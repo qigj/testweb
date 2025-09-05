@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>CLUSTER - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="cluster"><a class="header" href="#cluster">CLUSTER</a></h1>
+<p>Physically reorders a heap storage table on disk according to an index. Not a recommended operation in SynxDB.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code class="language-{#sql_command_synopsis}">CLUSTER &lt;indexname&gt; ON &lt;tablename&gt;
+
+CLUSTER [VERBOSE] &lt;tablename&gt; [ USING index_name ]
+
+CLUSTER [VERBOSE]
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p><code>CLUSTER</code> orders a heap storage table based on an index. <code>CLUSTER</code> is not supported on append-optmized storage tables. Clustering an index means that the records are physically ordered on disk according to the index information. If the records you need are distributed randomly on disk, then the database has to seek across the disk to get the records requested. If those records are stored more closely together, then the fetching from disk is more sequential. A good example for a clustered index is on a date column where the data is ordered sequentially by date. A query against a specific date range will result in an ordered fetch from the disk, which leverages faster sequential access.</p>
+<p>Clustering is a one-time operation: when the table is subsequently updated, the changes are not clustered. That is, no attempt is made to store new or updated rows according to their index order. If you wish, you can periodically recluster by issuing the command again. Setting the table’s <code>FILLFACTOR</code> storage parameter to less than 100% can aid in preserving cluster ordering during updates, because updated rows are kept on the same page if enough space is available there.</p>
+<p>When a table is clustered using this command, SynxDB remembers on which index it was clustered. The form <code>CLUSTER</code> tablename reclusters the table on the same index that it was clustered before. You can use the <code>CLUSTER</code> or <code>SET WITHOUT CLUSTER</code> forms of <a href="ALTER_TABLE.html">ALTER TABLE</a> to set the index to use for future cluster operations, or to clear any previous setting. <code>CLUSTER</code> without any parameter reclusters all previously clustered tables in the current database that the calling user owns, or all tables if called by a superuser. This form of <code>CLUSTER</code> cannot be run inside a transaction block.</p>
+<p>When a table is being clustered, an <code>ACCESS EXCLUSIVE</code> lock is acquired on it. This prevents any other database operations (both reads and writes) from operating on the table until the <code>CLUSTER</code> is finished.</p>
+<h2 id="parameters"><a class="header" href="#parameters"><a id="section4"></a>Parameters</a></h2>
+<h3 id="indexname"><a class="header" href="#indexname">indexname</a></h3>
+<p>The name of an index.</p>
+<h3 id="verbose"><a class="header" href="#verbose"><code>VERBOSE</code></a></h3>
+<p>Prints a progress report as each table is clustered.</p>
+<h3 id="tablename"><a class="header" href="#tablename">tablename</a></h3>
+<p>The name (optionally schema-qualified) of a table.</p>
+<h2 id="notes"><a class="header" href="#notes"><a id="section5"></a>Notes</a></h2>
+<p>In cases where you are accessing single rows randomly within a table, the actual order of the data in the table is unimportant. However, if you tend to access some data more than others, and there is an index that groups them together, you will benefit from using <code>CLUSTER</code>. If you are requesting a range of indexed values from a table, or a single indexed value that has multiple rows that match, <code>CLUSTER</code> will help because once the index identifies the table page for the first row that matches, all other rows that match are probably already on the same table page, and so you save disk accesses and speed up the query.</p>
+<p><code>CLUSTER</code> can re-sort the table using either an index scan on the specified index, or (if the index is a b-tree) a sequential scan followed by sorting. It will attempt to choose the method that will be faster, based on planner cost parameters and available statistical information.</p>
+<p>When an index scan is used, a temporary copy of the table is created that contains the table data in the index order. Temporary copies of each index on the table are created as well. Therefore, you need free space on disk at least equal to the sum of the table size and the index sizes.</p>
+<p>When a sequential scan and sort is used, a temporary sort file is also created, so that the peak temporary space requirement is as much as double the table size, plus the index sizes. This method is often faster than the index scan method, but if the disk space requirement is intolerable, you can deactivate this choice by temporarily setting the <a href="../config_params/guc-list.html">enable_sort</a> configuration parameter to <code>off</code>.</p>
+<p>It is advisable to set <a href="../config_params/guc-list.html">maintenance_work_mem</a> configuration parameter to a reasonably large value (but not more than the amount of RAM you can dedicate to the <code>CLUSTER</code> operation) before clustering.</p>
+<p>Because the query optimizer records statistics about the ordering of tables, it is advisable to run <code>ANALYZE</code> on the newly clustered table. Otherwise, the planner may make poor choices of query plans.</p>
+<p>Because <code>CLUSTER</code> remembers which indexes are clustered, you can cluster the tables you want clustered manually the first time, then set up a periodic maintenance script that runs <code>CLUSTER</code> without any parameters, so that the desired tables are periodically reclustered.</p>
+<blockquote>
+<p><strong>Note</strong> <code>CLUSTER</code> is not supported with append-optimized tables.</p>
+</blockquote>
+<h2 id="examples"><a class="header" href="#examples"><a id="section6"></a>Examples</a></h2>
+<p>Cluster the table <code>employees</code> on the basis of its index <code>emp_ind</code>:</p>
+<pre><code>CLUSTER emp_ind ON emp;
+</code></pre>
+<p>Cluster a large table by recreating it and loading it in the correct index order:</p>
+<pre><code>CREATE TABLE newtable AS SELECT * FROM table ORDER BY column;
+DROP table;
+ALTER TABLE newtable RENAME TO table;
+CREATE INDEX column_ix ON table (column);
+VACUUM ANALYZE table;
+</code></pre>
+<h2 id="compatibility"><a class="header" href="#compatibility"><a id="section7"></a>Compatibility</a></h2>
+<p>There is no <code>CLUSTER</code> statement in the SQL standard.</p>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section8"></a>See Also</a></h2>
+<p><a href="CREATE_TABLE_AS.html">CREATE TABLE AS</a>, <a href="CREATE_INDEX.html">CREATE INDEX</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/sql_commands/CLOSE.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/sql_commands/COMMENT.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/sql_commands/CLOSE.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/sql_commands/COMMENT.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

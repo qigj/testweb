@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Searching Text in Database Tables - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="searching-text-in-database-tables"><a class="header" href="#searching-text-in-database-tables">Searching Text in Database Tables</a></h1>
+<p>This topic shows how to use text search operators to search database tables and how to create indexes to speed up text searches.</p>
+<p>The examples in the previous section illustrated full text matching using simple constant strings. This section shows how to search table data, optionally using indexes.</p>
+<p>This section contains the following subtopics:</p>
+<ul>
+<li><a href="#searching">Searching a Table</a></li>
+<li><a href="#indexes">Creating Indexes</a></li>
+</ul>
+<h2 id="searching-a-table"><a class="header" href="#searching-a-table"><a id="searching"></a>Searching a Table</a></h2>
+<p>It is possible to do a full text search without an index. A simple query to print the <code>title</code> of each row that contains the word <code>friend</code> in its <code>body</code> field is:</p>
+<pre><code>SELECT title
+FROM pgweb
+WHERE to_tsvector('english', body) @@ to_tsquery('english', 'friend');
+</code></pre>
+<p>This will also find related words such as <code>friends</code> and <code>friendly</code>, since all these are reduced to the same normalized lexeme.</p>
+<p>The query above specifies that the <code>english</code> configuration is to be used to parse and normalize the strings. Alternatively we could omit the configuration parameters:</p>
+<pre><code>SELECT title
+FROM pgweb
+WHERE to_tsvector(body) @@ to_tsquery('friend');
+</code></pre>
+<p>This query will use the configuration set by <a href="../../ref_guide/config_params/guc-list.html">default_text_search_config</a>.</p>
+<p>A more complex example is to select the ten most recent documents that contain <code>create</code> and <code>table</code> in the <code>title</code> or <code>body</code>:</p>
+<pre><code>SELECT title
+FROM pgweb
+WHERE to_tsvector(title || ' ' || body) @@ to_tsquery('create &amp; table')
+ORDER BY last_mod_date DESC
+LIMIT 10;
+</code></pre>
+<p>For clarity we omitted the <code>coalesce</code> function calls which would be needed to find rows that contain <code>NULL</code> in one of the two fields.</p>
+<p>Although these queries will work without an index, most applications will find this approach too slow, except perhaps for occasional ad-hoc searches. Practical use of text searching usually requires creating an index.</p>
+<h2 id="creating-indexes"><a class="header" href="#creating-indexes"><a id="indexes"></a>Creating Indexes</a></h2>
+<p>We can create a GIN index (<a href="gist-gin.html">GiST and GIN Indexes for Text Search</a>) to speed up text searches:</p>
+<pre><code>CREATE INDEX pgweb_idx ON pgweb USING gin(to_tsvector('english', body));
+</code></pre>
+<p>Notice that the two-argument version of <code>to_tsvector</code> is used. Only text search functions that specify a configuration name can be used in expression indexes. This is because the index contents must be unaffected by <a href="../../ref_guide/config_params/guc-list.html">default_text_search_config</a>. If they were affected, the index contents might be inconsistent because different entries could contain <code>tsvector</code>s that were created with different text search configurations, and there would be no way to guess which was which. It would be impossible to dump and restore such an index correctly.</p>
+<p>Because the two-argument version of <code>to_tsvector</code> was used in the index above, only a query reference that uses the two-argument version of <code>to_tsvector</code> with the same configuration name will use that index. That is, <code>WHERE to_tsvector('english', body) @@ 'a &amp; b'</code> can use the index, but <code>WHERE to_tsvector(body) @@ 'a &amp; b'</code> cannot. This ensures that an index will be used only with the same configuration used to create the index entries.</p>
+<p>It is possible to set up more complex expression indexes wherein the configuration name is specified by another column, e.g.:</p>
+<pre><code>CREATE INDEX pgweb_idx ON pgweb USING gin(to_tsvector(config_name, body));
+</code></pre>
+<p>where <code>config_name</code> is a column in the <code>pgweb</code> table. This allows mixed configurations in the same index while recording which configuration was used for each index entry. This would be useful, for example, if the document collection contained documents in different languages. Again, queries that are meant to use the index must be phrased to match, e.g., <code>WHERE to_tsvector(config_name, body) @@ 'a &amp; b'</code>.</p>
+<p>Indexes can even concatenate columns:</p>
+<pre><code>CREATE INDEX pgweb_idx ON pgweb USING gin(to_tsvector('english', title || ' ' || body));
+</code></pre>
+<p>Another approach is to create a separate <code>tsvector</code> column to hold the output of <code>to_tsvector</code>. This example is a concatenation of title and body, using <code>coalesce</code> to ensure that one field will still be indexed when the other is NULL:</p>
+<pre><code>ALTER TABLE pgweb ADD COLUMN textsearchable_index_col tsvector;
+UPDATE pgweb SET textsearchable_index_col =
+     to_tsvector('english', coalesce(title,'') || ' ' || coalesce(body,''));
+</code></pre>
+<p>Then we create a GIN index to speed up the search:</p>
+<pre><code>CREATE INDEX textsearch_idx ON pgweb USING gin(textsearchable_index_col);
+</code></pre>
+<p>Now we are ready to perform a fast full text search:</p>
+<pre><code>SELECT title FROM pgweb WHERE textsearchable_index_col @@ to_tsquery('create &amp; table') 
+ORDER BY last_mod_date DESC LIMIT 10;
+</code></pre>
+<p>One advantage of the separate-column approach over an expression index is that it is not necessary to explicitly specify the text search configuration in queries in order to make use of the index. As shown in the example above, the query can depend on <code>default_text_search_config</code>. Another advantage is that searches will be faster, since it will not be necessary to redo the <code>to_tsvector</code> calls to verify index matches. (This is more important when using a GiST index than a GIN index; see <a href="gist-gin.html">GiST and GIN Indexes for Text Search</a>.) The expression-index approach is simpler to set up, however, and it requires less disk space since the <code>tsvector</code> representation is not stored explicitly.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/textsearch/intro.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/textsearch/controlling.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/textsearch/intro.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/textsearch/controlling.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,37 @@
+# UNDROP TABLE
+
+`UNDROP TABLE` restores a dropped table from the recycle bin.
+
+## Synopsis
+
+```sql
+UNDROP TABLE <new_table_name> AS <recycle_bin_table_name>;
+```
+
+## Description
+
+When a table is dropped, you can restore it within the data retention period using the `UNDROP TABLE` command. Before restoring, you must first query the system table `pg_recycle_bin` to find the unique name of the table in the recycle bin.
+
+## Parameters
+
+- `<new_table_name>`: The new name for the restored table.
+- `<recycle_bin_table_name>`: The name of the table to be restored, as it exists in `pg_recycle_bin`.
+
+## Examples
+
+```sql
+-- Assume table t1 was accidentally dropped.
+DROP TABLE t1;
+
+-- 1. Query the recycle bin for the unique name of the dropped table.
+SELECT relname FROM pg_recycle_bin WHERE orig_relname = 't1';
+
+-- Assume the query result is 't1_1678886400'.
+
+-- 2. Use the retrieved name to restore the table and name it t1.
+UNDROP TABLE t1 AS "t1_1678886400";
+```
+
+## See also
+
+[Time travel and flashback recovery](../../manage-system/high-availability/time-travel.md)

@@ -1,0 +1,316 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Preparing and Adding Hosts - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="preparing-and-adding-hosts"><a class="header" href="#preparing-and-adding-hosts">Preparing and Adding Hosts</a></h1>
+<p>Verify your new host systems are ready for integration into the existing SynxDB system.</p>
+<p>To prepare new host systems for expansion, install the SynxDB software binaries, exchange the required SSH keys, and run performance tests.</p>
+<p>Run performance tests first on the new hosts and then all hosts. Run the tests on all hosts with the system offline so user activity does not distort results.</p>
+<p>Generally, you should run performance tests when an administrator modifies host networking or other special conditions in the system. For example, if you will run the expanded system on two network clusters, run tests on each cluster.</p>
+<blockquote>
+<p><strong>Note</strong> Preparing host systems for use by a SynxDB system assumes that the new hosts’ operating system has been properly configured to match the existing hosts, described in <a href="../../install_guide/prep_os.html">Configuring Your Systems</a>.</p>
+</blockquote>
+<h2 id="adding-new-hosts-to-the-trusted-host-environment"><a class="header" href="#adding-new-hosts-to-the-trusted-host-environment"><a id="topic18"></a>Adding New Hosts to the Trusted Host Environment</a></h2>
+<p>New hosts must exchange SSH keys with the existing hosts to enable SynxDB administrative utilities to connect to all segments without a password prompt. Perform the key exchange process twice with the <a href="../../utility_guide/ref/gpssh-exkeys.html">gpssh-exkeys</a> utility.</p>
+<p>First perform the process as <code>root</code>, for administration convenience, and then as the user <code>gpadmin</code>, for management utilities. Perform the following tasks in order:</p>
+<ol>
+<li><a href="#no160715">To exchange SSH keys as root</a></li>
+<li><a href="#no160595">To create the gpadmin user</a></li>
+<li><a href="#sshexch_gpadmin">To exchange SSH keys as the gpadmin user</a></li>
+</ol>
+<blockquote>
+<p><strong>Note</strong> The SynxDB segment host naming convention is <code>sdwN</code> where <code>sdw</code> is a prefix and <code>N</code> is an integer ( <code>sdw1</code>, <code>sdw2</code> and so on). For hosts with multiple interfaces, the convention is to append a dash (<code>-</code>) and number to the host name. For example, <code>sdw1-1</code> and <code>sdw1-2</code> are the two interface names for host <code>sdw1</code>.</p>
+</blockquote>
+<h3 id="to-exchange-ssh-keys-as-root"><a class="header" href="#to-exchange-ssh-keys-as-root"><a id="no160715"></a>To exchange SSH keys as root</a></h3>
+<ol>
+<li>
+<p>Create a host file with the existing host names in your array and a separate host file with the new expansion host names. For existing hosts, you can use the same host file used to set up SSH keys in the system. In the files, list all hosts (master, backup master, and segment hosts) with one name per line and no extra lines or spaces. Exchange SSH keys using the configured host names for a given host if you use a multi-NIC configuration. In this example, <code>mdw</code> is configured with a single NIC, and <code>sdw1</code>, <code>sdw2</code>, and <code>sdw3</code> are configured with 4 NICs:</p>
+<pre><code>mdw
+sdw1-1
+sdw1-2
+sdw1-3
+sdw1-4
+sdw2-1
+sdw2-2
+sdw2-3
+sdw2-4
+sdw3-1
+sdw3-2
+sdw3-3
+sdw3-4
+</code></pre>
+</li>
+<li>
+<p>Log in as <code>root</code> on the master host, and source the <code>synxdb_path.sh</code> file from your SynxDB installation.</p>
+<pre><code>$ su - 
+# source /usr/local/synxdb/synxdb_path.sh
+</code></pre>
+</li>
+<li>
+<p>Run the <code>gpssh-exkeys</code> utility referencing the host list files. For example:</p>
+<pre><code># gpssh-exkeys -e /home/gpadmin/&lt;existing_hosts_file&gt; -x 
+/home/gpadmin/&lt;new_hosts_file&gt;
+</code></pre>
+</li>
+<li>
+<p><code>gpssh-exkeys</code> checks the remote hosts and performs the key exchange between all hosts. Enter the <code>root</code> user password when prompted. For example:</p>
+<pre><code>***Enter password for root@&lt;hostname&gt;: &lt;root_password&gt;
+</code></pre>
+</li>
+</ol>
+<h3 id="to-create-the-gpadmin-user"><a class="header" href="#to-create-the-gpadmin-user"><a id="no160595"></a>To create the gpadmin user</a></h3>
+<ol>
+<li>
+<p>Use <a href="../../utility_guide/ref/gpssh.html">gpssh</a> to create the <code>gpadmin</code> user on all the new segment hosts (if it does not exist already). Use the list of new hosts you created for the key exchange. For example:</p>
+<pre><code># gpssh -f &lt;new_hosts_file&gt; '/usr/sbin/useradd gpadmin -d 
+/home/gpadmin -s /bin/bash'
+</code></pre>
+</li>
+<li>
+<p>Set a password for the new <code>gpadmin</code> user. On Linux, you can do this on all segment hosts simultaneously using <code>gpssh</code>. For example:</p>
+<pre><code># gpssh -f &lt;new_hosts_file&gt; 'echo &lt;gpadmin_password&gt; | passwd 
+gpadmin --stdin'
+</code></pre>
+</li>
+<li>
+<p>Verify the <code>gpadmin</code> user has been created by looking for its home directory:</p>
+<pre><code># gpssh -f &lt;new_hosts_file&gt; ls -l /home
+</code></pre>
+</li>
+</ol>
+<h3 id="to-exchange-ssh-keys-as-the-gpadmin-user"><a class="header" href="#to-exchange-ssh-keys-as-the-gpadmin-user"><a id="sshexch_gpadmin"></a>To exchange SSH keys as the gpadmin user</a></h3>
+<ol>
+<li>
+<p>Log in as <code>gpadmin</code> and run the <code>gpssh-exkeys</code> utility referencing the host list files. For example:</p>
+<pre><code># gpssh-exkeys -e /home/gpadmin/&lt;existing_hosts_file&gt; -x 
+/home/gpadmin/&lt;new_hosts_file&gt;
+</code></pre>
+</li>
+<li>
+<p><code>gpssh-exkeys</code> will check the remote hosts and perform the key exchange between all hosts. Enter the <code>gpadmin</code> user password when prompted. For example:</p>
+<pre><code>***Enter password for gpadmin@&lt;hostname&gt;: &lt;gpadmin_password&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="validating-disk-io-and-memory-bandwidth"><a class="header" href="#validating-disk-io-and-memory-bandwidth"><a id="topic20"></a>Validating Disk I/O and Memory Bandwidth</a></h2>
+<p>Use the <a href="../../utility_guide/ref/gpcheckperf.html">gpcheckperf</a> utility to test disk I/O and memory bandwidth.</p>
+<h3 id="to-run-gpcheckperf"><a class="header" href="#to-run-gpcheckperf"><a id="no159247"></a>To run gpcheckperf</a></h3>
+<ol>
+<li>
+<p>Run the <code>gpcheckperf</code> utility using the host file for new hosts. Use the <code>-d</code> option to specify the file systems you want to test on each host. You must have write access to these directories. For example:</p>
+<pre><code>$ gpcheckperf -f &lt;new_hosts_file&gt; -d /data1 -d /data2 -v 
+</code></pre>
+</li>
+<li>
+<p>The utility may take a long time to perform the tests because it is copying very large files between the hosts. When it is finished, you will see the summary results for the Disk Write, Disk Read, and Stream tests.</p>
+</li>
+</ol>
+<p>For a network divided into subnets, repeat this procedure with a separate host file for each subnet.</p>
+<h2 id="integrating-new-hardware-into-the-system"><a class="header" href="#integrating-new-hardware-into-the-system"><a id="topic21"></a>Integrating New Hardware into the System</a></h2>
+<p>Before initializing the system with the new segments, shut down the system with <code>gpstop</code> to prevent user activity from skewing performance test results. Then, repeat the performance tests using host files that include <em>all</em> hosts, existing and new.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/expand/expand-planning.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/expand/expand-initialize.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/expand/expand-planning.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/expand/expand-initialize.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

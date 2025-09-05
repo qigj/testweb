@@ -1,0 +1,208 @@
+.. raw:: latex
+
+   \newpage
+
+Connect to Databases
+=======================
+
+This document describes how to connect to |product_name|.
+
+Connection parameters
+---------------------
+
+You can connect to |product_name| using a PostgreSQL-compatible client program, such as ``psql``. Users and administrators always connect to |product_name| through the *coordinator*. Segments do not accept client connections.
+
+To establish a connection to the |product_name| coordinator, you need to know the following connection information and configure your client program accordingly.
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+   :widths: 8 30 8
+
+   * - Connection parameter
+     - Description
+     - Environment variable
+   * - Application name
+     - The name of the application connecting to the database. The default value for the ``application_name`` connection parameter is *psql*.
+     - ``$PGAPPNAME``
+   * - Database name
+     - The name of the database to connect to. For a newly initialized system, use the ``postgres`` database for the first connection.
+     - ``$PGDATABASE``
+   * - Host name
+     - The host name of the |product_name| coordinator. The default is localhost.
+     - ``$PGHOST``
+   * - Port
+     - The port number on which the |product_name| coordinator instance is running. The default value is ``5432``.
+     - ``$PGPORT``
+   * - User name
+     - The database user (role) name for the connection. This is not necessarily the same as your operating system user name. If you are unsure of your database user name, contact your |product_name| administrator. Note that each |product_name| system automatically creates a superuser account upon initialization. The name of this account is the same as the operating system user name of the user who initialized the |product_name| system (usually ``gpadmin``).
+     - ``$PGUSER``
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+The :ref:`Connect using psql <create-and-prepare-db/connect-to-db:Connect using psql>` section provides example commands for connecting to |product_name|.
+
+Supported client applications
+-----------------------------
+
+You can use various client applications to connect to |product_name|:
+
+-  Some :ref:`client applications <create-and-prepare-db/connect-to-db:client applications>` are included with the |product_name| installation. Among them, ``psql`` is an interactive command-line interface.
+-  Using standard :ref:`database application interfaces <create-and-prepare-db/connect-to-db:connect using application interfaces>`, you can create your own client applications to connect with |product_name|.
+-  Most client tools that use standard database interfaces, such as ODBC and JDBC, can be configured to connect to |product_name|.
+
+Client applications
+~~~~~~~~~~~~~~~~~~~
+
+The |product_name| installation includes several client utility applications, located in the ``$GPHOME/bin`` directory of the coordinator host installation. The following are the most commonly used client applications:
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+
+   * - Name
+     - Purpose
+   * - ``createdb``
+     - Create a new database
+   * - ``createuser``
+     - Define a new database role
+   * - ``dropdb``
+     - Remove a database
+   * - ``dropuser``
+     - Remove a role
+   * - ``psql``
+     - PostgreSQL interactive terminal
+   * - ``reindexdb``
+     - Reindex a database
+   * - ``vacuumdb``
+     - Collect garbage and analyze a database
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+When using these client applications, you must connect to the database through the coordinator instance. You need to know the name of the target database, the host name and port number of the coordinator, and the database user name to connect with. You can specify this information using the ``-d``, ``-h``, ``-p``, and ``-U`` options on the connection command, respectively. If an option is not specified for a parameter, its default value is used.
+
+All these options have default values, which are used if an option is not specified: The default host is localhost. The default port number is ``5432``. The default user name is the operating system user name, and so is the database name. Note that the operating system user name and the |product_name| user name are not necessarily the same.
+
+If the default values are not correct, you can set the ``PGDATABASE``, ``PGHOST``, ``PGPORT``, and ``PGUSER`` environment variables accordingly, or use the ``~/.pgpass`` file to store frequently used passwords.
+
+Connect using psql
+~~~~~~~~~~~~~~~~~~~~~
+
+Depending on the default values or the environment variables you have set, use ``psql`` to access the database. Examples are as follows:
+
+.. code:: shell
+
+   $ psql -d cbdb-database -h coordinator_host -p 5432 -U `gpadmin`
+
+.. code:: shell
+
+   $ psql cbdb-database
+
+.. code:: shell
+
+   $ psql
+
+If you have not yet created a user-defined database, you can connect to the ``postgres`` database to access the system. For example:
+
+.. code:: shell
+
+   $ psql postgres
+
+After connecting to the database, ``psql`` displays a prompt with the name of the database to which ``psql`` is currently connected, followed by the string ``=>`` (or ``=#`` if you are a database superuser). For example:
+
+.. code:: shell
+
+   cbdb-database=>
+
+At the prompt, you can type SQL commands. An SQL command must end with a semicolon (`;``) to be sent to the server and run. For example:
+
+.. code:: sql
+
+   => SELECT * FROM mytable;
+
+Connect using application interfaces
+------------------------------------
+
+You might want to develop your own client application to interact with |product_name|. PostgreSQL provides a series of database drivers for the most common database application programming interfaces (APIs), which can also be used with |product_name|. These drivers need to be downloaded separately.
+
+Each driver (except for ``libpq``, which is supplied with PostgreSQL) is an independent PostgreSQL development project. You need to download, install, and configure these applications to connect to |product_name|. These drivers are as follows:
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+
+   * - API
+     - PostgreSQL driver
+     - Download link
+   * - ODBC
+     - psqlODBC
+     - `psqlODBC - PostgreSQL ODBC driver <https://odbc.postgresql.org/>`__
+   * - JDBC
+     - pgjdbc
+     - `PostgreSQL JDBC driver <https://jdbc.postgresql.org/>`__
+   * - Perl DBI
+     - pgperl
+     - `DBD-Pg <https://metacpan.org/release/DBD-Pg>`__
+   * - Python DBI
+     - pygresql
+     - `PyGreSQL <http://www.pygresql.org/>`__
+   * - Python DBI
+     - psycopg2
+     - `Psycopg <https://www.psycopg.org/>`__
+   * - libpq C library
+     - libpq
+     - `libpq - C Library <https://www.postgresql.org/docs/12/libpq.html>`__
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+The general instructions for accessing |product_name| using an API are:
+
+1. Download your programming language platform and the corresponding API from an appropriate source. For example, you can get the Java Development Kit (JDK) and JDBC API from Oracle.
+2. Write your client application according to the API specification. When writing your application, be mindful of the SQL support in |product_name|, so that you do not include unsupported SQL syntax.
+
+Download the appropriate driver and configure the connection to your |product_name| coordinator instance.
+
+Common connection problems
+--------------------------
+
+There are many reasons why a client application might fail to connect to |product_name|. The following table describes some common causes of connection problems and how to resolve them.
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+   :widths: 12 40
+
+   * - Problem
+     - Solution
+   * - No ``pg_hba.conf`` entry for host or user
+     - To allow remote clients to connect to |product_name|, you need to configure the |product_name| coordinator instance to accept these connections. This is done by adding an appropriate entry to the ``pg_hba.conf`` configuration file, which is located in the data directory of the coordinator instance.
+   * - |product_name| is not running
+     - If the |product_name| coordinator instance is stopped, users will not be able to connect. You can verify that the |product_name| system is running by running the ``gpstate`` utility on the |product_name| coordinator host.
+   * - Network issues: Connection timed out
+     - If a user connects to the |product_name| coordinator host from a remote client, network issues might prevent the connection (for example, DNS hostname resolution issues, host system shutdown, and so on.). To rule out network problems, connect from the remote client host to the |product_name| coordinator host. For example: ``ping hostname``. Queries and connections will fail if the system cannot resolve the host names and IP addresses of the hosts participating in |product_name|. Some operations connect to the |product_name| coordinator using ``localhost``, while others use the actual host name, so you must be able to resolve both. If you encounter this error, first ensure that you can connect from the coordinator host to every host in the |product_name| list over the network. In the ``/etc/hosts`` file on the coordinator and all segments, ensure that you have the correct host names and IP addresses for all hosts involved in the |product_name| list. ``127.0.0.1`` must resolve to ``localhost``.
+
+.. raw:: latex
+
+   \end{mytable-mid}

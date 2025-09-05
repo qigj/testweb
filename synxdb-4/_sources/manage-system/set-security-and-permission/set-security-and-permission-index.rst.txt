@@ -1,0 +1,13 @@
+Configure Security and Permission
+************************************
+
+.. toctree:: 
+   :maxdepth: 2
+
+   set-password-policy
+   check-password-security
+   use-pgcrypto
+   use-anon
+   use-tde-to-encrypt-data
+   use-pgaudit
+   manage-roles-and-privileges

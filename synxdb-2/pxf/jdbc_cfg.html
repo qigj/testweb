@@ -1,0 +1,491 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Configuring the JDBC Connector (Optional) - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="configuring-the-jdbc-connector-optional"><a class="header" href="#configuring-the-jdbc-connector-optional">Configuring the JDBC Connector (Optional)</a></h1>
+<p>You can use PXF to access an external SQL database including MySQL, ORACLE, Microsoft SQL Server, DB2, PostgreSQL, Hive, and Apache Ignite. This topic describes how to configure the PXF JDBC Connector to access these external data sources.</p>
+<p><em>If you do not plan to use the PXF JDBC Connector, then you do not need to perform this procedure.</em></p>
+<h2 id="about-jdbc-configuration"><a class="header" href="#about-jdbc-configuration"><a id="about_cfg"></a>About JDBC Configuration</a></h2>
+<p>To access data in an external SQL database with the PXF JDBC Connector, you must:</p>
+<ul>
+<li>Register a compatible JDBC driver JAR file</li>
+<li>Specify the JDBC driver class name, database URL, and client credentials</li>
+</ul>
+<p>In previous releases of SynxDB, you may have specified the JDBC driver class name, database URL, and client credentials via options in the <code>CREATE EXTERNAL TABLE</code> command. PXF now supports file-based server configuration for the JDBC Connector. This configuration, described below, allows you to specify these options and credentials in a file.</p>
+<p><strong>Note</strong>: PXF external tables that you previously created that directly specified the JDBC connection options will continue to work. If you want to move these tables to use JDBC file-based server configuration, you must create a server configuration, drop the external tables, and then recreate the tables specifying an appropriate <code>SERVER=&lt;server_name&gt;</code> clause.</p>
+<h2 id="jdbc-driver-jar-registration"><a class="header" href="#jdbc-driver-jar-registration"><a id="cfg_jar"></a>JDBC Driver JAR Registration</a></h2>
+<p>PXF is bundled with the <code>postgresql-42.4.3.jar</code> JAR file. If you require a different JDBC driver, ensure that you install the JDBC driver JAR file for the external SQL database in the <code>$PXF_BASE/lib</code> directory on each SynxDB host. Be sure to install JDBC driver JAR files that are compatible with your JRE version. See <a href="reg_jar_depend.html">Registering PXF Library Dependencies</a> for additional information.</p>
+<h2 id="jdbc-server-configuration"><a class="header" href="#jdbc-server-configuration"><a id="cfg_server"></a>JDBC Server Configuration</a></h2>
+<p>When you configure the PXF JDBC Connector, you add at least one named PXF server configuration for the connector as described in <a href="cfg_server.html">Configuring PXF Servers</a>. You can also configure one or more statically-defined queries to run against the remote SQL database.</p>
+<p>PXF provides a template configuration file for the JDBC Connector. This server template configuration file, located in <code>&lt;PXF_INSTALL_DIR&gt;/templates/jdbc-site.xml</code>, identifies properties that you can configure to establish a connection to the external SQL database. The template also includes optional properties that you can set before running query or insert commands in the external database session.</p>
+<p>The required properties in the <code>jdbc-site.xml</code> server template file follow:</p>
+<div class="table-wrapper"><table><thead><tr><th>Property</th><th>Description</th><th>Value</th></tr></thead><tbody>
+<tr><td>jdbc.driver</td><td>Class name of the JDBC driver.</td><td>The JDBC driver Java class name; for example <code>org.postgresql.Driver</code>.</td></tr>
+<tr><td>jdbc.url</td><td>The URL that the JDBC driver uses to connect to the database.</td><td>The database connection URL (database-specific); for example <code>jdbc:postgresql://phost:pport/pdatabase</code>.</td></tr>
+<tr><td>jdbc.user</td><td>The database user name.</td><td>The user name for connecting to the database.</td></tr>
+<tr><td>jdbc.password</td><td>The password for <code>jdbc.user</code>.</td><td>The password for connecting to the database.</td></tr>
+</tbody></table>
+</div><div class="note"><b>Note:</b> When you configure a PXF JDBC server, you specify the external database user credentials to PXF in clear text in a configuration file.</div>
+<h3 id="connection-level-properties"><a class="header" href="#connection-level-properties"><a id="connprop"></a>Connection-Level Properties</a></h3>
+<p>To set additional JDBC connection-level properties, add <code>jdbc.connection.property.&lt;CPROP_NAME&gt;</code> properties to <code>jdbc-site.xml</code>. PXF passes these properties to the JDBC driver when it establishes the connection to the external SQL database (<code>DriverManager.getConnection()</code>).</p>
+<p>Replace <code>&lt;CPROP_NAME&gt;</code> with the connection property name and specify its value:</p>
+<div class="table-wrapper"><table><thead><tr><th>Property</th><th>Description</th><th>Value</th></tr></thead><tbody>
+<tr><td>jdbc.connection.property.&lt;CPROP_NAME&gt;</td><td>The name of a property (&lt;CPROP_NAME&gt;) to pass to the JDBC driver when PXF establishes the connection to the external SQL database.</td><td>The value of the &lt;CPROP_NAME&gt; property.</td></tr>
+</tbody></table>
+</div>
+<p>Example: To set the <code>createDatabaseIfNotExist</code> connection property on a JDBC connection to a PostgreSQL database, include the following property block in <code>jdbc-site.xml</code>:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;jdbc.connection.property.createDatabaseIfNotExist&lt;/name&gt;
+    &lt;value&gt;true&lt;/value&gt;
+ &lt;/property&gt;
+</code></pre>
+<p>Ensure that the JDBC driver for the external SQL database supports any connection-level property that you specify.</p>
+<h3 id="connection-transaction-isolation-property"><a class="header" href="#connection-transaction-isolation-property"><a id="conntransiso"></a>Connection Transaction Isolation Property</a></h3>
+<p>The SQL standard defines four transaction isolation levels. The level that you specify for a given connection to an external SQL database determines how and when the changes made by one transaction run on the connection are visible to another.</p>
+<p>The PXF JDBC Connector exposes an optional server configuration property named <code>jdbc.connection.transactionIsolation</code> that enables you to specify the transaction isolation level. PXF sets the level (<code>setTransactionIsolation()</code>) just after establishing the connection to the external SQL database.</p>
+<p>The JDBC Connector supports the following <code>jdbc.connection.transactionIsolation</code> property values:</p>
+<div class="table-wrapper"><table><thead><tr><th>SQL Level</th><th>PXF Property Value</th></tr></thead><tbody>
+<tr><td>Read uncommitted</td><td>READ_UNCOMMITTED</td></tr>
+<tr><td>Read committed</td><td>READ_COMMITTED</td></tr>
+<tr><td>Repeatable Read</td><td>REPEATABLE_READ</td></tr>
+<tr><td>Serializable</td><td>SERIALIZABLE</td></tr>
+</tbody></table>
+</div>
+<p>For example, to set the transaction isolation level to <em>Read uncommitted</em>, add the following property block to the <code>jdbc-site.xml</code> file:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;jdbc.connection.transactionIsolation&lt;/name&gt;
+    &lt;value&gt;READ_UNCOMMITTED&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<p>Different SQL databases support different transaction isolation levels. Ensure that the external database supports the level that you specify.</p>
+<h3 id="statement-level-properties"><a class="header" href="#statement-level-properties"><a id="stateprop"></a>Statement-Level Properties</a></h3>
+<p>The PXF JDBC Connector runs a query or insert command on an external SQL database table in a <em>statement</em>. The Connector exposes properties that enable you to configure certain aspects of the statement before the command is run in the external database. The Connector supports the following statement-level properties:</p>
+<div class="table-wrapper"><table><thead><tr><th>Property</th><th>Description</th><th>Value</th></tr></thead><tbody>
+<tr><td>jdbc.statement.batchSize</td><td>The number of rows to write to the external database table in a batch.</td><td>The number of rows. The default write batch size is 100.</td></tr>
+<tr><td>jdbc.statement.fetchSize</td><td>The number of rows to fetch/buffer when reading from the external database table.</td><td>The number of rows. The default read fetch size for MySQL is <code>-2147483648</code> (<code>Integer.MIN_VALUE</code>). The default read fetch size for all other databases is 1000.</td></tr>
+<tr><td>jdbc.statement.queryTimeout</td><td>The amount of time (in seconds) the JDBC driver waits for a statement to run. This timeout applies to statements created for both read and write operations.</td><td>The timeout duration in seconds. The default wait time is unlimited.</td></tr>
+</tbody></table>
+</div>
+<p>PXF uses the default value for any statement-level property that you do not explicitly configure.</p>
+<p>Example: To set the read fetch size to 5000, add the following property block to <code>jdbc-site.xml</code>:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;jdbc.statement.fetchSize&lt;/name&gt;
+    &lt;value&gt;5000&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<p>Ensure that the JDBC driver for the external SQL database supports any statement-level property that you specify.</p>
+<h3 id="prepared-statements"><a class="header" href="#prepared-statements"><a id="prepared"></a>Prepared Statements</a></h3>
+<p>By default, the PXF JDBC Connector reads from an external data source using a JDBC <code>Statement</code>.</p>
+<p>The PXF <code>jdbc.read.prepared-statement</code> property governs the use of <code>PreparedStatements</code> by the connector. If the JDBC driver that you are using to access the external data source requires the use of a <code>PreparedStatement</code>, set the property to <code>true</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>Property</th><th>Description</th><th>Default Value</th></tr></thead><tbody>
+<tr><td>jdbc.read.prepared-statement</td><td>Use a <code>PreparedStatement</code> instead of a <code>Statement</code> when reading from the external data source.</td><td>false</td></tr>
+</tbody></table>
+</div>
+<h3 id="session-level-properties"><a class="header" href="#session-level-properties"><a id="sessprop"></a>Session-Level Properties</a></h3>
+<p>To set session-level properties, add the <code>jdbc.session.property.&lt;SPROP_NAME&gt;</code> property to <code>jdbc-site.xml</code>. PXF will <code>SET</code> these properties in the external database before running a query.</p>
+<p>Replace <code>&lt;SPROP_NAME&gt;</code> with the session property name and specify its value:</p>
+<div class="table-wrapper"><table><thead><tr><th>Property</th><th>Description</th><th>Value</th></tr></thead><tbody>
+<tr><td>jdbc.session.property.&lt;SPROP_NAME&gt;</td><td>The name of a session property (&lt;SPROP_NAME&gt;) to set before PXF runs the query.</td><td>The value of the &lt;SPROP_NAME&gt; property.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Note</strong>: The PXF JDBC Connector passes both the session property name and property value to the external SQL database exactly as specified in the <code>jdbc-site.xml</code> server configuration file. To limit the potential threat of SQL injection, the Connector rejects any property name or value that contains the <code>;</code>, <code>\n</code>, <code>\b</code>, or <code>\0</code> characters.</p>
+<p>The PXF JDBC Connector handles the session property <code>SET</code> syntax for all supported external SQL databases.</p>
+<p>Example: To set the <code>search_path</code> parameter before running a query in a PostgreSQL database, add the following property block to <code>jdbc-site.xml</code>:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;jdbc.session.property.search_path&lt;/name&gt;
+    &lt;value&gt;public&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<p>Ensure that the JDBC driver for the external SQL database supports any property that you specify.</p>
+<h3 id="other-properties"><a class="header" href="#other-properties"><a id="other"></a>Other Properties</a></h3>
+<p>Other properties supported by the PXF JDBC Connector:</p>
+<div class="table-wrapper"><table><thead><tr><th>Property</th><th>Description</th><th>Default Value</th></tr></thead><tbody>
+<tr><td>jdbc.date.wideRange</td><td>Boolean that enables special parsing of dates when the year contains more than four alphanumeric characters. When set to <code>true</code>, PXF uses extended classes to parse dates, and recognizes years that specify <code>BC</code> or <code>AD</code>.</td><td>false</td></tr>
+</tbody></table>
+</div>
+<h3 id="about-jdbc-connection-pooling"><a class="header" href="#about-jdbc-connection-pooling"><a id="jdbcconpool"></a>About JDBC Connection Pooling</a></h3>
+<p>The PXF JDBC Connector uses JDBC connection pooling implemented by <a href="https://github.com/brettwooldridge/HikariCP">HikariCP</a>. When a user queries or writes to an external table, the Connector establishes a connection pool for the associated server configuration the first time that it encounters a unique combination of <code>jdbc.url</code>, <code>jdbc.user</code>, <code>jdbc.password</code>, connection property, and pool property settings. The Connector reuses connections in the pool subject to certain connection and timeout settings.</p>
+<p>One or more connection pools may exist for a given server configuration, and user access to different external tables specifying the same server may share a connection pool.</p>
+<p><strong>Note</strong>: If you have activated JDBC user impersonation in a server configuration, the JDBC Connector creates a separate connection pool for each SynxDB user that accesses any external table specifying that server configuration.</p>
+<p>The <code>jdbc.pool.enabled</code> property governs JDBC connection pooling for a server configuration. Connection pooling is activated by default. To deactive JDBC connection pooling for a server configuration, set the property to false:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;jdbc.pool.enabled&lt;/name&gt;
+    &lt;value&gt;false&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<p>If you deactive JDBC connection pooling for a server configuration, PXF does not reuse JDBC connections for that server. PXF creates a connection to the remote database for every partition of a query, and closes the connection when the query for that partition completes.</p>
+<p>PXF exposes connection pooling properties that you can configure in a JDBC server definition. These properties are named with the <code>jdbc.pool.property.</code> prefix and <em>apply to each PXF JVM</em>. The JDBC Connector automatically sets the following connection pool properties and default values:</p>
+<div class="table-wrapper"><table><thead><tr><th>Property</th><th>Description</th><th>Default Value</th></tr></thead><tbody>
+<tr><td>jdbc.pool.property.maximumPoolSize</td><td>The maximum number of connections to the database backend.</td><td>15</td></tr>
+<tr><td>jdbc.pool.property.connectionTimeout</td><td>The maximum amount of time, in milliseconds, to wait for a connection from the pool.</td><td>30000</td></tr>
+<tr><td>jdbc.pool.property.idleTimeout</td><td>The maximum amount of time, in milliseconds, after which an inactive connection is considered idle.</td><td>30000</td></tr>
+<tr><td>jdbc.pool.property.minimumIdle</td><td>The minimum number of idle connections maintained in the connection pool.</td><td>0</td></tr>
+</tbody></table>
+</div>
+<p>You can set other HikariCP-specific connection pooling properties for a server configuration by specifying <code>jdbc.pool.property.&lt;HIKARICP_PROP_NAME&gt;</code> and the desired value in the <code>jdbc-site.xml</code> configuration file for the server. Also note that the JDBC Connector passes along any property that you specify with a <code>jdbc.connection.property.</code> prefix when it requests a connection from the JDBC <code>DriverManager</code>. Refer to <a href="#connprop">Connection-Level Properties</a> above.</p>
+<h4 id="tuning-the-maximum-connection-pool-size"><a class="header" href="#tuning-the-maximum-connection-pool-size"><a id="jdbcconpool_tune"></a>Tuning the Maximum Connection Pool Size</a></h4>
+<p>To not exceed the maximum number of connections allowed by the target database, and at the same time ensure that each PXF JVM services a fair share of the JDBC connections, determine the maximum value of <code>maximumPoolSize</code> based on the size of the SynxDB cluster as follows:</p>
+<pre><code class="language-pre">max_conns_allowed_by_remote_db / #_synxdb_segment_hosts
+</code></pre>
+<p>For example, if your SynxDB cluster has 16 segment hosts and the target database allows 160 concurrent connections, calculate <code>maximumPoolSize</code> as follows:</p>
+<pre><code class="language-pre">160 / 16 = 10
+</code></pre>
+<p>In practice, you may choose to set <code>maximumPoolSize</code> to a lower value, since the number of concurrent connections per JDBC query depends on the number of partitions used in the query. When a query uses no partitions, a single PXF JVM services the query. If a query uses 12 partitions, PXF establishes 12 concurrent JDBC connections to the remote database. Ideally, these connections are distributed equally among the PXF JVMs, but that is not guaranteed.</p>
+<h2 id="jdbc-user-impersonation"><a class="header" href="#jdbc-user-impersonation"><a id="jdbcimpers"></a>JDBC User Impersonation</a></h2>
+<p>The PXF JDBC Connector uses the <code>jdbc.user</code> setting or information in the <code>jdbc.url</code> to determine the identity of the user to connect to the external data store. When PXF JDBC user impersonation is deactivated (the default), the behavior of the JDBC Connector is further dependent upon the external data store. For example, if you are using the JDBC Connector to access Hive, the Connector uses the settings of certain Hive authentication and impersonation properties to determine the user. You may be required to provide a <code>jdbc.user</code> setting, or add properties to the <code>jdbc.url</code> setting in the server <code>jdbc-site.xml</code> file. Refer to <a href="hive_jdbc_cfg.html">Configuring Hive Access via the JDBC Connector</a> for more information on this procedure.</p>
+<p>When you activate PXF JDBC user impersonation, the PXF JDBC Connector accesses the external data store on behalf of a SynxDB end user. The Connector uses the name of the SynxDB user that accesses the PXF external table to try to connect to the external data store.</p>
+<p>When you activate JDBC user impersonation for a PXF server, PXF overrides the value of a <code>jdbc.user</code> property setting defined in either <code>jdbc-site.xml</code> or <code>&lt;synxdb_user_name&gt;-user.xml</code>, or specified in the external table DDL, with the SynxDB user name. For user impersonation to work effectively when the external data store requires passwords to authenticate connecting users, you must specify the <code>jdbc.password</code> setting for each user that can be impersonated in that user’s <code>&lt;synxdb_user_name&gt;-user.xml</code> property override file. Refer to <a href="cfg_server.html#usercfg">Configuring a PXF User</a> for more information about per-server, per-SynxDB-user configuration.</p>
+<p>The <code>pxf.service.user.impersonation</code> property in the <code>jdbc-site.xml</code> configuration file governs JDBC user impersonation.</p>
+<h3 id="example-configuration-procedure"><a class="header" href="#example-configuration-procedure"><a id="jdbc-impers-cfg"></a>Example Configuration Procedure</a></h3>
+<p>By default, PXF JDBC user impersonation is deactivated.  Perform the following procedure to turn PXF user impersonation on or off for a JDBC server configuration.</p>
+<ol>
+<li>
+<p>Log in to your SynxDB coordinator host as the administrative user:</p>
+<pre><code class="language-shell">$ ssh gpadmin@&lt;coordinator&gt;
+</code></pre>
+</li>
+<li>
+<p>Identify the name of the PXF JDBC server configuration that you want to update.</p>
+</li>
+<li>
+<p>Navigate to the server configuration directory. For example, if the server is named <code>mysqldb</code>:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cd $PXF_BASE/servers/mysqldb
+</code></pre>
+</li>
+<li>
+<p>Open the <code>jdbc-site.xml</code> file in the editor of your choice, and add or uncomment the user impersonation property and setting. For example, if you require user impersonation for this server configuration, set the <code>pxf.service.user.impersonation</code> property to <code>true</code>:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;pxf.service.user.impersonation&lt;/name&gt;
+    &lt;value&gt;true&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+</li>
+<li>
+<p>Save the <code>jdbc-site.xml</code> file and exit the editor.</p>
+</li>
+<li>
+<p>Use the <code>pxf cluster sync</code> command to synchronize the PXF JDBC server configuration to your SynxDB cluster:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ pxf cluster sync
+</code></pre>
+</li>
+</ol>
+<h2 id="about-session-authorization"><a class="header" href="#about-session-authorization"><a id="sessauth"></a>About Session Authorization</a></h2>
+<p>Certain SQL databases, including PostgreSQL and DB2, allow a privileged user to change the effective database user that runs commands in a session. You might take advantage of this feature if, for example, you connect to the remote database as a proxy user and want to switch session authorization after establishing the database connection.</p>
+<p>In databases that support it, you can configure a session property to switch the effective user. For example, in DB2, you use the <code>SET SESSION_USER &lt;username&gt;</code> command to switch the effective DB2 user. If you configure the DB2 <code>session_user</code> variable via a PXF session-level property (<code>jdbc.session.property.&lt;SPROP_NAME&gt;</code>) in your <code>jdbc-site.xml</code> file, PXF runs this command for you.</p>
+<p>For example, to switch the effective DB2 user to the user named <code>bill</code>, you configure your <code>jdbc-site.xml</code> as follows:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;jdbc.session.property.session_user&lt;/name&gt;
+    &lt;value&gt;bill&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<p>After establishing the database connection, PXF implicitly runs the following command to set the <code>session_user</code> DB2 session variable to the value that you configured:</p>
+<pre><code class="language-sql">SET SESSION_USER = bill
+</code></pre>
+<p>PXF recognizes a synthetic property value, <code>${pxf.session.user}</code>, that identifies the SynxDB user name. You may choose to use this value when you configure a property that requires a value that changes based on the SynxDB user running the session.</p>
+<p>A scenario where you might use <code>${pxf.session.user}</code> is when you authenticate to the remote SQL database with Kerberos, the primary component of the Kerberos principal identifies the SynxDB user name, and you want to run queries in the remote database using this effective user name. For example, if you are accessing DB2, you would configure your <code>jdbc-site.xml</code> to specify the Kerberos <code>securityMechanism</code> and <code>KerberosServerPrincipal</code>, and then set the <code>session_user</code> variable as follows:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;jdbc.session.property.session_user&lt;/name&gt;
+    &lt;value&gt;${pxf.session.user}&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<p>With this configuration, PXF <code>SET</code>s the DB2 <code>session_user</code> variable to the current SynxDB user name, and runs subsequent operations on the DB2 table as that user.</p>
+<h3 id="session-authorization-considerations-for-connection-pooling"><a class="header" href="#session-authorization-considerations-for-connection-pooling"><a id="sessauth_conpool"></a>Session Authorization Considerations for Connection Pooling</a></h3>
+<p>When PXF performs session authorization on your behalf and JDBC connection pooling is activated (the default), you may choose to set the <code>jdbc.pool.qualifier</code> property. Setting this property instructs PXF to include the property value in the criteria that it uses to create and reuse connection pools. In practice, you would not set this to a fixed value, but rather to a value that changes based on the user/session/transaction, etc. When you set this property to <code>${pxf.session.user}</code>, PXF includes the SynxDB user name in the criteria that it uses to create and re-use connection pools. The default setting is no qualifier.</p>
+<p>To make use of this feature, add or uncomment the following property block in <code>jdbc-site.xml</code> to prompt PXF to include the SynxDB user name in connection pool creation/reuse criteria:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;jdbc.pool.qualifier&lt;/name&gt;
+    &lt;value&gt;${pxf.session.user}&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<h2 id="jdbc-named-query-configuration"><a class="header" href="#jdbc-named-query-configuration"><a id="namedquery"></a>JDBC Named Query Configuration</a></h2>
+<p>A PXF <em>named query</em> is a static query that you configure, and that PXF runs in the remote SQL database.</p>
+<p>To configure and use a PXF JDBC named query:</p>
+<ol>
+<li>You <a href="#namedquery_define">define the query</a> in a text file.</li>
+<li>You provide the <a href="#namedquery_pub">query name</a> to SynxDB users.</li>
+<li>The SynxDB user <a href="#namedquery_ref">references the query</a> in a SynxDB external table definition.</li>
+</ol>
+<p>PXF runs the query each time the user invokes a <code>SELECT</code> command on the SynxDB external table.</p>
+<h3 id="defining-a-named-query"><a class="header" href="#defining-a-named-query"><a id="namedquery_define"></a>Defining a Named Query</a></h3>
+<p>You create a named query by adding the query statement to a text file that has the following naming format: <code>&lt;query_name&gt;.sql</code>. You can define one or more named queries for a JDBC server configuration. Each query must reside in a separate text file.</p>
+<p>You must place a query text file in the PXF JDBC server configuration directory from which it will be accessed. If you want to make the query available to more than one JDBC server configuration, you must copy the query text file to the configuration directory for each JDBC server.</p>
+<p>The query text file must contain a single query that you want to run in the remote SQL database. You must construct the query in accordance with the syntax supported by the database.</p>
+<p>For example, if a MySQL database has a <code>customers</code> table and an <code>orders</code> table, you could include the following SQL statement in a query text file:</p>
+<pre><code class="language-sql">SELECT c.name, c.city, sum(o.amount) AS total, o.month
+  FROM customers c JOIN orders o ON c.id = o.customer_id
+  WHERE c.state = 'CO'
+GROUP BY c.name, c.city, o.month
+</code></pre>
+<p>You may optionally provide the ending semicolon (<code>;</code>) for the SQL statement.</p>
+<h3 id="query-naming"><a class="header" href="#query-naming"><a id="namedquery_pub"></a>Query Naming</a></h3>
+<p>The SynxDB user references a named query by specifying the query file name without the extension. For example, if you define a query in a file named <code>report.sql</code>, the name of that query is <code>report</code>.</p>
+<p>Named queries are associated with a specific JDBC server configuration. You will provide the available query names to the SynxDB users that you allow to create external tables using the server configuration.</p>
+<h4 id="referencing-a-named-query"><a class="header" href="#referencing-a-named-query"><a id="namedquery_ref"></a>Referencing a Named Query</a></h4>
+<p>The SynxDB user specifies <code>query:&lt;query_name&gt;</code> rather than the name of a remote SQL database table when they create the external table. For example, if the query is defined in the file <code>$PXF_BASE/servers/mydb/report.sql</code>, the <code>CREATE EXTERNAL TABLE</code> <code>LOCATION</code> clause would include the following components:</p>
+<pre><code class="language-sql">LOCATION ('pxf://query:report?PROFILE=jdbc&amp;SERVER=mydb ...')
+</code></pre>
+<p>Refer to <a href="jdbc_pxf.html#about_nq">About Using Named Queries</a> for information about using PXF JDBC named queries.</p>
+<h2 id="overriding-the-jdbc-server-configuration"><a class="header" href="#overriding-the-jdbc-server-configuration"><a id="cfg_override"></a>Overriding the JDBC Server Configuration</a></h2>
+<p>You can override the JDBC server configuration by directly specifying certain JDBC properties via custom options in the <code>CREATE EXTERNAL TABLE</code> command <code>LOCATION</code> clause. Refer to <a href="jdbc_pxf.html#jdbc_override">Overriding the JDBC Server Configuration via DDL</a> for additional information.</p>
+<h2 id="configuring-access-to-hive"><a class="header" href="#configuring-access-to-hive"><a id="cfg_hive"></a>Configuring Access to Hive</a></h2>
+<p>You can use the JDBC Connector to access Hive. Refer to <a href="hive_jdbc_cfg.html">Configuring the JDBC Connector for Hive Access</a> for detailed information on this configuration procedure.</p>
+<h2 id="example-configuration-procedure-1"><a class="header" href="#example-configuration-procedure-1"><a id="cfg_proc"></a>Example Configuration Procedure</a></h2>
+<p>In this procedure, you name and add a PXF JDBC server configuration for a PostgreSQL database and synchronize the server configuration(s) to the SynxDB cluster.</p>
+<ol>
+<li>
+<p>Log in to your SynxDB coordinator host:</p>
+<pre><code class="language-shell">$ ssh gpadmin@&lt;coordinator&gt;
+</code></pre>
+</li>
+<li>
+<p>Choose a name for the JDBC server. You will provide the name to SynxDB users that you choose to allow to reference tables in the external SQL database as the configured user.</p>
+<p><strong>Note</strong>: The server name <code>default</code> is reserved.</p>
+</li>
+<li>
+<p>Create the <code>$PXF_BASE/servers/&lt;server_name&gt;</code> directory. For example, use the following command to create a JDBC server configuration named <code>pg_user1_testdb</code>:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ mkdir $PXF_BASE/servers/pg_user1_testdb
+</code></pre>
+</li>
+<li>
+<p>Copy the PXF JDBC server template file to the server configuration directory. For example:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cp &lt;PXF_INSTALL_DIR&gt;/templates/jdbc-site.xml $PXF_BASE/servers/pg_user1_testdb/
+</code></pre>
+</li>
+<li>
+<p>Open the template server configuration file in the editor of your choice, and provide appropriate property values for your environment. For example, if you are configuring access to a PostgreSQL database named <code>testdb</code> on a PostgreSQL instance running on the host named <code>pgserverhost</code> for the user named <code>user1</code>:</p>
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;configuration&gt;
+    &lt;property&gt;
+        &lt;name&gt;jdbc.driver&lt;/name&gt;
+        &lt;value&gt;org.postgresql.Driver&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;jdbc.url&lt;/name&gt;
+        &lt;value&gt;jdbc:postgresql://pgserverhost:5432/testdb&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;jdbc.user&lt;/name&gt;
+        &lt;value&gt;user1&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;jdbc.password&lt;/name&gt;
+        &lt;value&gt;changeme&lt;/value&gt;
+    &lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre>
+</li>
+<li>
+<p>Save your changes and exit the editor.</p>
+</li>
+<li>
+<p>Use the <code>pxf cluster sync</code> command to copy the new server configuration to the SynxDB cluster:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ pxf cluster sync
+</code></pre>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pxf/objstore_cfg.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pxf/hive_jdbc_cfg.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pxf/objstore_cfg.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pxf/hive_jdbc_cfg.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

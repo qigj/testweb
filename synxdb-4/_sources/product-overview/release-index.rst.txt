@@ -1,0 +1,7 @@
+Releases
+***********************
+
+.. toctree::
+   :maxdepth: 2
+
+   releases/v4.0.0

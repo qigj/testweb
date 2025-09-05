@@ -1,0 +1,232 @@
+.. raw:: latex
+
+   \newpage
+
+UnionStore Storage Format
+=============================
+
+This document describes the use cases, methods, limitations, and frequently asked questions for UnionStore.
+
+UnionStore is a storage engine for heap tables and their indexes, which, combined with |product_name|, forms a decoupled compute and storage architecture. The core idea of UnionStore is "Log is database," where data is constructed by persisting and replaying logs from the compute layer, making it available for queries.
+
+By decoupling compute and storage, UnionStore allows for adjusting compute resources based on the actual workload, improving cost-effectiveness. UnionStore supports multi-tenancy and multi-instance read/write operations for a single tenant, enabling efficient resource utilization and data sharing across multiple clusters.
+
+Use cases
+------------
+
+Building a UnionStore cluster to store business/user data is suitable for the following scenarios:
+
+-  **Write-intensive, read-light workloads**: For scenarios with high write volumes, low query volumes, and large datasets, UnionStore enables storage expansion and stores data on more cost-effective, reliable storage, improving storage cost-effectiveness.
+-  **Read-intensive, write-light workloads**: For scenarios with high query volumes and relatively low write volumes, which are heavily dependent on CPU and memory resources. You can store data in UnionStore and configure compute nodes with more compute resources and less local storage to enhance query performance.
+-  **Multi-tenancy**: UnionStore supports multi-tenancy, allowing data from multiple compute clusters to be stored under different tenants within the same UnionStore, achieving efficient resource utilization.
+
+Prerequisites
+-------------
+
+To use the UnionStore feature on |product_name|, you must first have a running |product_name| cluster.
+
+Install UnionStore
+------------------
+
+Before using UnionStore, you need to install it. Follow these steps for installation:
+
+.. caution:: 
+
+   The following installation method is only for local deployment of |product_name| in a test environment and must not be used in a production environment.
+
+1. In the cluster node directory, find the UnionStore installation package ``unionstore.tar.gz`` and the installation script ``unionstore_deploy.sh``.
+
+2. Open the ``unionstore_deploy.sh`` script file with a text editor like Vim. Fill in the required parameters as described in the script's comments, then save and close the file.
+
+   .. image:: /images/unionstore-config.png
+
+3. Run the ``unionstore_deploy.sh`` script. UnionStore will be deployed automatically.
+
+Usage
+-------
+
+Step 1: Create a UnionStore tenant
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To create a UnionStore tenant, you need to use the ``neon_local`` tool included in the UnionStore installation package.
+
+1. Set the ``NEON_REPO_DIR`` environment variable to the directory where the page server is located. For example:
+
+   .. code:: shell
+
+      export NEON_REPO_DIR=/home/gpadmin/pageserver
+
+2. On the machine where the page server is running, run the following command to create a tenant:
+
+   .. code:: shell
+
+      ./target/release/neon_local tenant create
+
+   The result will be similar to the following:
+
+   .. code:: shell
+
+      tenant 176349c483c0578faca41101fa70e19f successfully created on the pageserver
+
+      Created an initial timeline '30cf96abf49fbb6f6c9712fc71c83d40' at Lsn 0/4AABC88 for tenant: 176349c483c0578faca41101fa70e19f
+
+   In the returned result, ``"176349c483c0578faca41101fa70e19f"`` is the newly created tenant ID, which is unique within a UnionStore cluster. ``"30cf96abf49fbb6f6c9712fc71c83d40"`` is the timeline ID, which is similar to a Git branch. For this purpose, using a single timeline is sufficient.
+
+Step 2: Configure |product_name| parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+After creating the UnionStore tenant, you need to add the tenant information to the ``postgresql.conf`` configuration file for |product_name|. You must add these settings to the configuration file on each node:
+
+.. raw:: latex
+
+    \begingroup
+    \renewcommand{\arraystretch}{1.5} % Adjust table row spacing
+    \fontsize{5pt}{6pt}\selectfont % Set table font size to be smaller
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+   :class: longtable
+   :widths: 15 20 8 8 18 5
+
+   * - Parameter name
+     - Description
+     - Default value
+     - Required
+     - Example
+     - Note
+   * - ``shared_preload_libraries``
+     - The name of the plugin's dynamic library to be loaded when the |product_name| database starts.
+     - Empty
+     - Yes
+     - ``shared_preload_libraries = unionstore``
+     - 
+   * - ``unionstore.tenant_id``
+     - The tenant ID for UnionStore.
+     - Empty
+     - Yes
+     - ``unionstore.tenant_id='176349c483c0578faca41101fa70e19f'``
+     - 
+   * - ``unionstore.timeline_id``
+     - The timeline ID for the UnionStore tenant.
+     - Empty
+     - Yes
+     - ``unionstore.timeline_id='30cf96abf49fbb6f6c9712fc71c83d40'``
+     - 
+   * - ``unionstore.safekeepers``
+     - The IP addresses and ports of the safekeeper components, which default to a three-replica setup. Used to establish connections with the log service and persist logs. This must match the values you provided during the UnionStore installation.
+     - Empty
+     - Yes
+     - ``unionstore.safekeepers='127.0.0.1:5454,127.0.0.1:5455,127.0.0.1:5457'``
+     - 
+   * - ``unionstore.pageserver_connstring``
+     - The IP address and port of the UnionStore PageServer component. Used to establish a connection with the PageServer to read pages and other data. This must match the values you provided during the UnionStore installation.
+     - Empty
+     - Yes
+     - ``unionstore.pageserver_connstring='postgresql://no_user:@127.0.0.1:64000'``
+     - 
+
+.. raw:: latex
+
+    \endgroup
+
+Below is a sample configuration. You need to replace the values with your actual parameters:
+
+::
+
+   shared_preload_libraries=unionstore
+   unionstore.tenant_id='176349c483c0578faca41101fa70e19f'
+   unionstore.timeline_id='30cf96abf49fbb6f6c9712fc71c83d40'
+   unionstore.safekeepers='127.0.0.1:5454,127.0.0.1:5455,127.0.0.1:5457'
+   unionstore.pageserver_connstring='postgresql://no_user:@127.0.0.1:64000'
+
+Step 3: Install the |product_name| extension
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+|product_name| uses an extension to interact with UnionStore for operations like writing logs and reading data. After completing the configuration, you need to install the extension in the database where you plan to use UnionStore:
+
+.. code:: sql
+
+   CREATE EXTENSION unionstore;
+
+After the extension is installed, |product_name| creates a new access method. You can view it with the following SQL query:
+
+.. code:: sql
+
+   unionstore=# SELECT * FROM pg_am;
+
+.. code:: sql
+
+   oid  |   amname    |         amhandler         | amtype
+   -------+-------------+---------------------------+--------
+        2 | heap        | heap_tableam_handler      | t
+      403 | btree       | bthandler                 | i
+      405 | hash        | hashhandler               | i
+      783 | gist        | gisthandler               | i
+     2742 | gin         | ginhandler                | i
+     4000 | spgist      | spghandler                | i
+     3580 | brin        | brinhandler               | i
+     7024 | ao_row      | ao_row_tableam_handler    | t
+     7166 | ao_column   | ao_column_tableam_handler | t
+     7013 | bitmap      | bmhandler                 | i
+    16403 | union_store | heap_tableam_handler      | t
+   (11 rows)
+
+In the results above, ``union_store`` is the new access method created for using UnionStore.
+
+Step 4: Create and use tables and indexes in UnionStore
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+After installing the |product_name| extension and creating the ``union_store`` access method, you can start creating UnionStore tables and indexes.
+
+The syntax for creating a UnionStore table is as follows:
+
+.. code:: sql
+
+   CREATE TABLE <table_name> (xxx) USING union_store;
+
+The syntax for creating a UnionStore B-tree index (similar for other index types) is as follows:
+
+.. code:: sql
+
+   CREATE INDEX ON <table_name> USING BTREE (column_name);
+
+Example:
+
+.. code:: sql
+
+   --- Creates a table.
+   CREATE TABLE unionstore_table (c1 INT, c2 VARCHAR, c3 TIMESTAMP) USING union_store;
+
+   unionstore=# \dt+ unionstore_table
+                                                List of relations
+    Schema |       Name       | Type  |  Owner  | Storage | Persistence | Access method |  Size  | Description
+   --------+------------------+-------+---------+---------+-------------+---------------+--------+-------------
+    public | unionstore_table | table | gpadmin |         | permanent   | union_store   | 128 kB |
+    
+    --- Creates an index.
+   CREATE INDEX ON unionstore_table USING btree (c1);
+    
+    --- Inserts data.
+   INSERT INTO unionstore_table SELECT t,t,now() FROM generate_series(1,100) t;
+    
+    --- Queries data.
+   SELECT * FROM unionstore_table WHERE c1 = 55;
+
+    c1 | c2 |             c3
+   ----+----+----------------------------
+    55 | 55 | 2023-07-04 16:47:49.373224
+   (1 row)
+
+Limitations
+--------------
+
+-  UnionStore does not support storing AO or AOCS tables.
+
+-  UnionStore does not support temp and unlogged tables or their indexes.
+
+   The core idea of UnionStore is "Log is database." However, because temp and unlogged tables do not generate logs, their data cannot be persisted to UnionStore, and thus they are not supported.
+
+-  UnionStore does not support tablespaces.
+
+   The underlying implementation of UnionStore currently only supports the default tablespace. Therefore, you cannot create new tablespaces or modify the tablespace for a database, table, or index when using UnionStore.

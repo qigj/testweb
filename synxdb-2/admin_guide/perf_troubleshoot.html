@@ -1,0 +1,274 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Investigating a Performance Problem - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="investigating-a-performance-problem"><a class="header" href="#investigating-a-performance-problem">Investigating a Performance Problem</a></h1>
+<p>This section provides guidelines for identifying and troubleshooting performance problems in a SynxDB system.</p>
+<p>This topic lists steps you can take to help identify the cause of a performance problem. If the problem affects a particular workload or query, you can focus on tuning that particular workload. If the performance problem is system-wide, then hardware problems, system failures, or resource contention may be the cause.</p>
+<h2 id="checking-system-state"><a class="header" href="#checking-system-state"><a id="topic2"></a>Checking System State</a></h2>
+<p>Use the <code>gpstate</code> utility to identify failed segments. A SynxDB system will incur performance degradation when segment instances are down because other hosts must pick up the processing responsibilities of the down segments.</p>
+<p>Failed segments can indicate a hardware failure, such as a failed disk drive or network card. SynxDB provides the hardware verification tool <code>gpcheckperf</code> to help identify the segment hosts with hardware issues.</p>
+<h2 id="checking-database-activity"><a class="header" href="#checking-database-activity"><a id="topic3"></a>Checking Database Activity</a></h2>
+<ul>
+<li><a href="#topic4">Checking for Active Sessions (Workload)</a></li>
+<li><a href="#topic5">Checking for Locks (Contention)</a></li>
+<li><a href="#topic6">Checking Query Status and System Utilization</a></li>
+</ul>
+<h3 id="checking-for-active-sessions-workload"><a class="header" href="#checking-for-active-sessions-workload"><a id="topic4"></a>Checking for Active Sessions (Workload)</a></h3>
+<p>The <em>pg_stat_activity</em> system catalog view shows one row per server process; it shows the database OID, database name, process ID, user OID, user name, current query, time at which the current query began execution, time at which the process was started, client address, and port number. To obtain the most information about the current system workload, query this view as the database superuser. For example:</p>
+<pre><code>SELECT * FROM pg_stat_activity;
+
+</code></pre>
+<p>Note that the information does not update instantaneously.</p>
+<h3 id="checking-for-locks-contention"><a class="header" href="#checking-for-locks-contention"><a id="topic5"></a>Checking for Locks (Contention)</a></h3>
+<p>The <em>pg_locks</em> system catalog view allows you to see information about outstanding locks. If a transaction is holding a lock on an object, any other queries must wait for that lock to be released before they can continue. This may appear to the user as if a query is hanging.</p>
+<p>Examine <em>pg_locks</em> for ungranted locks to help identify contention between database client sessions. <em>pg_locks</em> provides a global view of all locks in the database system, not only those relevant to the current database. You can join its relation column against <code>pg_class.oid</code> to identify locked relations (such as tables), but this works correctly only for relations in the current database. You can join the <code>pid</code> column to the <code>pg_stat_activity.pid</code> to see more information about the session holding or waiting to hold a lock. For example:</p>
+<pre><code>SELECT locktype, database, c.relname, l.relation, 
+l.transactionid, l.pid, l.mode, l.granted, 
+a.query 
+        FROM pg_locks l, pg_class c, pg_stat_activity a 
+        WHERE l.relation=c.oid AND l.pid=a.pid
+        ORDER BY c.relname;
+
+</code></pre>
+<p>If you use resource groups, queries that are waiting will also show in <em>pg_locks</em>. To see how many queries are waiting to run in a resource group, use the<em>gp_resgroup_status</em>system catalog view. For example:</p>
+<pre><code>SELECT * FROM gp_toolkit.gp_resgroup_status;
+
+</code></pre>
+<p>Similarly, if you use resource queues, queries that are waiting in a queue also show in <em>pg_locks</em>. To see how many queries are waiting to run from a resource queue, use the<em>gp_resqueue_status</em>system catalog view. For example:</p>
+<pre><code>SELECT * FROM gp_toolkit.gp_resqueue_status;
+
+</code></pre>
+<h3 id="checking-query-status-and-system-utilization"><a class="header" href="#checking-query-status-and-system-utilization"><a id="topic6"></a>Checking Query Status and System Utilization</a></h3>
+<p>You can use system monitoring utilities such as <code>ps</code>, <code>top</code>, <code>iostat</code>, <code>vmstat</code>, <code>netstat</code> and so on to monitor database activity on the hosts in your SynxDB array. These tools can help identify SynxDB processes (<code>postgres</code> processes) currently running on the system and the most resource intensive tasks with regards to CPU, memory, disk I/O, or network activity. Look at these system statistics to identify queries that degrade database performance by overloading the system and consuming excessive resources. SynxDB’s management tool <code>gpssh</code> allows you to run these system monitoring commands on several hosts simultaneously.</p>
+<p>You can create and use the SynxDB <em>session_level_memory_consumption</em> view that provides information about the current memory utilization and idle time for sessions that are running queries on SynxDB. For information about the view, see <a href="managing/monitor.html">Viewing Session Memory Usage Information</a>.</p>
+<p>You can enable a dedicated database, <code>gpperfmon</code>, in which data collection agents running on each segment host save query and system utilization metrics. Refer to the <code>gpperfmon_install</code> management utility reference in the <em>SynxDB Management Utility Reference Guide</em> for help creating the <code>gpperfmon</code> database and managing the agents. See documentation for the tables and views in the <code>gpperfmon</code> database in the <em>SynxDB Reference Guide</em>.</p>
+<h2 id="troubleshooting-problem-queries"><a class="header" href="#troubleshooting-problem-queries"><a id="topic7"></a>Troubleshooting Problem Queries</a></h2>
+<p>If a query performs poorly, look at its query plan to help identify problems. The <code>EXPLAIN</code> command shows the query plan for a given query. See <a href="query/topics/query-profiling.html">Query Profiling</a> for more information about reading query plans and identifying problems.</p>
+<p>When an out of memory event occurs during query execution, the SynxDB memory accounting framework reports detailed memory consumption of every query running at the time of the event. The information is written to the SynxDB segment logs.</p>
+<h2 id="investigating-error-messages"><a class="header" href="#investigating-error-messages"><a id="topic8"></a>Investigating Error Messages</a></h2>
+<p>SynxDB log messages are written to files in the <code>log</code> directory within the master’s or segment’s data directory. Because the master log file contains the most information, you should always check it first. Log files roll over daily and use the naming convention: <code>gpdb-</code><em><code>YYYY</code></em><code>-</code><em><code>MM</code></em><code>-</code><em><code>DD_hhmmss.csv</code></em>. To locate the log files on the master host:</p>
+<pre><code>$ cd $MASTER_DATA_DIRECTORY/log
+
+</code></pre>
+<p>Log lines have the format of:</p>
+<pre><code>&lt;timestamp&gt; | &lt;user&gt; | &lt;database&gt; | &lt;statement_id&gt; | &lt;con#&gt;&lt;cmd#&gt; 
+|:-&lt;LOG_LEVEL&gt;: &lt;log_message&gt;
+
+</code></pre>
+<p>You may want to focus your search for <code>WARNING</code>, <code>ERROR</code>, <code>FATAL</code> or <code>PANIC</code> log level messages. You can use the SynxDB utility <code>gplogfilter</code> to search through SynxDB log files. For example, when you run the following command on the master host, it checks for problem log messages in the standard logging locations:</p>
+<pre><code>$ gplogfilter -t
+
+</code></pre>
+<p>To search for related log entries in the segment log files, you can run <code>gplogfilter</code> on the segment hosts using <code>gpssh</code>. You can identify corresponding log entries by the <em><code>statement_id</code></em> or <em><code>con</code></em><code>#</code> (session identifier). For example, to search for log messages in the segment log files containing the string <code>con6</code> and save output to a file:</p>
+<pre><code>gpssh -f seg_hosts_file -e 'source 
+/usr/local/synxdb/synxdb_path.sh ; gplogfilter -f 
+con6 /gpdata/*/log/gpdb*.csv' &gt; seglog.out
+
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../admin_guide/workload_mgmt.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../best_practices/intro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../admin_guide/workload_mgmt.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../best_practices/intro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

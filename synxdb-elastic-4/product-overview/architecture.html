@@ -1,0 +1,477 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture and Services &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Architectural Principles" href="architecture-principles.html" />
+    <link rel="prev" title="Key Concepts" href="key-concepts.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="product-index.html">Product Overview</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="product-overview.html">Product Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="key-concepts.html">Key Concepts</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Architecture and Services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#architecture-overview">Architecture Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#metadata-service-layer">Metadata Service Layer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#foundationdb-based-metadata-service">FoundationDB-based Metadata Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unionstore-based-metadata-service">UnionStore-based Metadata Service</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#compute-service-layer">Compute Service Layer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#coordinator-proxy">Coordinator (Proxy)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#warehouse">Warehouse</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#storage-service-layer">Storage Service Layer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#unionstore-row-storage">UnionStore Row Storage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pax-column-storage">PAX Column Storage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gopher-cache">Gopher Cache</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#data-science-and-ai-services">Data Science and AI Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synxml-platform-core-features">SynxML Platform Core Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#synxml-platform-use-cases">SynxML Platform Use Cases</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture-principles.html">Architectural Principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="highlighted-features.html">Highlighted Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="product-scenarios.html">User Scenarios</a></li>
+<li class="toctree-l2"><a class="reference internal" href="product-comparison-cbdb.html">Comparison with Apache Cloudberry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="product-comparison-gp.html">Comparison with Greenplum</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="product-index.html">Product Overview</a></li>
+      <li class="breadcrumb-item active">Architecture and Services</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="architecture-and-services">
+<h1>Architecture and Services<a class="headerlink" href="#architecture-and-services" title="Link to this heading"></a></h1>
+<p>SynxDB Elastic employs a cloud-native, storage-compute separated architecture that consists of four distinct layers: the metadata service layer, compute service layer, storage service layer, and data science and AI services layer. This design enables efficient resource utilization, horizontal scalability, and optimal performance for diverse analytical and machine learning workloads.</p>
+<section id="architecture-overview">
+<h2>Architecture Overview<a class="headerlink" href="#architecture-overview" title="Link to this heading"></a></h2>
+<p>The four-layer architecture provides clear functional separation and enables independent scaling of each component:</p>
+<ul class="simple">
+<li><p><strong>Metadata Service Layer</strong>: Manages metadata persistence and access, handles transaction management and state persistence</p></li>
+<li><p><strong>Compute Service Layer</strong>: Processes query requests with coordinator nodes handling query optimization and segment nodes executing queries, supports multiple warehouses for independent compute clusters</p></li>
+<li><p><strong>Storage Service Layer</strong>: Provides data persistence and access, supporting both row storage and column storage engines for different workload scenarios</p></li>
+<li><p><strong>Data Science and AI Services</strong>: Provides comprehensive machine learning and AI capabilities through the SynxML Platform</p></li>
+</ul>
+</section>
+<section id="metadata-service-layer">
+<h2>Metadata Service Layer<a class="headerlink" href="#metadata-service-layer" title="Link to this heading"></a></h2>
+<p>SynxDB Elastic offers two metadata service options: FoundationDB (FDB)-based metadata service and UnionStore-based metadata service.</p>
+<section id="foundationdb-based-metadata-service">
+<h3>FoundationDB-based Metadata Service<a class="headerlink" href="#foundationdb-based-metadata-service" title="Link to this heading"></a></h3>
+<p>The Metadata Service is an independent cluster built upon FoundationDB, specifically engineered to manage the diverse metadata required by a computing cluster. This service implements a compute-storage separation design principle, isolating metadata management operations. This architectural choice not only reduces the overall system coupling but also significantly enhances scalability. Its underlying storage leverages FoundationDB, an industry-recognized, highly available, distributed key-value (KV) database renowned for its exceptional scalability and reliability. FoundationDB supports both independent and multi-tenant deployment models, thereby balancing security requirements with cost-effectiveness.</p>
+<p>The overall Metadata Service architecture comprises three core components, which collaborate to deliver its functionality:</p>
+<ul class="simple">
+<li><p><strong>Coordination and Session Management Service</strong>: A session management cluster responsible for service discovery and the allocation of metadata service nodes.</p></li>
+<li><p><strong>Metadata Service</strong>: A stateless service cluster providing critical metadata access, access control, lock management, and distributed transaction capabilities. Internally, this service is further modularized into specific functional components:</p>
+<ul>
+<li><p>Object Definition Manager: Manages queries, modifications, and deletions of database object definitions (e.g., tables, views) and handles their associated access permissions.</p></li>
+<li><p>Manifest Manager: Provides multi-version management for data manifest files.</p></li>
+<li><p>Sequence Server: Offers sequence value allocation services.</p></li>
+<li><p>WAL Manager: Handles the storage and application of metadata Write-Ahead Logs (WAL).</p></li>
+<li><p>Concurrent Controller: Provides lock-based concurrency control to ensure data consistency during concurrent access.</p></li>
+</ul>
+</li>
+<li><p><strong>Metadata Storage Service</strong>: A distributed key-value storage engine implemented using FoundationDB, responsible for the actual storage of metadata. This includes, for example, mappings from tables to storage objects, data dictionaries, WAL logs, and index information.</p></li>
+</ul>
+<section id="operational-workflow">
+<h4>Operational Workflow<a class="headerlink" href="#operational-workflow" title="Link to this heading"></a></h4>
+<p>Upon receipt of a metadata request, the Coordination and Session Management Service allocates an appropriate Metadata Service node to process the request. The designated node then retrieves the necessary metadata from the Metadata Storage Service and returns the results to the requester. Furthermore, the Coordination and Session Management Service functions as the connection entry point for Database Proxy nodes, managing communication with other nodes within the system.</p>
+</section>
+</section>
+<section id="unionstore-based-metadata-service">
+<h3>UnionStore-based Metadata Service<a class="headerlink" href="#unionstore-based-metadata-service" title="Link to this heading"></a></h3>
+<p>UnionStore serves as an alternative metadata service, providing data persistence and access capabilities. The core concept is “log is database”. It persists redo logs and provides external access through log replay. UnionStore consists of two main components:</p>
+<section id="wal-service">
+<h4>WAL Service<a class="headerlink" href="#wal-service" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Receives data logs from the compute layer and persists them with 3-replica reliability</p></li>
+<li><p>Synchronizes persisted logs to the Page Service</p></li>
+</ul>
+</section>
+<section id="page-service">
+<h4>Page Service<a class="headerlink" href="#page-service" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Retrieves and parses persisted logs from WAL Service</p></li>
+<li><p>Applies log modifications to corresponding pages to obtain the latest page versions</p></li>
+<li><p>Provides page read requests, returning the appropriate version of pages to clients</p></li>
+</ul>
+</section>
+<section id="unionstore-features">
+<h4>UnionStore Features<a class="headerlink" href="#unionstore-features" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Multi-version Data</strong>: Supports accessing any version of retained data (Time Travel capability)</p></li>
+<li><p><strong>Multi-tenancy</strong>: A single metadata service cluster can serve multiple users, improving resource utilization and cost-effectiveness</p></li>
+<li><p><strong>Backup and Recovery</strong>:</p>
+<ul>
+<li><p>WAL Service backs up persisted logs to object storage for enhanced reliability and cost reduction</p></li>
+<li><p>Page Service backs up current data snapshots to object storage as checkpoints</p></li>
+<li><p>Recovery involves retrieving the latest snapshot from object storage and synchronizing data from the snapshot’s log position</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="using-unionstore-as-metadata-service">
+<h4>Using UnionStore as Metadata Service<a class="headerlink" href="#using-unionstore-as-metadata-service" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>All metadata modifications and transaction information are persisted to UnionStore through WAL</p></li>
+<li><p>Each cluster uses a single tenant, with all cluster nodes accessing the tenant’s metadata (including system table data and transaction data)</p></li>
+<li><p>Cluster nodes maintain metadata caches, accessing the metadata service only on cache misses</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="compute-service-layer">
+<h2>Compute Service Layer<a class="headerlink" href="#compute-service-layer" title="Link to this heading"></a></h2>
+<p>The compute layer consists of two primary components: Coordinator and Segment nodes, where segments are the minimum units of a compute cluster (Warehouse).</p>
+<section id="coordinator-proxy">
+<h3>Coordinator (Proxy)<a class="headerlink" href="#coordinator-proxy" title="Link to this heading"></a></h3>
+<p>Coordinator nodes primarily handle client request reception, query optimization, and query plan distribution to segments for execution.</p>
+<section id="key-features">
+<h4>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Metadata Distribution</strong>:</p>
+<ul>
+<li><p>Coordinator nodes distribute all relevant metadata along with query plans, avoiding segment access to metadata services</p></li>
+<li><p>Significantly reduces metadata service pressure</p></li>
+<li><p>Eliminates network interaction delays with metadata services</p></li>
+</ul>
+</li>
+<li><p><strong>Lightweight and Stateless</strong>:</p>
+<ul>
+<li><p>Primarily handles query optimization and forwarding, with minimal computation involvement</p></li>
+<li><p>Metadata access primarily uses cache</p></li>
+<li><p>Metadata and data are stored separately, enabling fast startup and reconstruction</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="warehouse">
+<h3>Warehouse<a class="headerlink" href="#warehouse" title="Link to this heading"></a></h3>
+<p>A Warehouse is a compute cluster composed of one or more segments, responsible for receiving and executing query plans from the coordinator and returning results.</p>
+<section id="id1">
+<h4>Key Features<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Multiple Warehouses</strong>:</p>
+<ul>
+<li><p>Supports launching multiple independent warehouses that share the same data while performing concurrent read/write operations</p></li>
+<li><p>Different warehouses can be configured with varying specifications and scales for different business workloads on the same data</p></li>
+</ul>
+</li>
+<li><p><strong>Stateless and Rapid Scaling</strong>:</p>
+<ul>
+<li><p>Warehouses can quickly scale segments without business impact to improve query performance</p></li>
+<li><p>Warehouses can be created, started, and stopped rapidly (within seconds) based on business requirements, improving compute resource utilization</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="storage-service-layer">
+<h2>Storage Service Layer<a class="headerlink" href="#storage-service-layer" title="Link to this heading"></a></h2>
+<p>The storage service layer supports both row storage and column storage engines to accommodate different workload scenarios. Data is persisted to:</p>
+<ol class="arabic simple">
+<li><p><strong>PAX Column Storage (Object Storage)</strong>: Provides unlimited expansion capabilities</p></li>
+<li><p><strong>UnionStore</strong>: Supports fast row storage read/write operations</p></li>
+</ol>
+<p>All cluster nodes maintain data caches for efficient data access.</p>
+<section id="unionstore-row-storage">
+<h3>UnionStore Row Storage<a class="headerlink" href="#unionstore-row-storage" title="Link to this heading"></a></h3>
+<p>UnionStore serves as a row storage engine that can provide storage and access for user row tables in addition to metadata services. Users can create and use row tables through specific syntax.</p>
+<section id="data-organization">
+<h4>Data Organization<a class="headerlink" href="#data-organization" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Data is organized at the tuple level and sequentially written to different pages (8K/32K)</p></li>
+<li><p>Page headers contain pointers for quick tuple location</p></li>
+</ul>
+</section>
+<section id="key-benefits">
+<h4>Key Benefits<a class="headerlink" href="#key-benefits" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Fast reading and writing of complete records</p></li>
+<li><p>More efficient DML operations</p></li>
+<li><p>Supports OLTP (Online Transaction Processing) workloads with frequent DML operations and high latency requirements</p></li>
+<li><p>Handles continuous, batch data writing scenarios</p></li>
+<li><p>Compatible with PostgreSQL ecosystem, supporting special requirements such as PostGIS</p></li>
+</ul>
+</section>
+</section>
+<section id="pax-column-storage">
+<h3>PAX Column Storage<a class="headerlink" href="#pax-column-storage" title="Link to this heading"></a></h3>
+<p>PAX is a new column storage engine that organizes data by columns in continuous storage, grouping multiple column data into row groups within files stored in object storage.</p>
+<section id="id2">
+<h4>Key Features<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Statistical Information</strong>:</p>
+<ul>
+<li><p>Collects file-level and row group-level statistics during data writing to accelerate queries</p></li>
+<li><p>Uses statistics as query results to avoid data scanning and computation (e.g., for aggregates)</p></li>
+<li><p>Employs min-max filtering for file-level and row group-level data filtering during scanning</p></li>
+</ul>
+</li>
+<li><p><strong>Vectorized Engine</strong>:</p>
+<ul>
+<li><p>Integrates with vectorized engines, generating internal column storage formats for enhanced data processing and query capabilities</p></li>
+</ul>
+</li>
+<li><p><strong>Data Writing and Updates</strong>:</p>
+<ul>
+<li><p>Uses append-only writing for data insertion</p></li>
+<li><p>Employs visibility map (visimap) for delete marking</p></li>
+<li><p>Data reading determines record visibility based on visimap</p></li>
+<li><p>Visimap is stored with data rather than as metadata, avoiding excessive metadata growth and frequent metadata access during data reads</p></li>
+<li><p>Provides Copy on Write writing strategy for delete operations, rewriting related data files to avoid visimap generation, suitable for read-heavy, write-light scenarios</p></li>
+</ul>
+</li>
+<li><p><strong>Data Clustering</strong>:</p>
+<ul>
+<li><p>Groups “adjacent data” together to enable more effective data filtering through min-max filters</p></li>
+</ul>
+</li>
+<li><p><strong>File Management</strong>:</p>
+<ul>
+<li><p>Merges multiple data writes into single files to avoid small file generation</p></li>
+<li><p>Periodically deletes unnecessary files and merges small files to improve data scanning efficiency</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="gopher-cache">
+<h3>Gopher Cache<a class="headerlink" href="#gopher-cache" title="Link to this heading"></a></h3>
+<p>Gopher is a distributed cache system that supports high-concurrency, low-latency access to massive small and large files. It is deployed to each node in the data warehouse compute layer to accelerate computing I/O access.</p>
+<ul class="simple">
+<li><p>Adopts a decentralized design where each cache instance is a self-contained client/server service</p></li>
+<li><p>Acts as a local file system with two-level caches for data warehouse computing services</p></li>
+<li><p>Avoids potential intra-cluster network communication constraints observed in centralized master-slave distributed cache systems</p></li>
+</ul>
+<section id="core-components">
+<h4>Core Components<a class="headerlink" href="#core-components" title="Link to this heading"></a></h4>
+<ol class="arabic simple">
+<li><p><strong>Metadata Service</strong>: The core of the cache system, managing metadata such as task status, file names, and block IDs, interfacing with other modules to facilitate client data access</p></li>
+<li><p><strong>User File System</strong>: Stores destination storage information including target file systems, ports, and buckets</p></li>
+<li><p><strong>Block Manager and File Manager</strong>: Provide data access for blocks and files respectively, utilizing stream reads and writes for large file processing in small memory buffers</p></li>
+<li><p><strong>Cache Manager</strong>: Implements a two-level cache (memory pool and SSD cache) to efficiently utilize limited cache space and improve data access speed</p></li>
+<li><p><strong>Persistent Storage Module</strong>: Incorporates network transmission libraries for S3 object storage, HDFS, and local storage connections</p></li>
+<li><p><strong>Session Manager</strong>: Utilizes epoll multiplexing to handle multiple client connections simultaneously</p></li>
+</ol>
+</section>
+<section id="id3">
+<h4>Key Features<a class="headerlink" href="#id3" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>File prefetching, batch reading, shared memory, asynchronous write optimization</p></li>
+<li><p>Concurrent multiple reads and small file memory merging</p></li>
+<li><p>High-performance and highly available caching system supporting efficient concurrent processing and rapid scaling</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="data-science-and-ai-services">
+<h2>Data Science and AI Services<a class="headerlink" href="#data-science-and-ai-services" title="Link to this heading"></a></h2>
+<p>SynxDB Elastic includes the SynxML Platform, a high-performance distributed computing platform designed for enterprise-grade AI applications. The platform integrates the strengths of open-source technologies and enhances them with enterprise-grade features, offering a complete end-to-end solution covering data preparation, feature engineering, model training, and production deployment.</p>
+<section id="synxml-platform-core-features">
+<h3>SynxML Platform Core Features<a class="headerlink" href="#synxml-platform-core-features" title="Link to this heading"></a></h3>
+<section id="visual-modeling">
+<h4>Visual Modeling<a class="headerlink" href="#visual-modeling" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Offers an intuitive graphical interface that lets users train models by selecting algorithms, datasets, and setting hyperparameters</p></li>
+<li><p>After training, models can be deployed as services with a single click</p></li>
+<li><p>Supports A/B testing and staged rollouts</p></li>
+</ul>
+</section>
+<section id="notebook-based-development">
+<h4>Notebook-based Development<a class="headerlink" href="#notebook-based-development" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Comes with a built-in professional-grade Jupyter environment</p></li>
+<li><p>Developers can write and debug Python code flexibly, enabling customization and experimentation with complex algorithms</p></li>
+</ul>
+</section>
+<section id="algorithm-and-model-library">
+<h4>Algorithm and Model Library<a class="headerlink" href="#algorithm-and-model-library" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Includes a rich collection of built-in algorithms such as Logistic Regression and XGBoost</p></li>
+<li><p>Deep learning models like MLP, ResNet, and Bert</p></li>
+<li><p>Fine-tuning algorithms for large language models (supporting QLoRA and Unsloth)</p></li>
+<li><p>Users can also extend the library with custom algorithms</p></li>
+</ul>
+</section>
+</section>
+<section id="synxml-platform-use-cases">
+<h3>SynxML Platform Use Cases<a class="headerlink" href="#synxml-platform-use-cases" title="Link to this heading"></a></h3>
+<section id="private-model-training-for-enterprises">
+<h4>Private Model Training for Enterprises<a class="headerlink" href="#private-model-training-for-enterprises" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Enables organizations to train machine learning models on sensitive internal data without leaving the enterprise network</p></li>
+<li><p>Ensures secure end-to-end management and high-performance training</p></li>
+<li><p>Helps businesses build accurate, compliant, and domain-specific models</p></li>
+</ul>
+</section>
+<section id="fine-tuning-large-language-models">
+<h4>Fine-tuning Large Language Models<a class="headerlink" href="#fine-tuning-large-language-models" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Integrates efficient fine-tuning methods such as QLoRA and Unsloth to support popular LLMs</p></li>
+<li><p>Enterprises can quickly adapt LLMs to specialized domains using few-shot learning</p></li>
+<li><p>Reduces training costs while improving task accuracy and semantic understanding</p></li>
+</ul>
+</section>
+<section id="model-deployment">
+<h4>Model Deployment<a class="headerlink" href="#model-deployment" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Allows trained models to be deployed as RESTful API services in one click</p></li>
+<li><p>Seamlessly integrates with business systems</p></li>
+<li><p>Supports A/B testing, phased rollouts, and auto-scaling to maintain stable performance under high concurrency</p></li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="architecture-principles.html" class="btn btn-neutral float-right" title="Architectural Principles" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="key-concepts.html" class="btn btn-neutral float-left" title="Key Concepts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,719 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>diskquota - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="diskquota"><a class="header" href="#diskquota">diskquota</a></h1>
+<p>The diskquota module allows SynxDB administrators to limit the amount of disk space used by schemas, roles, or tablespaces in a database.</p>
+<p>This topic includes the following sections:</p>
+<ul>
+<li><a href="#topic_ofb_gb1_b3b">Installing and Registering the Module (First Use)</a></li>
+<li><a href="#intro">About the diskquota Module</a></li>
+<li><a href="#topic_ndp_4wy_c3b">Understanding How diskquota Monitors Disk Usage</a></li>
+<li><a href="#functions">About the diskquota Functions and Views</a></li>
+<li><a href="#config">Configuring the diskquota Module</a></li>
+<li><a href="#using">Using the diskquota Module</a></li>
+<li><a href="#limits">Known Issues and Limitations</a></li>
+<li><a href="#topic_sfb_gb1_b3b">Notes</a></li>
+<li><a href="#upgrade">Upgrading the Module</a></li>
+<li><a href="#topic_v2z_jrv_b3b">Examples</a></li>
+</ul>
+<h2 id="installing-and-registering-the-module-first-use"><a class="header" href="#installing-and-registering-the-module-first-use"><a id="topic_ofb_gb1_b3b"></a>Installing and Registering the Module (First Use)</a></h2>
+<p>The <code>diskquota</code> module is installed when you install SynxDB.</p>
+<p>Before you can use the module, you must perform these steps:</p>
+<ol>
+<li>
+<p>Create the <code>diskquota</code> database. The <code>diskquota</code> module uses this database to store the list of databases where the module is enabled.</p>
+<pre><code>$ createdb diskquota;
+</code></pre>
+</li>
+<li>
+<p>Add the <code>diskquota</code> shared library to the SynxDB <code>shared_preload_libraries</code> server configuration parameter and restart SynxDB. Be sure to retain the previous setting of the configuration parameter. For example:</p>
+<pre><code>$ gpconfig -s shared_preload_libraries
+Values on all segments are consistent
+GUC              : shared_preload_libraries
+Master      value: auto_explain
+Segment     value: auto_explain
+$ gpconfig -c shared_preload_libraries -v 'auto_explain,diskquota-2.2'
+$ gpstop -ar
+</code></pre>
+</li>
+<li>
+<p>Register the <code>diskquota</code> extension in each database in which you want to enforce disk usage quotas. You can register <code>diskquota</code> in up to ten databases.</p>
+<pre><code>$ psql -d testdb -c "CREATE EXTENSION diskquota"
+</code></pre>
+</li>
+<li>
+<p>If you register the <code>diskquota</code> extension in a database that already contains data, you must initialize the <code>diskquota</code> table size data by running the <code>diskquota.init_table_size_table()</code> UDF in the database. In a database with many files, this can take some time. The <code>diskquota</code> module cannot be used until the initialization is complete.</p>
+<pre><code>=# SELECT diskquota.init_table_size_table();
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> You must run the <code>diskquota.init_table_size_table()</code> UDF for <code>diskquota</code> to work.</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="about-the-diskquota-module"><a class="header" href="#about-the-diskquota-module"><a id="intro"></a>About the diskquota Module</a></h2>
+<p>The disk usage for a table includes the table data, indexes, toast tables, and free space map. For append-optimized tables, the calculation includes the visibility map and index, and the block directory table.</p>
+<p>The <code>diskquota</code> module allows a SynxDB administrator to limit the amount of disk space used by tables in schemas or owned by roles in up to 50 databases. The administrator can also use the module to limit the amount of disk space used by schemas and roles on a per-tablespace basis, as well as to limit the disk space used per SynxDB segment for a tablespace.</p>
+<blockquote>
+<p><strong>Note</strong> A role-based disk quota cannot be set for the SynxDB system owner (the user that creates the SynxDB cluster).</p>
+</blockquote>
+<p>You can set the following quotas with the <code>diskquota</code> module:</p>
+<ul>
+<li>A <em>schema disk quota</em> sets a limit on the disk space that can used by all tables in a database that reside in a specific schema. The disk usage of a schema is defined as the total of disk usage on all segments for all tables in the schema.</li>
+<li>A <em>role disk quota</em> sets a limit on the disk space that can be used used by all tables in a database that are owned by a specific role. The disk usage for a role is defined as the total of disk usage on all segments for all tables the role owns. Although a role is a cluster-level database object, the disk usage for roles is calculated separately for each database.</li>
+<li>A <em>schema tablespace disk quota</em> sets a limit on the disk space that can used by all tables in a database that reside in a specific schema and tablespace.</li>
+<li>A <em>role tablespace disk quota</em> sets a limit on the disk space that can used by all tables in a database that are owned by a specific role and reside in a specific tablespace.</li>
+<li>A <em>per-segment tablespace disk quota</em> sets a limit on the disk space that can be used by a Greeplum Database segment when a tablespace quota is set for a schema or role.</li>
+</ul>
+<h2 id="understanding-how-diskquota-monitors-disk-usage"><a class="header" href="#understanding-how-diskquota-monitors-disk-usage"><a id="topic_ndp_4wy_c3b"></a>Understanding How diskquota Monitors Disk Usage</a></h2>
+<p>A single <code>diskquota</code> launcher process runs on the active SynxDB master node. The diskquota launcher process creates and launches a diskquota worker process on the master for each diskquota-enabled database. A worker process is responsible for monitoring the disk usage of tablespaces, schemas, and roles in the target database, and communicates with the SynxDB segments to obtain the sizes of active tables. The worker process also performs quota enforcement, placing tablespaces, schemas, or roles on a denylist when they reach their quota.</p>
+<p>When a query plan for a data-adding query is generated, and the tablespace, schema, or role into which data would be loaded is on the denylist, <code>diskquota</code> cancels the query before it starts executing, and reports an error message that the quota has been exceeded.</p>
+<p>A query that does not add data, such as a simple <code>SELECT</code> query, is always allowed to run, even when the tablespace, role, or schema is on the denylist.</p>
+<p>Diskquota can enforce both <em>soft limits</em> and <em>hard limits</em> for disk usage:</p>
+<ul>
+<li>
+<p>By default, <code>diskquota</code> always enforces soft limits. <code>diskquota</code> checks quotas before a query runs. If quotas are not exceeded when a query is initiated, <code>diskquota</code> allows the query to run, even if it were to eventually cause a quota to be exceeded.</p>
+</li>
+<li>
+<p>When hard limit enforcement of disk usage is enabled, <code>diskquota</code> also monitors disk usage during query execution. If a query exceeds a disk quota during execution, <code>diskquota</code> terminates the query.</p>
+<p>Administrators can enable enforcement of a disk usage hard limit by setting the <code>diskquota.hard_limit</code> server configuration parameter as described in <a href="#hardlimit">Activating/Deactivating Hard Limit Disk Usage Enforcement</a>.</p>
+</li>
+</ul>
+<p>There is some delay after a quota has been reached before the schema or role is added to the denylist. Other queries could add more data during the delay. The delay occurs because <code>diskquota</code> processes that calculate the disk space used by each table run periodically with a pause between executions (two seconds by default). The delay also occurs when disk usage falls beneath a quota, due to operations such as <code>DROP</code>, <code>TRUNCATE</code>, or <code>VACUUM FULL</code> that remove data. Administrators can change the amount of time between disk space checks by setting the <code>diskquota.naptime</code> server configuration parameter as described in <a href="#naptime">Setting the Delay Between Disk Usage Updates</a>.</p>
+<p>Diskquota can operate in both <em>static</em> and <em>dynamic</em> modes:</p>
+<ul>
+<li>
+<p>When the number of databases in which the <code>diskquota</code> extension is registered is less than or equal to the maximum number of <code>diskquota</code> worker processes, <code>diskquota</code> operates in static mode; it assigns a background worker (bgworker) process to monitor each database, and the bgworker process exits only when the <code>diskquota</code> extension is dropped from the database.</p>
+</li>
+<li>
+<p>When the number of databases in which the <code>diskquota</code> extension is registered is greater than the maximum number of <code>diskquota</code> worker processes, <code>diskquota</code> operates in dynamic mode. In dynamic mode, for every monitored database every <code>diskquota.naptime</code> seconds, <code>diskquota</code> creates a bgworker process to collect disk usage information for the database, and then stops the bgworker process immediately after data collection completes. In this mode, <code>diskquota</code> dynamically starts and stops bgworker processes as needed for all monitored databases.</p>
+<p>Administrators can change the maximum number of worker processes configured for <code>diskquota</code> by setting the <code>diskquota.max_workers</code> server configuration parameter as described in <a href="#maxworkers">Specifying the Maximum Number of Active diskquota Worker Processes</a>.</p>
+</li>
+</ul>
+<p>If a query is unable to run because the tablespace, schema, or role has been denylisted, an administrator can increase the exceeded quota to allow the query to run. The module provides views that you can use to find the tablespaces, schemas, or roles that have exceeded their limits.</p>
+<h2 id="about-the-diskquota-functions-and-views"><a class="header" href="#about-the-diskquota-functions-and-views"><a id="functions"></a>About the diskquota Functions and Views</a></h2>
+<p>The <code>diskquota</code> module provides user-defined functions (UDFs) and views that you can use to manage and monitor disk space usage in your SynxDB deployment.</p>
+<p>The functions and views provided by the <code>diskquota</code> module are available in the SynxDB schema named <code>diskquota</code>.</p>
+<blockquote>
+<p><strong>Note</strong> You may be required to prepend the schema name (<code>diskquota.</code>) to any UDF or view that you access.</p>
+</blockquote>
+<p>User-defined functions provided by the module include:</p>
+<div class="table-wrapper"><table><thead><tr><th>Function Signature</th><th>Description</th></tr></thead><tbody>
+<tr><td>void init_table_size_table()</td><td>Sizes the existing tables in the current database.</td></tr>
+<tr><td>void set_role_quota( role_name text, quota text )</td><td>Sets a disk quota for a specific role in the current database.<br/><br/>&gt; <strong>Note</strong> A role-based disk quota cannot be set for the SynxDB system owner.</td></tr>
+<tr><td>void set_role_tablespace_quota( role_name text, tablespace_name text, quota text )</td><td>Sets a disk quota for a specific role and tablespace combination in the current database.<br/><br/>&gt; <strong>Note</strong> A role-based disk quota cannot be set for the SynxDB system owner.</td></tr>
+<tr><td>void set_schema_quota( schema_name text, quota text )</td><td>Sets a disk quota for a specific schema in the current database.</td></tr>
+<tr><td>void set_schema_tablespace_quota( schema_name text, tablespace_name text, quota text )</td><td>Sets a disk quota for a specific schema and tablespace combination in the current database.</td></tr>
+<tr><td>void set_per_segment_quota( tablespace_name text, ratio float4 )</td><td>Sets a per-segment disk quota for a tablespace in the current database.</td></tr>
+<tr><td>void pause()</td><td>Instructs the module to continue to count disk usage for the current database, but pause and cease emitting an error when the limit is exceeded.</td></tr>
+<tr><td>void resume()</td><td>Instructs the module to resume emitting an error when the disk usage limit is exceeded in the current database.</td></tr>
+<tr><td>status() RETURNS table</td><td>Displays the <code>diskquota</code> binary and schema versions and the status of soft and hard limit disk usage enforcement in the current database.</td></tr>
+</tbody></table>
+</div>
+<p>Views available in the <code>diskquota</code> module include:</p>
+<div class="table-wrapper"><table><thead><tr><th>View Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>show_fast_database_size_view</td><td>Displays the disk space usage in the current database.</td></tr>
+<tr><td>show_fast_role_quota_view</td><td>Lists active quotas for roles in the current database.</td></tr>
+<tr><td>show_fast_role_tablespace_quota_view</td><td>List active quotas for roles per tablespace in the current database.</td></tr>
+<tr><td>show_fast_schema_quota_view</td><td>Lists active quotas for schemas in the current database.</td></tr>
+<tr><td>show_fast_schema_tablespace_quota_view</td><td>Lists active quotas for schemas per tablespace in the current database.</td></tr>
+<tr><td>show_segment_ratio_quota_view</td><td>Displays the per-segment disk quota ratio for any per-segment tablespace quotas set in the current database.</td></tr>
+</tbody></table>
+</div>
+<h2 id="configuring-the-diskquota-module"><a class="header" href="#configuring-the-diskquota-module"><a id="config"></a>Configuring the diskquota Module</a></h2>
+<p><code>diskquota</code> exposes server configuration parameters that allow you to control certain module functionality:</p>
+<ul>
+<li><a href="#naptime">diskquota.naptime</a> - Controls how frequently (in seconds) that <code>diskquota</code> recalculates the table sizes.</li>
+<li><a href="#shmem">diskquota.max_active_tables</a> - Identifies the maximum number of relations (including tables, indexes, etc.) that the <code>diskquota</code> module can monitor at the same time.</li>
+<li><a href="#hardlimit">diskquota.hard_limit</a> -  Activates or deactivates  the hard limit enforcement of disk usage.</li>
+<li><a href="#maxworkers">diskquota.max_workers</a> -  Specifies the maximum number of diskquota worker processes that may be running at any one time.</li>
+<li><a href="#maxtableseg">diskquota.max_table_segments</a> -  Specifies the maximum number of <em>table segments</em> in the cluster.</li>
+<li><a href="#maxquotaprobes">diskquota.max_quota_probes</a> - Specifies the maximum number of of quota probes pre-allocated at the cluster level.</li>
+<li><a href="#maxmonitoreddatabases">diskquota.max_monitored_databases</a> - Specifies the maximum number of database that the module can monitor.</li>
+</ul>
+<p>You use the <code>gpconfig</code> command to set these parameters in the same way that you would set any SynxDB server configuration parameter.</p>
+<h3 id="setting-the-delay-between-disk-usage-updates"><a class="header" href="#setting-the-delay-between-disk-usage-updates"><a id="naptime"></a>Setting the Delay Between Disk Usage Updates</a></h3>
+<p>The <code>diskquota.naptime</code> server configuration parameter specifies how frequently (in seconds) <code>diskquota</code> recalculates the table sizes. The smaller the <code>naptime</code> value, the less delay in detecting changes in disk usage. This example sets the <code>naptime</code> to ten seconds and restarts SynxDB:</p>
+<pre><code>$ gpconfig -c diskquota.naptime -v 10
+$ gpstop -ar
+</code></pre>
+<h3 id="about-shared-memory-and-the-maximum-number-of-relations"><a class="header" href="#about-shared-memory-and-the-maximum-number-of-relations"><a id="shmem"></a>About Shared Memory and the Maximum Number of Relations</a></h3>
+<p>The <code>diskquota</code> module uses shared memory to save the denylist and to save the active table list.</p>
+<p>The denylist shared memory can hold up to one million database objects that exceed the quota limit. If the denylist shared memory fills, data may be loaded into some schemas or roles after they have reached their quota limit.</p>
+<p>Active table shared memory holds up to one million of active tables by default. Active tables are tables that may have changed sizes since <code>diskquota</code> last recalculated the table sizes. <code>diskquota</code> hook functions are called when the storage manager on each SynxDB segment creates, extends, or truncates a table file. The hook functions store the identity of the file in shared memory so that its file size can be recalculated the next time the table size data is refreshed.</p>
+<p>The <code>diskquota.max_active_tables</code> server configuration parameter identifies the maximum number of relations (including tables, indexes, etc.) that the <code>diskquota</code> module can monitor at the same time. The default value is <code>300 * 1024</code>. This value should be sufficient for most SynxDB installations. Should you change the value of this configuration parameter, you must restart the SynxDB server.</p>
+<h3 id="activatingdeactivating-hard-limit-disk-usage-enforcement"><a class="header" href="#activatingdeactivating-hard-limit-disk-usage-enforcement"><a id="hardlimit"></a>Activating/Deactivating Hard Limit Disk Usage Enforcement</a></h3>
+<p>When you enable enforcement of a hard limit of disk usage, <code>diskquota</code> checks the quota during query execution. If at any point a currently running query exceeds a quota limit, <code>diskquota</code> terminates the query.</p>
+<p>By default, hard limit disk usage enforcement is deactivated for all databases. To activate hard limit enforcement for all databases, set the <code>diskquota.hard_limit</code> server configuration parameter to <code>'on'</code>, and then reload the SynxDB configuration:</p>
+<pre><code>$ gpconfig -c diskquota.hard_limit -v 'on'
+$ gpstop -u
+</code></pre>
+<p>Run the following query to view the hard limit enforcement setting:</p>
+<pre><code>SELECT * from diskquota.status();
+</code></pre>
+<h3 id="specifying-the-maximum-number-of-active-diskquota-worker-processes"><a class="header" href="#specifying-the-maximum-number-of-active-diskquota-worker-processes"><a id="maxworkers"></a>Specifying the Maximum Number of Active diskquota Worker Processes</a></h3>
+<p>The <code>diskquota.max_workers</code> server configuration parameter specifies the maximum number of diskquota worker processes (not including the <code>diskquota</code> launcher process) that may be running at any one time. The default number of maximum worker processes is <code>10</code>, and the maximum value that you can specify is <code>20</code>.</p>
+<p>You must set this parameter at SynxDB server start time.</p>
+<blockquote>
+<p><strong>Note</strong> Setting <code>diskquota.max_workers</code> to a value that is larger than <code>max_worker_processes</code> has no effect; <code>diskquota</code> workers are taken from the pool of worker processes established by that SynxDB server configuration parameter setting.</p>
+</blockquote>
+<h3 id="specifying-the-maximum-number-of-table-segments-shards"><a class="header" href="#specifying-the-maximum-number-of-table-segments-shards"><a id="maxtableseg"></a>Specifying the Maximum Number of Table Segments (Shards)</a></h3>
+<p>A SynxDB table (including a partitioned table’s child tables) is distributed to all segments as a shard. <code>diskquota</code> counts each table shard as a <em>table segment</em>. The <code>diskquota.max_table_segments</code> server configuration parameter identifies the maximum number of <em>table segments</em> in the SynxDB cluster, which in turn can gate the maximum number of tables that <code>diskquota</code> can monitor.</p>
+<p>The runtime value of <code>diskquota.max_table_segments</code> equals the maximum number of tables multiplied by (number_of_segments + 1). The default value is <code>10 * 1024 * 1024</code>.</p>
+<h3 id="specifying-the-maximum-number-of-quota-probes"><a class="header" href="#specifying-the-maximum-number-of-quota-probes"><a id="maxquotaprobes"></a>Specifying the Maximum Number of Quota Probes</a></h3>
+<p>The <code>diskquota.max_quota_probes</code> server configuration parameter specifies the number of quota probes allowed at the cluster level. <code>diskquota</code> requires thousands of probes to collect different quota usage in the cluster, and each quota probe is only used to monitor a specific quota usage, such as how much disk space a role uses on a certain tablespace in a certain database. Even if you do not define its corresponding disk quota rule, its corresponding quota probe runs in the background. For example, if you have 100 roles in a cluster, but you only defined disk quota rules for 10 of the roles’ disk usage, SynxDB still requires quota probes for the 100 roles in the cluster.</p>
+<p>You may calculate the number of maximum active probes for a cluster using the following formula:</p>
+<pre><code>role_num * database_num + schema_num + role_num * tablespace_num * database_num + schema_num * tablespace_num
+</code></pre>
+<p>where <code>role_num</code> is the number of roles in the cluster, <code>tablespace_number</code> is the number of tablespaces in the cluster, and <code>schema_num</code> is the total number of schemas in all databases.</p>
+<p>You must set <code>diskquota.max_quota_probes</code> to a number greater than the calculated maximum number of active quota probes: the higher the value, the more memory is used. The memory used by the probes can be calculated as <code>diskquota.max_quota_probes * 48</code> (in bytes). The default value of <code>diskquota.max_quota_probes</code> is <code>1048576</code>, which means that the memory used by the probes by default is <code>1048576 * 48</code>, which is approximately 50MB.</p>
+<h3 id="specifying-the-maximum-number-of-databases"><a class="header" href="#specifying-the-maximum-number-of-databases"><a id="maxmonitoreddatabases"></a>Specifying the Maximum Number of Databases</a></h3>
+<p>The <code>diskquota.max_monitored_databases</code> server configuration parameter specifies the maximum number of databases that can be monitored by <code>diskquota</code>. The default value is 50 and the maximum value is 1024.</p>
+<h2 id="using-the-diskquota-module"><a class="header" href="#using-the-diskquota-module"><a id="using"></a>Using the diskquota Module</a></h2>
+<p>You can perform the following tasks with the <code>diskquota</code> module:</p>
+<ul>
+<li><a href="#status">View the diskquota Status</a></li>
+<li><a href="#pause_resume">Pause and Resume Disk Quota Exceeded Notifications</a></li>
+<li><a href="#schema_or_role_quota">Set a Schema or Role Disk Quota</a></li>
+<li><a href="#tablespace_quota">Set a Tablespace Disk Quota for a Schema or Role</a></li>
+<li><a href="#per_seg_tblsp_quota">Set a Per-Segment Tablespace Disk Quota</a></li>
+<li><a href="#quotas_usage">Display Disk Quotas and Disk Usage</a></li>
+<li><a href="#temp_deactivate">Temporarily Deactivate Disk Quota Monitoring</a></li>
+</ul>
+<h3 id="viewing-the-diskquota-status"><a class="header" href="#viewing-the-diskquota-status"><a id="status"></a>Viewing the diskquota Status</a></h3>
+<p>To view the <code>diskquota</code> module and schema version numbers, and the state of soft and hard limit enforcement in the current database, invoke the <code>status()</code> command:</p>
+<pre><code>SELECT diskquota.status();
+          name          | status 
+------------------------+--------- 
+ soft limits            | on 
+ hard limits            | on 
+ current binary version | 2.0.1 
+ current schema version | 2.0 
+</code></pre>
+<h3 id="pausing-and-resuming-disk-quota-exceeded-notifications"><a class="header" href="#pausing-and-resuming-disk-quota-exceeded-notifications"><a id="pause_resume"></a>Pausing and Resuming Disk Quota Exceeded Notifications</a></h3>
+<p>If you do not care to be notified of disk quota exceeded events for a period of time, you can pause and resume error notification in the current database as shown below:</p>
+<pre><code>SELECT diskquota.pause();
+-- perform table operations where you do not care to be notified
+-- when a disk quota exceeded
+SELECT diskquota.resume(); 
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> The pause operation does not persist through a SynxDB cluster restart; you must invoke <code>diskquota.pause()</code> again when the cluster is back up and running.</p>
+</blockquote>
+<h3 id="setting-a-schema-or-role-disk-quota"><a class="header" href="#setting-a-schema-or-role-disk-quota"><a id="schema_or_role_quota"></a>Setting a Schema or Role Disk Quota</a></h3>
+<p>Use the <code>diskquota.set_schema_quota()</code> and <code>diskquota.set_role_quota()</code> user-defined functions in a database to set, update, or delete disk quota limits for schemas and roles in the database. The functions take two arguments: the schema or role name, and the quota to set. You can specify the quota in units of MB, GB, TB, or PB; for example, <code>'2TB'</code>.</p>
+<p>The following example sets a 250GB quota for the <code>acct</code> schema:</p>
+<pre><code>SELECT diskquota.set_schema_quota('acct', '250GB');
+</code></pre>
+<p>This example sets a 500MB disk quota for the <code>nickd</code> role:</p>
+<pre><code>SELECT diskquota.set_role_quota('nickd', '500MB');
+</code></pre>
+<p>To change a quota, invoke the <code>diskquota.set_schema_quota()</code> or <code>diskquota.set_role_quota()</code> function again with the new quota value.</p>
+<p>To remove a schema or role quota, set the quota value to <code>'-1'</code> and invoke the function.</p>
+<h3 id="setting-a-tablespace-disk-quota"><a class="header" href="#setting-a-tablespace-disk-quota"><a id="tablespace_quota"></a>Setting a Tablespace Disk Quota</a></h3>
+<p>Use the <code>diskquota.set_schema_tablespace_quota()</code> and <code>diskquota.set_role_tablespace_quota()</code> user-defined functions in a database to set, update, or delete per-tablespace disk quota limits for schemas and roles in the current database. The functions take three arguments: the schema or role name, the tablespace name, and the quota to set. You can specify the quota in units of MB, GB, TB, or PB; for example, <code>'2TB'</code>.</p>
+<p>The following example sets a 50GB disk quota for the tablespace named <code>tspaced1</code> and the <code>acct</code> schema:</p>
+<pre><code>SELECT diskquota.set_schema_tablespace_quota('acct', 'tspaced1', '250GB');
+</code></pre>
+<p>This example sets a 500MB disk quota for the <code>tspaced2</code> tablespace and the <code>nickd</code> role:</p>
+<pre><code>SELECT diskquota.set_role_tablespace_quota('nickd', 'tspaced2', '500MB');
+</code></pre>
+<p>To change a quota, invoke the <code>diskquota.set_schema_tablespace_quota()</code> or <code>diskquota.set_role_tablespace_quota()</code> function again with the new quota value.</p>
+<p>To remove a schema or role tablespace quota, set the quota value to <code>'-1'</code> and invoke the function.</p>
+<h3 id="setting-a-per-segment-tablespace-disk-quota"><a class="header" href="#setting-a-per-segment-tablespace-disk-quota"><a id="per_seg_tblsp_quota"></a>Setting a Per-Segment Tablespace Disk Quota</a></h3>
+<p>When an administrator sets a tablespace quota for a schema or a role, they may also choose to define a per-segment disk quota for the tablespace. Setting a per-segment quota limits the amount of disk space on a single SynxDB segment that a single tablespace may consume, and may help prevent a segment’s disk from filling due to data skew.</p>
+<p>You can use the <code>diskquota.set_per_segment_quota()</code> function to set, update, or delete a per-segment tablespace disk quota limit. The function takes two arguments: the tablespace name and a ratio. The ratio identifies how much more of the disk quota a single segment can use than the average segment quota. A ratio that you specify must be greater than zero.</p>
+<p>You can calculate the average segment quota as follows:</p>
+<pre><code>avg_seg_quota = tablespace_quota / number_of_segments
+</code></pre>
+<p>For example, if your SynxDB cluster has 8 segments and you set the following schema tablespace quota:</p>
+<pre><code>SELECT diskquota.set_schema_tablespace_quota( 'accts', 'tspaced1', '800GB' );
+</code></pre>
+<p>The average segment quota for the <code>tspaced1</code> tablespace is <code>800GB / 8 = 100GB</code>.</p>
+<p>If you set the following per-segment tablespace quota:</p>
+<pre><code>SELECT diskquota.set_per_segment_quota( 'tspaced1', '2.0' );
+</code></pre>
+<p>You can calculate the the maximum allowed disk usage per segment allowed as follows:</p>
+<pre><code>max_disk_usage_per_seg = average_segment_quota * ratio
+</code></pre>
+<p>In this example, the maximum disk usage allowed per segment is <code>100GB * 2.0 = 200GB</code>.</p>
+<p><code>diskquota</code> will allow a query to run if the disk usage on all segments for all tables that are in tablespace <code>tblspc1</code> and that are goverend by a role or schema quota does not exceed <code>200GB</code>.</p>
+<p>You can change the per-segment tablespace quota by invoking the <code>diskquota.set_per_segment_quota()</code> function again with the new quota value.</p>
+<p>To remove a per-segment tablespace quota, set the quota value to <code>'-1'</code> and invoke the function.</p>
+<p>To view the per-segment quota ratio set for a tablespace, display the <code>show_segment_ratio_quota_view</code> view. For example:</p>
+<pre><code>SELECT tablespace_name, per_seg_quota_ratio
+  FROM diskquota.show_segment_ratio_quota_view WHERE tablespace_name in ('tspaced1');
+  tablespace_name  | per_seg_quota_ratio
+-------------------+---------------------
+ tspaced1          |                   2
+(1 rows)
+
+</code></pre>
+<h3 id="identifying-the-diskquota-monitored-databases"><a class="header" href="#identifying-the-diskquota-monitored-databases"><a id="dbs_monitored"></a>Identifying the diskquota-Monitored Databases</a></h3>
+<p>Run the following SQL commands to obtain a list of the <code>diskquota</code>-monitored databases in your SynxDB cluster:</p>
+<pre><code class="language-sql">\c diskquota
+SELECT d.datname FROM diskquota_namespace.database_list q, pg_database d
+    WHERE q.dbid = d.oid ORDER BY d.datname;
+</code></pre>
+<h3 id="displaying-disk-quotas-and-disk-usage"><a class="header" href="#displaying-disk-quotas-and-disk-usage"><a id="quotas_usage"></a>Displaying Disk Quotas and Disk Usage</a></h3>
+<p>The <code>diskquota</code> module provides four views to display active quotas and the current computed disk space used.</p>
+<p>The <code>diskquota.show_fast_schema_quota_view</code> view lists active quotas for schemas in the current database. The <code>nspsize_in_bytes</code> column contains the calculated size for all tables that belong to the schema.</p>
+<pre><code>SELECT * FROM diskquota.show_fast_schema_quota_view;
+ schema_name | schema_oid | quota_in_mb | nspsize_in_bytes
+-------------+------------+-------------+------------------
+ acct        |      16561 |      256000 |           131072
+ analytics   |      16519 |  1073741824 |        144670720
+ eng         |      16560 |     5242880 |        117833728
+ public      |       2200 |         250 |          3014656
+(4 rows)
+</code></pre>
+<p>The <code>diskquota.show_fast_role_quota_view</code> view lists the active quotas for roles in the current database. The <code>rolsize_in_bytes</code> column contains the calculated size for all tables that are owned by the role.</p>
+<pre><code>SELECT * FROM diskquota.show_fast_role_quota_view;
+ role_name | role_oid | quota_in_mb | rolsize_in_bytes
+-----------+----------+-------------+------------------
+ mdach     |    16558 |         500 |           131072
+ adam      |    16557 |         300 |        117833728
+ nickd     |    16577 |         500 |        144670720
+(3 rows)
+</code></pre>
+<p>You can view the per-tablespace disk quotas for schemas and roles with the <code>diskquota.show_fast_schema_tablespace_quota_view</code> and <code>diskquota.show_fast_role_tablespace_quota_view</code> views. For example:</p>
+<pre><code>SELECT schema_name, tablespace_name, quota_in_mb, nspsize_tablespace_in_bytes
+   FROM diskquota.show_fast_schema_tablespace_quota_view
+   WHERE schema_name = 'acct' and tablespace_name ='tblspc1';
+ schema_name | tablespace_name | quota_in_mb | nspsize_tablespace_in_bytes
+-------------+-----------------+-------------+-----------------------------
+ acct        | tspaced1        |      250000 |                      131072
+(1 row)
+
+</code></pre>
+<h3 id="about-temporarily-deactivating-diskquota"><a class="header" href="#about-temporarily-deactivating-diskquota"><a id="temp_deactivate"></a>About Temporarily Deactivating diskquota</a></h3>
+<p>You can temporarily deactivate the <code>diskquota</code> module by removing the shared library from <code>shared_preload_libraries</code>. For example::</p>
+<pre><code>$ gpconfig -s shared_preload_libraries
+Values on all segments are consistent
+GUC              : shared_preload_libraries
+Master      value: auto_explain,diskquota-2.0
+Segment     value: auto_explain,diskquota-2.0
+$ gpconfig -c shared_preload_libraries -v 'auto_explain'
+$ gpstop -ar
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> When you deactivate the <code>diskquota</code> module in this manner, disk quota monitoring ceases. To re-initiate disk quota monitoring in this scenario, you must:</p>
+</blockquote>
+<ol>
+<li>Re-add the library to <code>shared_preload_libraries</code>.</li>
+<li>Restart SynxDB.</li>
+<li>Re-size the existing tables in the database by running: <code>SELECT diskquota.init_table_size_table();</code></li>
+<li>Restart SynxDB again.</li>
+</ol>
+<h2 id="known-issues-and-limitations"><a class="header" href="#known-issues-and-limitations"><a id="limits"></a>Known Issues and Limitations</a></h2>
+<p>The <code>diskquota</code> module has the following limitations and known issues:</p>
+<ul>
+<li>
+<p><code>diskquota</code> does not automatically work on a segment when the segment is replaced by a mirror. You must manually restart SynxDB in this circumstance.</p>
+</li>
+<li>
+<p><code>diskquota</code> cannot enforce a hard limit on <code>ALTER TABLE ADD COLUMN DEFAULT</code> operations.</p>
+</li>
+<li>
+<p>If SynxDB restarts due to a crash, you must run <code>SELECT diskquota.init_table_size_table();</code> to ensure that the disk usage statistics are accurate.</p>
+</li>
+<li>
+<p>To avoid the chance of deadlock, you must first pause the <code>diskquota</code> extension before you drop the extension in any database:</p>
+<pre><code>SELECT diskquota.pause();
+DROP EXTENSION diskquota;
+</code></pre>
+</li>
+<li>
+<p><code>diskquota</code> may record an incorrect table size after <code>ALTER TABLESPACE</code>, <code>TRUNCATE</code>, or other operations that modify the <code>relfilenode</code> of the table.</p>
+<p>Cause: <code>diskquota</code> does not acquire any locks on a relation when computing the table size. If another session is updating the table’s tablespace while <code>diskquota</code> is calculating the table size, an error can occur.</p>
+<p>In most cases, you can ignore the difference; <code>diskquota</code> will update the size when new data is next ingested. To immediately ensure that the disk usage statistics are accurate, invoke:</p>
+<pre><code>SELECT diskquota.init_table_size_table();
+</code></pre>
+<p>And then restart SynxDB.</p>
+</li>
+<li>
+<p>In rare cases, a <code>VACUUM FULL</code> operation may exceed a quota limit. To remedy the situation, pause <code>diskquota</code> before the operation and then resume <code>diskquota</code> after:</p>
+<pre><code>SELECT diskquota.pause();
+-- perform the VACUUM FULL
+SELECT diskquota.resume();
+</code></pre>
+<p>If you do not want to pause/resume <code>diskquota</code>, you may choose to temporarily set a higher quota for the operation and then set it back when the <code>VACUUM FULL</code> completes. Consider the following:</p>
+<ul>
+<li>If you <code>VACUUM FULL</code> only a single table, set the quota to be no smaller than the size of that table.</li>
+<li>If you <code>VACUUM FULL</code> all tables, set the quota to be no smaller than the size of the largest table in the database.</li>
+</ul>
+</li>
+<li>
+<p>The size of uncommitted tables are not counted in quota views. Even though the <code>diskquota.show_fast_role_quota_view</code> view may display a smaller used quota than the quota limit, a new query may trigger a quota exceeded condition in the following circumstance:</p>
+<ul>
+<li>Hard limit enforcement of disk usage is deactivated.</li>
+<li>A long-running query in a session has consumed the full disk quota.
+<code>diskquota</code> does update the denylist in this scenario, but the <code>diskquota.show_fast_role_quota_view</code> may not represent the actual used quota because the long-running query is not yet committed. If you execute a new query while the original is still running, the new query will trigger a quota exceeded error.</li>
+</ul>
+</li>
+<li>
+<p>When <code>diskquota</code> is operating in <em>static mode</em>, it may fail to monitor some databases when <code>diskquota.max_workers</code> is greater than the available number of bgworker processes. In <em>dynamic mode</em>, <code>diskquota</code> works correctly when there is at least one available bgworker process.</p>
+</li>
+</ul>
+<h2 id="notes"><a class="header" href="#notes"><a id="topic_sfb_gb1_b3b"></a>Notes</a></h2>
+<p>The <code>diskquota</code> module can detect a newly created table inside of an uncommitted transaction. The size of the new table is included in the disk usage calculated for its corresponding schema or role. Hard limit enforcement of disk usage must enabled for a quota-exceeding operation to trigger a <code>quota exceeded</code> error in this scenario.</p>
+<p>Deleting rows or running <code>VACUUM</code> on a table does not release disk space, so these operations cannot alone remove a schema or role from the <code>diskquota</code> denylist. The disk space used by a table can be reduced by running <code>VACUUM FULL</code> or <code>TRUNCATE TABLE</code>.</p>
+<p>The <code>diskquota</code> module supports high availability features provided by the background worker framework. The <code>diskquota</code> launcher process only runs on the active master node. The postmaster on the standby master does not start the <code>diskquota</code> launcher process when it is in standby mode. When the master is down and the administrator runs the <a href="../../utility_guide/ref/gpactivatestandby.html">gpactivatestandby</a> command, the standby master changes its role to master and the <code>diskquota</code> launcher process is forked automatically. Using the <code>diskquota</code>-enabled database list in the <code>diskquota</code> database, the <code>diskquota</code> launcher creates the <code>diskquota</code> worker processes that manage disk quotas for each database.</p>
+<p>When you expand the SynxDB cluster, each table consumes more table segments, which may then reduce the maximum number of tables that <code>diskquota</code> can support. If you encounter the following warning, try increasing the <code>diskquota.max_table_segments</code> value, and then restart SynxDB:</p>
+<pre><code>[diskquota] the number of tables exceeds the limit, please increase the GUC value for diskquota.max_table_segments.
+</code></pre>
+<h2 id="upgrading-the-module-to-version-2x"><a class="header" href="#upgrading-the-module-to-version-2x"><a id="upgrade"></a>Upgrading the Module to Version 2.x</a></h2>
+<p>The <code>diskquota</code> 2.2 module is installed when you install or upgrade SynxDB. Versions 1.x, 2.0.x, and 2.1.x of the module will continue to work after you upgrade SynxDB.</p>
+<blockquote>
+<blockquote>
+<p><strong>Note</strong> <code>diskquota</code> will be paused during the upgrade procedure and will be automatically resumed when the upgrade completes.</p>
+</blockquote>
+</blockquote>
+<p>Perform the following procedure to upgrade the <code>diskquota</code> module:</p>
+<ol>
+<li>
+<p>Replace the <code>diskquota-&lt;n&gt;</code> shared library in the SynxDB <code>shared_preload_libraries</code> server configuration parameter setting and restart SynxDB. Be sure to retain the other libraries. For example:</p>
+<pre><code>$ gpconfig -s shared_preload_libraries
+Values on all segments are consistent
+GUC              : shared_preload_libraries
+Coordinator value: auto_explain,diskquota-2.1
+Segment     value: auto_explain,diskquota-2.1
+
+$ gpconfig -c shared_preload_libraries -v 'auto_explain,diskquota-2.2'
+$ gpstop -ar
+</code></pre>
+</li>
+<li>
+<p>Update the <code>diskquota</code> extension in every database in which you registered the module:</p>
+<pre><code>$ psql -d testdb -c "ALTER EXTENSION diskquota UPDATE TO '2.2'";
+</code></pre>
+</li>
+<li>
+<p>Restart SynxDB:</p>
+<pre><code>$ gpstop -ar
+</code></pre>
+</li>
+</ol>
+<p>After upgrade, your existing disk quota rules continue to be enforced, and you can define new tablespace or per-segment rules. You can also utilize the new pause/resume disk quota enforcement functions.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="topic_v2z_jrv_b3b"></a>Examples</a></h2>
+<h3 id="setting-a-schema-quota"><a class="header" href="#setting-a-schema-quota"><a id="schemaquota"></a>Setting a Schema Quota</a></h3>
+<p>This example demonstrates how to configure a schema quota and then observe <code>diskquota</code> soft limit behavior as data is added to the schema. The example assumes that the <code>diskquota</code> processes are configured and running.</p>
+<ol>
+<li>
+<p>Create a database named <code>testdb</code> and connect to it.</p>
+<pre><code>$ createdb testdb
+$ psql -d testdb
+</code></pre>
+</li>
+<li>
+<p>Create the diskquota extension in the database.</p>
+<pre><code>CREATE EXTENSION diskquota;
+</code></pre>
+</li>
+<li>
+<p>Create a schema named <code>s1</code>:</p>
+<pre><code>CREATE SCHEMA s1;
+</code></pre>
+</li>
+<li>
+<p>Set a 1MB disk quota for the <code>s1</code> schema.</p>
+<pre><code>SELECT diskquota.set_schema_quota('s1', '1MB');
+</code></pre>
+</li>
+<li>
+<p>Run the following commands to create a table in the <code>s1</code> schema and insert a small amount of data into it. The schema has no data yet, so it is not on the denylist.</p>
+<pre><code>SET search_path TO s1;
+CREATE TABLE a(i int);
+INSERT INTO a SELECT generate_series(1,100);
+</code></pre>
+</li>
+<li>
+<p>Insert a large amount of data, enough to exceed the 1MB quota that was set for the schema. Before the <code>INSERT</code> command, the <code>s1</code> schema is still not on the denylist, so this command should be allowed to run with only soft limit disk usage enforcement in effect, even though the operation will exceed the limit set for the schema.</p>
+<pre><code>INSERT INTO a SELECT generate_series(1,10000000);
+</code></pre>
+</li>
+<li>
+<p>Attempt to insert a small amount of data. Because the previous command exceeded the schema’s disk quota soft limit, the schema should be denylisted and any data loading command should be cancelled.</p>
+<pre><code>INSERT INTO a SELECT generate_series(1,100);
+ERROR:  schema's disk space quota exceeded with name: s1
+</code></pre>
+</li>
+<li>
+<p>Remove the quota from the <code>s1</code> schema by setting it to <code>-1</code> and again inserts a small amount of data. A 5-second sleep before the <code>INSERT</code> command ensures that the <code>diskquota</code> table size data is updated before the command is run.</p>
+<pre><code>SELECT diskquota.set_schema_quota('s1', '-1');
+-- Wait for 5 seconds to ensure that the denylist is updated
+SELECT pg_sleep(5);
+INSERT INTO a SELECT generate_series(1,100);
+</code></pre>
+</li>
+</ol>
+<h3 id="enabling-hard-limit-disk-usage-enforcement-and-exceeding-quota"><a class="header" href="#enabling-hard-limit-disk-usage-enforcement-and-exceeding-quota"><a id="enablehardlimit"></a>Enabling Hard Limit Disk Usage Enforcement and Exceeding Quota</a></h3>
+<p>In this example, we enable hard limit enforcement of disk usage, and re-run commands from the previous example.</p>
+<ol>
+<li>
+<p>Enable hard limit disk usage enforcement:</p>
+<pre><code>$ gpconfig -c diskquota.hard_limit -v 'on'
+$ gpstop -u
+</code></pre>
+</li>
+<li>
+<p>Run the following query to view the hard limit enforcement setting:</p>
+<pre><code>SELECT * from diskquota.status();
+</code></pre>
+</li>
+<li>
+<p>Re-set a 1MB disk quota for the <code>s1</code> schema.</p>
+<pre><code>SELECT diskquota.set_schema_quota('s1', '1MB');
+</code></pre>
+</li>
+<li>
+<p>Insert a large amount of data, enough to exceed the 1MB quota that was set for the schema. Before the <code>INSERT</code> command, the <code>s1</code> schema is still not on the denylist, so this command should be allowed to start. When the operation exceeds the schema quota, <code>diskquota</code> will terminate the query.</p>
+<pre><code>INSERT INTO a SELECT generate_series(1,10000000);
+[hardlimit] schema's disk space quota exceeded
+</code></pre>
+</li>
+<li>
+<p>Remove the quota from the <code>s1</code> schema:</p>
+<pre><code>SELECT diskquota.set_schema_quota('s1', '-1');
+</code></pre>
+</li>
+</ol>
+<h3 id="setting-a-per-segment-tablespace-quota"><a class="header" href="#setting-a-per-segment-tablespace-quota"><a id="persegtablespace"></a>Setting a Per-Segment Tablespace Quota</a></h3>
+<p>This example demonstrates how to configure tablespace and per-segment tablespace quotas. In addition to using the <code>testdb</code> database and the <code>s1</code> schema that you created in the previous example, this example assumes the following:</p>
+<ul>
+<li>Hard limit enforcement of disk usage is enabled (as in the previous example).</li>
+<li>The SynxDB cluster has 8 primary segments.</li>
+<li>A tablespace named <code>tbsp1</code> has been created in the cluster.</li>
+</ul>
+<p>Procedure:</p>
+<ol>
+<li>
+<p>Set a disk quota of <code>1 MB</code> for the tablespace named <code>tbsp1</code> and the schema named <code>s1</code>:</p>
+<pre><code>SELECT diskquota.set_schema_tablespace_quota('s1', 'tbsp1', '1MB');
+</code></pre>
+</li>
+<li>
+<p>Set a per-segment ratio of <code>2</code> for the <code>tbsp1</code> tablespace:</p>
+<pre><code>SELECT diskquota.set_per_segment_quota('tbsp1', 2);
+</code></pre>
+<p>With this ratio setting, the average segment quota is <code>1MB / 8 = 125KB</code>, and the max per-segment disk usage for the tablespace is <code>125KB * 2 = 250KB</code>.</p>
+</li>
+<li>
+<p>Create a new table named <code>b</code> and insert some data:</p>
+<pre><code>CREATE TABLE b(i int);
+INSERT INTO b SELECT generate_series(1,100);
+</code></pre>
+</li>
+<li>
+<p>Insert a large amount of data into the table, enough to exceed the 250KB per-segment quota that was set for the tablespace. When the operation exceeds the per-segment tablespace quota, <code>diskquota</code> will terminate the query.</p>
+<pre><code>INSERT INTO b SELECT generate_series(1,10000000);
+ERROR:  tablespace: tbsp1, schema: s1 diskquota exceeded per segment quota
+</code></pre>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/modules/dblink.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/modules/fuzzystrmatch.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/modules/dblink.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/modules/fuzzystrmatch.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

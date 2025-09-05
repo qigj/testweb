@@ -1,0 +1,43 @@
+Create AO/AOCO Tables and Refresh Materialized Views in Parallel
+================================================================================
+
+|product_name| supports refreshing materialized views in parallel based on the AO or AOCO tables. Parallel processing accelerates table creation and materialized view refresh.
+
+To use the parallel feature, you need to first set the value of the system parameter ``enable_parallel`` to ``ON``.
+
+Usage example
+-------------
+
+1. Create a base table ``t_p`` and use ``WITH`` to specify the number of parallel workers in the table creation statement.
+
+   .. code:: sql
+
+      CREATE TABLE t_p(c1 INT, c2 INT) WITH (parallel_workers=8);
+
+2. Insert data into ``t_p`` and collect statistics on this table.
+
+   .. code:: sql
+
+      INSERT INTO t_p SELECT i, i+1 FROM generate_series(1, 10000000) i;
+      ANALYZE t_p;
+
+3. Create a materialized view ``matv`` that uses row storage (AO row) or column storage (AO column), depending on the parameter ``ao_row``. The content of the materialized view is aggregated query results derived from table ``t_p``.
+
+   .. code:: sql
+
+      CREATE MATERIALIZED VIEW matv USING ao_row AS SELECT SUM(a.c2) AS c2, AVG(b.c1) AS c1 FROM t_p a JOIN t_p b ON a.c1 = b.c1 WITH NO DATA;
+
+4. Enable parallel processing and turn off the GPORCA optimizer.
+
+   .. code:: sql
+
+      SET enable_parallel = ON;
+      SET optimizer = OFF;
+
+5. Refresh the materialized view.
+
+   .. code:: sql
+
+      REFRESH MATERIALIZED VIEW matv;
+
+You can use tools to record the refresh durations, and compare the difference in the durations when turning on and off the parallel processing. You can see the acceleration from parallel processing.

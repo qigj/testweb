@@ -1,0 +1,14 @@
+Operate with Database Objects
+**********************************
+
+.. toctree::
+   :maxdepth: 2
+
+   basic-query-syntax
+   create-and-manage-warehouses
+   create-and-manage-tables
+   create-and-manage-views
+   create-and-manage-materialized-views
+   insert-update-delete-row-data
+   use-tagging-for-db-objects
+   use-data-branching

@@ -1,0 +1,90 @@
+# Create and Manage Tables
+
+{{ product_name }} tables are similar to tables in any relational database.
+
+## Create a table
+
+The `CREATE TABLE` command creates a table and defines its structure. When you create a table, you define:
+
+- The columns of the table and their associated data types. See [Choose column data types](#choose-column-data-types).
+- Any table or column constraints to limit the data that a column or table can contain. See [Setting table and column constraints](#set-table-and-column-constraints).
+- The way the table is stored on disk.
+- The table partitioning strategy for large tables.
+
+### Choose column data types
+
+The data type of a column determines the types of data values the column can contain. Choose the data type that uses the least possible space but can still accommodate your data and that best constrains the data. For example, use character data types for strings, date or timestamp data types for dates, and numeric data types for numbers.
+
+For table columns that contain textual data, specify the data type `VARCHAR` or `TEXT`. Specifying the data type `CHAR` is not recommended. In {{ product_name }}, the data types `VARCHAR` or `TEXT` handle padding added to the data (space characters added after the last non-space character) as significant characters, the data type `CHAR` does not.
+
+Use the smallest numeric data type that will accommodate your numeric data and allow for future expansion. For example, using `BIGINT` for data that fits in `INT` or `SMALLINT` wastes storage space. If you expect that your data values will expand over time, consider that changing from a smaller datatype to a larger datatype after loading large amounts of data is costly. For example, if your current data values fit in a `SMALLINT` but it is likely that the values will expand, `INT` is the better long-term choice.
+
+Use the same data types for columns that you plan to use in cross-table joins. When the data types are different, the database must convert one of them so that the data values can be compared correctly, which adds unnecessary overhead.
+
+### Set table and column constraints
+
+You can define constraints on columns and tables to restrict the data in your tables. {{ product_name }} support for constraints is the same as PostgreSQL with some limitations, including:
+
+- `CHECK` constraints can refer only to the table on which they are defined.
+- `FOREIGN KEY` constraints are allowed, but not enforced.
+- Constraints that you define on partitioned tables apply to the partitioned table as a whole. You cannot define constraints on the individual parts of the table.
+
+#### Check constraints
+
+Check constraints allow you to specify that the value in a certain column must satisfy a Boolean (truth-value) expression. For example, to require positive product prices:
+
+```sql
+CREATE TABLE products 
+       ( product_no integer, 
+         name text, 
+         price numeric CHECK (price > 0) );
+```
+
+#### Not-null constraints
+
+Not-null constraints specify that a column must not assume the null value. A not-null constraint is always written as a column constraint. For example:
+
+```sql
+CREATE TABLE products 
+ ( product_no integer NOT NULL,
+   name text NOT NULL,
+   price numeric );
+```
+
+#### Foreign keys
+
+Foreign keys are not supported. You can declare them, but referential integrity is not enforced.
+
+Foreign key constraints specify that the values in a column or a group of columns must match the values appearing in some row of another table to maintain referential integrity between two related tables.
+
+### Create temporary tables
+
+A temporary table is a table that exists only during the current database session. When the session ends, the temporary table and all its data are automatically deleted. Temporary tables are very useful for storing intermediate result sets during a transaction or session. You can use the `CREATE TEMPORARY TABLE` or `CREATE TEMP TABLE` statement to create a temporary table.
+
+#### Optimize temporary tables using an in-memory catalog
+
+When a temporary table is created in {{ product_name }}, by default, corresponding metadata records are inserted into system catalog tables (such as `pg_class` and `pg_attribute`). Although the temporary table becomes invalid after the session ends, these metadata records remain in the system tables (invisible to users), which can lead to system table bloat in scenarios where many temporary tables are created.
+
+To solve this problem, {{ product_name }} introduces the `inmemory_catalog` storage option. When this option is set to `true` while a temporary table is created, the table's metadata is stored in memory instead of being written to the on-disk system tables. When the session ends, this in-memory metadata is automatically destroyed along with the temporary table, thus preventing system table bloat.
+
+**Example:**
+
+```sql
+CREATE TEMP TABLE virtualcat_test1(x int, s text) WITH (inmemory_catalog=true);
+
+INSERT INTO virtualcat_test1 VALUES (1, 'aaa'), (2, 'bbb'), (3, 'ccc'), (4, 'ddd');
+
+UPDATE virtualcat_test1 SET s = 'eee' WHERE x = 4;
+
+UPDATE virtualcat_test1 SET x = 5 WHERE s = 'bbb';
+
+DELETE FROM virtualcat_test1 WHERE x = 3;
+
+SELECT * FROM virtualcat_test1 ORDER BY x;
+
+DROP TABLE virtualcat_test1;
+```
+
+:::{note}
+Once the `inmemory_catalog` option is specified when creating a table, it cannot be changed later using the `ALTER TABLE` statement.
+:::

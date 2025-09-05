@@ -1,0 +1,1228 @@
+v4.0.0 Release Notes
+=======================================
+
+Release date: July, 2025
+
+Version number: v4.0.0
+
+|product_name| v4.0.0 is a major release that brings significant enhancements to the database kernel and introduces a new monitoring tool, DBCC and a new backup and recovery tool, CBDR. This release represents a substantial leap forward in performance, reliability, and manageability.
+
+- **Enhanced Query Processing**: Major improvements in query optimization and execution, including advanced index-only scans, dynamic partition elimination, and improved join strategies. The ORCA optimizer now supports more complex query patterns and provides better performance for analytical workloads.
+
+- **New Monitoring Solution**: Introduction of DBCC, a modern web-based monitoring and operations dashboard that replaces the legacy Web Platform. DBCC provides comprehensive cluster monitoring, resource tracking, and alert management capabilities.
+
+- **Improved Storage Engine**: Significant enhancements to AO/CO tables, including optimized index creation, better transaction safety, and improved memory management. The storage layer now offers better performance and reliability for large-scale data processing.
+
+- **Enhanced Security**: Added FIPS mode support in pgcrypto, improved permission management, and strengthened security controls across the database system.
+
+- **Resource Management**: Refined resource group management with clearer parameter naming and improved monitoring capabilities. The system now provides better control over CPU, memory, and I/O resources.
+
+- **High Availability and High Reliability**: Introduction of CBDR, a backup and recovery tool built on WAL-G, offering flexible backup strategies and improved disaster recovery capabilities.
+
+This release also includes numerous bug fixes and stability improvements.
+
+New features
+-----------------
+
+- :ref:`Database <database>`
+- :ref:`Interactive manager DBCC <dbcc>`
+
+.. _database:
+
+Database
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+   :class: longtable
+   :widths: 8 20 8
+
+   * - **Category**
+     - **Sub-category**
+     - **Feature and documents**
+   * - Query processing and optimization
+     - **Index and scan**: introduces multiple enhancements in indexing and scanning, including:
+
+       - Enhanced index-only scan capabilities: supports dynamic index-only scans and index-only scans on AO/PAX tables; expands support to indexes with ``INCLUDE`` columns.
+       - Improved index scan performance and flexibility: adds support for backward index scans, bitmap scans with array comparisons, and more accurate cost estimation for covering indexes.
+       - BRIN index enhancements: optimizes internal structure for AO/CO tables and improves summarization control and robustness.
+     - :ref:`Index and scan <index-and-scan>`
+   * - Query processing and optimization
+     - **View and materialized view**: improves performance of ``REFRESH MATERIALIZED VIEW WITH NO DATA`` by avoiding full query execution.
+     - :ref:`View and materialized view <view-and-materialized-view>`
+   * - Query processing and optimization
+     - **Join**: supports left join pruning when the inner table is uniquely constrained and unused, enabling more efficient plans. ``FULL JOIN`` now uses ``Hash Full Join`` by default to avoid sorting and reduce data movement. For symmetric multi-way outer self joins, unnecessary data redistribution is eliminated. Broadcast plans for ``NOT IN`` queries are no longer penalized, improving parallelism and reducing memory pressure.
+     - :ref:`Join <join>`
+   * - Query processing and optimization
+     - **Function and aggregate**: adds support for intermediate aggregates to optimize queries with both ``DISTINCT`` and regular aggregates, and introduces index-based plans for ``MIN()`` and ``MAX()`` using ``LIMIT``, even with ``IS NULL`` conditions. Additional ``HashAggregate`` plan alternatives improve support for ``DISTINCT`` aggregates through two-stage planning. Support for ``GROUP BY CUBE`` enables multi-dimensional grouping, expanding analytic capabilities.
+     - :ref:`Function and aggregate <function-and-aggregate>`
+   * - Query processing and optimization
+     - **Preprocessing**: inlines Common Table Expressions (CTEs) with outer references, allowing broader optimization coverage and avoiding fallback to the legacy planner. ``IN``-to-\ ``EXISTS`` rewrites are now skipped when set-returning functions are present in the subquery, ensuring correctness and preventing execution errors.
+     - :ref:`Preprocessing <preprocessing>`
+   * - Query processing and optimization
+     - Optimization and performance enhancements:
+
+       - **Plan hint**: adds support for scan type hints and join row estimates using ``pg_hint_plan``-style comments, allowing users to influence query planning more precisely. Join order hints are now extended to include left and right outer joins. Additionally, the plan hint field is now mandatory in the ORCA configuration, ensuring consistent parsing and behavior.
+       - **Enhancements to ORCA**: improve compatibility, performance, and usability across a wide range of query scenarios. Support is added for table aliases, query parameters, row-level security, and set-returning functions, reducing fallback to the legacy planner. Predicate pushdown, hashed subplans, and direct dispatch for random tables improve execution efficiency. Planning is further optimized for foreign tables, **UNION AL** queries, and composite types, while **EXPLAIN** and log output are updated for greater clarity.
+     - :ref:`Optimization and performance enhancements <optimization-and-performance>`
+   * - Transaction management
+     - **Lock management**: updates logic to ignore invalidated slots during catalog Xmin computation, performs early serializable isolation checks on AO/CO tables to improve consistency, and enhances index creation by synchronizing lock acquisition across coordinator and segments to prevent deadlocks. These changes improve transaction reliability, concurrency, and system stability.
+     - :ref:`Lock management <lock-management>`
+   * - Transaction management
+     - **Transaction performance and reliability improvements**: avoid replaying DTX information on newly added segments to ensure consistent recovery, enhance observability with ``gp_stat_progress_dtx_recovery``, and improve error reporting for DTX dispatch issues. The update also extends the default retry period for phase 2 transactions to 600 seconds and allows utility mode to skip unnecessary lock upgrades, improving efficiency during maintenance.
+     - :ref:`Transaction performance and reliability <transaction-performance>`
+   * - Storage
+     - **AO/CO**: optimizes ``CREATE INDEX`` operations on AO tables by adding scan progress reporting for better efficiency, and improves transaction safety by marking connection-related variables as volatile, aligning with PostgreSQL best practices for exception handling.
+     - :ref:`AO/CO table enhancements <ao-co-enhancements>`
+   * - Storage
+     - **Partitioning**: extends ORCA's planning to support foreign partitions with full integration of static and dynamic pruning, improves partition analysis efficiency, and enables advanced dynamic partition elimination in complex join scenarios. The update also introduces opfamily-aware pruning, caching for repeated lookups, and better cardinality estimation from leaf partitions. In addition, the new version enhances the DPv2 algorithm with distribution specs and introduces a new Non-Replicated distribution type to reduce unnecessary data motion in join operations.
+     - :ref:`Partitioning <partitioning>`
+   * - Storage
+     - **Memory management**: implements a custom allocator for ORCA to improve heap handling and enable the use of standard C++ containers, optimizes lazy serialization of metadata objects to speed up planning, and ensures proper deallocation of memory to prevent leaks. In addition, MPP support for ``pg_buffercache`` improves scalability, and the new ``pg_buffercache_summary()`` function provides simplified monitoring of buffer cache activity.
+     - :ref:`Memory management <memory-management>`
+   * - Storage
+     - **Memory and metadata**: adds support for defining lock modes and reloptions for storage transitions, introduces origin tracking for partitioned table creation, and improves catalog access with syscache lookups. A new pg_aggregate field supports marking aggregates as replication-safe, optimizing execution on replicated data. In addition, ``ALTER DATABASE`` options are now properly dispatched to segments to ensure consistent catalog state.
+     - :ref:`Memory and metadata <memory-and-metadata>`
+   * - Data loading
+     - **External table**: improves consistency and usability by disabling ``SET DISTRIBUTED REPLICATED`` for ``ALTER EXTERNAL TABLE`` and enforcing stricter rules when exchanging or attaching external tables. Writable external tables can no longer be used as partitions, and attaching readable external tables now issues a warning when done without validation.
+     - :ref:`External table enhancements <external-table>`
+   * - Data loading
+     - **Foreign data wrapper**: improves gpfdist external table performance by enabling TCP keepalive and increasing default write buffer size. ORCA now gracefully falls back to the planner for queries involving foreign partitions with ``greenplum_fdw``, ensuring stability, while maintaining support for non-partitioned foreign tables.
+     - :ref:`Foreign data wrapper enhancements <foreign-data-wrapper>`
+   * - High availability and high reliability
+     - **Backup and disaster recovery**: introduces CBDR, a backup and recovery tool for |product_name| and Apache Cloudberry databases, offering a user-friendly CLI, full and incremental backups, support for multiple compression formats, and backup encryption, enhancing disaster recovery and data safety.
+     - :ref:`Backup and disaster recovery <backup-and-disaster-recovery>`
+   * - High availability and high reliability
+     - **WAL**: restricts coordinator-specific WAL tracking to simplify primary segment behavior, improves WAL retention logic for reliable incremental recovery using ``pg_rewind``, and switches WAL replication connections to the standard libpq protocol for enhanced compatibility.
+     - :ref:`WAL <wal>`
+   * - Security
+     - **Database operations**: prevents potential privilege escalation by running all internal operations in the correct security context for ``REFRESH MATERIALIZED VIEW CONCURRENTLY`` and aligns tuple freezing behavior for new aoseg and aocsseg tuples with other catalog operations to enhance consistency.
+     - :ref:`Database operations <database-operations>`
+   * - Security
+     - **System processes**: excludes idle sessions from orphaned file checks, adds safety checks in signal handlers, prevents child processes from calling ``proc_exit()``, and removes unnecessary permission checks, enhancing process safety and stability.
+     - :ref:`System processes <system-processes>`
+   * - Security
+     - **Replication/Mirrorless clusters**: improves replication error reporting by setting persistent ``WalSndError`` when a replication slot is invalidated, ensuring accurate error visibility in ``gp_stat_replication``.
+     - :ref:`Replication/Mirrorless clusters <replication-mirrorless>`
+   * - Security
+     - **Permission management**: strengthens security by rejecting unsafe characters in extension schema or owner substitutions, prevents SQL injection, reserves the ``system_group`` resource group for internal use, reverts the superuser requirement for setting ``gp_resource_group_bypass``, and disallows altering the ``mpp_execute`` option to ensure plan correctness.
+     - :ref:`Permission management <permission-management>`
+   * - Security
+     - **pgcrypto**: adds FIPS mode support in pgcrypto, enabling |product_name| to operate in FIPS-compliant environments and allowing FIPS mode to be enabled regardless of pre-existing system settings. 
+     - :ref:`pgcrypto <pgcrypto>`
+   * - Resource management
+     - **Resource group management**: renames the ``memory_limit`` parameter to ``memory_quota`` for clarity, adds a system view to monitor per-segment memory usage, improves logging for memory limit breaches, and removes an unnecessary permission check to enhance compatibility.
+     - :ref:`Resource group management <resource-group-management>`
+   * - Resource management
+     - **Logging and monitoring**: adds detailed log messages for GDD backends, reduces log noise for connection terminations, increases verbosity in deadlock checks, logs queue and portal IDs, dumps more information on resource lock releases, and enhances error reporting for dispatcher and connection liveness checks.
+     - :ref:`Logging and monitoring <logging-and-monitoring>`
+   * - Resource management
+     - **Platform compatibility and build**: enhances compatibility and consistency by improving gp_sparse_vector handling on ARM platforms, aligning signal handling on Windows with other platforms, and ensuring consistent ACL mode type usage in ORCA.
+     - :ref:`Platform compatibility and build <platform-compatibility>`
+   * - Resource management
+     - **System views and statistics**: improves join cardinality estimation, increases precision for frequency and NDV values, considers null value skew, supports extended statistics, logs memory contexts across segments, supports statistics derivation for time-related data types, uses ``SKIP LOCKED`` for ``ANALYZE`` operations, and supports ``STATS_EXT_NDISTINCT`` extended statistics.
+     - :ref:`System views and statistics <system-views-and-statistics>`
+   * - Resource management
+     - **Network connections**: enhances reliability of internal QD-to-entry DB connections.
+     - :ref:`Network connections <network-connections>`
+   * - Tools and utilities
+     - Several tools are enhanced to improve performance and usage:
+
+       - **analyzedb**: analyzes materialized views to improve performance immediately after analysis.
+       - **gpexpand**: performs cluster health checks to ensure all segments are up and in their preferred roles before proceeding, preventing issues during expansion.
+       - **gp_toolkit**: updates to version 1.6.
+     - :ref:`Tools and utilities <tools-and-utilities>`
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+Query processing and optimization
++++++++++++++++++++++++++++++++++++
+
+.. _index-and-scan:
+
+Index and scan
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  **Enhanced index-only scan capabilities**
+
+   -  Supports index-only scans on a broader range of index types when using the GPORCA optimizer, including those with covering indexes using ``INCLUDE`` columns. This helps improve query performance. See :ref:`related document <operate-with-data/operate-with-database-objects/create-and-manage-indexes:purpose of covering indexes>`.
+
+   -  Supports dynamic index-only scan when using the GPORCA optimizer to accelerate queries on partitioned tables. This feature combines partition pruning with index-only access to avoid heap lookups, significantly reducing I/O and improving performance. It is ideal for wide tables with narrow covering indexes and can be enabled using ``SET optimizer_enable_dynamicindexonlyscan = on``. See :ref:`related document <operate-with-data/operate-with-database-objects/create-and-manage-indexes:dynamic index-only scan>`.
+
+   -  Supports index-only scans when using the GPORCA optimizer on append-only (AO) tables and PAX tables, enabling faster query execution by avoiding block access when possible. This improves performance in scenarios where traditional index scans on AO and PAX tables were previously inefficient. See :ref:`related document <operate-with-data/operate-with-database-objects/create-and-manage-indexes:what is an index-only scan>`.
+
+-  **Improved index scan performance and flexibility**
+
+   -  Supports backward index scans when using the GPORCA optimizer for queries with ``ORDER BY ... DESC``, eliminating the need for explicit sorting when a B-tree index exists in the opposite order. This optimization reduces resource usage and improves performance, especially for top-N and pagination queries. See :ref:`related document <operate-with-data/operate-with-database-objects/create-and-manage-indexes:backward index scan>`.
+
+   -  The GPORCA optimizer supports triggering Bitmap Index Scans using array comparison predicates like ``col IN (...)`` or ``col = ANY(array)``, including for hash indexes. This improves query performance on large datasets by enabling more efficient multi-value matching. The optimizer automatically chooses the bitmap scan path based on cost estimation. See :ref:`related document <operate-with-data/operate-with-database-objects/create-and-manage-indexes:bitmap indexes>`.
+
+   -  The GPORCA optimizer now considers the width of ``INCLUDE`` columns when costing index-only scans, favoring narrower indexes that return fewer unused columns. This improves plan selection for queries where multiple covering indexes are available. The cost model also more accurately estimates I/O by refining how ``relallvisible`` is used in index-only scan costing. See :ref:`related document <operate-with-data/operate-with-database-objects/create-and-manage-indexes:purpose of covering indexes>`.
+
+-  **BRIN index enhancements** (:ref:`related document <operate-with-data/operate-with-database-objects/brin-indexes:brin indexes>`)
+
+   -  Redesigns BRIN index internals for AO/CO tables to replace the ``UPPER`` page structure with a more efficient chaining model. This significantly reduces disk space usage for empty indexes and improves performance by avoiding unnecessary page access. The new design better handles the unique layout of AO/CO tables while maintaining correctness and compatibility.
+
+   -  BRIN indexes on AO/CO tables now support summarizing specific logical heap block ranges using ``brin_summarize_range()``, enabling more precise control during index maintenance and testing. This enhancement also adds improved coverage for scenarios involving aborted rows, increasing robustness and correctness in edge cases.
+
+   -  Supports generating ``IndexScan`` plans when using the GPORCA optimizer with ``ScalarArrayOp`` qualifiers (for example, ``col = ANY(array)``) for B-tree indexes. This enhancement aligns ORCA with the planner's behavior and allows more efficient execution of array comparison queries, as long as the predicate column is the first key in a multicolumn index.
+
+.. _view-and-materialized-view:
+
+View and materialized view
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Improves performance of ``REFRESH MATERIALIZED VIEW WITH NO DATA`` by avoiding full query execution. The command now behaves like a ``TRUNCATE``, significantly reducing execution time while preserving proper dispatch to segments.
+
+.. _join:
+
+Join
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Supports left join pruning when using the GPORCA optimizer, allowing unnecessary left joins to be eliminated during query optimization. This applies when the query only uses columns from the outer table and the join condition fully covers the inner table's unique or primary keys. This can lead to more efficient query plans.
+
+-  Supports ``FULL JOIN`` using the ``Hash Full Join`` strategy when using the GPORCA optimizer. This approach avoids sorting join keys and reduces data redistribution, making it suitable for large datasets or joins on non-aligned distribution keys. All ``FULL JOIN`` queries now use ``Hash Full Join``. See :ref:`related document <optimize-performance/optimize-queries/use-orca/whats-new-in-orca:gporca optimizer update notes>`.
+
+-  The GPORCA optimizer now avoids unnecessary data redistribution for multi-way self joins using left or right outer joins when the join keys are symmetric. This optimization improves performance by recognizing that such joins preserve data colocation, eliminating redundant motion operations. See :ref:`related document <optimize-performance/optimize-queries/use-orca/whats-new-in-orca:gporca optimizer update notes>`.
+
+-  The GPORCA optimizer no longer penalizes broadcast plans for ``NOT IN`` queries (Left Anti Semi Join), regardless of the ``optimizer_penalize_broadcast_threshold`` setting. This change improves performance and avoids potential OOM issues by enabling parallel execution instead of concentrating large tables on the coordinator node. See :ref:`related document <optimize-performance/optimize-queries/use-orca/whats-new-in-orca:gporca optimizer update notes>`.
+
+.. _function-and-aggregate:
+
+Function & aggregate
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Supports intermediate aggregates when using the GPORCA optimizer, enabling more efficient execution of queries that include both ``DISTINCT`` aggregates and regular aggregates. This ensures correct handling of aggregation stages using ``AGGSPLIT``. In addition, ORCA introduces an optimization for ``MIN()`` and ``MAX()`` functions by using index scans with a limit, instead of full table scans with regular aggregation. This optimization also supports ``IS NULL`` and ``IS NOT NULL`` conditions on indexed columns, significantly improving performance for applicable queries.
+
+-  Enables more ``HashAggregate`` plan alternatives for queries that include ``DISTINCT`` aggregates when using the GPORCA optimizer. By generating a two-stage aggregation plan that avoids placing ``DISTINCT`` functions in hash-based nodes, ORCA ensures compatibility with the executor and expands the range of supported query plans. This improvement enhances optimization choices for group-by queries.
+
+-  Supports queries using ``GROUP BY CUBE``, enabling multi-dimensional grouping sets in query plans. This expands analytic query capabilities. Note that optimization time for ``CUBE`` queries may be high due to the large number of generated plan alternatives.
+
+.. _preprocessing:
+
+Preprocessing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Inlines Common Table Expressions (CTEs) that contain outer references, allowing such queries to be planned and explained successfully. Previously, these queries would fall back to the legacy planner due to limitations in handling shared scans with outer references. This change improves compatibility and enables ORCA to optimize a broader range of CTE-based queries.
+
+-  No longer rewrites ``IN`` queries to ``EXISTS`` when the inner subquery contains a set-returning function. This prevents invalid query transformations that could previously result in execution errors. The change ensures correct handling of queries like ``a IN (SELECT generate_series(1, a))``.
+
+.. _optimization-and-performance:
+
+Optimization and performance enhancements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  **Plan hint** (:ref:`related document <optimize-performance/optimize-queries/query-hints:query plan hints>`)
+
+   -  Supports plan hints for scan types and join row estimates when using the GPORCA optimizer, enabling users to guide query planning using ``pg_hint_plan``-style comments. Supports scan hints include ``SeqScan``, ``IndexScan``, ``BitmapScan``, and their negations, while row hints allow users to specify expected join cardinalities.
+
+   -  The ``plan hint`` field is now required in the ORCA optimizer configuration. This change simplifies internal parsing logic and ensures consistent handling of optimizer configuration files.
+
+   -  Supports join order hints for left and right outer joins when using the GPORCA optimizer, extending the existing hint framework beyond inner joins. This enhancement allows users to guide the optimizer's join order more precisely in complex queries involving outer joins, improving plan control and potentially execution performance.
+
+-  **Enhancements to ORCA** (:ref:`related document <optimize-performance/optimize-queries/use-orca/whats-new-in-orca:gporca optimizer update notes>`)
+
+   -  Supports table aliases in query plans when using the GPORCA optimizer, making ``EXPLAIN`` outputs more descriptive and aligned with user-defined query syntax. In addition, ORCA adds support for query parameters, including those used in functions and prepared statements, enabling better compatibility with parameterized workloads and dynamic SQL execution.
+
+   -  When using the GPORCA optimizer, supports generating plans for queries on tables with row-level security (RLS) enabled. Security policies are enforced during plan generation, ensuring only permitted rows are visible to each user. ORCA still falls back to the planner for RLS queries with sublinks, foreign tables, or for ``INSERT`` and ``UPDATE`` statements.
+
+   -  The GPORCA optimizer now gracefully falls back to the Postgres planner when a function in the ``FROM`` clause uses ``WITH ORDINALITY``, which is not currently supported. The fallback includes a clear error message indicating the unsupported feature.
+
+   -  When using the GPORCA optimizer, supports pushing down filters with ``BETWEEN`` predicates when combined with constant filters, enabling more effective predicate propagation. This enhancement can reduce the number of rows processed during joins, improving query performance in applicable cases.
+
+   -  When using the GPORCA optimizer, supports hashed subplans when the subquery expression is hashable and contains no outer references. This enhancement can significantly improve query performance by reducing execution time in applicable cases.
+
+   -  ORCA now supports executing foreign tables with ``mpp_execute='ANY'`` on either the coordinator or segments, depending on cost. This allows more flexible and efficient execution plans for foreign data sources. A new "Universal" distribution type is introduced to support this behavior, similar to how ``generate_series()`` is handled.
+
+   -  ORCA now supports direct dispatch for randomly distributed tables when the query includes a filter on ``gp_segment_id``. This enhancement improves query performance by routing execution directly to the relevant segment, reducing unnecessary data processing across the cluster.
+
+   -  ORCA now supports generating plans with the ``ProjectSet`` node, enabling correct execution of queries that include set-returning functions (SRFs) in the target list. This enhancement prevents fallback to the legacy planner and ensures compatibility with PostgreSQL 11+ behavior.
+
+   -  ORCA now supports the ``FIELDSELECT`` node, which allows it to optimize a broader range of queries involving composite data types. Previously, such queries would fall back to the legacy planner. This enhancement improves compatibility and reduces unnecessary planner fallbacks.
+
+   -  ORCA now derives statistics only for the columns used in ``UNION ALL`` queries, instead of all output columns from the input tables. This optimization reduces unnecessary computation and can improve planning performance for large queries.
+
+   -  Updates naming in logs and ``EXPLAIN`` output to refer to the optimizers as "GPORCA" and "Postgres based planner" for improved clarity and consistency.
+
+   -  Optimizes ORCA's ``Union All`` performance by deriving statistics only for columns used in the query output. This reduces unnecessary computation and improves planning efficiency for queries with unused columns.
+
+
+Transaction management
++++++++++++++++++++++++++
+
+.. _lock-management:
+
+Lock management
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Updates logic to ignore invalidated slots while computing the oldest catalog Xmin, reducing the risk of deadlocks and improving transaction concurrency.
+
+-  Performs serializable isolation checks early for AO/CO tables, ensuring stricter consistency guarantees and reducing the likelihood of isolation conflicts.
+
+-  Enhances the index creation process to prevent deadlocks by ensuring the coordinator acquires an ``AccessShareLock`` on ``pg_index`` before dispatching a synchronization query to segments, thus aligning ``indcheckxmin`` and avoiding conflicts that GDD cannot resolve.
+
+.. _transaction-performance:
+
+Transaction performance and reliability
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Avoids replaying DTX information in checkpoints for newly expanded segments, preventing potential inconsistencies during recovery.
+
+-  Adds ``gp_stat_progress_dtx_recovery`` for better observability of distributed transaction recovery progress.
+
+-  Improves error reporting for DTX protocol command dispatch errors, making it easier to diagnose and resolve issues.
+
+-  Allows utility mode on the coordinator to skip upgrading locks for ``SELECT`` locking clauses, improving efficiency for maintenance operations.
+
+Storage
++++++++++
+
+.. _ao-co-enhancements:
+
+AO/CO table enhancements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Optimizes ``CREATE INDEX`` operations on AO tables with scan progress reporting, enhancing the efficiency of index creation. See :ref:`related document <references/sys-catalog/sys-views:pg_stat_progress_create_index>`.
+
+-  Declares the connected variable as "volatile" to ensure proper handling across ``PG_TRY`` and ``PG_CATCH`` blocks, mirroring PostgreSQL's best practices for exception-safe variable usage in transaction control. 
+
+.. _partitioning:
+
+Partitioning
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:ref:`Related documents (in part) <optimize-performance/optimize-queries/optimize-performance-overview:query performance overview>`）
+
+-  Extends Orca's planning capabilities to include support for foreign partitions, enabling optimized query execution for tables with a mix of foreign and non-foreign partitions. The implementation introduces new logical and physical operators for foreign partitions, supports static and dynamic partition elimination, and integrates with any foreign data wrapper compatible, enhancing performance and flexibility for external data queries.
+
+-  Optimizes the analysis of leaf partitions in multi-level partition tables to avoid unnecessary resampling of intermediate partitions.
+
+-  Supports dynamic partition elimination (DPE) when using the GPORCA optimizer for plans involving duplicate-sensitive random motions. This allows partition selectors to pass through segment filters, enabling more efficient query plans and reducing the number of scanned partitions.
+
+-  Adds Dynamic Partition Elimination for Hash Right Joins, which enhances the efficiency of join operations on partitioned tables.
+
+-  Supports boolean static partition pruning in ORCA, enhancing the efficiency of partition pruning during query optimization.
+
+-  Enhances ORCA's query planning by incorporating partition key opfamily checks during partition pruning to optimize data distribution and partition scanning, ensuring correct motion triggering and partition scanning by aligning predicate operators with the distribution or partition key's opfamily, addressing issues with missing motion, incorrect direct dispatch, and ineffective partition pruning.
+
+-  Caches the last found partition in ``ExecFindPartition`` to improve performance for repeated partition lookups.
+
+-  Enables ORCA to derive dynamic table scan cardinality from leaf partitions, addressing limitations in handling date and time-related data types by changing their internal representation to doubles.
+
+-  Enhances the DPv2 algorithm to include distribution spec information with partition selectors, improving the efficiency of distributed query execution.
+
+-  Introduces a new Non-Replicated distribution specification to optimize join operations in database processing. By relaxing the enforcement of singleton distribution for outer tables when the inner table is universally distributed, it aims to reduce unnecessary data gathering and duplicate-sensitive motions, thereby generating more efficient execution plans.
+
+.. _memory-management:
+
+Memory management
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Implements a custom allocator to enable ORCA to use standard C++ containers, addressing heap allocation management.
+   
+-  Refactors ORCA's memory pool by making several methods static and adds assertions to ensure pointer safety.
+
+-  Optimizes serialization of IMDId objects in ORCA to be lazy, improving performance by deferring serialization until necessary. Improves optimization time when loading objects into the relcache and when involving large and wide partition tables.
+
+-  Ensures that strings returned by ``GetDatabasePath`` are always freed using ``pfree``, preventing memory leaks.
+
+-  Enables MPP (Massively Parallel Processing) support for ``pg_buffercache`` and builds it by default, making buffer cache management more scalable and efficient in distributed environments.
+
+-  Introduces ``pg_buffercache_summary()`` to offer a high-level overview of buffer cache activity.
+
+.. _memory-and-metadata:
+
+Metadata and access methods
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Allows the definition of lock modes for custom reloptions, providing more control over table and index access.
+
+-  Supports specification of reloptions when switching storage models, allowing seamless transitions between different storage formats.
+
+-  Introduces a new struct member in ``CreateStmt`` to indicate the origin of the statement, specifying if it was generated from GP style classic partitioning syntax.
+
+-  Adds syscache lookup for ``pg_attribute_encoding`` and ``pg_appendonly``, improving performance and efficiency in metadata access.
+
+-  Introduces a new catalog entry in ``pg_aggregate`` to store replication safety information for aggregates, allowing users to mark specific aggregates as safe for execution on replicated slices via an optional repsafe parameter during the ``CREATE AGGREGATE`` command. This helps optimize performance by avoiding unnecessary broadcasts on large replicated datasets.
+
+-  Enhances the dispatch of ``ALTER DATABASE`` commands by allowing options like ``ALLOW_CONNECTIONS`` and ``IS_TEMPLATE`` to be dispatched to segments, ensuring catalog changes are reflected everywhere.
+
+Data loading and external tables
++++++++++++++++++++++++++++++++++++
+
+.. _external-table:
+
+External table enhancements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Adds clearer restrictions and warnings when exchanging or attaching external tables. Writable external tables can no longer be used as partitions, and attaching readable external tables without validation now triggers a warning instead of requiring a no-op clause.
+
+-  Disables ``SET DISTRIBUTED REPLICATED`` for ``ALTER EXTERNAL TABLE`` to prevent misuse and ensure consistency.
+
+.. _foreign-data-wrapper:
+
+Foreign data wrapper
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Improves performance and stability for ``gpfdist`` external tables. Adds TCP keepalive support for more reliable reads, and increases the default buffer size to enhance write throughput for writable external tables.
+
+-  ORCA now falls back to the planner for queries involving foreign partitions using ``greenplum_fdw``, preventing crashes caused by incompatible execution behavior. Queries on non-partitioned foreign tables using ``greenplum_fdw`` remain supported by ORCA.
+
+High availability and high reliability
+++++++++++++++++++++++++++++++++++++++++
+
+.. _backup-and-disaster-recovery:
+
+Backup and disaster recovery
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  CBDR
+
+   Introduces CBDR, a backup and recovery tool designed for |product_name| and Apache Cloudberry databases. Built on WAL-G, CBDR offers a user-friendly command-line interface that simplifies disaster recovery and ensures data safety.
+
+   CBDR supports both full and incremental backups, making it efficient for large-scale clusters. Users can list available backups, restore from any selected point, and store backups in S3-compatible object storage. Compared to existing tools like ``gpbackup`` and ``gprestore``, CBDR provides enhanced flexibility with features such as support for multiple compression formats (lz4, lzma, zstd, brotli) and backup encryption, making it a comprehensive solution for enterprise-grade backup strategies.
+
+   See :ref:`related document <manage-system/backup-and-restore/cbdr:cbdr>`.
+
+-  DB recovery and synchronization
+
+   -  Improves archiver performance when handling many ``.ready`` files by reducing redundant directory scans. This change speeds up WAL archiving, especially when ``archive_command`` has been failing and many files have accumulated.
+
+   -  ``gp_create_restore_point()`` can only be executed on the Coordinator node. Calling this function on a segment node will result in an error. The function returns a structured record value, including the restore point name and LSN, which you can view directly by running ``SELECT * FROM gp_create_restore_point()``.
+
+.. _wal:
+
+WAL
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Improves WAL replication management by restricting a coordinator-specific tracking mechanism to the coordinator only. This change simplifies primary segment behavior and aligns replication practices more closely across segments. No functional change for users, but helps reduce unnecessary complexity in WAL retention logic.
+
+-  Enhances WAL retention logic to improve reliability of incremental recovery using ``pg_rewind``. Physical replication slots now retain WAL files up to the last common checkpoint, reducing risk of missing WAL during recovery. This change also simplifies the underlying logic and adds test coverage for WAL recycling.
+
+-  Switches WAL replication connections to use the standard libpq protocol instead of a legacy internal one. This improves compatibility and reliability of replication behavior. Also fixed test failures and improved error handling for replication connections.
+
+Security
+++++++++++
+
+.. _database-operations:
+
+DB Operations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  ``REFRESH MATERIALIZED VIEW CONCURRENTLY`` runs all internal operations in the correct security context to prevent potential privilege escalation. This change ensures safer execution by restricting operations to the appropriate permission level.
+
+-  Improves internal handling of new ``aoseg`` and ``aocsseg`` tuples by aligning tuple freezing behavior with other catalog operations. This change enhances consistency with upstream PostgreSQL practices and removes the need for ``CatalogTupleFrozenInsert``.
+
+.. _system-processes:
+
+System processes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Orphaned file checks now exclude idle sessions during safety validation. This prevents unnecessary errors when persistent connections from services are active, allowing the detection process to complete successfully.
+
+-  Adds a safety check in backend signal handlers to ensure signals are handled by the correct process. This prevents unintended shared memory access by child processes and improves overall process isolation and stability.
+
+-  Improves process safety by preventing child processes spawned via ``system()`` from calling ``proc_exit()``. This avoids potential corruption of shared memory structures and ensures only the parent process performs cleanup operations.
+
+-  Removes the permission check for ``cpu.pressure`` when using ``gp_resource_manager='group-v2'``. This prevents startup failures on systems where PSI is disabled, without affecting resource management functionality.
+
+.. _replication-mirrorless:
+
+Replication/Mirrorless clusters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Improves replication error reporting by setting persistent ``WalSndError`` when a replication slot is invalidated. This ensures accurate error visibility in ``gp_stat_replication``.
+
+.. _permission-management:
+
+Permission management
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Strengthens security by rejecting extension schema or owner substitutions containing potentially unsafe characters like ``$``, ``'``, or ``\``. This prevents SQL injection in extension scripts and protects against privilege escalation in certain non-bundled extensions.
+
+-  Creating or assigning roles to the ``system_group`` resource group now results in an error, as this group is reserved for internal system processes only.
+
+-  Reverts the restriction requiring superuser privileges to set the ``gp_resource_group_bypass`` GUC. This allows applications like GPCC to function more easily while still limiting resource impact.
+
+-  Altering the ``mpp_execute`` option of a foreign server or wrapper is now disallowed to prevent inconsistencies in foreign table distribution policies. Changing these options previously could result in outdated cached plans and incorrect query execution. This update ensures plan correctness by enforcing cache invalidation only when appropriate.
+
+.. _pgcrypto:
+
+pgcrypto
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Adds support for FIPS mode in ``pgcrypto``, controlled by a GUC. This allows |product_name| to operate in FIPS-compliant environments when linked with a supported FIPS-enabled OpenSSL version. Certain ciphers are disabled in this mode to comply with FIPS requirements.
+
+-  ``pgcrypto`` now allows enabling FIPS mode even on systems where FIPS is not pre-enabled by the OS or environment. This change removes the dependency on ``FIPS_mode()`` checks, offering more flexibility in managing FIPS compliance through the database.
+
+Resource management
++++++++++++++++++++++++
+
+.. _resource-group-management:
+
+Resource group management
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Renames the ``memory_limit`` parameter to ``memory_quota`` in ``CREATE/ALTER RESOURCE GROUP`` to clarify its meaning and unit. See :ref:`related document <optimize-performance/manage-resources-using-resource-groups:manage resources using resource groups>`.
+
+-  Adds a new system view ``gp_toolkit.gp_resgroup_status_per_segment`` to monitor memory usage per resource group on each segment. This view helps database administrators track real-time vmem consumption (in MB) when resource group-based resource management is enabled. See :ref:`related document <references/sys-catalog/gp-toolkit-schema:gp_resgroup_status_per_segment>`.
+
+-  Improves logging behavior when memory usage reaches Vmem or resource group limits. The system now prints log messages directly to stderr to avoid stack overflow errors during allocation failures.
+
+-  Removes unnecessary permission check for ``cpu.pressure`` when using the ``group-v2`` resource manager. This prevents startup failures on systems where PSI is not enabled, improving compatibility across Linux distributions. See :ref:`related document <optimize-performance/manage-resources-using-resource-groups:manage resources using resource groups>`.
+
+.. _logging-and-monitoring:
+
+Logging and monitoring
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Adds additional log messages for GDD backends to help investigate memory-related issues. These logs provide better visibility into backend behavior during high memory usage scenarios.
+
+-  Adds a log ignore rule for "terminating connection" messages to reduce noise in test outputs. This helps avoid unnecessary diffs in CI for tests that involve connection termination.
+
+-  Adds more verbose logging to ``ResCheckSelfDeadlock()``.
+
+-  Logs queue IDs and portal IDs in resource queue logs.
+
+-  Dumps more information when releasing resource queue locks to aid in troubleshooting and monitoring.
+
+-  Uses ``ERROR`` for dispatcher liveness checks.
+
+-  Enhances logging for dispatch connection liveness checks to improve clarity during connection failures. Logs now include more accurate error messages based on socket state and system errors.
+
+.. _platform-compatibility:
+
+Platform compatibility and build
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Improves ``gp_sparse_vector`` compatibility with ARM platforms by fixing type handling in serialization logic. This ensures consistent behavior across different architectures.
+
+-  Adds support for ``sigaction()`` on Windows to align signal handling behavior with other platforms. This reduces platform-specific differences and improves code consistency.
+
+-  Updates ACL mode type in ORCA to match the parser's definition, ensuring consistent type usage.
+
+.. _system-views-and-statistics:
+
+System views and statistics
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Improves join cardinality estimation for projected columns that preserve the number of distinct values (NDVs), such as additions or subtractions with constants. This allows the optimizer to use underlying column histograms for more accurate estimates, improving plan quality for queries with scalar projections in join conditions.
+
+-  Increases precision for frequency and NDV values in ORCA when processing metadata population scripts (MDPs). This change ensures consistent behavior between MDPs and live database queries, reducing discrepancies caused by rounding small values.
+
+-  ORCA now considers null value skew when costing redistribute motions, improving plan accuracy for queries involving columns with many nulls. This helps avoid performance issues caused by data being unevenly distributed across segments.
+
+-  ORCA now supports extended statistics to improve cardinality estimation for queries with correlated columns. This allows the optimizer to use real data-driven correlation factors instead of relying on arbitrary GUC settings, leading to more accurate query plans.
+
+-  Introduces ``gp_log_backend_memory_contexts`` to log memory contexts across segments, with optional targeting by content ID. This enhances observability and helps diagnose memory issues in distributed queries.
+
+-  ORCA now supports statistics derivation for predicates involving different time-related data types, such as date and timestamp. This improves plan accuracy and performance for queries comparing mixed temporal types.
+
+-  Autostats now uses ``SKIP LOCKED`` for ``ANALYZE`` operations to avoid blocking on locks, reducing the risk of deadlocks and improving predictability. This behavior is enabled by default and can be controlled using the ``gp_autostats_lock_wait`` GUC.
+
+-  ORCA now supports ``STATS_EXT_NDISTINCT`` extended statistics for estimating cardinality on correlated columns. This improves accuracy for queries using ``GROUP BY`` or ``DISTINCT`` on such columns.
+
+.. _network-connections:
+
+Network connections
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  Marks ``gp_reject_internal_tcp_connection`` as defunct to improve reliability of internal QD-to-entry DB connections. These connections over TCP/IP are now treated as authenticated by default, preventing authentication errors caused by ``pg_hba.conf`` settings.
+
+
+.. _tools-and-utilities:
+
+Tools and utilities
+++++++++++++++++++++++
+
+-  **analyzedb**
+
+   -  ``analyzedb`` now includes materialized views in its list of tables to analyze. This improves the performance immediately after analysis.
+
+-  **gpexpand**
+
+   -  ``gpexpand`` now includes a cluster health check to ensure all segments are up and in their preferred roles before proceeding. This prevents incorrect port assignments and avoids potential issues during expansion when nodes are not in a stable state.
+
+-  **gp_toolkit**
+
+   -  Added an update path for the ``gp_toolkit`` extension to version 1.6. This update renames the column ``memory_limit`` to ``memory_quota`` in the ``gp_resgroup_config`` view for improved clarity. Users can apply the update using ``ALTER EXTENSION gp_toolkit UPDATE TO '1.6'``.
+
+
+.. _dbcc:
+
+Interactive manager DBCC
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+DBCC is a monitoring and operations dashboard component designed for |product_name|. It provides a unified web console that displays real-time cluster status, resource usage, database object details, SQL execution metrics, and more. It supports automated operations and alert management across the entire cluster. DBCC must be installed separately.
+
+DBCC provides the following key features:
+
+-  **Cluster overview**: Displays core metrics such as database version, uptime, number of connections, total tables, and disk usage. Helps users quickly understand the health of the cluster.
+
+-  **Resource monitoring**: Shows near real-time usage of CPU, memory, disk I/O, and network I/O. Supports viewing the status and metrics of individual nodes and hosts.
+
+-  **Storage analysis**: Displays disk usage by node to support capacity planning and storage optimization.
+
+-  **Database object view**: Provides detailed table information by schema, user, and partitioning. Includes table size and estimated row count.
+
+-  **SQL monitoring**: Tracks the execution status of active and historical SQL statements to support query performance optimization.
+
+-  **Alerting**: Supports creating alert rules to monitor abnormal resource usage or system events and trigger notifications.
+
+-  **Notification delivery**: Allows configuration of contact groups to ensure the right people are notified when alerts are triggered. 
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+
+   * - Category
+     - Features
+     - User document
+   * - Deploy
+     - Deploy DBCC
+     - :ref:`manage-system/monitor-system/install-monitor-console:install monitoring console`
+   * - Cluster
+     - View cluster overview
+     - :ref:`manage-system/monitor-system/monitor-console-view-cluster-overview:view cluster information`
+   * - Cluster
+     - View cluster runtime details
+     - :ref:`manage-system/monitor-system/monitor-console-view-cluster-status:view the overall status and data of the cluster`
+   * - Cluster
+     - View storage overview
+     - :ref:`manage-system/monitor-system/monitor-console-storage-overview:view storage information`
+   * - Database
+     - View database object information
+     - :ref:`manage-system/monitor-system/monitor-console-view-db-object-info:view database object information`
+   * - Database
+     - View SQL monitoring information
+     - :ref:`manage-system/monitor-system/monitor-console-sql-monitor-info:view sql monitoring information`
+   * - Alert
+     - Configure alert rules
+     - :ref:`manage-system/monitor-system/monitor-console-alert-configs:view and create alert rules`
+   * - Alert
+     - View and create contact groups
+     - :ref:`manage-system/monitor-system/monitor-console-contact-groups:view and create contact groups`
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+Upgrade path
+----------------
+
+To upgrade to |product_name| v4.0.0 from an earlier version, use the ``cbcopy`` or ``hashcopy`` utility to export data from the existing cluster and import it into a newly deployed v4.0.0 cluster. This export-import approach ensures data consistency and supports a clean migration path to the latest version. 
+
+Product change information
+---------------------------
+
+SQL syntax
+~~~~~~~~~~~~~~~
+
+Resource group syntax updates
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  The ``memory_limit`` parameter has been **renamed to** ``memory_quota`` in both ``CREATE RESOURCE GROUP`` and ``ALTER RESOURCE GROUP`` statements.
+
+   Before:
+
+   .. code:: sql
+
+      CREATE RESOURCE GROUP rg_memory_test WITH (memory_limit = -1, cpu_max_percent = 20, concurrency = 2);
+      ALTER RESOURCE GROUP rg_memory_test SET memory_limit = 1000;
+
+   After:
+
+   .. code:: sql
+
+      CREATE RESOURCE GROUP rg_memory_test WITH (memory_quota = -1, cpu_max_percent = 20, concurrency = 2);
+      ALTER RESOURCE GROUP rg_memory_test SET memory_quota = 1000;
+
+-  The ``cpu_hard_quota_limit`` parameter has been **replaced by**
+   ``cpu_max_percent``.
+
+   Before:
+
+   .. code:: sql
+
+      CREATE RESOURCE GROUP rg_test_group WITH (cpu_hard_quota_limit = 10);
+      ALTER RESOURCE GROUP rg_test_group SET cpu_hard_quota_limit = 100;
+
+   After:
+
+   .. code:: sql
+
+      CREATE RESOURCE GROUP rg_test_group WITH (cpu_max_percent = 10);
+      ALTER RESOURCE GROUP rg_test_group SET cpu_max_percent = 100;
+
+-  The ``CREATE RESOURCE GROUP`` statement now supports a new parameter:
+   ``io_limit``.
+
+   Example:
+
+   .. code:: sql
+
+      CREATE RESOURCE GROUP rg_test_group1 WITH (
+      concurrency = 10,
+      cpu_max_percent = 10,
+      io_limit = 'pg_default:rbps=1000,wbps=1000,riops=1000,wiops=1000'
+      );
+
+-  Another new parameter ``cpuset`` has also been introduced to control CPU binding.
+
+   Example:
+
+   .. code:: sql
+
+      CREATE RESOURCE GROUP rg_test_group WITH (cpuset = '1;4-5');
+
+New DDL: ALTER TABLE SET ACCESS METHOD
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A new clause ``ALTER TABLE ... SET ACCESS METHOD`` has been added to support changing the access method of a table.
+
+.. code:: sql
+
+   ALTER TABLE heaptable SET ACCESS METHOD heap2;
+
+Configuration parameters (GUCs)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For details of GUCs, see the :ref:`GUC document <references/config-params-guc-list:configuration parameters>`.
+
+Newly added GUCs
+^^^^^^^^^^^^^^^^^^^^^^
+
+The following configuration parameters are added in v4.0.0:
+
+-  ``allow_dml_directory_table``: The default value is ``off``.
+
+-  ``autovacuum_freeze_max_age``: The age at which to autovacuum a table to prevent transaction ID wraparound.
+
+-  ``autovacuum_vacuum_cost_delay``: The vacuum cost delay in milliseconds, for autovacuum.
+
+-  ``autovacuum_vacuum_scale_factor``: The number of tuple updates or deletes prior to vacuum as a fraction of reltuples.
+
+-  ``autovacuum_vacuum_threshold``: The minimum number of tuple updates or deletes prior to vacuum.
+
+-  ``gp_appendonly_compaction_segfile_limit``: Sets the minimum number of segfiles that must always be available for inserts.
+
+-  ``gp_autostats_lock_wait``: The autostats generated ``ANALYZE`` statements to wait for lock acquisition.
+
+-  ``gp_enable_runtime_filter_pushdown``: Tries to push the hash table of hash join to the seqscan or AM as bloom filter.
+
+-  ``gp_enable_statement_trigger``: Enables statement triggers to be created instead of erroring out.
+
+-  ``gp_max_partition_level``: Sets the maximum number of levels allowed when creating a partitioned table using Greenplum classic syntax.
+
+-  ``optimizer_array_constraints``: Allows the optimizer's constraint framework to derive array constraints. The default value is ``on``.
+
+-  ``optimizer_array_expansion_threshold``: The item limit for expansion of arrays in ``WHERE`` clause for constraint derivation.
+
+-  ``optimizer_cost_model``: Sets the optimizer cost model.
+
+-  ``optimizer_cost_threshold``: Sets the threshold for plan sampling relative to the cost of best plan. ``0.0`` means unbounded.
+
+-  ``optimizer_cte_inlining_bound``: Sets the CTE inlining cutoff.
+
+-  ``optimizer_damping_factor_filter``: Selects predicate damping factor in optimizer. ``1.0`` means no damping.
+
+-  ``optimizer_damping_factor_groupby``: The ``group by`` operator damping factor in optimizer. ``1.0`` means no damping.
+
+-  ``optimizer_damping_factor_join``: The join predicate damping factor in optimizer. ``1.0`` means no damping; ``0.0`` means square root method.
+
+-  ``optimizer_discard_redistribute_hashjoin``: Discards hash join with redistribute motion in the optimizer.
+
+-  ``optimizer_dpe_stats``: Enables statistics derivation for partitioned tables with dynamic partition elimination.
+
+-  ``optimizer_enable_derive_stats_all_groups``: Enables stats derivation for all groups after exploration.
+
+-  ``optimizer_enable_dynamicbitmapscan``: Enables the optimizer's use of plans with dynamic bitmap scan.
+
+-  ``optimizer_enable_dynamicindexonlyscan``: Enables the optimizer's use of plans with dynamic index only scan.
+
+-  ``optimizer_enable_dynamicindexscan``: Enables the optimizer's use of plans with dynamic index scan.
+
+-  ``optimizer_enable_foreign_table``: Enables foreign tables in GPORCA.
+
+-  ``optimizer_enable_orderedagg``: Enables ordered aggregate plans.
+
+-  ``optimizer_enable_push_join_below_union_all``: Enables transform of join of union all to union all of joins, which might improve the join performance.
+
+-  ``optimizer_enable_query_parameter``: Enables query parameters in GPORCA. The default value is ``on``.
+
+-  ``optimizer_enable_right_outer_join``: Enables GPORCA to generate plans containing right outer joins.
+
+-  ``optimizer_force_three_stage_scalar_dqa``: Forces the optimizer to always pick 3-stage aggregate plan for scalar distinct qualified aggregate.
+
+-  ``optimizer_nestloop_factor``: Sets the nestloop join cost factor in the optimizer.
+
+-  ``optimizer_penalize_broadcast_threshold``: The maximum number of rows of a relation that can be broadcasted without penalty. A value of ``0`` means disabled.
+
+-  ``optimizer_push_group_by_below_setop_threshold``: The maximum number of children that setops have to consider pushing ``group by`` s below it.
+
+-  ``optimizer_replicated_table_insert``: Omits broadcast motion when inserting into replicated table.
+
+-  ``optimizer_skew_factor``: The coefficient of skew ratio computed from sample stastics.
+
+-  ``optimizer_sort_factor``: Sets the sort cost factor in the optimizer. The value of ``1.0`` means the same as the default. If the value is greater than ``> 1.0``, the optimizer is more costly than the default. If the value is less than ``1.0``, the optimizer is less costly than the default.
+
+-  ``optimizer_trace_fallback``: Prints a message at ``INFO`` level, whenever GPORCA falls back.
+
+-  ``optimizer_use_gpdb_allocators``: Enables the GPORCA to use Memory Contexts.
+
+-  ``optimizer_xform_bind_threshold``: The maximum number bindings per xform per group expression. The value ``0`` means disabled.
+
+Removed GUCs
+^^^^^^^^^^^^^^^^^^
+
+The following configuration parameters are removed in v4.0.0:
+
+-  ``gp_enable_sort_distinct``
+
+-  ``gp_safefswritesize``
+
+-  ``vector.enable_plan_merge``
+
+Changed GUCs
+^^^^^^^^^^^^^^^^^^^
+
+-  The default value of ``gp_command_count`` in v4.0.0 has been changed from ``2`` to ``0``, which means that the system will not show any command received from the client in a session by default.
+
+-  The default value of ``krb_server_keyfile`` in v4.0.0 has been changed from ``FILE:/usr/local/cloudberry-db-devel/etc/postgresql/krb5.keytab`` to ``FILE:/workspace/dist/database/etc/postgresql/krb5.keytab``, which means that the default location of the Kerberos server key files has been changed to ``FILE:/workspace/dist/database/etc/postgresql/krb5.keytab``.
+
+-  The category of ``work_mem`` in v4.0.0 has been changed from ``Deprecated Options`` to ``Resource Usage / Memory``.
+
+-  The minimum value of ``max_replication_slots`` in v4.0.0 has been changed from ``1`` to ``0``, which means that the maximum number of simultaneously defined replication slots has been changed to 0 by default.
+
+-  The default value of ``writable_external_table_bufsize`` in v4.0.0 has been changed from ``64`` to ``1024``, which means that the default buffer size for the writable external table before writing data to gpfdist has been changed to 1024 KB.
+
+-  The default value of ``wal_compression`` in v4.0.0 has been changed from ``off`` to ``on``, which means that the system will compress full-page writes written in WAL files by default.
+
+-  The default value of ``log_checkpoints`` in v4.0.0 has been changed from ``off`` to ``on``, which means that the system will log each checkpoint by default.
+
+-  The default value, minimum value, and maximum value of ``gp_server_version_num`` in v4.0.0 have been changed from ``10000`` to ``20000``.
+
+Extensions and plugins
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following extensions and plugins are **bundled with the |product_name| v4.0.0 RPM installation package**. These components are preinstalled and ready for use in supported environments.
+
+Foreign data wrappers
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  ``kafka_fdw``
+
+-  ``oracle_fdw``
+
+-  ``mysql_fdw``
+
+-  ``hive_connector``
+
+-  ``datalake_fdw``
+
+Procedural languages
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  ``PL/Perl``
+
+-  ``PL/Java``
+
+Analytical and performance tools
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  ``pgvector``
+
+-  ``zombodb``
+
+-  ``pg_jieba``
+
+-  ``roaringbitmap``
+
+-  ``vectorization``
+
+-  ``madlib``
+
+-  ``perfmon``
+
+Database management extensions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  ``pg_pool``
+
+-  ``pgaudit``
+
+-  ``gophermeta``
+
+-  ``unionstore_ext``
+
+-  ``tablespace`` (with ``enable_dfs_tablespace`` support)
+
+-  ``gp_exttable_delimiter``
+
+-  ``gpbackup``
+
+-  ``cbcopy``
+
+-  ``cbdr``
+
+-  ``anon``
+
+-  ``pax``
+
+Separately installable tools
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+These tools are **not included** in the main RPM and must be installed separately.
+
+-  ``PXF`` (platform extension framework for accessing external data sources)
+
+-  ``DBCC`` (for web-based cluster monitoring and alerting)
+
+Removed features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+zhparser
+^^^^^^^^^^^
+
+In v4.0.0, zhparser has been removed and is not available.
+
+Web platform
+^^^^^^^^^^^^^^^^^
+
+Starting from v4.0.0, **Web Platform** has been replaced by **DBCC** as the default monitoring and management console.
+
+DBCC provides the same core monitoring capabilities as Web Platform, including:
+
+-  Cluster overview: View key metrics such as database version, uptime, number of connections, total tables, and disk usage.
+
+-  Resource monitoring: Monitor near real-time CPU, memory, disk I/O, and network I/O usage at both the cluster and host levels.
+
+-  Storage analysis: Inspect disk usage by node to assist with capacity planning.
+
+-  Database object view: View detailed table information by schema, user, and partition, including estimated row counts and table sizes.
+
+-  SQL monitoring: Track active and historical SQL execution status to support performance tuning.
+
+DBCC also introduces new features that were not available in Web Platform:
+
+-  Alerting system: Define alert rules to monitor abnormal resource usage or system events and trigger notifications.
+
+-  Notification delivery: Configure contact groups to ensure alerts are delivered to the appropriate recipients.
+
+-  Standalone deployment: DBCC is not bundled with the database and must be installed separately.
+
+As of v4.0.0, **Web Platform is no longer available**. This includes all Web Platform–specific features such as:
+
+-  Built-in deployment interface for provisioning |product_name| clusters.
+
+-  Built-in SQL editor and worksheet workspace.
+
+-  Native bundling with the database installation.
+
+Users upgrading to v4.0.0 are advised to install DBCC separately to continue using web-based monitoring and operational tools.
+
+Bug fixes
+--------------
+
+- Fixed data loss caused by incorrect shared snapshot handling.
+- Fixed memory corruption during AOCO ADD COLUMN abort.
+- Fixed checkpoint WAL replay failure.
+- Fixed incorrect results when using UNION for RECURSIVE_CTE.
+- Fixed incorrect results from hash joins on char columns.
+- Fixed incorrect results produced by WITH RECURSIVE queries.
+- Fixed incorrect results when a REPLICATED table is unioned with a DISTRIBUTED table.
+- Fixed incorrect results when the outer query had ORDER BY after a LATERAL subquery.
+- Fixed incorrect behavior of DELETE with split update.
+- Fixed incorrect results when using direct dispatch.
+- Fixed memory leaks in ORCA and various components.
+- Fixed long-running execution with bitmap indexes.
+- Fixed redundant SORT enforcement on group aggregates.
+- Fixed incorrect index position in target list in ExecTupleSplit.
+- Fixed incorrect value in the cpu_usage column returned by pg_resgroup_get_status().
+- Fixed incorrect behavior of gp_toolkit.gp_move_orphaned_files.
+- Fixed incorrect results in multi-stage aggregate queries.
+- Fixed incorrect plan and output in multi-stage aggregate queries.
+- Fixed incorrect reltuples value after VACUUM.
+- Fixed incorrect index->reltuples value after VACUUM.
+- Fixed a vulnerability where LDAP leaked user information.
+- Fixed incorrect permissions warning on the pgpass file.
+- Fixed incorrect handling of ONLY keyword for multiple tables in GRANT/REVOKE statements.
+- Fixed incorrect permissions in resource management DDL.
+- Fixed incorrect security context in REFRESH MATERIALIZED VIEW CONCURRENTLY.
+- Fixed deadlock between coordinator and segments.
+- Fixed race condition in CTE reader-writer communication.
+- Fixed race condition when invalidating obsolete replication slots.
+- Fixed deadlock by allowing concurrent creation of non-first indexes on AO tables.
+- Fixed locking issue when opening range tables inside ExecInitModifyTable().
+- Fixed incorrect unlock mode in DefineRelation.
+- Fixed incorrect locking in partition distribution policies.
+- Fixed issues with rle_type when converting a table from AO to AOCO.
+- Fixed incorrect handling of empty ranges and NULL values in BRIN indexes.
+- Fixed incorrect handling of NULL values when merging BRIN summaries.
+- Fixed incorrect TIDs order when building bitmap indexes.
+- Fixed possible inconsistency between bitmap LOV table and its index.
+- Fixed incorrect behavior of VACUUM in AO tables with indexes.
+- Fixed incorrect handling of TOAST values for invisible AppendOptimized tuples during VACUUM.
+- Fixed ORCA's invalid processing of nested SubLinks under aggregates.
+- Fixed ORCA's invalid processing of nested SubLinks referenced in GROUP BY clauses.
+- Fixed ORCA's invalid processing of nested SubLinks with GROUP BY attributes.
+- Fixed incorrect predicate pushdown when using casted columns.
+- Fixed incorrect join condition loss after pulling up sublinks to join nodes.
+- Fixed incorrect hash-key generation for Redistribute Motion in multi-DQA expressions.
+- Fixed incorrect plan generation for SEMI JOIN with RANDOM distributed tables.
+- Fixed incorrect behavior of gp_stat_bgwriter.
+- Fixed incorrect monitoring in pg_stat_slru.
+- Fixed incorrect monitoring in gp_stat_progress_dtx_recovery.
+- Fixed incorrect monitoring in pg_resgroup_get_status().
+- Fixed incorrect monitoring in gp_toolkit.gp_resgroup_config.
+- Fixed compilation issues on various platforms.
+- Fixed documentation and comment typos.
+- Fixed build system and Makefile issues.
+- Fixed various memory leaks and resource management issues.
+- Fixed various error handling and logging improvements.
+- Fixed mismatched types.
+- Fixed the ORCA preprocess step for queries with the Select-Project-NaryJoin pattern.
+- Fixed the missing discard_output variable in shared scan node functions.
+- Fixed the crash caused by running VACUUM AO_AUX_ONLY on an AO-partitioned table.
+- Fixed an obvious memory leak in _bitmap_xlog_insert_bitmapwords().
+- Fixed a memory leak in the merge join implementation.
+- Fixed the issue where the token for user ID xxx did not exist.
+- Fixed the issue where plan hints could not derive table descriptors.
+- Fixed the issue where inject_fault suspend could not be canceled.
+- Fixed fallback in debug builds due to scalars with invalid return types.
+- Fixed relptr encoding of the base address.
+- Fixed visimap consults for unique checks during UPDATE operations.
+- Fixed the issue where external table location URIs containing | caused errors.
+- Fixed handling of the time command output containing commas.
+- Fixed a small overestimation of the output length of base64 encoding.
+- Fixed gp_toolkit.__gp_aocsseg_history crash on non-AO columnar tables.
+- Fixed a race condition between termination and resqueue wakeup.
+- Fixed a statement leak involving self-deadlocks.
+- Fixed the detection of child output columns when the parent is a UNION during join pruning.
+- Fixed a query crash when using a negative memory_limit value in resource groups.
+- Fixed issues in pgarch new directory-scanning logic.
+- Fixed a memory leak in the FTS PROBE process.
+- Fixed check_multi_column_list_partition_keys.
+- Fixed a memory leak caught via ICW with memory check enabled.
+- Fixed query hang and fallback issues involving CTEs on replicated tables.
+- Fixed the unrecognized join type error with LASJ Not-In and network types.
+- Fixed issues in upgrade_adapt.sql related to queries using WITH OIDS.
+- Fixed the double declaration of check_ok() in pg_upgrade.h.
+- Fixed logic error with subdirectories generated by pg_upgrade for internal files.
+- Fixed a typo in the pg_upgrade file header.
+- Fixed the bug where PL/Python functions caused the master process to reset.
+- Fixed the Shared Scan hang issue involving initplans.
+- Fixed motion toast error.
+- Fixed a memory leak related to fsync in AO tables.
+- Fixed CDatumSortedSet handling of empty arrays that caused errors in ORCA.
+- Fixed ORCA returning incorrect column type modifier information.
+- Fixed DbgStr output when printing DP structs in ORCA.
+- Fixed the comment on performDtxProtocolPrepare.
+- Fixed a memory leak in Dynamic Index, IndexOnly, and BitmapIndex scans during execution.
+- Fixed the memory accounting bug when moving MemoryContext under another accounting node.
+- Fixed the ALTER TABLE ALTER COLUMN TYPE issue that reuses an incorrect index.
+- Fixed query fallback when a subquery is present within LEAST() or GREATEST().
+- Fixed the typo in timestamp.
+- Fixed unexpected warnings related to pg_stat_statements node types.
+- Fixed the crash involving initplan in MPP.
+- Fixed LeftJoinPruning pruning essential LEFT JOINs.
+- Fixed the SET command that incorrectly sends DTX protocol commands.
+- Fixed the segmentation fault in addOneOption().
+- Fixed parallel_retrieve_cursor diffs.
+- Fixed gpdiff.pl to ignore information when EXPLAIN ignores costs.
+- Fixed the uninitialized-use warning in CTranslatorDXLToPlStmt.cpp.
+- Fixed the bug where the LOCALE flag cannot be used with a string pattern.
+- Fixed a typo in cdbmutate.c.
+- Fixed CColRefSet debug printing.
+- Fixed ORCA producing incorrect plans when handling SEMI JOIN with RANDOM distributed tables.
+- Fixed orphaned temp tables on the coordinator.
+- Fixed the segmentation fault caused by concurrent INSERT ON CONFLICT and DROP TABLE.
+- Fixed redundant columns in a multi-stage aggregate plan.
+- Fixed the import of ICU collations in pg_import_system_collations().
+- Fixed the error: "Cannot add cell to table content: total cell count of XXX exceeded."
+- Fixed orphaned temporary namespace catalog entries left on the coordinator.
+- Fixed REFRESH MATERIALIZED VIEW on AO tables with indexes.
+- Fixed the use of PORTNAME in the gp_toolkit Makefile.
+- Fixed pg_stat_activity display for bypassed and unassigned queries.
+- Fixed the recursive CTE MergeJoin that involved a motion on WTS.
+- Fixed the column width display for partitioned tables.
+- Fixed the LDAP crash when ldaptls=1 and ldapscheme is not set.
+- Fixed the gpstop pipeline flakiness after the referenced change.
+- Fixed the ANALYZE bug in expand_vacuum_rels.
+- Fixed the compilation error.
+- Fixed the ORCA crash due to improper colref mapping with CTEs.
+- Fixed the bug where gpload insert mode was not included in a transaction.
+- Fixed the bug where resgroup total wait time was always zero.
+- Fixed the gpcheckcat error against pg_description.
+- Fixed flakiness caused by waiting for a different number of fault triggers.
+- Fixed the bug involving RelabelType in the GROUP BY clause.
+- Fixed the planner error with multiple copies of an AlternativeSubPlan.
+- Fixed the issue with bitmap indexes.
+- Fixed the bug in HashAgg related to selective-column-spilling logic.
+- Fixed the bug in disk-based hash aggregation.
+- Fixed the pipeline stall issue in LookupTupleHashEntryHash().
+- Fixed the use of version in ArgumentParser, which is deprecated.
+- Fixed the use of BaseException.message, which has been deprecated since Python 2.6.
+- Fixed the case pg_rewind_fail_missing_xlog.
+- Fixed the compiler warning for gcc-12.
+- Fixed support for the DEFERRABLE keyword on primary and unique keys.
+- Fixed the unlocking of pruned partitions in partitioned tables.
+- Fixed the crash in ORCA involving skip-level correlated queries.
+- Fixed the removal of Assert statements in release builds.
+- Fixed the typo in comments: JOIN_SEMI_DEDUP/JOIN_SEMI_DEDUP_REVERSE.
+- Fixed the issue where REORGANIZE=TRUE did not redistribute randomly-distributed tables.
+- Fixed the core dump caused by concurrent updates on partition tables in DynamicScan.
+- Fixed the typo: ANALZE to ANALYZE.
+- Fixed the issue where cgroup v1 cpu_quota_us cannot be larger than its parent's value.
+- Fixed indentation and trailing whitespace in UDFs in resgroup/resgroup_auxiliary_tools_v1.
+- Fixed the name of cpu_hard_quota_limit in resgroup_syntax.sql.
+- Fixed multi-row DEFAULT handling in INSERT ... SELECT rules.
+- Fixed invalid function references in several comments.
+- Fixed the bug where COPY FORM does not throw ERROR: extra data after last expected column.
+- Fixed the issue where file .204800 was not being checked in ao_foreach_extent_file.
+- Fixed the issue of incorrectly incrementing the command counter.
+- Fixed the coordinator crash in MPPnoticeReceiver.
+- Fixed the dangling pointer in ExecDynamicIndexScan().
+- Fixed the ORCA bug that incorrectly removed required redistribution motion when using GROUP BY over gp_segment_id.
+- Fixed header handling in url_curl.c.
+- Fixed ao_filehandler to support new attnum to filenum mapping changes.
+- Fixed pg_aocsseg to work with attnum to filenum mapping.
+- Fixed a comment in pg_dump.
+- Fixed the ORCA build break.
+- Fixed the gpconfig SSH retry undefined parameter issue.
+- Fixed the stale gp_default_storage_options comment.
+- Fixed the bug: unrecognized node type: 147.
+- Fixed spelling errors identified by lintian.
+- Fixed the bypass catalog unit test.
+- Fixed erroneous Valgrind markings in AllocSetRealloc.
+- Fixed the legacy bug in the DatabaseFrozenIds lock.
+- Fixed the mirror checkpointer error on the ALTER DATABASE query.
+- Fixed the bug: get_ao_compression_ratio() failed on root partitioned tables with AO children.
+- Fixed the issue where InterruptHoldoffCount was not being reset.
+- Fixed gpexpand failure caused by an event trigger.
+- Fixed missing redistribute for CTAS or INSERT INTO on randomly distributed tables when using ORCA.
+- Fixed the double free of remapper->typmodmap in TeardownUDPIFCInterconnect().
+- Fixed the bug in the upstream-merged COMMIT AND CHAIN feature.
+- Fixed inconsistency between gp_fastsequence row and index after a crash.
+- Fixed the typo allocatd to allocated.
+- Fixed the error: unrecognized node type: 145 in transformExpr.
+- Fixed build error caused by unused variable.
+- Fixed the issue where the distribution key was missing when creating a stage table.
+- Fixed the regex for etc/environment.d.
+- Fixed the string comparison warning.
+- Fixed obsolete references to SnapshotNow in comments.
+- Fixed pull-up error when the target list contains a RelabelType node.
+- Fixed the issue where index DDL operations were recorded in QEs' pg_last_stat_operation.
+- Fixed two compiler warnings.
+- Fixed the wrong value of maxAttrNum in TupleSplitState.
+- Fixed the bug of incorrect index position in target list in ExecTupleSplit.
+- Fixed the format error of the library name on Mac M1.
+- Fixed the pg_resgroup_get_status_kv() function.
+- Fixed interconnect bugs in ic_proxy_ibuf_push().
+- Fixed memory leaks in auto_explain.
+- Fixed ic_proxy compilation when HOST_NAME_MAX is unavailable.
+- Fixed duplicate filters caused by reversed operator argument order.
+- Fixed pg_rewind when the log file is a symbolic link.
+- Fixed and enabled 64-bit bitmapset and updated visimap.
+- Fixed the hang caused by multi-DQA with filters in the planner.
+- Fixed the bogus ORCA plan that incorrectly joins a CTE and a REPLICATED table.
+- Fixed the error in ATSETAM when applied to ao_column with a dropped column.
+- Fixed the LWLockHeldByMe assert failure in SharedSnapshotDump.
+- Fixed the KeepLogSeg() unit test.
+- Fixed the race condition when invalidating obsolete replication slots.
+- Fixed the uninitialized value in segno calculation.
+- Fixed issues in the invalidation logic for obsolete replication slots.
+- Fixed checkpoint signalling.
+- Fixed memory overrun when querying pg_stat_slru.
+- Fixed the bug where ORCA fails to decorrelate subqueries ordered by outer references.
+- Fixed unused variable compile warnings.
+- Fixed the bug where NestLoop join fails to materialize the inner child in some cases.
+- Fixed COPY execution via FDW on coordinator as executor.
+- Fixed inFunction usage for auto_stats in CTAS.
+- Fixed a compiler warning.
+- Fixed the syntax error with CREATE MATERIALIZED VIEW.
+- Fixed the issue preventing temporary table creation LIKE existing tables with comments.
+- Fixed and rewrote IndexOpProperties API.
+- Removed redundant Get/SetStaticPruneResult usage.
+- Fixed EPQ handling for DML operations.
+- Fixed gpcheckperf failure when using -V with -f option.
+- Fixed possible mirror startup failure triggered by FTS promotion.
+- Fixed the parallel retrieve cursor issue when selecting transient record types.
+- Fixed the resource management DDL warning: unrecognized node type when log_statement='ddl'
+- Fixed the resgroup init error when many cores are present in cpuset.cpus.
+- Fixed resqueue malfunction when using JDBC extended protocol.
+- Fixed the missing LOCKING CLAUSE on foreign tables when ORCA is enabled.
+- Fixed the test_consume_xids behavior where it consumes one more transaction ID than expected.
+- Fixed the ONLY keyword handling for multiple tables in GRANT/REVOKE statements.
+- Fixed the regression test to ignore memory usage values in JSON format EXPLAIN output.
+- Fixed relcache lookup in ORCA when selecting from sequences.
+- Fixed missing WAL files required by pg_rewind.
+- Fixed the gp_dqa test to explicitly ANALYZE tables.
+- Fixed the crash of AggNode in the executor caused by an ORCA plan.
+- Fixed the resource group cpuset test case.
+- Fixed the compiler warning caused by gpfdist with compressed external tables.
+- Fixed link issues on macOS and Windows.
+- Fixed failure when DynamicSeqScan contains a SubPlan.
+- Fixed the error: cache lookup failed for type 0.
+- Fixed the multi-level correlated subquery bug.
+- Fixed checkpoint WAL replay failure.
+- Fixed the check for BufFileRead() in ExecHashJoinGetSavedTuple().
+- Fixed the test extension to allow executing SQL code inside a Portal.
+- Fixed resgroup view test cases.
+- Fixed incorrect DISTKEY assignment when copying partitions on segments.
+- Fixed ic-proxy mis-disconnecting addresses after reloading the config file.
+- Fixed the gpcheckcat check on partition distribution policies.
+- Fixed colid remapping in disjunctive constraints.
+- Fixed the Makefile by removing the tablespace-step target from all.
+- Fixed CBitSet intersection logic in ORCA.
+- Fixed the query preprocessor for nested Select-Project-NaryJoin patterns.
+- Fixed incorrect unlock mode in DefineRelation.
+- Fixed the upgrade process for external tables with dropped columns.
+- Fixed the formatting issue in SECURITY.md.
+- Fixed gp_gettmid to return the correct startup timestamp.
+- Fixed the gpload regression test failure when the OS user is not gpadmin.
+- Fixed the compiler warning in appendonlyblockdirectory.c.
+- Fixed missing reloptions in partition roots created using |product_name| syntax.
+- Fixed the crash when calling get_ao_compression_ratio on HEAP tables.
+- Fixed incorrect sortOp and eqOp values generated by IsCorrelatedEqualityOpExpr.
+- Fixed the dependency bug involving minirepro and materialized views.
+- Fixed recursion handling in ALTER TABLE ... ENABLE/DISABLE TRIGGER.
+- Fixed SPE plans to display Partitions selected: 1 (out of 5).
+- Fixed incorrect hash-key generation for Redistribute Motion when creating paths for multi-DQA expressions.
+- Removed gp_enable_sort_distinct and noduplicates optimizations.
+- Fixed gpinitsystem Behave tests that use environment variables.
+- Fixed false alarms in gpcheckcat for pg_default_acl.
+- Fixed gpinitsystem failure with custom locale settings.
+- Fixed a panic in the greenplum_fdw test.
+- Fixed the failure in bitmap index null-array condition.
+- Fixed the compilation warning in gram.y.
+- Fixed multiple issues related to DistributedTransaction handling.
+- Fixed compile-time warnings in pg_basebackup code.
+- Fixed gplogfilter to correctly generate CSV output.
+- Fixed the assert in the OpExecutor node.
+- Fixed improper copying of group statistics in ORCA.
+- Fixed error reporting after ioctl() call in pg_upgrade --clone mode.
+- Fixed replay of CREATE DATABASE records on standby.
+- Fixed a minor memory leak in pg_dump.
+- Fixed parallel restore of foreign keys to partitioned tables.
+- Fixed the issue where the pg_appendonly entry was not removed during AO-to-HEAP table conversion.
+- Fixed assertion failure and segmentation fault in the backup code.
+- Fixed fallback behavior for non-default collations.
+- Fixed the subtransaction test for Python 3.10.
+- Fixed Windows client compilation of libpgcommon.
+- Fixed compiler warnings introduced by the Dynamic Scan commit.
+- Fixed the issue where CREATE OR REPLACE TRANSFORM failed.
+- Fixed compiler warnings for non-assert builds.
+- Fixed lock assertions in dshash.c.
+- Fixed \watch interaction with libedit on C.

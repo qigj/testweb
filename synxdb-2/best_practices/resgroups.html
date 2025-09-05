@@ -1,0 +1,295 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Memory and Resource Management with Resource Groups - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="memory-and-resource-management-with-resource-groups"><a class="header" href="#memory-and-resource-management-with-resource-groups">Memory and Resource Management with Resource Groups</a></h1>
+<p>Managing SynxDB resources with resource groups.</p>
+<p>Memory, CPU, and concurrent transaction management have a significant impact on performance in a SynxDB cluster. Resource groups are a newer resource management scheme that enforce memory, CPU, and concurrent transaction limits in SynxDB.</p>
+<ul>
+<li><a href="#section_r52_rbl_zt">Configuring Memory for SynxDB</a></li>
+<li><a href="#toolowmem">Memory Considerations when using Resource Groups</a></li>
+<li><a href="#configuring_rg">Configuring Resource Groups</a></li>
+<li><a href="#section113x">Low Memory Queries</a></li>
+<li><a href="#section177x">Administrative Utilities and admin_group Concurrency</a></li>
+</ul>
+<h2 id="configuring-memory-for-synxdb"><a class="header" href="#configuring-memory-for-synxdb"><a id="section_r52_rbl_zt"></a>Configuring Memory for SynxDB</a></h2>
+<p>While it is not always possible to increase system memory, you can avoid many out-of-memory conditions by configuring resource groups to manage expected workloads.</p>
+<p>The following operating system and SynxDB memory settings are significant when you manage SynxDB resources with resource groups:</p>
+<ul>
+<li>
+<p><strong>vm.overcommit_memory</strong></p>
+<p>This Linux kernel parameter, set in <a href="../install_guide/prep_os.html#topic3"><code>/etc/sysctl.conf</code></a>, identifies the method that the operating system uses to determine how much memory can be allocated to processes. <code>vm.overcommit_memory</code> must always be set to 2 for SynxDB systems.</p>
+</li>
+<li>
+<p><strong>vm.overcommit_ratio</strong></p>
+<p>This Linux kernel parameter, set in <a href="../install_guide/prep_os.html#topic3"><code>/etc/sysctl.conf</code></a>, identifies the percentage of RAM that is used for application processes; the remainder is reserved for the operating system. Tune the setting as necessary. If your memory utilization is too low, increase the value; if your memory or swap usage is too high, decrease the setting.</p>
+</li>
+<li>
+<p><strong>gp_resource_group_memory_limit</strong></p>
+<p>The percentage of system memory to allocate to SynxDB. The default value is .7 (70%).</p>
+</li>
+<li>
+<p><strong>gp_resource_group_enable_recalculate_query_mem</strong></p>
+<p>By default, SynxDB calculates the maximum per-query memory allotment for all hosts using the memory configuration of, and the number of primary segments configured on, the master host.</p>
+<blockquote>
+<p><strong>Note</strong> The default behavior may lead to out of memory issues and underutilization of resources when the hardware configuration of the master and segment hosts differ.</p>
+</blockquote>
+<p>If the hardware configuration of your master and segment hosts differ, set the <code>gp_resource_group_enable_recalculate_query_mem</code> server configuration parameter to <code>true</code>; this prompts SynxDB to recalculate the maximum per-query memory allotment on each segment host based on the memory and the number of primary segments configured on that segment host.</p>
+</li>
+<li>
+<p><strong>gp_workfile_limit_files_per_query</strong></p>
+<p>Set <code>gp_workfile_limit_files_per_query</code> to limit the maximum number of temporary spill files (workfiles) allowed per query. Spill files are created when a query requires more memory than it is allocated. When the limit is exceeded the query is terminated. The default is zero, which allows an unlimited number of spill files and may fill up the file system.</p>
+</li>
+<li>
+<p><strong>gp_workfile_compression</strong></p>
+<p>If there are numerous spill files then set <code>gp_workfile_compression</code> to compress the spill files. Compressing spill files may help to avoid overloading the disk subsystem with IO operations.</p>
+</li>
+<li>
+<p><strong>memory_spill_ratio</strong></p>
+<p>Set <code>memory_spill_ratio</code> to increase or decrease the amount of query operator memory SynxDB allots to a query. When <code>memory_spill_ratio</code> is larger than 0, it represents the percentage of resource group memory to allot to query operators. If concurrency is high, this memory amount may be small even when <code>memory_spill_ratio</code> is set to the max value of 100. When you set <code>memory_spill_ratio</code> to 0, SynxDB uses the <code>statement_mem</code> setting to determine the initial amount of query operator memory to allot.</p>
+</li>
+<li>
+<p><strong>statement_mem</strong></p>
+<p>When <code>memory_spill_ratio</code> is 0, SynxDB uses the <code>statement_mem</code> setting to determine the amount of memory to allocate to a query.</p>
+</li>
+</ul>
+<p>Other considerations:</p>
+<ul>
+<li>Do not configure the operating system to use huge pages. See the <a href="../install_guide/prep_os.html#topic3">Recommended OS Parameters Settings</a> in the <em>SynxDB Installation Guide</em>.</li>
+<li>When you configure resource group memory, consider memory requirements for mirror segments that become primary segments during a failure to ensure that database operations can continue when primary segments or segment hosts fail.</li>
+</ul>
+<h2 id="memory-considerations-when-using-resource-groups"><a class="header" href="#memory-considerations-when-using-resource-groups"><a id="toolowmem"></a>Memory Considerations when using Resource Groups</a></h2>
+<p>Available memory for resource groups may be limited on systems that use low or no swap space, and that use the default <code>vm.overcommit_ratio</code> and <code>gp_resource_group_memory_limit</code> settings. To ensure that SynxDB has a reasonable per-segment-host memory limit, you may be required to increase one or more of the following configuration settings:</p>
+<ol>
+<li>The swap size on the system.</li>
+<li>The system’s <code>vm.overcommit_ratio</code> setting.</li>
+<li>The resource group <code>gp_resource_group_memory_limit</code> setting.</li>
+</ol>
+<h2 id="configuring-resource-groups"><a class="header" href="#configuring-resource-groups"><a id="configuring_rg"></a>Configuring Resource Groups</a></h2>
+<p>SynxDB resource groups provide a powerful mechanism for managing the workload of the cluster. Consider these general guidelines when you configure resource groups for your system:</p>
+<ul>
+<li>A transaction submitted by any SynxDB role with <code>SUPERUSER</code> privileges runs under the default resource group named <code>admin_group</code>. Keep this in mind when scheduling and running SynxDB administration utilities.</li>
+<li>Ensure that you assign each non-admin role a resource group. If you do not assign a resource group to a role, queries submitted by the role are handled by the default resource group named <code>default_group</code>.</li>
+<li>Use the <code>CONCURRENCY</code> resource group parameter to limit the number of active queries that members of a particular resource group can run concurrently.</li>
+<li>Use the <code>MEMORY_LIMIT</code> and <code>MEMORY_SPILL_RATIO</code> parameters to control the maximum amount of memory that queries running in the resource group can consume.</li>
+<li>SynxDB assigns unreserved memory (100 - (sum of all resource group <code>MEMORY_LIMIT</code>s) to a global shared memory pool. This memory is available to all queries on a first-come, first-served basis.</li>
+<li>Alter resource groups dynamically to match the real requirements of the group for the workload and the time of day.</li>
+<li>Use the <code>gp_toolkit</code> views to examine resource group resource usage and to monitor how the groups are working.</li>
+</ul>
+<h2 id="low-memory-queries"><a class="header" href="#low-memory-queries"><a id="section113x"></a>Low Memory Queries</a></h2>
+<p>A low <code>statement_mem</code> setting (for example, in the 10MB range) has been shown to increase the performance of queries with low memory requirements. Use the <code>memory_spill_ratio</code> and <code>statement_mem</code> server configuration parameters to override the setting on a per-query basis. For example:</p>
+<pre><code>SET memory_spill_ratio=0;
+SET statement_mem='10 MB';
+</code></pre>
+<h2 id="administrative-utilities-and-admin_group-concurrency"><a class="header" href="#administrative-utilities-and-admin_group-concurrency"><a id="section177x"></a>Administrative Utilities and admin_group Concurrency</a></h2>
+<p>The default resource group for database transactions initiated by SynxDB <code>SUPERUSER</code>s is the group named <code>admin_group</code>. The default <code>CONCURRENCY</code> value for the <code>admin_group</code> resource group is 10.</p>
+<p>Certain SynxDB administrative utilities may use more than one <code>CONCURRENCY</code> slot at runtime, such as <code>gpbackup</code> that you invoke with the <code>--jobs</code> option. If the utility(s) you run require more concurrent transactions than that configured for <code>admin_group</code>, consider temporarily increasing the group’s <code>MEMORY_LIMIT</code> and <code>CONCURRENCY</code> values to meet the utility’s requirement, making sure to return these parameters back to their original settings when the utility completes.</p>
+<blockquote>
+<p><strong>Note</strong> Memory allocation changes that you initiate with <code>ALTER RESOURCE GROUP</code> may not take affect immediately due to resource consumption by currently running queries. Be sure to alter resource group parameters in advance of your maintenance window.</p>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../best_practices/schema.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../best_practices/workloads.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../best_practices/schema.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../best_practices/workloads.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,105 @@
+Data Loading Overview
+========================
+
+|product_name| loads external data by converting it into external tables via loading tools. Then, it reads from or writes to these external tables to complete the external data loading process.
+
+Data loading process
+--------------------
+
+The general process of loading data into |product_name| is as follows:
+
+1. Evaluate the data loading scenario (such as data source location, data types, and data volume) and choose the appropriate loading tool.
+2. Configure and activate the loading tool.
+3. Create an external table, specifying the loading tool protocol, data source address, and data format in the ``CREATE EXTERNAL TABLE`` statement. For details, see :ref:`load-data/load-external-data-source-using-foreign-table:load external data using foreign table`.
+4. Once the external table is created, you can directly query the data using the ``SELECT`` statement or load the data into a table using the ``INSERT INTO SELECT`` statement.
+
+Loading tools and scenarios
+---------------------------
+
+|product_name| provides multiple data loading solutions, allowing you to choose different methods based on the data source.
+
+.. raw:: latex
+
+    \begin{mytable-small}
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+   :widths: 15 15 18 8
+   :class: longtable
+
+   * - Loading method/tool
+     - Data source
+     - Data format
+     - Parallel loading
+   * - :ref:`load-data/load-data-from-local-files/load-data-using-copy:load data using copy`
+     - Local file system
+        - Coordinator node (for single files)
+        - Segment nodes (for multiple files)
+     - - TXT
+       - CSV
+       - Binary
+     - No
+   * - :ref:`load-data/load-data-from-local-files/load-data-using-file-protocal:load data using the file:// protocol`
+     - Local file system (local Segment nodes, only accessible by superusers)
+     - - TXT
+       - CSV
+     - Yes
+   * - :ref:`gpfdist <load-data/load-data-from-local-files/load-data-using-gpfdist:load data using gpfdist>`
+     - Local host files or files accessible over the intranet
+     - - TXT
+       - CSV
+       - Any delimited text format supported by the ``FORMAT`` clause
+       - XML and JSON (converted to text via YAML configuration)
+     - Yes
+   * - Bulk loading using :ref:`gpload <load-data/load-data-from-local-files/load-data-using-gpload:load data using gpload>` (using ``gpfdist`` as the underlying component)
+     - Local host files or files accessible over the intranet
+     - - TXT
+       - CSV
+       - Any delimited text format supported by the ``FORMAT`` clause
+       - XML and JSON (converted to text via YAML configuration)
+     - Yes
+   * - :ref:`Create external Web tables <load-data/load-data-from-web-services:load data from web services>`
+     - Data fetched from web services or any source accessible via command line
+     - - TXT
+       - CSV
+     - Yes
+   * - :ref:`Kafka FDW <load-data/load-data-using-kafka-fdw:load data from kafka using kafka fdw>` and `Kafka Connector <load-data/load-data-using-kafka-connector>`
+     - Kafka
+     - - CSV
+       - JSON
+     - Yes
+   * - :ref:`Data Lake Connector <load-data/load-data-from-oss-and-hdfs:load data from object storage and hdfs>`
+     - - Public cloud object storage (for example, Amazon S3, QingCloud, Alibaba Cloud, Huawei Cloud, Tencent Cloud)
+       - Hadoop storage
+     - - CSV
+       - TEXT
+       - ORC
+       - PARQUET
+     - Yes
+   * - :ref:`Hive Connector <load-data/load-data-from-hive:load data from hive data warehouse>` with ``data lake_fdw``
+     - Hive data warehouse
+     - - CSV
+       - TEXT
+       - ORC
+       - PARQUET
+       - Iceberg
+       - Hudi
+     - Yes
+   * - :ref:`PXF <load-data/load-data-using-pxf:load data using pxf>`
+     - - HDFS
+       - Hive
+       - HBase
+       - Relational databases via JDBC
+     - Depends on the connector. Common formats include:
+       - Text, CSV, JSON
+       - Avro, Parquet, ORC
+     - Yes
+   * - :ref:`mysql_fdw <load-data/load-data-from-mysql:load data from mysql server using mysql_fdw>`
+     - MySQL
+     - MySQL table data
+     - Yes
+
+.. raw:: latex
+
+    \end{mytable-small}

@@ -1,0 +1,297 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Anonymization Using Anon &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Configure Row-Level and Column-Level Permissions" href="configure-row-column-security.html" />
+    <link rel="prev" title="Transparent Data Encryption" href="use-tde-to-encrypt-data.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="set-security-and-permission-index.html">Configure Security and Permissions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="set-password-profile.html">Set Password Profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-pgcrypto.html">Use pgcrypto for Data Encryption</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-pgaudit.html">Log Auditing pgAudit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manage-users.html">Manage Roles and Privileges</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-tde-to-encrypt-data.html">Transparent Data Encryption</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Data Anonymization Using Anon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-it-works">How it works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#usage-guide">Usage guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#declare-masking-rules">Declare masking rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#static-masking">Static masking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dynamic-masking">Dynamic masking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configure-row-column-security.html">Configure Row-Level and Column-Level Permissions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+      <li class="breadcrumb-item active">Data Anonymization Using Anon</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-anonymization-using-anon">
+<h1>Data Anonymization Using Anon<a class="headerlink" href="#data-anonymization-using-anon" title="Link to this heading"></a></h1>
+<p>Anon is an extension for SynxDB Elastic, adapted from <a class="reference external" href="https://postgresql-anonymizer.readthedocs.io/en/stable/">PostgreSQL Anonymizer</a>. It provides data anonymization features for SynxDB Elastic to prevent sensitive data leakage.</p>
+<p>Data anonymization, also known as data masking, is the process of removing sensitive information from data. This includes personal names, phone numbers, addresses, and ID numbers. Anon uses the <code class="docutils literal notranslate"><span class="pre">SECURITY</span> <span class="pre">LABEL</span></code> feature from PostgreSQL to define masking rules and applies them to specific database objects. For example, an original phone number <code class="docutils literal notranslate"><span class="pre">0609110911</span></code> becomes <code class="docutils literal notranslate"><span class="pre">06******11</span></code> after anonymization.</p>
+<section id="how-it-works">
+<h2>How it works<a class="headerlink" href="#how-it-works" title="Link to this heading"></a></h2>
+<p>Anon primarily uses PostgreSQL’s <code class="docutils literal notranslate"><span class="pre">SECURITY</span> <span class="pre">LABEL</span></code> feature to store masking rules. For dynamic masking, when a role marked as a masked user accesses data, Anon rewrites the SQL query at the optimizer level, replacing sensitive data with masked data. This way, the database can return different data for different users, achieving data anonymization without creating extra views or modifying the original data.</p>
+</section>
+<section id="usage-guide">
+<h2>Usage guide<a class="headerlink" href="#usage-guide" title="Link to this heading"></a></h2>
+<p>Anon provides two data anonymization methods: static and dynamic.</p>
+<section id="declare-masking-rules">
+<h3>Declare masking rules<a class="headerlink" href="#declare-masking-rules" title="Link to this heading"></a></h3>
+<p>The core concept of Anon is to provide “anonymization by design”.</p>
+<p>Masking rules should be written by application developers who best understand the data model. Therefore, the rules must be implemented directly within the database schema. This allows data to be anonymized directly inside the PostgreSQL instance without external tools, thus limiting the risk of data exposure and leakage.</p>
+<p>Declare masking rules using <code class="docutils literal notranslate"><span class="pre">SECURITY</span> <span class="pre">LABEL</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">anon</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">anon</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">player</span><span class="p">(</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span><span class="w"> </span><span class="n">points</span><span class="w"> </span><span class="nb">INT</span><span class="p">);</span>
+
+<span class="k">SECURITY</span><span class="w"> </span><span class="n">LABEL</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">anon</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="n">name</span>
+<span class="k">IS</span><span class="w"> </span><span class="s1">&#39;MASKED WITH FUNCTION anon.fake_last_name()&#39;</span><span class="p">;</span>
+
+<span class="k">SECURITY</span><span class="w"> </span><span class="n">LABEL</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">anon</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="n">id</span>
+<span class="k">IS</span><span class="w"> </span><span class="s1">&#39;MASKED WITH VALUE NULL&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="static-masking">
+<h3>Static masking<a class="headerlink" href="#static-masking" title="Link to this heading"></a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Anon also provides a static masking feature, but it is “dangerous” because it directly updates the database with masked data, causing the loss of original data. Therefore, it is not recommended to use this feature in a production environment.</p>
+<p>However, this feature is useful in testing scenarios, and many existing tests use static masking. The relevant functions are <code class="docutils literal notranslate"><span class="pre">anon.anonymize_database()</span></code>, <code class="docutils literal notranslate"><span class="pre">anon.anonymize_table()</span></code>, and <code class="docutils literal notranslate"><span class="pre">anon.anonymize_column()</span></code>.</p>
+</div>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">anon.anonymize_database()</span></code> function to permanently remove Personally Identifiable Information (PII) from the database. This will destroy the original data, so use it with caution.</p>
+<p>For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Original data</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">customer</span><span class="p">;</span>
+<span class="w"> </span><span class="n">id</span><span class="w">  </span><span class="o">|</span><span class="w">   </span><span class="n">full_name</span><span class="w">      </span><span class="o">|</span><span class="w">   </span><span class="n">birth</span><span class="w">    </span><span class="o">|</span><span class="w">    </span><span class="n">employer</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="n">zipcode</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fk_shop</span>
+<span class="c1">-----+------------------+------------+---------------+---------+---------</span>
+<span class="w"> </span><span class="mi">911</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Chuck</span><span class="w"> </span><span class="n">Norris</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="mi">1940</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">10</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Texas</span><span class="w"> </span><span class="n">Rangers</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">75001</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="mi">12</span>
+<span class="w"> </span><span class="mi">112</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">David</span><span class="w"> </span><span class="n">Hasselhoff</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1952</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">17</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Baywatch</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="mi">90001</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="mi">423</span>
+
+<span class="c1">-- Define masking rules</span>
+<span class="k">SECURITY</span><span class="w"> </span><span class="n">LABEL</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">anon</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">customer</span><span class="p">.</span><span class="n">full_name</span>
+<span class="k">IS</span><span class="w"> </span><span class="s1">&#39;MASKED WITH FUNCTION anon.fake_first_name() || &#39;&#39; &#39;&#39; || anon.fake_last_name()&#39;</span><span class="p">;</span>
+
+<span class="k">SECURITY</span><span class="w"> </span><span class="n">LABEL</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">anon</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">customer</span><span class="p">.</span><span class="n">birth</span>
+<span class="k">IS</span><span class="w"> </span><span class="s1">&#39;MASKED WITH FUNCTION anon.random_date_between(&#39;&#39;1920-01-01&#39;&#39;::DATE,now())&#39;</span><span class="p">;</span>
+
+<span class="k">SECURITY</span><span class="w"> </span><span class="n">LABEL</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">anon</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">customer</span><span class="p">.</span><span class="n">employer</span>
+<span class="k">IS</span><span class="w"> </span><span class="s1">&#39;MASKED WITH FUNCTION anon.fake_company()&#39;</span><span class="p">;</span>
+
+<span class="k">SECURITY</span><span class="w"> </span><span class="n">LABEL</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">anon</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">customer</span><span class="p">.</span><span class="n">zipcode</span>
+<span class="k">IS</span><span class="w"> </span><span class="s1">&#39;MASKED WITH FUNCTION anon.random_zip()&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Performs static anonymization on the database.</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">anon</span><span class="p">.</span><span class="n">anonymize_database</span><span class="p">();</span>
+
+<span class="c1">-- Anonymized data</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">customer</span><span class="p">;</span>
+<span class="w"> </span><span class="n">id</span><span class="w">  </span><span class="o">|</span><span class="w">     </span><span class="n">full_name</span><span class="w">     </span><span class="o">|</span><span class="w">   </span><span class="n">birth</span><span class="w">    </span><span class="o">|</span><span class="w">     </span><span class="n">employer</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="n">zipcode</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fk_shop</span>
+<span class="c1">-----+-------------------+------------+------------------+---------+---------</span>
+<span class="w"> </span><span class="mi">911</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">michel</span><span class="w"> </span><span class="n">Duffus</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="mi">1970</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">24</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Body</span><span class="w"> </span><span class="n">Expressions</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">63824</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="mi">12</span>
+<span class="w"> </span><span class="mi">112</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">andromach</span><span class="w"> </span><span class="n">Tulip</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="mi">1921</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">24</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Dot</span><span class="w"> </span><span class="n">Darcy</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="mi">38199</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="mi">423</span>
+</pre></div>
+</div>
+<p>You can also use the <code class="docutils literal notranslate"><span class="pre">anon.anonymize_table()</span></code> and <code class="docutils literal notranslate"><span class="pre">anon.anonymize_column()</span></code> functions to anonymize a subset of the database (a specified table or column).</p>
+</section>
+<section id="dynamic-masking">
+<h3>Dynamic masking<a class="headerlink" href="#dynamic-masking" title="Link to this heading"></a></h3>
+<p>Dynamic masking refers to applying different masking rules for different users. For example, you can declare a role as “MASKED” to hide sensitive information from that role, while other user roles can still access the original data.</p>
+<p>Dynamic masking hides sensitive information for specified users. Let’s walk through an example.</p>
+<ol class="arabic">
+<li><p>Create and initialize the extension.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">pgcrypto</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">anon</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">anon</span><span class="p">.</span><span class="n">start_dynamic_masking</span><span class="p">();</span>
+<span class="c1">-- Because this example uses faking functions, you need to run anon.init().</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">anon</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a table for testing.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">people</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span><span class="w"> </span><span class="n">firstname</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span><span class="w"> </span><span class="n">phone</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">);</span><span class="w"> </span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">people</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;T1&#39;</span><span class="p">,</span><span class="s1">&#39;Sarah&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Conor&#39;</span><span class="p">,</span><span class="s1">&#39;0609110911&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Define masking rules for the columns of the <code class="docutils literal notranslate"><span class="pre">people</span></code> table.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SECURITY</span><span class="w"> </span><span class="n">LABEL</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">anon</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">people</span><span class="p">.</span><span class="n">lastname</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="s1">&#39;MASKED WITH FUNCTION anon.fake_last_name()&#39;</span><span class="p">;</span>
+<span class="k">SECURITY</span><span class="w"> </span><span class="n">LABEL</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">anon</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">people</span><span class="p">.</span><span class="n">phone</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="s1">&#39;MASKED WITH FUNCTION anon.partial(phone,2,$$******$$,2)&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a new user and designate it as “MASKED”.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">skynet</span><span class="w"> </span><span class="n">LOGIN</span><span class="p">;</span>
+<span class="k">alter</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">skynet</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="s1">&#39;123456&#39;</span><span class="p">;</span>
+<span class="k">SECURITY</span><span class="w"> </span><span class="n">LABEL</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">anon</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">skynet</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="s1">&#39;MASKED&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Switch to the new user to view the anonymized data.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="err">\</span><span class="k">c</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">skynet</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">people</span><span class="p">;</span>
+
+<span class="c1">-- The test result is as follows:</span>
+<span class="n">dynamic_masking</span><span class="o">=&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">people</span><span class="p">;</span>
+<span class="n">id</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">firstname</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="o">|</span><span class="w">   </span><span class="n">phone</span>
+<span class="c1">----+-----------+----------+------------</span>
+<span class="n">T1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Sarah</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="n">Watsica</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="mi">06</span><span class="o">******</span><span class="mi">11</span>
+<span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="k">row</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>As you can see, in addition to the general operations of creating and initializing the extension, the basic steps for dynamic masking are: define masking rules for the database object you want to anonymize (for example, a specific column), designate a user as “MASKED”, and start dynamic masking. When this user logs in, the data they see will be anonymized.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="configure-row-column-security.html" class="btn btn-neutral float-right" title="Configure Row-Level and Column-Level Permissions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="use-tde-to-encrypt-data.html" class="btn btn-neutral float-left" title="Transparent Data Encryption" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

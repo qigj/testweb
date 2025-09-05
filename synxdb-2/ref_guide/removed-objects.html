@@ -1,0 +1,711 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Objects Removed in SynxDB 2 - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="objects-removed-in-synxdb-2"><a class="header" href="#objects-removed-in-synxdb-2">Objects Removed in SynxDB 2</a></h1>
+<p>SynxDB 2 removes several database objects. These changes can effect the successful upgrade from one major version to another. Review these objects when using SynxDB Upgrade, or SynxDB Backup and Restore. This topic highlight these changes.</p>
+<ul>
+<li><a href="#rem_relations">Removed Relations</a></li>
+<li><a href="#rem_columns">Removed Columns</a></li>
+<li><a href="#rem_functions_procedures">Removed Functions and Procedures</a></li>
+<li><a href="#rem_types_domains_composite">Removed Types, Domains, and Composite Types</a></li>
+<li><a href="#rem_operators">Removed Operators</a></li>
+</ul>
+<h2 id="removed-relations"><a class="header" href="#removed-relations"><a id="rem_relations"></a>Removed Relations</a></h2>
+<p>The following list includes the removed relations in SynxDB 2.</p>
+<ul>
+<li>gp_toolkit.__gp_localid</li>
+<li>gp_toolkit.__gp_masterid</li>
+<li>pg_catalog.gp_configuration</li>
+<li>pg_catalog.gp_db_interfaces</li>
+<li>pg_catalog.gp_fault_strategy</li>
+<li>pg_catalog.gp_global_sequence</li>
+<li>pg_catalog.gp_interfaces</li>
+<li>pg_catalog.gp_persistent_database_node</li>
+<li>pg_catalog.gp_persistent_filespace_node</li>
+<li>pg_catalog.gp_persistent_relation_node</li>
+<li>pg_catalog.gp_persistent_tablespace_node</li>
+<li>pg_catalog.gp_relation_node</li>
+<li>pg_catalog.pg_autovacuum</li>
+<li>pg_catalog.pg_filespace</li>
+<li>pg_catalog.pg_filespace_entry</li>
+<li>pg_catalog.pg_listener</li>
+<li>pg_catalog.pg_window</li>
+</ul>
+<h2 id="removed-columns"><a class="header" href="#removed-columns"><a id="rem_columns"></a>Removed Columns</a></h2>
+<p>The following list includes the removed columns in SynxDB 2.</p>
+<ul>
+<li>gp_toolkit.gp_resgroup_config.proposed_concurrency</li>
+<li>gp_toolkit.gp_resgroup_config.proposed_memory_limit</li>
+<li>gp_toolkit.gp_resgroup_config.proposed_memory_shared_quota</li>
+<li>gp_toolkit.gp_resgroup_config.proposed_memory_spill_ratio</li>
+<li>gp_toolkit.gp_workfile_entries.current_query</li>
+<li>gp_toolkit.gp_workfile_entries.directory</li>
+<li>gp_toolkit.gp_workfile_entries.procpid</li>
+<li>gp_toolkit.gp_workfile_entries.state</li>
+<li>gp_toolkit.gp_workfile_entries.workmem</li>
+<li>gp_toolkit.gp_workfile_usage_per_query.current_query</li>
+<li>gp_toolkit.gp_workfile_usage_per_query.procpid</li>
+<li>gp_toolkit.gp_workfile_usage_per_query.state</li>
+<li>information_schema.triggers.condition_reference_new_row</li>
+<li>information_schema.triggers.condition_reference_new_table</li>
+<li>information_schema.triggers.condition_reference_old_row</li>
+<li>information_schema.triggers.condition_reference_old_table</li>
+<li>information_schema.triggers.condition_timing</li>
+<li>pg_catalog.gp_distribution_policy.attrnums</li>
+<li>pg_catalog.gp_segment_configuration.replication_port</li>
+<li>pg_catalog.pg_aggregate.agginvprelimfn</li>
+<li>pg_catalog.pg_aggregate.agginvtransfn</li>
+<li>pg_catalog.pg_aggregate.aggordered</li>
+<li>pg_catalog.pg_aggregate.aggprelimfn</li>
+<li>pg_catalog.pg_am.amcanshrink</li>
+<li>pg_catalog.pg_am.amgetmulti</li>
+<li>pg_catalog.pg_am.amindexnulls</li>
+<li>pg_catalog.pg_amop.amopreqcheck</li>
+<li>pg_catalog.pg_authid.rolconfig</li>
+<li>pg_catalog.pg_authid.rolcreaterexthdfs</li>
+<li>pg_catalog.pg_authid.rolcreatewexthdfs</li>
+<li>pg_catalog.pg_class.relfkeys</li>
+<li>pg_catalog.pg_class.relrefs</li>
+<li>pg_catalog.pg_class.reltoastidxid</li>
+<li>pg_catalog.pg_class.reltriggers</li>
+<li>pg_catalog.pg_class.relukeys</li>
+<li>pg_catalog.pg_database.datconfig</li>
+<li>pg_catalog.pg_exttable.fmterrtbl</li>
+<li>pg_catalog.pg_proc.proiswin</li>
+<li>pg_catalog.pg_resgroupcapability.proposed</li>
+<li>pg_catalog.pg_rewrite.ev_attr</li>
+<li>pg_catalog.pg_roles.rolcreaterexthdfs</li>
+<li>pg_catalog.pg_roles.rolcreatewexthdfs</li>
+<li>pg_catalog.pg_stat_activity.current_query</li>
+<li>pg_catalog.pg_stat_activity.procpid</li>
+<li>pg_catalog.pg_stat_replication.procpid</li>
+<li>pg_catalog.pg_tablespace.spcfsoid</li>
+<li>pg_catalog.pg_tablespace.spclocation</li>
+<li>pg_catalog.pg_tablespace.spcmirlocations</li>
+<li>pg_catalog.pg_tablespace.spcprilocations</li>
+<li>pg_catalog.pg_trigger.tgconstrname</li>
+<li>pg_catalog.pg_trigger.tgisconstraint</li>
+</ul>
+<h2 id="removed-functions-and-procedures"><a class="header" href="#removed-functions-and-procedures"><a id="rem_functions_procedures"></a>Removed Functions and Procedures</a></h2>
+<p>The following list includes the removed functions and procedures in SynxDB 2.</p>
+<ul>
+<li>gp_toolkit.__gp_aocsseg</li>
+<li>gp_toolkit.__gp_aocsseg_history</li>
+<li>gp_toolkit.__gp_aocsseg_name</li>
+<li>gp_toolkit.__gp_aoseg_history</li>
+<li>gp_toolkit.__gp_aoseg_name</li>
+<li>gp_toolkit.__gp_aovisimap</li>
+<li>gp_toolkit.__gp_aovisimap_entry</li>
+<li>gp_toolkit.__gp_aovisimap_entry_name</li>
+<li>gp_toolkit.__gp_aovisimap_hidden_info</li>
+<li>gp_toolkit.__gp_aovisimap_hidden_info_name</li>
+<li>gp_toolkit.__gp_aovisimap_name</li>
+<li>gp_toolkit.__gp_param_local_setting</li>
+<li>gp_toolkit.__gp_workfile_entries_f</li>
+<li>gp_toolkit.__gp_workfile_mgr_used_diskspace_f</li>
+<li>information_schema._pg_keyissubset</li>
+<li>information_schema._pg_underlying_index</li>
+<li>pg_catalog.areajoinsel</li>
+<li>pg_catalog.array_agg_finalfn</li>
+<li>pg_catalog.bmcostestimate</li>
+<li>pg_catalog.bmgetmulti</li>
+<li>pg_catalog.bpchar_pattern_eq</li>
+<li>pg_catalog.bpchar_pattern_ne</li>
+<li>pg_catalog.btcostestimate</li>
+<li>pg_catalog.btgetmulti</li>
+<li>pg_catalog.btgpxlogloccmp</li>
+<li>pg_catalog.btname_pattern_cmp</li>
+<li>pg_catalog.btrescan</li>
+<li>pg_catalog.contjoinsel</li>
+<li>pg_catalog.cume_dist_final</li>
+<li>pg_catalog.cume_dist_prelim</li>
+<li>pg_catalog.dense_rank_immed</li>
+<li>pg_catalog.eqjoinsel</li>
+<li>pg_catalog.first_value</li>
+<li>pg_catalog.first_value_any</li>
+<li>pg_catalog.first_value_bit</li>
+<li>pg_catalog.first_value_bool</li>
+<li>pg_catalog.first_value_box</li>
+<li>pg_catalog.first_value_bytea</li>
+<li>pg_catalog.first_value_char</li>
+<li>pg_catalog.first_value_cidr</li>
+<li>pg_catalog.first_value_circle</li>
+<li>pg_catalog.first_value_float4</li>
+<li>pg_catalog.first_value_float8</li>
+<li>pg_catalog.first_value_inet</li>
+<li>pg_catalog.first_value_int4</li>
+<li>pg_catalog.first_value_int8</li>
+<li>pg_catalog.first_value_interval</li>
+<li>pg_catalog.first_value_line</li>
+<li>pg_catalog.first_value_lseg</li>
+<li>pg_catalog.first_value_macaddr</li>
+<li>pg_catalog.first_value_money</li>
+<li>pg_catalog.first_value_name</li>
+<li>pg_catalog.first_value_numeric</li>
+<li>pg_catalog.first_value_oid</li>
+<li>pg_catalog.first_value_path</li>
+<li>pg_catalog.first_value_point</li>
+<li>pg_catalog.first_value_polygon</li>
+<li>pg_catalog.first_value_reltime</li>
+<li>pg_catalog.first_value_smallint</li>
+<li>pg_catalog.first_value_text</li>
+<li>pg_catalog.first_value_tid</li>
+<li>pg_catalog.first_value_time</li>
+<li>pg_catalog.first_value_timestamp</li>
+<li>pg_catalog.first_value_timestamptz</li>
+<li>pg_catalog.first_value_timetz</li>
+<li>pg_catalog.first_value_varbit</li>
+<li>pg_catalog.first_value_varchar</li>
+<li>pg_catalog.first_value_xid</li>
+<li>pg_catalog.flatfile_update_trigger</li>
+<li>pg_catalog.float4_avg_accum</li>
+<li>pg_catalog.float4_avg_decum</li>
+<li>pg_catalog.float4_decum</li>
+<li>pg_catalog.float8_amalg</li>
+<li>pg_catalog.float8_avg</li>
+<li>pg_catalog.float8_avg_accum</li>
+<li>pg_catalog.float8_avg_amalg</li>
+<li>pg_catalog.float8_avg_decum</li>
+<li>pg_catalog.float8_avg_demalg</li>
+<li>pg_catalog.float8_decum</li>
+<li>pg_catalog.float8_demalg</li>
+<li>pg_catalog.float8_regr_amalg</li>
+<li>pg_catalog.get_ao_compression_ratio</li>
+<li>pg_catalog.get_ao_distribution</li>
+<li>pg_catalog.ginarrayconsistent</li>
+<li>pg_catalog.gincostestimate</li>
+<li>pg_catalog.gin_extract_tsquery</li>
+<li>pg_catalog.gingetmulti</li>
+<li>pg_catalog.gingettuple</li>
+<li>pg_catalog.ginqueryarrayextract</li>
+<li>pg_catalog.ginrescan</li>
+<li>pg_catalog.gin_tsquery_consistent</li>
+<li>pg_catalog.gist_box_consistent</li>
+<li>pg_catalog.gist_circle_consistent</li>
+<li>pg_catalog.gistcostestimate</li>
+<li>pg_catalog.gistgetmulti</li>
+<li>pg_catalog.gist_poly_consistent</li>
+<li>pg_catalog.gistrescan</li>
+<li>pg_catalog.gp_activate_standby</li>
+<li>pg_catalog.gp_add_global_sequence_entry</li>
+<li>pg_catalog.gp_add_master_standby</li>
+<li>pg_catalog.gp_add_persistent_database_node_entry</li>
+<li>pg_catalog.gp_add_persistent_filespace_node_entry</li>
+<li>pg_catalog.gp_add_persistent_relation_node_entry</li>
+<li>pg_catalog.gp_add_persistent_tablespace_node_entry</li>
+<li>pg_catalog.gp_add_relation_node_entry</li>
+<li>pg_catalog.gp_add_segment</li>
+<li>pg_catalog.gp_add_segment_mirror</li>
+<li>pg_catalog.gp_add_segment_persistent_entries</li>
+<li>pg_catalog.gpaotidin</li>
+<li>pg_catalog.gpaotidout</li>
+<li>pg_catalog.gpaotidrecv</li>
+<li>pg_catalog.gpaotidsend</li>
+<li>pg_catalog.gp_backup_launch</li>
+<li>pg_catalog.gp_changetracking_log</li>
+<li>pg_catalog.gp_dbspecific_ptcat_verification</li>
+<li>pg_catalog.gp_delete_global_sequence_entry</li>
+<li>pg_catalog.gp_delete_persistent_database_node_entry</li>
+<li>pg_catalog.gp_delete_persistent_filespace_node_entry</li>
+<li>pg_catalog.gp_delete_persistent_relation_node_entry</li>
+<li>pg_catalog.gp_delete_persistent_tablespace_node_entry</li>
+<li>pg_catalog.gp_delete_relation_node_entry</li>
+<li>pg_catalog.gp_nondbspecific_ptcat_verification</li>
+<li>pg_catalog.gp_persistent_build_all</li>
+<li>pg_catalog.gp_persistent_build_db</li>
+<li>pg_catalog.gp_persistent_relation_node_check</li>
+<li>pg_catalog.gp_persistent_repair_delete</li>
+<li>pg_catalog.gp_persistent_reset_all</li>
+<li>pg_catalog.gp_prep_new_segment</li>
+<li>pg_catalog.gp_quicklz_compress</li>
+<li>pg_catalog.gp_quicklz_constructor</li>
+<li>pg_catalog.gp_quicklz_decompress</li>
+<li>pg_catalog.gp_quicklz_destructor</li>
+<li>pg_catalog.gp_quicklz_validator</li>
+<li>pg_catalog.gp_read_backup_file</li>
+<li>pg_catalog.gp_remove_segment_persistent_entries</li>
+<li>pg_catalog.gp_restore_launch</li>
+<li>pg_catalog.gp_statistics_estimate_reltuples_relpages_oid</li>
+<li>pg_catalog.gp_update_ao_master_stats</li>
+<li>pg_catalog.gp_update_global_sequence_entry</li>
+<li>pg_catalog.gp_update_persistent_database_node_entry</li>
+<li>pg_catalog.gp_update_persistent_filespace_node_entry</li>
+<li>pg_catalog.gp_update_persistent_relation_node_entry</li>
+<li>pg_catalog.gp_update_persistent_tablespace_node_entry</li>
+<li>pg_catalog.gp_update_relation_node_entry</li>
+<li>pg_catalog.gp_write_backup_file</li>
+<li>pg_catalog.gpxlogloceq</li>
+<li>pg_catalog.gpxloglocge</li>
+<li>pg_catalog.gpxloglocgt</li>
+<li>pg_catalog.gpxloglocin</li>
+<li>pg_catalog.gpxlogloclarger</li>
+<li>pg_catalog.gpxloglocle</li>
+<li>pg_catalog.gpxlogloclt</li>
+<li>pg_catalog.gpxloglocne</li>
+<li>pg_catalog.gpxloglocout</li>
+<li>pg_catalog.gpxloglocrecv</li>
+<li>pg_catalog.gpxloglocsend</li>
+<li>pg_catalog.gpxloglocsmaller</li>
+<li>pg_catalog.gtsquery_consistent</li>
+<li>pg_catalog.gtsvector_consistent</li>
+<li>pg_catalog.hashcostestimate</li>
+<li>pg_catalog.hashgetmulti</li>
+<li>pg_catalog.hashrescan</li>
+<li>pg_catalog.iclikejoinsel</li>
+<li>pg_catalog.icnlikejoinsel</li>
+<li>pg_catalog.icregexeqjoinsel</li>
+<li>pg_catalog.icregexnejoinsel</li>
+<li>pg_catalog.int24mod</li>
+<li>pg_catalog.int2_accum</li>
+<li>pg_catalog.int2_avg_accum</li>
+<li>pg_catalog.int2_avg_decum</li>
+<li>pg_catalog.int2_decum</li>
+<li>pg_catalog.int2_invsum</li>
+<li>pg_catalog.int42mod</li>
+<li>pg_catalog.int4_accum</li>
+<li>pg_catalog.int4_avg_accum</li>
+<li>pg_catalog.int4_avg_decum</li>
+<li>pg_catalog.int4_decum</li>
+<li>pg_catalog.int4_invsum</li>
+<li>pg_catalog.int8</li>
+<li>pg_catalog.int8_accum</li>
+<li>pg_catalog.int8_avg</li>
+<li>pg_catalog.int8_avg_accum</li>
+<li>pg_catalog.int8_avg_amalg</li>
+<li>pg_catalog.int8_avg_decum</li>
+<li>pg_catalog.int8_avg_demalg</li>
+<li>pg_catalog.int8_decum</li>
+<li>pg_catalog.int8_invsum</li>
+<li>pg_catalog.interval_amalg</li>
+<li>pg_catalog.interval_decum</li>
+<li>pg_catalog.interval_demalg</li>
+<li>pg_catalog.json_each_text</li>
+<li>pg_catalog.json_extract_path_op</li>
+<li>pg_catalog.json_extract_path_text_op</li>
+<li>pg_catalog.lag_any</li>
+<li>pg_catalog.lag_bit</li>
+<li>pg_catalog.lag_bool</li>
+<li>pg_catalog.lag_box</li>
+<li>pg_catalog.lag_bytea</li>
+<li>pg_catalog.lag_char</li>
+<li>pg_catalog.lag_cidr</li>
+<li>pg_catalog.lag_circle</li>
+<li>pg_catalog.lag_float4</li>
+<li>pg_catalog.lag_float8</li>
+<li>pg_catalog.lag_inet</li>
+<li>pg_catalog.lag_int4</li>
+<li>pg_catalog.lag_int8</li>
+<li>pg_catalog.lag_interval</li>
+<li>pg_catalog.lag_line</li>
+<li>pg_catalog.lag_lseg</li>
+<li>pg_catalog.lag_macaddr</li>
+<li>pg_catalog.lag_money</li>
+<li>pg_catalog.lag_name</li>
+<li>pg_catalog.lag_numeric</li>
+<li>pg_catalog.lag_oid</li>
+<li>pg_catalog.lag_path</li>
+<li>pg_catalog.lag_point</li>
+<li>pg_catalog.lag_polygon</li>
+<li>pg_catalog.lag_reltime</li>
+<li>pg_catalog.lag_smallint</li>
+<li>pg_catalog.lag_text</li>
+<li>pg_catalog.lag_tid</li>
+<li>pg_catalog.lag_time</li>
+<li>pg_catalog.lag_timestamp</li>
+<li>pg_catalog.lag_timestamptz</li>
+<li>pg_catalog.lag_timetz</li>
+<li>pg_catalog.lag_varbit</li>
+<li>pg_catalog.lag_varchar</li>
+<li>pg_catalog.lag_xid</li>
+<li>pg_catalog.last_value</li>
+<li>pg_catalog.last_value_any</li>
+<li>pg_catalog.last_value_bigint</li>
+<li>pg_catalog.last_value_bit</li>
+<li>pg_catalog.last_value_bool</li>
+<li>pg_catalog.last_value_box</li>
+<li>pg_catalog.last_value_bytea</li>
+<li>pg_catalog.last_value_char</li>
+<li>pg_catalog.last_value_cidr</li>
+<li>pg_catalog.last_value_circle</li>
+<li>pg_catalog.last_value_float4</li>
+<li>pg_catalog.last_value_float8</li>
+<li>pg_catalog.last_value_inet</li>
+<li>pg_catalog.last_value_int</li>
+<li>pg_catalog.last_value_interval</li>
+<li>pg_catalog.last_value_line</li>
+<li>pg_catalog.last_value_lseg</li>
+<li>pg_catalog.last_value_macaddr</li>
+<li>pg_catalog.last_value_money</li>
+<li>pg_catalog.last_value_name</li>
+<li>pg_catalog.last_value_numeric</li>
+<li>pg_catalog.last_value_oid</li>
+<li>pg_catalog.last_value_path</li>
+<li>pg_catalog.last_value_point</li>
+<li>pg_catalog.last_value_polygon</li>
+<li>pg_catalog.last_value_reltime</li>
+<li>pg_catalog.last_value_smallint</li>
+<li>pg_catalog.last_value_text</li>
+<li>pg_catalog.last_value_tid</li>
+<li>pg_catalog.last_value_time</li>
+<li>pg_catalog.last_value_timestamp</li>
+<li>pg_catalog.last_value_timestamptz</li>
+<li>pg_catalog.last_value_timetz</li>
+<li>pg_catalog.last_value_varbit</li>
+<li>pg_catalog.last_value_varchar</li>
+<li>pg_catalog.last_value_xid</li>
+<li>pg_catalog.lead_any</li>
+<li>pg_catalog.lead_bit</li>
+<li>pg_catalog.lead_bool</li>
+<li>pg_catalog.lead_box</li>
+<li>pg_catalog.lead_bytea</li>
+<li>pg_catalog.lead_char</li>
+<li>pg_catalog.lead_cidr</li>
+<li>pg_catalog.lead_circle</li>
+<li>pg_catalog.lead_float4</li>
+<li>pg_catalog.lead_float8</li>
+<li>pg_catalog.lead_inet</li>
+<li>pg_catalog.lead_int</li>
+<li>pg_catalog.lead_int8</li>
+<li>pg_catalog.lead_interval</li>
+<li>pg_catalog.lead_lag_frame_maker</li>
+<li>pg_catalog.lead_line</li>
+<li>pg_catalog.lead_lseg</li>
+<li>pg_catalog.lead_macaddr</li>
+<li>pg_catalog.lead_money</li>
+<li>pg_catalog.lead_name</li>
+<li>pg_catalog.lead_numeric</li>
+<li>pg_catalog.lead_oid</li>
+<li>pg_catalog.lead_path</li>
+<li>pg_catalog.lead_point</li>
+<li>pg_catalog.lead_polygon</li>
+<li>pg_catalog.lead_reltime</li>
+<li>pg_catalog.lead_smallint</li>
+<li>pg_catalog.lead_text</li>
+<li>pg_catalog.lead_tid</li>
+<li>pg_catalog.lead_time</li>
+<li>pg_catalog.lead_timestamp</li>
+<li>pg_catalog.lead_timestamptz</li>
+<li>pg_catalog.lead_timetz</li>
+<li>pg_catalog.lead_varbit</li>
+<li>pg_catalog.lead_varchar</li>
+<li>pg_catalog.lead_xid</li>
+<li>pg_catalog.likejoinsel</li>
+<li>pg_catalog.max</li>
+<li>pg_catalog.min</li>
+<li>pg_catalog.mod</li>
+<li>pg_catalog.name_pattern_eq</li>
+<li>pg_catalog.name_pattern_ge</li>
+<li>pg_catalog.name_pattern_gt</li>
+<li>pg_catalog.name_pattern_le</li>
+<li>pg_catalog.name_pattern_lt</li>
+<li>pg_catalog.name_pattern_ne</li>
+<li>pg_catalog.neqjoinsel</li>
+<li>pg_catalog.nlikejoinsel</li>
+<li>pg_catalog.ntile</li>
+<li>pg_catalog.ntile_final</li>
+<li>pg_catalog.ntile_prelim_bigint</li>
+<li>pg_catalog.ntile_prelim_int</li>
+<li>pg_catalog.ntile_prelim_numeric</li>
+<li>pg_catalog.numeric_accum</li>
+<li>pg_catalog.numeric_amalg</li>
+<li>pg_catalog.numeric_avg</li>
+<li>pg_catalog.numeric_avg_accum</li>
+<li>pg_catalog.numeric_avg_amalg</li>
+<li>pg_catalog.numeric_avg_decum</li>
+<li>pg_catalog.numeric_avg_demalg</li>
+<li>pg_catalog.numeric_decum</li>
+<li>pg_catalog.numeric_demalg</li>
+<li>pg_catalog.numeric_stddev_pop</li>
+<li>pg_catalog.numeric_stddev_samp</li>
+<li>pg_catalog.numeric_var_pop</li>
+<li>pg_catalog.numeric_var_samp</li>
+<li>pg_catalog.percent_rank_final</li>
+<li>pg_catalog.pg_current_xlog_insert_location</li>
+<li>pg_catalog.pg_current_xlog_location</li>
+<li>pg_catalog.pg_cursor</li>
+<li>pg_catalog.pg_get_expr</li>
+<li>pg_catalog.pg_lock_status</li>
+<li>pg_catalog.pg_objname_to_oid</li>
+<li>pg_catalog.pg_prepared_statement</li>
+<li>pg_catalog.pg_prepared_xact</li>
+<li>pg_catalog.pg_relation_size</li>
+<li>pg_catalog.pg_show_all_settings</li>
+<li>pg_catalog.pg_start_backup</li>
+<li>pg_catalog.pg_stat_get_activity</li>
+<li>pg_catalog.pg_stat_get_backend_txn_start</li>
+<li>pg_catalog.pg_stat_get_wal_senders</li>
+<li>pg_catalog.pg_stop_backup</li>
+<li>pg_catalog.pg_switch_xlog</li>
+<li>pg_catalog.pg_total_relation_size</li>
+<li>pg_catalog.pg_xlogfile_name</li>
+<li>pg_catalog.pg_xlogfile_name_offset</li>
+<li>pg_catalog.positionjoinsel</li>
+<li>pg_catalog.rank_immed</li>
+<li>pg_catalog.regexeqjoinsel</li>
+<li>pg_catalog.regexnejoinsel</li>
+<li>pg_catalog.row_number_immed</li>
+<li>pg_catalog.scalargtjoinsel</li>
+<li>pg_catalog.scalarltjoinsel</li>
+<li>pg_catalog.string_agg</li>
+<li>pg_catalog.string_agg_delim_transfn</li>
+<li>pg_catalog.string_agg_transfn</li>
+<li>pg_catalog.text_pattern_eq</li>
+<li>pg_catalog.text_pattern_ne</li>
+</ul>
+<h2 id="removed-types-domains-and-composite-types"><a class="header" href="#removed-types-domains-and-composite-types"><a id="rem_types_domains_composite"></a>Removed Types, Domains, and Composite Types</a></h2>
+<p>The following list includes the SynxDB 2 removed types, domains, and composite types.</p>
+<ul>
+<li>gp_toolkit.__gp_localid</li>
+<li>gp_toolkit.__gp_masterid</li>
+<li>pg_catalog._gpaotid</li>
+<li>pg_catalog._gpxlogloc</li>
+<li>pg_catalog.gp_configuration</li>
+<li>pg_catalog.gp_db_interfaces</li>
+<li>pg_catalog.gp_fault_strategy</li>
+<li>pg_catalog.gp_global_sequence</li>
+<li>pg_catalog.gp_interfaces</li>
+<li>pg_catalog.gp_persistent_database_node</li>
+<li>pg_catalog.gp_persistent_filespace_node</li>
+<li>pg_catalog.gp_persistent_relation_node</li>
+<li>pg_catalog.gp_persistent_tablespace_node</li>
+<li>pg_catalog.gp_relation_node</li>
+<li>pg_catalog.gpaotid</li>
+<li>pg_catalog.gpxlogloc</li>
+<li>pg_catalog.nb_classification</li>
+<li>pg_catalog.pg_autovacuum</li>
+<li>pg_catalog.pg_filespace</li>
+<li>pg_catalog.pg_filespace_entry</li>
+<li>pg_catalog.pg_listener</li>
+<li>pg_catalog.pg_window</li>
+</ul>
+<h2 id="removed-operators"><a class="header" href="#removed-operators"><a id="rem_operators"></a>Removed Operators</a></h2>
+<p>The following list includes the SynxDB 2 removed operators.</p>
+<div class="table-wrapper"><table><thead><tr><th>oprname</th><th>oprcode</th></tr></thead><tbody>
+<tr><td>pg_catalog.#&gt;</td><td>json_extract_path_op</td></tr>
+<tr><td>pg_catalog.#&gt;&gt;</td><td>json_extract_path_text_op</td></tr>
+<tr><td>pg_catalog.%</td><td>int42mod</td></tr>
+<tr><td>pg_catalog.%</td><td>int24mod</td></tr>
+<tr><td>pg_catalog.&lt;</td><td>gpxlogloclt</td></tr>
+<tr><td>pg_catalog.&lt;=</td><td>gpxloglocle</td></tr>
+<tr><td>pg_catalog.&lt;&gt;</td><td>gpxloglocne</td></tr>
+<tr><td>pg_catalog.=</td><td>gpxlogloceq</td></tr>
+<tr><td>pg_catalog.&gt;</td><td>gpxloglocgt</td></tr>
+<tr><td>pg_catalog.&gt;=</td><td>gpxloglocge</td></tr>
+<tr><td>pg_catalog.<del>&lt;=</del></td><td>name_pattern_le</td></tr>
+<tr><td>pg_catalog.<del>&lt;&gt;</del></td><td>name_pattern_ne</td></tr>
+<tr><td>pg_catalog.<del>&lt;&gt;</del></td><td>bpchar_pattern_ne</td></tr>
+<tr><td>pg_catalog.<del>&lt;&gt;</del></td><td>textne</td></tr>
+<tr><td>pg_catalog.<del>&lt;</del></td><td>name_pattern_lt</td></tr>
+<tr><td>pg_catalog.<del>=</del></td><td>name_pattern_eq</td></tr>
+<tr><td>pg_catalog.<del>=</del></td><td>bpchar_pattern_eq</td></tr>
+<tr><td>pg_catalog.<del>=</del></td><td>texteq</td></tr>
+<tr><td>pg_catalog.<del>&gt;=</del></td><td>name_pattern_ge</td></tr>
+<tr><td>pg_catalog.<del>&gt;</del></td><td>name_pattern_gt</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ref_guide/SQL2008_support.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ref_guide/guc-changes-5to6.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ref_guide/SQL2008_support.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ref_guide/guc-changes-5to6.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

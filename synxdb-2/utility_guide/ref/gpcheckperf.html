@@ -1,0 +1,293 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>gpcheckperf - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gpcheckperf"><a class="header" href="#gpcheckperf">gpcheckperf</a></h1>
+<p>Verifies the baseline hardware performance of the specified hosts.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code>gpcheckperf -d &lt;test_directory&gt; [-d &lt;test_directory&gt; ...] 
+    {-f &lt;hostfile_gpcheckperf&gt; | - h &lt;hostname&gt; [-h hostname ...]} 
+    [-r ds] [-B &lt;block_size&gt;] [-S &lt;file_size&gt;] [--buffer-size &lt;buffer_size&gt;] [-D] [-v|-V]
+
+gpcheckperf -d &lt;temp_directory&gt;
+    {-f &lt;hostfile_gpchecknet&gt; | - h &lt;hostname&gt; [-h&lt; hostname&gt; ...]} 
+    [ -r n|N|M [--duration &lt;time&gt;] [--netperf] ] [-D] [-v | -V]
+
+gpcheckperf -?
+
+gpcheckperf --version
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p>The <code>gpcheckperf</code> utility starts a session on the specified hosts and runs the following performance tests:</p>
+<ul>
+<li><strong>Disk I/O Test (dd test)</strong> — To test the sequential throughput performance of a logical disk or file system, the utility uses the <strong>dd</strong> command, which is a standard UNIX utility. It times how long it takes to write and read a large file to and from disk and calculates your disk I/O performance in megabytes (MB) per second. By default, the file size that is used for the test is calculated at two times the total random access memory (RAM) on the host. This ensures that the test is truly testing disk I/O and not using the memory cache.</li>
+<li><strong>Memory Bandwidth Test (stream)</strong> — To test memory bandwidth, the utility uses the STREAM benchmark program to measure sustainable memory bandwidth (in MB/s). This tests that your system is not limited in performance by the memory bandwidth of the system in relation to the computational performance of the CPU. In applications where the data set is large (as in SynxDB), low memory bandwidth is a major performance issue. If memory bandwidth is significantly lower than the theoretical bandwidth of the CPU, then it can cause the CPU to spend significant amounts of time waiting for data to arrive from system memory.</li>
+<li><strong>Network Performance Test (gpnetbench*)</strong> — To test network performance (and thereby the performance of the SynxDB interconnect), the utility runs a network benchmark program that transfers a 5 second stream of data from the current host to each remote host included in the test. The data is transferred in parallel to each remote host and the minimum, maximum, average and median network transfer rates are reported in megabytes (MB) per second. If the summary transfer rate is slower than expected (less than 100 MB/s), you can run the network test serially using the <code>-r n</code> option to obtain per-host results. To run a full-matrix bandwidth test, you can specify <code>-r M</code> which will cause every host to send and receive data from every other host specified. This test is best used to validate if the switch fabric can tolerate a full-matrix workload.</li>
+</ul>
+<p>To specify the hosts to test, use the <code>-f</code> option to specify a file containing a list of host names, or use the <code>-h</code> option to name single host names on the command-line. If running the network performance test, all entries in the host file must be for network interfaces within the same subnet. If your segment hosts have multiple network interfaces configured on different subnets, run the network test once for each subnet.</p>
+<p>You must also specify at least one test directory (with <code>-d</code>). The user who runs <code>gpcheckperf</code> must have write access to the specified test directories on all remote hosts. For the disk I/O test, the test directories should correspond to your segment data directories (primary and/or mirrors). For the memory bandwidth and network tests, a temporary directory is required for the test program files.</p>
+<p>Before using <code>gpcheckperf</code>, you must have a trusted host setup between the hosts involved in the performance test. You can use the utility <code>gpssh-exkeys</code> to update the known host files and exchange public keys between hosts if you have not done so already. Note that <code>gpcheckperf</code> calls to <code>gpssh</code> and <code>gpscp</code>, so these SynxDB utilities must also be in your <code>$PATH</code>.</p>
+<h2 id="options"><a class="header" href="#options"><a id="section4"></a>Options</a></h2>
+<h3 id="-b-block_size"><a class="header" href="#-b-block_size">-B block_size</a></h3>
+<p>Specifies the block size (in KB or MB) to use for disk I/O test. The default is 32KB, which is the same as the SynxDB page size. The maximum block size is 1 MB.</p>
+<h3 id="buffer-size-buffer_size"><a class="header" href="#buffer-size-buffer_size">–buffer-size buffer_size</a></h3>
+<p>Specifies the size of the send buffer in kilobytes. Default size is 32 kilobytes.</p>
+<h3 id="-d-test_directory"><a class="header" href="#-d-test_directory">-d test_directory</a></h3>
+<p>For the disk I/O test, specifies the file system directory locations to test. You must have write access to the test directory on all hosts involved in the performance test. You can use the <code>-d</code> option multiple times to specify multiple test directories (for example, to test disk I/O of your primary and mirror data directories).</p>
+<h3 id="-d-temp_directory"><a class="header" href="#-d-temp_directory">-d temp_directory</a></h3>
+<p>For the network and stream tests, specifies a single directory where the test program files will be copied for the duration of the test. You must have write access to this directory on all hosts involved in the test.</p>
+<h3 id="-d-display-per-host-results"><a class="header" href="#-d-display-per-host-results">-D (display per-host results)</a></h3>
+<p>Reports performance results for each host for the disk I/O tests. The default is to report results for just the hosts with the minimum and maximum performance, as well as the total and average performance of all hosts.</p>
+<h3 id="duration-time"><a class="header" href="#duration-time">–duration time</a></h3>
+<p>Specifies the duration of the network test in seconds (s), minutes (m), hours (h), or days (d). The default is 15 seconds.</p>
+<h3 id="-f-hostfile_gpcheckperf"><a class="header" href="#-f-hostfile_gpcheckperf">-f hostfile_gpcheckperf</a></h3>
+<p>For the disk I/O and stream tests, specifies the name of a file that contains one host name per host that will participate in the performance test. The host name is required, and you can optionally specify an alternate user name and/or SSH port number per host. The syntax of the host file is one host per line as follows:</p>
+<pre><code>[&lt;username&gt;@]&lt;hostname&gt;[:&lt;ssh_port&gt;]
+</code></pre>
+<h3 id="-f-hostfile_gpchecknet"><a class="header" href="#-f-hostfile_gpchecknet">-f hostfile_gpchecknet</a></h3>
+<p>For the network performance test, all entries in the host file must be for host addresses within the same subnet. If your segment hosts have multiple network interfaces configured on different subnets, run the network test once for each subnet. For example (a host file containing segment host address names for interconnect subnet 1):</p>
+<pre><code>sdw1-1
+sdw2-1
+sdw3-1
+</code></pre>
+<h3 id="-h-hostname"><a class="header" href="#-h-hostname">-h hostname</a></h3>
+<p>Specifies a single host name (or host address) that will participate in the performance test. You can use the <code>-h</code> option multiple times to specify multiple host names.</p>
+<h3 id="netperf"><a class="header" href="#netperf">–netperf</a></h3>
+<p>Specifies that the <code>netperf</code> binary should be used to perform the network test instead of the SynxDB network test. To use this option, you must download <code>netperf</code> from <a href="https://github.com/HewlettPackard/netperf">https://github.com/HewlettPackard/netperf</a> and install it into <code>$GPHOME/bin/lib</code> on all SynxDB hosts (master and segments).</p>
+<h3 id="-r-dsnnm"><a class="header" href="#-r-dsnnm">-r ds{n|N|M}</a></h3>
+<p>Specifies which performance tests to run. The default is <code>dsn</code>:
+-   Disk I/O test (<code>d</code>)
+-   Stream test (<code>s</code>)
+-   Network performance test in sequential (<code>n</code>), parallel (<code>N</code>), or full-matrix (<code>M</code>) mode. The optional <code>--duration</code> option specifies how long (in seconds) to run the network test. To use the parallel (<code>N</code>) mode, you must run the test on an even number of hosts.
+<br/><br/>If you would rather use <code>netperf</code> (<a href="https://github.com/HewlettPackard/netperf">https://github.com/HewlettPackard/netperf</a>) instead of the SynxDB network test, you can download it and install it into <code>$GPHOME/bin/lib</code> on all SynxDB hosts (master and segments). You would then specify the optional <code>--netperf</code> option to use the <code>netperf</code> binary instead of the default <code>gpnetbench*</code> utilities.</p>
+<h3 id="-s-file_size"><a class="header" href="#-s-file_size">-S file_size</a></h3>
+<p>Specifies the total file size to be used for the disk I/O test for all directories specified with <code>-d</code>. file_size should equal two times total RAM on the host. If not specified, the default is calculated at two times the total RAM on the host where <code>gpcheckperf</code> is run. This ensures that the test is truly testing disk I/O and not using the memory cache. You can specify sizing in KB, MB, or GB.</p>
+<h3 id="-v-verbose---v-very-verbose"><a class="header" href="#-v-verbose---v-very-verbose">-v (verbose) | -V (very verbose)</a></h3>
+<p>Verbose mode shows progress and status messages of the performance tests as they are run. Very verbose mode shows all output messages generated by this utility.</p>
+<h3 id="version"><a class="header" href="#version">–version</a></h3>
+<p>Displays the version of this utility.</p>
+<h3 id="--help"><a class="header" href="#--help">-? (help)</a></h3>
+<p>Displays the online help.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section5"></a>Examples</a></h2>
+<p>Run the disk I/O and memory bandwidth tests on all the hosts in the file host_file using the test directory of /data1 and /data2:</p>
+<pre><code>$ gpcheckperf -f hostfile_gpcheckperf -d /data1 -d /data2 -r ds
+</code></pre>
+<p>Run only the disk I/O test on the hosts named sdw1 and sdw2using the test directory of /data1. Show individual host results and run in verbose mode:</p>
+<pre><code>$ gpcheckperf -h sdw1 -h sdw2 -d /data1 -r d -D -v
+</code></pre>
+<p>Run the parallel network test using the test directory of /tmp, where hostfile_gpcheck_ic* specifies all network interface host address names within the same interconnect subnet:</p>
+<pre><code>$ gpcheckperf -f hostfile_gpchecknet_ic1 -r N -d /tmp
+$ gpcheckperf -f hostfile_gpchecknet_ic2 -r N -d /tmp
+</code></pre>
+<p>Run the same test as above, but use <code>netperf</code> instead of the SynxDB network test (note that <code>netperf</code> must be installed in <code>$GPHOME/bin/lib</code> on all SynxDB hosts):</p>
+<pre><code>$ gpcheckperf -f hostfile_gpchecknet_ic1 -r N --netperf -d /tmp
+$ gpcheckperf -f hostfile_gpchecknet_ic2 -r N --netperf -d /tmp
+</code></pre>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section6"></a>See Also</a></h2>
+<p><a href="gpssh.html">gpssh</a>, <a href="gpscp.html">gpscp</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../utility_guide/ref/gpcheckcat.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../utility_guide/ref/gpconfig.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../utility_guide/ref/gpcheckcat.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../utility_guide/ref/gpconfig.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,69 @@
+.. raw:: latex
+
+   \newpage
+
+Load External Data Using Foreign Table
+===============================================
+
+|product_name| allows you to access data stored in remote data sources using foreign tables. You can use foreign tables to connect to other databases or external data sources (such as CSV files) through a foreign data wrapper (FDW).
+
+Use foreign table
+---------------------
+
+You can create a foreign table using the following command:
+
+.. note::
+
+   Before creating a foreign table, you need to create a foreign server first.
+
+.. code:: sql
+
+   CREATE FOREIGN TABLE <external_table_name> (
+      col_1 data_type,
+      col_2 data_type,
+      ...
+   ) SERVER <server_name>
+   OPTIONS (<option_name> '<option_value>');
+
+For example:
+
+.. code:: sql
+
+   CREATE FOREIGN TABLE my_foreign_table (
+      id INTEGER,
+      name TEXT
+   ) SERVER remote_data
+   OPTIONS (table_name 'external_table');
+
+In this example, the table ``my_foreign_table`` is the foreign table created in the local database, while the actual data is stored in a remote table called ``external_table``.
+
+Create foreign table using the LIKE clause
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can use the ``LIKE`` clause to quickly create a foreign table based on the structure of an existing table. By using this clause, you can define a foreign table without explicitly listing the table's structure.
+
+.. note::
+
+   Foreign tables created using ``LIKE`` do not inherit the distribution settings of the existing table. These settings should be defined when you create the new foreign table.
+
+The following example shows how to use the ``LIKE`` clause to create a foreign table:
+
+.. code:: sql
+
+   CREATE FOREIGN DATA WRAPPER dummy; -- Creates a foreign data wrapper.
+   CREATE SERVER s0 FOREIGN DATA WRAPPER dummy; -- Creates a foreign server.
+   CREATE TABLE ft_source_table(a INT, b INT, c INT); -- Creates a table 'ft_source_table'.
+   CREATE FOREIGN TABLE my_foreign_table (LIKE ft_source_table) SERVER s0;  -- Creates a Foreign Table based on 'ft_source_table'.
+   \d+ my_foreign_table
+                                  Foreign table "public.my_foreign_table"
+   Column |  Type   | Collation | Nullable | Default | FDW options | Storage | Stats target | Description 
+   --------+---------+-----------+----------+---------+-------------+---------+--------------+-------------
+   a      | integer |           |          |         |             | plain   |              | 
+   b      | integer |           |          |         |             | plain   |              | 
+   c      | integer |           |          |         |             | plain   |              | 
+   Server: s0
+
+Query a foreign table
+------------------------
+
+After creating a foreign table, you can query it just like a local table.

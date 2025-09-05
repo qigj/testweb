@@ -1,0 +1,441 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log Auditing pgAudit &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Manage Roles and Privileges" href="manage-users.html" />
+    <link rel="prev" title="Use pgcrypto for Data Encryption" href="use-pgcrypto.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="set-security-and-permission-index.html">Configure Security and Permissions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="set-password-profile.html">Set Password Profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-pgcrypto.html">Use pgcrypto for Data Encryption</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Log Auditing pgAudit</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configure-pgaudit">Configure pgAudit</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pgaudit-log-class">pgaudit.log_class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgaudit-log-catalog">pgaudit.log_catalog</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgaudit-log-client">pgaudit.log_client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgaudit-log-level">pgaudit.log_level</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgaudit-log-parameter">pgaudit.log_parameter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgaudit-log-relation">pgaudit.log_relation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgaudit-log-rows">pgaudit.log_rows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgaudit-log-statement">pgaudit.log_statement</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgaudit-log-statement-once">pgaudit.log_statement_once</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgaudit-role">pgaudit.role</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#session-audit-logging">Session Audit Logging</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#object-audit-logging">Object audit logging</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#format">Format</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="manage-users.html">Manage Roles and Privileges</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-tde-to-encrypt-data.html">Transparent Data Encryption</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-anon.html">Data Anonymization Using Anon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configure-row-column-security.html">Configure Row-Level and Column-Level Permissions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+      <li class="breadcrumb-item active">Log Auditing pgAudit</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="log-auditing-pgaudit">
+<h1>Log Auditing pgAudit<a class="headerlink" href="#log-auditing-pgaudit" title="Link to this heading"></a></h1>
+<p>The pgAudit extension provides detailed session or object audit logging through PostgreSQL’s standard logging functionality.</p>
+<p>pgAudit enables users to generate audit logs, which are often required for government, financial, or ISO certifications. Auditing is an official inspection of an individual’s or organization’s accounts, typically conducted by an independent body.</p>
+<p>pgAudit is pre-installed in SynxDB Elastic. When using pgAudit, ORCA must be disabled.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">optimizer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">off</span><span class="p">;</span>
+</pre></div>
+</div>
+<section id="configure-pgaudit">
+<h2>Configure pgAudit<a class="headerlink" href="#configure-pgaudit" title="Link to this heading"></a></h2>
+<p>Only superusers can modify pgAudit settings. Allowing ordinary users to change these settings would compromise the integrity of the audit logs.</p>
+<p>Settings can be configured at the global level (in <code class="docutils literal notranslate"><span class="pre">postgresql.conf</span></code> or using <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">...</span> <span class="pre">SET</span></code>), database level (using <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">DATABASE</span> <span class="pre">...</span> <span class="pre">SET</span></code>), or role level (using <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">ROLE</span> <span class="pre">...</span> <span class="pre">SET</span></code>). Note that these settings cannot be inherited through ordinary roles, and <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">ROLE</span></code> will not change a user’s pgAudit settings. This is a limitation of the role system, not pgAudit itself.</p>
+<p>The pgAudit extension must be loaded in <a class="reference external" href="http://www.postgresql.org/docs/14/runtime-config-client.html#GUC-SHARED-PRELOAD-LIBRARIES">shared_preload_libraries</a>. Otherwise, an error will occur at load time, and audit logging will not function.</p>
+<p>Before setting <code class="docutils literal notranslate"><span class="pre">pgaudit.log_class</span></code>, you must first call <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTENSION</span> <span class="pre">pgaudit</span></code>. This extension installs event triggers that provide additional audit functionality for DDL operations. pgAudit will still work without the extension, but DDL statements will lack information about object types and names.</p>
+<p>If you need to drop and recreate the <code class="docutils literal notranslate"><span class="pre">pgaudit</span></code> extension, you must first remove the <code class="docutils literal notranslate"><span class="pre">pgaudit.log_class</span></code> setting; otherwise, an error will occur.</p>
+<section id="pgaudit-log-class">
+<h3>pgaudit.log_class<a class="headerlink" href="#pgaudit-log-class" title="Link to this heading"></a></h3>
+<p>Specifies the categories of statements to be logged for session audits. Possible values include:</p>
+<ul class="simple">
+<li><p>READ: <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> and <code class="docutils literal notranslate"><span class="pre">COPY</span></code> when the source is a relation or query.</p></li>
+<li><p>WRITE: <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>, <code class="docutils literal notranslate"><span class="pre">TRUNCATE</span></code>, and <code class="docutils literal notranslate"><span class="pre">COPY</span></code> when the target is a relation.</p></li>
+<li><p>FUNCTION: Function calls and <code class="docutils literal notranslate"><span class="pre">DO</span></code> blocks.</p></li>
+<li><p>ROLE: Role and permission-related statements, such as <code class="docutils literal notranslate"><span class="pre">GRANT</span></code>, <code class="docutils literal notranslate"><span class="pre">REVOKE</span></code>, and <code class="docutils literal notranslate"><span class="pre">CREATE/ALTER/DROP</span> <span class="pre">ROLE</span></code>.</p></li>
+<li><p>DDL: All <code class="docutils literal notranslate"><span class="pre">DDL</span></code> statements not included in the <code class="docutils literal notranslate"><span class="pre">ROLE</span></code> category.</p></li>
+<li><p>MISC: Other commands, such as <code class="docutils literal notranslate"><span class="pre">DISCARD</span></code>, <code class="docutils literal notranslate"><span class="pre">FETCH</span></code>, <code class="docutils literal notranslate"><span class="pre">CHECKPOINT</span></code>, <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code>, and <code class="docutils literal notranslate"><span class="pre">SET</span></code>.</p></li>
+<li><p>MISC_SET: Other <code class="docutils literal notranslate"><span class="pre">SET</span></code> commands, such as <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">ROLE</span></code>.</p></li>
+<li><p>ALL: All of the above.</p></li>
+</ul>
+<p>Multiple categories can be specified in a comma-separated list, and categories can be excluded by prefixing them with a <code class="docutils literal notranslate"><span class="pre">-</span></code> symbol. The default value is <code class="docutils literal notranslate"><span class="pre">none</span></code>.</p>
+</section>
+<section id="pgaudit-log-catalog">
+<h3>pgaudit.log_catalog<a class="headerlink" href="#pgaudit-log-catalog" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Enables session logging when all relations in a statement are within <code class="docutils literal notranslate"><span class="pre">pg_catalog</span></code>. Disabling this reduces log noise from tools like psql and pgAdmin that perform many catalog queries.</p></li>
+<li><p>Default setting is <code class="docutils literal notranslate"><span class="pre">on</span></code>.</p></li>
+</ul>
+</section>
+<section id="pgaudit-log-client">
+<h3>pgaudit.log_client<a class="headerlink" href="#pgaudit-log-client" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Determines whether log messages are visible to client processes (e.g., psql). This should generally remain disabled but may be useful for debugging or other purposes.</p></li>
+<li><p>Note that the <code class="docutils literal notranslate"><span class="pre">pgaudit.log</span></code> level is only enabled when <code class="docutils literal notranslate"><span class="pre">pgaudit.log_client</span></code> is turned on; otherwise, the default value is used.</p></li>
+<li><p>Default setting is <code class="docutils literal notranslate"><span class="pre">off</span></code>.</p></li>
+</ul>
+</section>
+<section id="pgaudit-log-level">
+<h3>pgaudit.log_level<a class="headerlink" href="#pgaudit-log-level" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Specifies the log level for audit log entries. Note that <code class="docutils literal notranslate"><span class="pre">ERROR</span></code>, <code class="docutils literal notranslate"><span class="pre">FATAL</span></code>, and <code class="docutils literal notranslate"><span class="pre">PANIC</span></code> are not allowed. This setting is primarily used for regression testing and may also be useful for end-user testing or other purposes.</p></li>
+<li><p>Note that the <code class="docutils literal notranslate"><span class="pre">pgaudit.log</span></code> level is only enabled when <code class="docutils literal notranslate"><span class="pre">pgaudit.log_client</span></code> is turned on; otherwise, the default value is used.</p></li>
+<li><p>Default is <code class="docutils literal notranslate"><span class="pre">log</span></code>.</p></li>
+</ul>
+</section>
+<section id="pgaudit-log-parameter">
+<h3>pgaudit.log_parameter<a class="headerlink" href="#pgaudit-log-parameter" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Determines whether audit logs should include parameters passed with statements. If enabled, parameters will be included in CSV format after the statement text.</p></li>
+<li><p>Default setting is <code class="docutils literal notranslate"><span class="pre">off</span></code>.</p></li>
+</ul>
+</section>
+<section id="pgaudit-log-relation">
+<h3>pgaudit.log_relation<a class="headerlink" href="#pgaudit-log-relation" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Determines whether session audit logs should create separate entries for each relation (e.g., <code class="docutils literal notranslate"><span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">VIEW</span></code>) referenced in <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> or DML statements. This provides a useful shortcut for detailed logging without using object-level auditing.</p></li>
+<li><p>Default setting is <code class="docutils literal notranslate"><span class="pre">off</span></code>.</p></li>
+</ul>
+</section>
+<section id="pgaudit-log-rows">
+<h3>pgaudit.log_rows<a class="headerlink" href="#pgaudit-log-rows" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Determines whether audit logs should include the number of rows retrieved or affected by a statement. If enabled, the row count will be included after the parameter field.</p></li>
+<li><p>Default setting is <code class="docutils literal notranslate"><span class="pre">off</span></code>.</p></li>
+</ul>
+</section>
+<section id="pgaudit-log-statement">
+<h3>pgaudit.log_statement<a class="headerlink" href="#pgaudit-log-statement" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Indicates whether the statement text and parameters (if enabled) are included in the log. Depending on the requirements, this level of detail may not be necessary for audit logs.</p></li>
+<li><p>Default setting is <code class="docutils literal notranslate"><span class="pre">on</span></code>.</p></li>
+</ul>
+</section>
+<section id="pgaudit-log-statement-once">
+<h3>pgaudit.log_statement_once<a class="headerlink" href="#pgaudit-log-statement-once" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Determines whether the statement text and parameters are logged only with the first entry for a statement/sub-statement combination or with each entry. Enabling this reduces log verbosity but may complicate identifying the statement that generated the log entry. However, the statement/sub-statement and process ID should still allow identification of the statement text from previous entries.</p></li>
+<li><p>Default setting is <code class="docutils literal notranslate"><span class="pre">off</span></code>.</p></li>
+</ul>
+</section>
+<section id="pgaudit-role">
+<h3>pgaudit.role<a class="headerlink" href="#pgaudit-role" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Specifies the primary role used for object audit logging. Multiple audit roles can be defined by granting them to this primary role, allowing different groups to manage various aspects of audit logging.</p></li>
+<li><p>There is no default value.</p></li>
+</ul>
+</section>
+</section>
+<section id="session-audit-logging">
+<h2>Session Audit Logging<a class="headerlink" href="#session-audit-logging" title="Link to this heading"></a></h2>
+<p>Session audit logging provides a detailed record of all statements executed by the backend on behalf of the user.</p>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<p>Session logging is enabled via the <code class="docutils literal notranslate"><span class="pre">pgaudit.log_class</span></code> setting.</p>
+<p>Enable session logging for all DML and DDL, and log all relations in DML statements:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">pgaudit</span><span class="p">.</span><span class="n">log_class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;write, ddl&#39;</span><span class="p">;</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">pgaudit</span><span class="p">.</span><span class="n">log_relation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">on</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Enable session logging for all commands except <code class="docutils literal notranslate"><span class="pre">MISC</span></code>, and set audit log messages to <code class="docutils literal notranslate"><span class="pre">NOTICE</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">pgaudit</span><span class="p">.</span><span class="n">log_class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;all, -misc&#39;</span><span class="p">;</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">pgaudit</span><span class="p">.</span><span class="n">log_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">notice</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h3>
+<p>In this example, session audit logging is used to log DDL and <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> statements. Note that <code class="docutils literal notranslate"><span class="pre">INSERT</span></code> statements are not logged because the <code class="docutils literal notranslate"><span class="pre">WRITE</span></code> category is not enabled.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">pgaudit</span><span class="p">.</span><span class="n">log_class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;read, ddl&#39;</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">account</span>
+<span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">password</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">description</span><span class="w"> </span><span class="nb">TEXT</span>
+<span class="p">);</span>
+
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">account</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">,</span><span class="w"> </span><span class="n">description</span><span class="p">)</span>
+<span class="w">             </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;user1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;HASH1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;blah, blah&#39;</span><span class="p">);</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">account</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Log output:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">AUDIT</span><span class="p">:</span><span class="w"> </span><span class="k">SESSION</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">DDL</span><span class="p">,</span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="p">,</span><span class="k">TABLE</span><span class="p">,</span><span class="k">public</span><span class="p">.</span><span class="n">account</span><span class="p">,</span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">account</span>
+<span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">password</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">description</span><span class="w"> </span><span class="nb">TEXT</span>
+<span class="p">);,</span><span class="o">&lt;</span><span class="k">not</span><span class="w"> </span><span class="n">logged</span><span class="o">&gt;</span>
+<span class="n">AUDIT</span><span class="p">:</span><span class="w"> </span><span class="k">SESSION</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="k">READ</span><span class="p">,</span><span class="k">SELECT</span><span class="p">,,,</span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">account</span><span class="p">,,</span><span class="o">&lt;</span><span class="k">not</span><span class="w"> </span><span class="n">logged</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="object-audit-logging">
+<h2>Object audit logging<a class="headerlink" href="#object-audit-logging" title="Link to this heading"></a></h2>
+<p>Object audit logging captures statements affecting specific relations, supporting only <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, and <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> commands. <code class="docutils literal notranslate"><span class="pre">TRUNCATE</span></code> is excluded from object audit logging.</p>
+<p>Object audit logging offers a more granular alternative to setting <code class="docutils literal notranslate"><span class="pre">pgaudit.log_class</span> <span class="pre">=</span> <span class="pre">'read,</span> <span class="pre">write'</span></code>. Combining them is generally not recommended, but one use case could be to first capture all statements via session logging and then enhance the logs with object-level details for specific relations.</p>
+<section id="id1">
+<h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>Object-level audit logging is managed through the role system. The <code class="docutils literal notranslate"><span class="pre">pgaudit.role</span></code> parameter specifies the role used for audit logging. When this role has permissions to execute a command or inherits permissions from another role, audit logs for the affected relation (such as <code class="docutils literal notranslate"><span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">VIEW</span></code>, etc.) will be recorded. This approach allows multiple audit roles to be defined, even though only one primary role is used in any context.</p>
+<p>To enable object audit logging, set <code class="docutils literal notranslate"><span class="pre">pgaudit.role</span></code> to <code class="docutils literal notranslate"><span class="pre">auditor</span></code> and grant <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> and <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> permissions on the <code class="docutils literal notranslate"><span class="pre">account</span></code> table. Any <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> or <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> statements on this table will be logged:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">pgaudit</span><span class="p">.</span><span class="k">role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;auditor&#39;</span><span class="p">;</span>
+
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span>
+<span class="w">   </span><span class="k">ON</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">account</span>
+<span class="w">   </span><span class="k">TO</span><span class="w"> </span><span class="n">auditor</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="example">
+<span id="example-1"></span><h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<p>This example demonstrates how object audit logging can be used for fine-grained logging of <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> and DML statements. Note that logging for the <code class="docutils literal notranslate"><span class="pre">account</span></code> table is controlled by column-level permissions, while logging for the <code class="docutils literal notranslate"><span class="pre">account_role_map</span></code> table is controlled by table-level permissions.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">set</span><span class="w"> </span><span class="n">pgaudit</span><span class="p">.</span><span class="k">role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;auditor&#39;</span><span class="p">;</span>
+
+<span class="k">create</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">account</span>
+<span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+<span class="w">    </span><span class="n">password</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+<span class="w">    </span><span class="n">description</span><span class="w"> </span><span class="nb">text</span>
+<span class="p">);</span>
+
+<span class="k">grant</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+<span class="w">   </span><span class="k">on</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">account</span>
+<span class="w">   </span><span class="k">to</span><span class="w"> </span><span class="n">auditor</span><span class="p">;</span>
+
+<span class="k">select</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">name</span>
+<span class="w">  </span><span class="k">from</span><span class="w"> </span><span class="n">account</span><span class="p">;</span>
+
+<span class="k">select</span><span class="w"> </span><span class="n">password</span>
+<span class="w">  </span><span class="k">from</span><span class="w"> </span><span class="n">account</span><span class="p">;</span>
+
+<span class="k">grant</span><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">)</span>
+<span class="w">   </span><span class="k">on</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">account</span>
+<span class="w">   </span><span class="k">to</span><span class="w"> </span><span class="n">auditor</span><span class="p">;</span>
+
+<span class="k">update</span><span class="w"> </span><span class="n">account</span>
+<span class="w">   </span><span class="k">set</span><span class="w"> </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;yada, yada&#39;</span><span class="p">;</span>
+
+<span class="k">update</span><span class="w"> </span><span class="n">account</span>
+<span class="w">   </span><span class="k">set</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;HASH2&#39;</span><span class="p">;</span>
+
+<span class="k">create</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">account_role_map</span>
+<span class="p">(</span>
+<span class="w">    </span><span class="n">account_id</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+<span class="w">    </span><span class="n">role_id</span><span class="w"> </span><span class="nb">int</span>
+<span class="p">);</span>
+
+<span class="k">grant</span><span class="w"> </span><span class="k">select</span>
+<span class="w">   </span><span class="k">on</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">account_role_map</span>
+<span class="w">   </span><span class="k">to</span><span class="w"> </span><span class="n">auditor</span><span class="p">;</span>
+
+<span class="k">select</span><span class="w"> </span><span class="n">account</span><span class="p">.</span><span class="n">password</span><span class="p">,</span>
+<span class="w">       </span><span class="n">account_role_map</span><span class="p">.</span><span class="n">role_id</span>
+<span class="w">  </span><span class="k">from</span><span class="w"> </span><span class="n">account</span>
+<span class="w">       </span><span class="k">inner</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">account_role_map</span>
+<span class="w">            </span><span class="k">on</span><span class="w"> </span><span class="n">account</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">account_role_map</span><span class="p">.</span><span class="n">account_id</span>
+</pre></div>
+</div>
+<p>Log output:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">AUDIT</span><span class="p">:</span><span class="w"> </span><span class="k">OBJECT</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="k">READ</span><span class="p">,</span><span class="k">SELECT</span><span class="p">,</span><span class="k">TABLE</span><span class="p">,</span><span class="k">public</span><span class="p">.</span><span class="n">account</span><span class="p">,</span><span class="k">select</span><span class="w"> </span><span class="n">password</span>
+<span class="w">  </span><span class="k">from</span><span class="w"> </span><span class="n">account</span><span class="p">,</span><span class="o">&lt;</span><span class="k">not</span><span class="w"> </span><span class="n">logged</span><span class="o">&gt;</span>
+<span class="n">AUDIT</span><span class="p">:</span><span class="w"> </span><span class="k">OBJECT</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="k">WRITE</span><span class="p">,</span><span class="k">UPDATE</span><span class="p">,</span><span class="k">TABLE</span><span class="p">,</span><span class="k">public</span><span class="p">.</span><span class="n">account</span><span class="p">,</span><span class="k">update</span><span class="w"> </span><span class="n">account</span>
+<span class="w">   </span><span class="k">set</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;HASH2&#39;</span><span class="p">,</span><span class="o">&lt;</span><span class="k">not</span><span class="w"> </span><span class="n">logged</span><span class="o">&gt;</span>
+<span class="n">AUDIT</span><span class="p">:</span><span class="w"> </span><span class="k">OBJECT</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="k">READ</span><span class="p">,</span><span class="k">SELECT</span><span class="p">,</span><span class="k">TABLE</span><span class="p">,</span><span class="k">public</span><span class="p">.</span><span class="n">account</span><span class="p">,</span><span class="k">select</span><span class="w"> </span><span class="n">account</span><span class="p">.</span><span class="n">password</span><span class="p">,</span>
+<span class="w">       </span><span class="n">account_role_map</span><span class="p">.</span><span class="n">role_id</span>
+<span class="w">  </span><span class="k">from</span><span class="w"> </span><span class="n">account</span>
+<span class="w">       </span><span class="k">inner</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">account_role_map</span>
+<span class="w">            </span><span class="k">on</span><span class="w"> </span><span class="n">account</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">account_role_map</span><span class="p">.</span><span class="n">account_id</span><span class="p">,</span><span class="o">&lt;</span><span class="k">not</span><span class="w"> </span><span class="n">logged</span><span class="o">&gt;</span>
+<span class="n">AUDIT</span><span class="p">:</span><span class="w"> </span><span class="k">OBJECT</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="k">READ</span><span class="p">,</span><span class="k">SELECT</span><span class="p">,</span><span class="k">TABLE</span><span class="p">,</span><span class="k">public</span><span class="p">.</span><span class="n">account_role_map</span><span class="p">,</span><span class="k">select</span><span class="w"> </span><span class="n">account</span><span class="p">.</span><span class="n">password</span><span class="p">,</span>
+<span class="w">       </span><span class="n">account_role_map</span><span class="p">.</span><span class="n">role_id</span>
+<span class="w">  </span><span class="k">from</span><span class="w"> </span><span class="n">account</span>
+<span class="w">       </span><span class="k">inner</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">account_role_map</span>
+<span class="w">            </span><span class="k">on</span><span class="w"> </span><span class="n">account</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">account_role_map</span><span class="p">.</span><span class="n">account_id</span><span class="p">,</span><span class="o">&lt;</span><span class="k">not</span><span class="w"> </span><span class="n">logged</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="format">
+<h2>Format<a class="headerlink" href="#format" title="Link to this heading"></a></h2>
+<p>Audit entries are written to standard logging tools in a comma-separated format. The output conforms to CSV format only if the log line prefix is removed from each log item.</p>
+<ul class="simple">
+<li><p><strong>AUDIT_TYPE</strong>: <code class="docutils literal notranslate"><span class="pre">SESSION</span></code> or <code class="docutils literal notranslate"><span class="pre">OBJECT</span></code>.</p></li>
+<li><p><strong>STATEMENT_ID</strong>: A unique identifier for each statement in the session. Statement IDs are consecutive, even if some statements are not logged. A single statement ID may have multiple entries when logging multiple relations.</p></li>
+<li><p><strong>SUBSTATEMENT_ID</strong>: A sequential identifier for each sub-statement within the main statement (e.g., functions called from a query). Sub-statement IDs are consecutive, even if some sub-statements are not logged. A single sub-statement ID may have multiple entries when logging multiple relations.</p></li>
+<li><p><strong>CLASS</strong>: For example, <code class="docutils literal notranslate"><span class="pre">READ</span></code>, <code class="docutils literal notranslate"><span class="pre">ROLE</span></code>.</p></li>
+<li><p><strong>COMMAND</strong>: For example, <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>.</p></li>
+<li><p><strong>OBJECT_TYPE</strong>: For example, <code class="docutils literal notranslate"><span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">VIEW</span></code>. Applies to <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, DML, and most DDL statements.</p></li>
+<li><p><strong>OBJECT_NAME</strong>: The fully qualified object name (e.g., <code class="docutils literal notranslate"><span class="pre">public.account</span></code>). Applies to <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, DML, and most DDL statements.</p></li>
+<li><p><strong>STATEMENT</strong>: The statement executed by the backend.</p></li>
+<li><p><strong>PARAMETER</strong>: If <code class="docutils literal notranslate"><span class="pre">pgaudit.log_parameter</span></code> is enabled, this field contains the statement parameters in CSV format, or <code class="docutils literal notranslate"><span class="pre">&lt;none&gt;</span></code> if there are no parameters. Otherwise, the field is <code class="docutils literal notranslate"><span class="pre">&lt;not</span> <span class="pre">logged&gt;</span></code>.</p></li>
+</ul>
+<p>Use <a class="reference external" href="http://www.postgresql.org/docs/14/runtime-config-logging.html#GUC-LOG-LINE-PREFIX">log_line_prefix</a> to add additional fields required for audit log compliance. A typical log line prefix might be <code class="docutils literal notranslate"><span class="pre">'%m</span> <span class="pre">%u</span> <span class="pre">%d</span> <span class="pre">[%p]:</span> <span class="pre">'</span></code>, which includes the date/time, username, database name, and process ID for each audit log entry.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="manage-users.html" class="btn btn-neutral float-right" title="Manage Roles and Privileges" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="use-pgcrypto.html" class="btn btn-neutral float-left" title="Use pgcrypto for Data Encryption" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

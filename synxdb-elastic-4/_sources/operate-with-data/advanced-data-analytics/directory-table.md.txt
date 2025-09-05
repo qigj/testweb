@@ -1,0 +1,320 @@
+# Directory Tables
+
+{{ product_name }} supports directory tables to uniformly manage unstructured data on object storage.
+
+Large-scale AI applications need to handle unstructured, multi-modal datasets. Therefore, AI application developers must continually prepare a large amount high-quality unstructured data, train large models through repeated iterations, and build rich knowledge bases. This creates technical challenges in managing and processing unstructured data.
+
+To address these challenges, {{ product_name }} introduces directory tables for managing multiple types of unstructured data. Developers can use simple SQL statements to leverage multiple computing engines for unified data processing and application development.
+
+A directory table stores, manages, and analyzes unstructured data objects. Users can either **upload** local files to a directory table for unified management or directly **map** and manage files that already exist in external object storage, to efficiently manage unstructured data.
+
+- **Upload mode**: When an unstructured data file is imported into a directory table, a record (that is, the file's metadata) is created in the directory table, and the file itself is loaded into the object storage managed by {{ product_name }}.
+- **Map mode**: This mode directly scans and identifies files in a user-specified external object storage path and synchronizes their metadata to the directory table. The file entities remain in their original object storage location and are managed by the user.
+
+## Instructions
+
+### Create a directory table
+
+You can create a directory table in a tablespace on local storage or in a tablespace on external storage (such as object storage services or HDFS).
+
+#### Create in local storage
+
+The syntax for creating a directory table in local storage is as follows. You need to replace `<table_name>` and `<tablespace_name>` with the actual table name and tablespace name.
+
+```sql
+-- Method 1: Does not specify a tablespace, which means creating the directory table in the existing default tablespace.
+CREATE DIRECTORY TABLE <table_name>;
+
+-- Method 2: First creates a tablespace, and then creates the directory table in that tablespace.
+CREATE TABLESPACE <tablespace_name>
+       LOCATION '<tablespace_path>';
+
+CREATE DIRECTORY TABLE <table_name>
+       TABLESPACE <tablespace_name>;
+```
+
+#### Create in external storage
+
+To create a directory table in external storage, you first need to create a tablespace in the external storage. You must provide the connection information required to access the external storage server, including the server's IP address, protocol, and access keys. The following examples show how to create a directory table on a major cloud provider like Amazon S3 and HDFS.
+
+1. Create a server object and define the connection method for the external data source. {{ product_name }} supports multiple storage protocols, including S3 object storage and HDFS. The following examples create server objects named `oss_server` and `hdfs_server` on Amazon S3 and HDFS, respectively.
+
+    - Amazon S3:
+
+        ```sql
+        CREATE STORAGE SERVER oss_server OPTIONS(protocol 's3', prefix '<path_prefix>', endpoint '<endpoint_address>', https 'true', virtual_host 'false');
+        ```
+
+    - HDFS:
+
+        ```sql
+        CREATE STORAGE SERVER hdfs_server OPTIONS(port '<port_number>', protocol 'hdfs', namenode '<HDFS_node_IP:port>', https 'false');
+        ```
+
+    The parameters in the commands above are as follows:
+
+    - `protocol`: The protocol used to connect to the external data source. In the examples above, `'s3'` indicates the protocol for Amazon S3 Object Storage, and `'hdfs'` indicates the HDFS protocol.
+    - `prefix`: Sets the path prefix for accessing object storage. When set, all operations are confined to this specific path, for example, `prefix '/rose-oss-test4/usf1'`. This is typically used to organize and isolate data within the same storage bucket.
+    - `endpoint`: Specifies the network address of the external object storage service. For example, `'s3.us-west-2.amazonaws.com'` is a specific regional endpoint for Amazon S3 services. {{ product_name }} can access external data through this endpoint.
+    - `https`: Specifies whether to connect to the object storage service via HTTPS. In this command, `'false'` means using an unencrypted HTTP connection. This setting may be influenced by data transmission security requirements; using HTTPS is generally recommended to ensure data security.
+    - `virtual_host`: Determines whether to use virtual host style for bucket access. `'false'` means not using virtual host style bucket access (that is, the bucket name is not included in the URL). This option usually depends on the URL format supported by the storage service provider.
+    - `namenode`: The IP address of the HDFS node. You need to replace `<HDFS_node_IP:port>` with the actual IP address and port number, such as `'192.168.51.106:8020'`.
+    - `port`: The port number of the HDFS node. You need to replace `<port_number>` with the actual port number, for example, `8020`.
+
+2. Create a user mapping to provide the current user with the authentication information needed to access these external servers.
+
+    - Amazon S3:
+
+        ```sql
+        CREATE STORAGE USER MAPPING FOR CURRENT_USER STORAGE SERVER oss_server OPTIONS (accesskey '<aws_access_key_id>', secretkey '<aws_secret_access_key>');
+        ```
+
+    - HDFS:
+
+        ```sql
+        CREATE STORAGE USER MAPPING FOR CURRENT_USER STORAGE SERVER hdfs_server OPTIONS (auth_method 'simple');
+        ```
+
+    The parameters in the commands above are as follows:
+
+    - `accesskey` and `secretkey`: These parameters provide the necessary authentication information. `'accesskey'` and `'secretkey'` are like a username and password used to access the object storage service.
+    - `auth_method`: Indicates the authentication mode for accessing HDFS. `simple` means simple authentication mode, and `kerberos` means using Kerberos authentication mode.
+
+3. Create a tablespace on the external server. These tablespaces are specifically linked to the previously defined external servers, and the `location` option of the tablespace points to a specific path on the external storage. The following examples create tablespaces `dir_oss` and `dir_hdfs` on Amazon S3 and HDFS, respectively.
+
+    - Amazon S3:
+
+        ```sql
+        CREATE TABLESPACE dir_oss location '<tablespace_path_on_object_storage>' SERVER oss_server HANDLER '$libdir/dfs_tablespace, remote_file_handler';
+
+        -- You need to replace <tablespace_path_on_object_storage> with the actual path,
+        -- for example, /tbs-49560-0-mgq-multi/oss-server-01-17.
+        ```
+
+    - HDFS:
+
+        ```sql
+        CREATE TABLESPACE dir_hdfs location '<tablespace_path_on_object_storage>' SERVER hdfs_server HANDLER '$libdir/dfs_tablespace, remote_file_handler';
+
+        -- You need to replace <tablespace_path_on_object_storage> with the actual path,
+        -- for example, /tbs-49560-0-mgq-multi/oss-server-01-17.
+        ```
+
+4. Create a directory table in the tablespace. The following statements create directory tables `dir_table_oss` and `dir_table_hdfs` in tablespaces `dir_oss` and `dir_hdfs`, respectively.
+
+    ```sql
+    CREATE DIRECTORY TABLE dir_table_oss TABLESPACE dir_oss;
+    CREATE DIRECTORY TABLE dir_table_hdfs TABLESPACE dir_hdfs;
+    ```
+
+### View field information of a directory table
+
+```sql
+\dY   -- Lists all current directory tables.
+\d <directory_table>   -- Views the field information of a specific directory table.
+```
+
+The fields of a directory table are typically as follows:
+
+| **Field name**      | **Data type**    | **Notes**                                                                    |
+|-----------------|-----------------|---------------------------------------------------------------------------------|
+| `RELATIVE_PATH` | `TEXT`          |                                                                                 |
+| `SIZE`          | `NUMBER`        |                                                                                 |
+| `LAST_MODIFIED` | `TIMESTAMP_LTZ` |                                                                                 |
+| `MD5`           | `HEX`           |                                                                                 |
+| `TAG`           | `TEXT`          | User-defined tags. Can be used to mark data lineage, uploading department/team, classification. "k1=v1, k2=v2". |
+
+Field descriptions
+
+### Add files to a directory table
+
+Directory tables support two ways to manage files: uploading new files or mapping files that already exist in external object storage.
+
+#### Upload files
+
+In upload mode, the file entity is copied to a storage space uniformly managed by {{ product_name }}, while its metadata is recorded in the directory table.
+
+The syntax for uploading files from a local path to the database object storage is as follows:
+
+```sql
+\COPY BINARY '<directory_table_name>' FROM '<local_path_to_file>' '<relative_path>';
+COPY BINARY '<directory_table_name>' FROM '<local_path_to_file>' '<relative_path>';  -- The leading \ can be omitted.
+
+-- <directory_table_name> is the name of the directory table.
+-- <local_path_to_file> is the local path of the file to be uploaded.
+-- <relative_path> is the target path in local or object storage.
+-- The file will be uploaded to this path.
+```
+
+:::{tip}
+It is recommended to use the subdirectory capability of `<path>` to ensure that the uploaded directory path is consistent with the local one, which facilitates file management.
+:::
+
+To better manage or track files and data flows, you can also add a `tag` to the upload command to provide additional information or markers:
+
+```sql
+\COPY BINARY '<directory_table_name>' FROM '<local_path_to_file>' '<relative_path>' WITH tag '<tag_name>';
+```
+
+Examples are as follows:
+
+```sql
+-- Uploads a file to the root directory.
+\COPY BINARY dir_table_oss FROM '/data/country.data' 'country.data';
+
+-- Uploads a file to a specific path: top_level/second_level.
+\COPY BINARY dir_table_oss FROM '/data/region.tbl' 'top_level/second_level/region.tbl';
+
+-- Uploads a file to the root directory with a tag.
+\COPY BINARY dir_table_oss FROM '/data/country1.data' 'country1.data' with tag 'country';
+
+-- Uploads a file to a specific path top_level/second_level with a tag.
+\COPY BINARY dir_table_oss FROM '/data/region1.tbl' 'top_level/second_level/region1.tbl' with tag 'region';
+```
+
+#### Map external object storage files
+
+In map mode, you can directly manage files already stored in external object storage (such as S3, and HDFS) without moving or uploading them. {{ product_name }} scans the specified external path and synchronizes the file metadata to the directory table.
+
+When creating a directory table, you can use the `WITH LOCATION` clause to directly specify a path on the object storage (for example, a bucket). This way, the directory table is directly associated with the specified external path. Subsequent file mapping operations (such as `ATTACH LOCATION`) will be based on this path.
+
+```sql
+CREATE DIRECTORY TABLE <directory_table_name>
+TABLESPACE <tablespace_name>
+WITH LOCATION '<oss_bucket_path>';
+
+-- Example
+CREATE DIRECTORY TABLE dir_table_with_location 
+TABLESPACE dir_oss 
+WITH LOCATION '/test_dirtable';
+```
+
+In the example above, `<oss_bucket_path>` is the bucket path on the object storage, for example, `/test_dirtable`. This allows you to use a directory table to manage data in an entire bucket or a specified directory.
+
+Once the directory table is created, you can use the `ALTER DIRECTORY TABLE ... ATTACH LOCATION` statement to attach one or more paths (`LOCATION`) from external object storage to the directory table, thereby managing specific files.
+
+The syntax is as follows:
+
+```sql
+ALTER DIRECTORY TABLE <directory_table_name> ATTACH LOCATION '<location_path>';
+
+-- Alternatively, attaches a path and add a uniform tag to all files under that path.
+ALTER DIRECTORY TABLE <directory_table_name> ATTACH LOCATION '<location_path>' WITH TAG '<tag_name>';
+```
+
+- `<directory_table_name>`: The name of the directory table.
+- `<location_path>`: The path in the external object storage. This path is relative to the `location` specified when creating the tablespace.
+- `<tag_name>`: The tag set for all files under this path.
+
+Examples are as follows:
+
+```sql
+-- Maps the path named nation1.
+ALTER DIRECTORY TABLE dir_table_oss ATTACH LOCATION 'nation1';
+
+-- Maps the path named nation2 and add the 'random' tag to its files.
+ALTER DIRECTORY TABLE dir_table_oss ATTACH LOCATION 'nation2' WITH TAG 'random';
+```
+
+When a `LOCATION` is attached, the directory table records the metadata of all files under that path. You can query, export, or delete these mapped files just as you would with uploaded files. For example, use `SELECT * FROM <directory_table>` to query all files, or use the `remove_file()` function to delete a specific file.
+
+### Export files from a directory table to a local path
+
+You can export data from a directory table to your local file system for backup:
+
+```sql
+\COPY BINARY DIRECTORY TABLE '<directory_table_name>' '<relative_path>' TO '<target_path>'; -- Downloads to the psql machine.
+
+\COPY BINARY DIRECTORY TABLE '<directory_table_name>' '<relative_path>' TO '<target_path>';  -- Downloads to the Coordinator machine.
+
+-- <directory_table_name> is the name of the directory table.
+-- <relative_path> is the relative path in the directory table.
+-- <target_path> is the destination path, including the local file path and the target file name.
+```
+
+Example:
+
+```sql
+-- Downloads a file to the local root directory.
+\COPY BINARY DIRECTORY TABLE dir_table_oss 'country.data' TO '/data/country.CSV';
+```
+
+You can also use the `gpdirtableload` command-line tool to bulk download files to the local file system. For details on command-line parameters, see the `gpdirtableload_usage` section.
+
+### Query and use directory table files
+
+Query file metadata within a directory table:
+
+```sql
+-- Uses the directory_table() table function to read file metadata and content.
+SELECT relative_path, 
+       size, 
+       last_modified, 
+       md5,
+       tag,
+       content
+       FROM directory_table('<directory_table>');
+
+-- Uses any of the following statements to query data in a directory table.
+SELECT * FROM <directory_table>;
+SELECT * FROM DIRECTORY_TABLE('<directory_table>');
+```
+
+### Add transaction locks to a directory table
+
+Directory tables support locking statements to control concurrent access, ensuring data consistency and integrity. By using different lock modes, you can restrict other transactions' access to the table to avoid potential data conflicts.
+
+The syntax for locking a table is as follows:
+
+```sql
+LOCK TABLE <table_name> IN <lock_mode>;
+```
+
+Where `<lock_mode>` can be one of the following:
+
+- `ACCESS SHARE MODE`: Allows other transactions to read the table but not modify it. Used for read-only queries.
+- `ROW SHARE MODE`: Allows other transactions to read rows of the table but not modify them. Suitable for `SELECT FOR UPDATE`/`FOR SHARE`.
+- `ROW EXCLUSIVE MODE`: Allows a transaction to update the table. Other transactions can read but not modify.
+- `SHARE UPDATE EXCLUSIVE MODE`: Allows online maintenance operations. Other transactions can read but not modify.
+- `SHARE MODE`: Allows other transactions to read the table but not modify it.
+- `SHARE ROW EXCLUSIVE MODE`: Allows certain operations, such as creating triggers. Other transactions can read but not modify.
+- `EXCLUSIVE`: Allows only concurrent `Access Share` locks. The lock holder can only perform read-only operations on the table. Typically acquired by `REFRESH MATERIALIZED VIEW CONCURRENTLY`.
+- `ACCESS EXCLUSIVE MODE`: The highest level of lock, ensuring the holder is the only transaction accessing the table. Acquired by commands like `DROP TABLE`, `TRUNCATE`, and `VACUUM FULL`.
+
+Here is an example of using the `ACCESS SHARE MODE` lock:
+
+```sql
+BEGIN;
+LOCK TABLE dir_table1 IN ACCESS SHARE MODE;  -- In this mode, other transactions can still query dir_table1.
+SELECT * FROM dir_table1;  -- Queries dir_table1.
+LOCK TABLE dir_table1 IN ACCESS EXCLUSIVE MODE;  -- Requests an exclusive lock; other transactions cannot access dir_table1.
+COMMIT;
+```
+
+Here is an example of using the `ACCESS EXCLUSIVE MODE` lock:
+
+```sql
+BEGIN;
+LOCK TABLE dir_table1 IN ACCESS EXCLUSIVE MODE;  -- In this mode, other transactions cannot query or modify dir_table1.
+
+-- Performs some operations.
+ROLLBACK;  -- Rolls back the operations and releases the lock.
+```
+
+### Delete files managed by a directory table
+
+To delete files managed by a directory table, you need administrator privileges:
+
+```sql
+SELECT remove_file('dir_table_oss', 'country.data');
+
+-- This command deletes the file country.data managed by the dir_table_oss table.
+```
+
+### Drop a directory table
+
+Deletes the specified directory table. After deletion, all files within the table are also deleted. You need administrator privileges to drop a directory table.
+
+```sql
+DROP DIRECTORY TABLE <table_name>;
+```

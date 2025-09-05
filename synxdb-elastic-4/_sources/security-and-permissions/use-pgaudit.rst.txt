@@ -1,0 +1,271 @@
+Log Auditing pgAudit
+====================
+
+The pgAudit extension provides detailed session or object audit logging through PostgreSQL's standard logging functionality.
+
+pgAudit enables users to generate audit logs, which are often required for government, financial, or ISO certifications. Auditing is an official inspection of an individual's or organization's accounts, typically conducted by an independent body.
+
+pgAudit is pre-installed in |product_name|. When using pgAudit, ORCA must be disabled.
+
+.. code:: sql
+
+   SET optimizer = off;
+
+Configure pgAudit
+------------------------
+
+Only superusers can modify pgAudit settings. Allowing ordinary users to change these settings would compromise the integrity of the audit logs.
+
+Settings can be configured at the global level (in ``postgresql.conf`` or using ``ALTER SYSTEM ... SET``), database level (using ``ALTER DATABASE ... SET``), or role level (using ``ALTER ROLE ... SET``). Note that these settings cannot be inherited through ordinary roles, and ``SET ROLE`` will not change a user's pgAudit settings. This is a limitation of the role system, not pgAudit itself.
+
+The pgAudit extension must be loaded in `shared_preload_libraries <http://www.postgresql.org/docs/14/runtime-config-client.html#GUC-SHARED-PRELOAD-LIBRARIES>`__. Otherwise, an error will occur at load time, and audit logging will not function.
+
+Before setting ``pgaudit.log_class``, you must first call ``CREATE EXTENSION pgaudit``. This extension installs event triggers that provide additional audit functionality for DDL operations. pgAudit will still work without the extension, but DDL statements will lack information about object types and names.
+
+If you need to drop and recreate the ``pgaudit`` extension, you must first remove the ``pgaudit.log_class`` setting; otherwise, an error will occur.
+
+pgaudit.log_class
+~~~~~~~~~~~~~~~~~
+
+Specifies the categories of statements to be logged for session audits. Possible values include:
+
+-  READ: ``SELECT`` and ``COPY`` when the source is a relation or query.
+-  WRITE: ``INSERT``, ``UPDATE``, ``DELETE``, ``TRUNCATE``, and ``COPY`` when the target is a relation.
+-  FUNCTION: Function calls and ``DO`` blocks.
+-  ROLE: Role and permission-related statements, such as ``GRANT``, ``REVOKE``, and ``CREATE/ALTER/DROP ROLE``.
+-  DDL: All ``DDL`` statements not included in the ``ROLE`` category.
+-  MISC: Other commands, such as ``DISCARD``, ``FETCH``, ``CHECKPOINT``, ``VACUUM``, and ``SET``.
+-  MISC_SET: Other ``SET`` commands, such as ``SET ROLE``.
+-  ALL: All of the above.
+
+Multiple categories can be specified in a comma-separated list, and categories can be excluded by prefixing them with a ``-`` symbol. The default value is ``none``.
+
+pgaudit.log_catalog
+~~~~~~~~~~~~~~~~~~~
+
+-  Enables session logging when all relations in a statement are within ``pg_catalog``. Disabling this reduces log noise from tools like psql and pgAdmin that perform many catalog queries.
+-  Default setting is ``on``.
+
+pgaudit.log_client
+~~~~~~~~~~~~~~~~~~
+
+-  Determines whether log messages are visible to client processes (e.g., psql). This should generally remain disabled but may be useful for debugging or other purposes.
+-  Note that the ``pgaudit.log`` level is only enabled when ``pgaudit.log_client`` is turned on; otherwise, the default value is used.
+-  Default setting is ``off``.
+
+pgaudit.log_level
+~~~~~~~~~~~~~~~~~
+
+-  Specifies the log level for audit log entries. Note that ``ERROR``, ``FATAL``, and ``PANIC`` are not allowed. This setting is primarily used for regression testing and may also be useful for end-user testing or other purposes.
+-  Note that the ``pgaudit.log`` level is only enabled when ``pgaudit.log_client`` is turned on; otherwise, the default value is used.
+-  Default is ``log``.
+
+pgaudit.log_parameter
+~~~~~~~~~~~~~~~~~~~~~
+
+-  Determines whether audit logs should include parameters passed with statements. If enabled, parameters will be included in CSV format after the statement text.
+-  Default setting is ``off``.
+
+pgaudit.log_relation
+~~~~~~~~~~~~~~~~~~~~
+
+-  Determines whether session audit logs should create separate entries for each relation (e.g., ``TABLE``, ``VIEW``) referenced in ``SELECT`` or DML statements. This provides a useful shortcut for detailed logging without using object-level auditing.
+-  Default setting is ``off``.
+
+pgaudit.log_rows
+~~~~~~~~~~~~~~~~
+
+-  Determines whether audit logs should include the number of rows retrieved or affected by a statement. If enabled, the row count will be included after the parameter field.
+-  Default setting is ``off``.
+
+pgaudit.log_statement
+~~~~~~~~~~~~~~~~~~~~~
+
+-  Indicates whether the statement text and parameters (if enabled) are included in the log. Depending on the requirements, this level of detail may not be necessary for audit logs.
+-  Default setting is ``on``.
+
+pgaudit.log_statement_once
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-  Determines whether the statement text and parameters are logged only with the first entry for a statement/sub-statement combination or with each entry. Enabling this reduces log verbosity but may complicate identifying the statement that generated the log entry. However, the statement/sub-statement and process ID should still allow identification of the statement text from previous entries.
+-  Default setting is ``off``.
+
+pgaudit.role
+~~~~~~~~~~~~
+
+-  Specifies the primary role used for object audit logging. Multiple audit roles can be defined by granting them to this primary role, allowing different groups to manage various aspects of audit logging.
+-  There is no default value.
+
+Session Audit Logging
+---------------------
+
+Session audit logging provides a detailed record of all statements executed by the backend on behalf of the user.
+
+Configuration
+~~~~~~~~~~~~~
+
+Session logging is enabled via the ``pgaudit.log_class`` setting.
+
+Enable session logging for all DML and DDL, and log all relations in DML statements:
+
+.. code:: sql
+
+   SET pgaudit.log_class = 'write, ddl';
+   SET pgaudit.log_relation = on;
+
+Enable session logging for all commands except ``MISC``, and set audit log messages to ``NOTICE``:
+
+.. code:: sql
+
+   SET pgaudit.log_class = 'all, -misc';
+   SET pgaudit.log_level = notice;
+
+Examples
+~~~~~~~~
+
+In this example, session audit logging is used to log DDL and ``SELECT`` statements. Note that ``INSERT`` statements are not logged because the ``WRITE`` category is not enabled.
+
+.. code:: sql
+
+   SET pgaudit.log_class = 'read, ddl';
+
+   CREATE TABLE account
+   (
+       id INT,
+       name TEXT,
+       password TEXT,
+       description TEXT
+   );
+
+   INSERT INTO account (id, name, password, description)
+                VALUES (1, 'user1', 'HASH1', 'blah, blah');
+
+   SELECT *
+       FROM account;
+
+Log output:
+
+.. code:: sql
+
+   AUDIT: SESSION,1,1,DDL,CREATE TABLE,TABLE,public.account,CREATE TABLE account
+   (
+       id INT,
+       name TEXT,
+       password TEXT,
+       description TEXT
+   );,<not logged>
+   AUDIT: SESSION,2,1,READ,SELECT,,,SELECT *
+       FROM account,,<not logged>
+
+Object audit logging
+--------------------
+
+Object audit logging captures statements affecting specific relations, supporting only ``SELECT``, ``INSERT``, ``UPDATE``, and ``DELETE`` commands. ``TRUNCATE`` is excluded from object audit logging.
+
+Object audit logging offers a more granular alternative to setting ``pgaudit.log_class = 'read, write'``. Combining them is generally not recommended, but one use case could be to first capture all statements via session logging and then enhance the logs with object-level details for specific relations.
+
+Configuration
+~~~~~~~~~~~~~~~~
+
+Object-level audit logging is managed through the role system. The ``pgaudit.role`` parameter specifies the role used for audit logging. When this role has permissions to execute a command or inherits permissions from another role, audit logs for the affected relation (such as ``TABLE``, ``VIEW``, etc.) will be recorded. This approach allows multiple audit roles to be defined, even though only one primary role is used in any context.
+
+To enable object audit logging, set ``pgaudit.role`` to ``auditor`` and grant ``SELECT`` and ``DELETE`` permissions on the ``account`` table. Any ``SELECT`` or ``DELETE`` statements on this table will be logged:
+
+.. code:: sql
+
+   SET pgaudit.role = 'auditor';
+
+   GRANT SELECT, DELETE
+      ON public.account
+      TO auditor;
+
+.. _example-1:
+
+Example
+~~~~~~~
+
+This example demonstrates how object audit logging can be used for fine-grained logging of ``SELECT`` and DML statements. Note that logging for the ``account`` table is controlled by column-level permissions, while logging for the ``account_role_map`` table is controlled by table-level permissions.
+
+.. code:: sql
+
+   set pgaudit.role = 'auditor';
+
+   create table account
+   (
+       id int,
+       name text,
+       password text,
+       description text
+   );
+
+   grant select (password)
+      on public.account
+      to auditor;
+
+   select id, name
+     from account;
+
+   select password
+     from account;
+
+   grant update (name, password)
+      on public.account
+      to auditor;
+
+   update account
+      set description = 'yada, yada';
+
+   update account
+      set password = 'HASH2';
+
+   create table account_role_map
+   (
+       account_id int,
+       role_id int
+   );
+
+   grant select
+      on public.account_role_map
+      to auditor;
+
+   select account.password,
+          account_role_map.role_id
+     from account
+          inner join account_role_map
+               on account.id = account_role_map.account_id
+
+Log output:
+
+.. code:: sql
+
+   AUDIT: OBJECT,1,1,READ,SELECT,TABLE,public.account,select password
+     from account,<not logged>
+   AUDIT: OBJECT,2,1,WRITE,UPDATE,TABLE,public.account,update account
+      set password = 'HASH2',<not logged>
+   AUDIT: OBJECT,3,1,READ,SELECT,TABLE,public.account,select account.password,
+          account_role_map.role_id
+     from account
+          inner join account_role_map
+               on account.id = account_role_map.account_id,<not logged>
+   AUDIT: OBJECT,3,1,READ,SELECT,TABLE,public.account_role_map,select account.password,
+          account_role_map.role_id
+     from account
+          inner join account_role_map
+               on account.id = account_role_map.account_id,<not logged>
+
+Format
+------
+
+Audit entries are written to standard logging tools in a comma-separated format. The output conforms to CSV format only if the log line prefix is removed from each log item.
+
+-  **AUDIT_TYPE**: ``SESSION`` or ``OBJECT``.
+-  **STATEMENT_ID**: A unique identifier for each statement in the session. Statement IDs are consecutive, even if some statements are not logged. A single statement ID may have multiple entries when logging multiple relations.
+-  **SUBSTATEMENT_ID**: A sequential identifier for each sub-statement within the main statement (e.g., functions called from a query). Sub-statement IDs are consecutive, even if some sub-statements are not logged. A single sub-statement ID may have multiple entries when logging multiple relations.
+-  **CLASS**: For example, ``READ``, ``ROLE``.
+-  **COMMAND**: For example, ``ALTER TABLE``, ``SELECT``.
+-  **OBJECT_TYPE**: For example, ``TABLE``, ``VIEW``. Applies to ``SELECT``, DML, and most DDL statements.
+-  **OBJECT_NAME**: The fully qualified object name (e.g., ``public.account``). Applies to ``SELECT``, DML, and most DDL statements.
+-  **STATEMENT**: The statement executed by the backend.
+-  **PARAMETER**: If ``pgaudit.log_parameter`` is enabled, this field contains the statement parameters in CSV format, or ``<none>`` if there are no parameters. Otherwise, the field is ``<not logged>``.
+
+Use `log_line_prefix <http://www.postgresql.org/docs/14/runtime-config-logging.html#GUC-LOG-LINE-PREFIX>`__ to add additional fields required for audit log compliance. A typical log line prefix might be ``'%m %u %d [%p]: '``, which includes the date/time, username, database name, and process ID for each audit log entry.

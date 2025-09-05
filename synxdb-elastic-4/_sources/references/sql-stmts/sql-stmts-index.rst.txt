@@ -1,0 +1,15 @@
+SQL Syntax
+***********************
+
+SynxDB Elastic is built on Apache Cloudberry as its database engine. Therefore, its SQL syntax, system functions, and data types are highly compatible with Apache Cloudberry. Users can refer to the `Apache Cloudberry SQL statement reference <https://cloudberry.apache.org/docs/sql-stmts/>`_ for detailed syntax and usage.
+
+However, SynxDB Elastic introduces several architectural and functional changes compared to Apache Cloudberry. As a result, while the SQL syntax remains highly compatible, actual behaviors might differ. Users should always refer to SynxDB Elastic documentation and validate their queries based on the product's actual execution behaviors. Some key differences include:
+
+-  Index management: SynxDB Elastic does not support the ``CREATE INDEX`` statement, and index-related DDL statements are unavailable.
+-  Resource management: SynxDB Elastic uses a container-based resource management system, which differs from Apache Cloudberry’s resource queue mechanism.
+-  Separation of storage and compute: Certain DDL, DML, and query optimization strategies have been adjusted to align with the storage-compute separation architecture, leading to behavioral differences from Apache Cloudberry.
+
+.. toctree::
+   :maxdepth: 2
+
+   undrop-table

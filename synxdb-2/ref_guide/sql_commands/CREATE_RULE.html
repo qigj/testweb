@@ -1,0 +1,271 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>CREATE RULE - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="create-rule"><a class="header" href="#create-rule">CREATE RULE</a></h1>
+<p>Defines a new rewrite rule.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code class="language-{#sql_command_synopsis}">CREATE [OR REPLACE] RULE &lt;name&gt; AS ON &lt;event&gt;
+  TO &lt;table_name&gt; [WHERE &lt;condition&gt;] 
+  DO [ALSO | INSTEAD] { NOTHING | &lt;command&gt; | (&lt;command&gt;; &lt;command&gt; 
+  ...) }
+</code></pre>
+<p>where <code>&lt;event&gt;</code> can be one of:</p>
+<pre><code>  SELECT | INSERT | UPDATE | DELETE
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p><code>CREATE RULE</code> defines a new rule applying to a specified table or view. <code>CREATE OR REPLACE RULE</code> will either create a new rule, or replace an existing rule of the same name for the same table.</p>
+<p>The SynxDB rule system allows one to define an alternate action to be performed on insertions, updates, or deletions in database tables. A rule causes additional or alternate commands to be run when a given command on a given table is run. An <code>INSTEAD</code> rule can replace a given command by another, or cause a command to not be run at all. Rules can be used to implement SQL views as well. It is important to realize that a rule is really a command transformation mechanism, or command macro. The transformation happens before the execution of the command starts. It does not operate independently for each physical row as does a trigger.</p>
+<p><code>ON SELECT</code> rules must be unconditional <code>INSTEAD</code> rules and must have actions that consist of a single <code>SELECT</code> command. Thus, an <code>ON SELECT</code> rule effectively turns the table into a view, whose visible contents are the rows returned by the rule’s <code>SELECT</code> command rather than whatever had been stored in the table (if anything). It is considered better style to write a <code>CREATE VIEW</code> command than to create a real table and define an <code>ON SELECT</code> rule for it.</p>
+<p>You can create the illusion of an updatable view by defining <code>ON INSERT</code>, <code>ON UPDATE</code>, and <code>ON DELETE</code> rules (or any subset of those that is sufficient for your purposes) to replace update actions on the view with appropriate updates on other tables. If you want to support <code>INSERT RETURNING</code> and so on, be sure to put a suitable <code>RETURNING</code> clause into each of these rules.</p>
+<p>There is a catch if you try to use conditional rules for complex view updates: there <em>must</em> be an unconditional <code>INSTEAD</code> rule for each action you wish to allow on the view. If the rule is conditional, or is not <code>INSTEAD</code>, then the system will still reject attempts to perform the update action, because it thinks it might end up trying to perform the action on the dummy table of the view in some cases. If you want to handle all of the useful cases in conditional rules, add an unconditional <code>DO INSTEAD NOTHING</code> rule to ensure that the system understands it will never be called on to update the dummy table. Then make the conditional rules non-<code>INSTEAD</code>; in the cases where they are applied, they add to the default <code>INSTEAD NOTHING</code> action. (This method does not currently work to support <code>RETURNING</code> queries, however.)</p>
+<blockquote>
+<p><strong>Note</strong> A view that is simple enough to be automatically updatable (see <a href="CREATE_VIEW.html">CREATE VIEW</a>) does not require a user-created rule in order to be updatable. While you can create an explicit rule anyway, the automatic update transformation will generally outperform an explicit rule.</p>
+</blockquote>
+<h2 id="parameters"><a class="header" href="#parameters"><a id="section4"></a>Parameters</a></h2>
+<h3 id="name"><a class="header" href="#name">name</a></h3>
+<p>The name of a rule to create. This must be distinct from the name of any other rule for the same table. Multiple rules on the same table and same event type are applied in alphabetical name order.</p>
+<h3 id="event"><a class="header" href="#event">event</a></h3>
+<p>The event is one of <code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code>. Note that an <code>INSERT</code> containing an <code>ON CONFLICT</code> clause cannot be used on tables that have either <code>INSERT</code> or <code>UPDATE</code> rules. Consider using an updatable view instead.</p>
+<h3 id="table_name"><a class="header" href="#table_name">table_name</a></h3>
+<p>The name (optionally schema-qualified) of the table or view the rule applies to.</p>
+<h3 id="condition"><a class="header" href="#condition">condition</a></h3>
+<p>Any SQL conditional expression (returning <code>boolean</code>). The condition expression can not refer to any tables except <code>NEW</code> and <code>OLD</code>, and can not contain aggregate functions.</p>
+<h3 id="instead"><a class="header" href="#instead">INSTEAD</a></h3>
+<p><code>INSTEAD NOTHING</code> indicates that the commands should be run <em>instead of</em> the original command.</p>
+<h3 id="also"><a class="header" href="#also">ALSO</a></h3>
+<p><code>ALSO</code> indicates that the commands should be run <em>in addition</em> to the original command. If neither <code>ALSO</code> nor <code>INSTEAD</code> is specified, <code>ALSO</code> is the default.</p>
+<h3 id="command"><a class="header" href="#command">command</a></h3>
+<p>The command or commands that make up the rule action. Valid commands are <code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, or <code>NOTIFY</code>.</p>
+<h2 id="notes"><a class="header" href="#notes"><a id="section5"></a>Notes</a></h2>
+<p>You must be the owner of a table to create or change rules for it.</p>
+<p>In a rule for <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code> on a view, you can add a <code>RETURNING</code> clause that emits the view’s columns. This clause will be used to compute the outputs if the rule is triggered by an <code>INSERT RETURNING</code>, <code>UPDATE RETURNING</code>, or <code>DELETE RETURNING</code> command respectively. When the rule is triggered by a command without <code>RETURNING</code>, the rule’s <code>RETURNING</code> clause will be ignored. The current implementation allows only unconditional <code>INSTEAD</code> rules to contain <code>RETURNING</code>; furthermore there can be at most one <code>RETURNING</code> clause among all the rules for the same event. (This ensures that there is only one candidate <code>RETURNING</code> clause to be used to compute the results.) <code>RETURNING</code> queries on the view will be rejected if there is no <code>RETURNING</code> clause in any available rule.</p>
+<p>It is very important to take care to avoid circular rules. For example, though each of the following two rule definitions are accepted by SynxDB, the <code>SELECT</code> command would cause SynxDB to report an error because of recursive expansion of a rule:</p>
+<pre><code>CREATE RULE "_RETURN" AS
+    ON SELECT TO t1
+    DO INSTEAD
+        SELECT * FROM t2;
+
+CREATE RULE "_RETURN" AS
+    ON SELECT TO t2
+    DO INSTEAD
+        SELECT * FROM t1;
+
+SELECT * FROM t1;
+</code></pre>
+<p>Presently, if a rule action contains a <code>NOTIFY</code> command, the <code>NOTIFY</code> command will be executed unconditionally, that is, the <code>NOTIFY</code> will be issued even if there are not any rows that the rule should apply to. For example, in:</p>
+<pre><code>CREATE RULE notify_me AS ON UPDATE TO mytable DO ALSO NOTIFY mytable;
+
+UPDATE mytable SET name = 'foo' WHERE id = 42;
+</code></pre>
+<p>one <code>NOTIFY</code> event will be sent during the <code>UPDATE</code>, whether or not there are any rows that match the condition id = 42. This is an implementation restriction that might be fixed in future releases.</p>
+<h2 id="compatibility"><a class="header" href="#compatibility"><a id="section7"></a>Compatibility</a></h2>
+<p><code>CREATE RULE</code> is a SynxDB language extension, as is the entire query rewrite system.</p>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section8"></a>See Also</a></h2>
+<p><a href="ALTER_RULE.html">ALTER RULE</a>, <a href="DROP_RULE.html">DROP RULE</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/sql_commands/CREATE_ROLE.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/sql_commands/CREATE_SCHEMA.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/sql_commands/CREATE_ROLE.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/sql_commands/CREATE_SCHEMA.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

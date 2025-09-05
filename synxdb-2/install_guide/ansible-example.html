@@ -1,0 +1,311 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Example Ansible Playbook - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="example-ansible-playbook"><a class="header" href="#example-ansible-playbook">Example Ansible Playbook</a></h1>
+<p>A sample Ansible playbook to install a SynxDB software release onto the hosts that will comprise a SynxDB system.</p>
+<p>This Ansible playbook shows how tasks described in <a href="install_gpdb.html">Installing the SynxDB Software</a> might be automated using <a href="https://docs.ansible.com">Ansible</a>.</p>
+<blockquote>
+<p><strong>Important</strong> This playbook is provided as an <em>example only</em> to illustrate how SynxDB cluster configuration and software installation tasks can be automated using provisioning tools such as Ansible, Chef, or Puppet. Synx Data Labs does not provide support for Ansible or for the playbook presented in this example.</p>
+</blockquote>
+<p>The example playbook is designed for use with CentOS 7. It creates the <code>gpadmin</code> user, installs the SynxDB software release, sets the owner and group of the installed software to <code>gpadmin</code>, and sets the Pam security limits for the <code>gpadmin</code> user.</p>
+<p>You can revise the script to work with your operating system platform and to perform additional host configuration tasks.</p>
+<p>Following are steps to use this Ansible playbook.</p>
+<ol>
+<li>
+<p>Install Ansible on the control node using your package manager. See the <a href="https://docs.ansible.com">Ansible documentation</a> for help with installation.</p>
+</li>
+<li>
+<p>Set up passwordless SSH from the control node to all hosts that will be a part of the SynxDB cluster. You can use the <code>ssh-copy-id</code> command to install your public SSH key on each host in the cluster. Alternatively, your provisioning software may provide more convenient ways to securely install public keys on multiple hosts.</p>
+</li>
+<li>
+<p>Create an Ansible inventory by creating a file called <code>hosts</code> with a list of the hosts that will comprise your SynxDB cluster. For example:</p>
+<pre><code>mdw
+sdw1
+sdw2
+...
+</code></pre>
+<p>This file can be edited and used with the SynxDB <code>gpssh-exkeys</code> and <code>gpinitsystem</code> utilities later on.</p>
+</li>
+<li>
+<p>Copy the playbook code below to a file <code>ansible-playbook.yml</code> on your Ansible control node.</p>
+</li>
+<li>
+<p>Edit the playbook variables at the top of the playbook, such as the <code>gpadmin</code> administrative user and password to create, and the version of SynxDB you are installing.</p>
+</li>
+<li>
+<p>Run the playbook, passing the package to be installed to the <code>package_path</code> parameter.</p>
+<pre><code>ansible-playbook ansible-playbook.yml -i hosts -e package_path=./synxdb-db-6.0.0-rhel7-x86_64.rpm
+</code></pre>
+</li>
+</ol>
+<h2 id="ansible-playbook---synxdb-installation-for-centos-7"><a class="header" href="#ansible-playbook---synxdb-installation-for-centos-7"><a id="fixme"></a>Ansible Playbook - SynxDB Installation for CentOS 7</a></h2>
+<pre><code>
+---
+
+- hosts: all
+  vars:
+    - version: "6.0.0"
+    - synxdb_admin_user: "gpadmin"
+    - synxdb_admin_password: "changeme"
+    # - package_path: passed via the command line with: -e package_path=./synxdb-db-6.0.0-rhel7-x86_64.rpm
+  remote_user: root
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: yes
+  tasks:
+    - name: create synxdb admin user
+      user:
+        name: "{{ synxdb_admin_user }}"
+        password: "{{ synxdb_admin_password | password_hash('sha512', 'DvkPtCtNH+UdbePZfm9muQ9pU') }}"
+    - name: copy package to host
+      copy:
+        src: "{{ package_path }}"
+        dest: /tmp
+    - name: install package
+      yum:
+        name: "/tmp/{{ package_path | basename }}"
+        state: present
+    - name: cleanup package file from host
+      file:
+        path: "/tmp/{{ package_path | basename }}"
+        state: absent
+    - name: find install directory
+      find:
+        paths: /usr/local
+        patterns: 'synxdb*'
+        file_type: directory
+      register: installed_dir
+    - name: change install directory ownership
+      file:
+        path: '{{ item.path }}'
+        owner: "{{ synxdb_admin_user }}"
+        group: "{{ synxdb_admin_user }}"
+        recurse: yes
+      with_items: "{{ installed_dir.files }}"
+    - name: update pam_limits
+      pam_limits:
+        domain: "{{ synxdb_admin_user }}"
+        limit_type: '-'
+        limit_item: "{{ item.key }}"
+        value: "{{ item.value }}"
+      with_dict:
+        nofile: 524288
+        nproc: 131072
+    - name: find installed synxdb version
+      shell: . /usr/local/synxdb/synxdb_path.sh &amp;&amp; /usr/local/synxdb-db/bin/postgres --gp-version
+      register: postgres_gp_version
+    - name: fail if the correct synxdb version is not installed
+      fail:
+        msg: "Expected synxdb version {{ version }}, but found '{{ postgres_gp_version.stdout }}'"
+      when: "version is not defined or version not in postgres_gp_version.stdout"
+
+</code></pre>
+<p>When the playbook has run successfully, you can proceed with <a href="create_data_dirs.html">Creating the Data Storage Areas</a> and <a href="init_gpdb.html">Initializing a SynxDB System</a>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../install_guide/env_var_ref.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../security-guide/topics/preface.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../install_guide/env_var_ref.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../security-guide/topics/preface.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

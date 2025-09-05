@@ -1,0 +1,401 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>gprestore - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gprestore"><a class="header" href="#gprestore">gprestore</a></h1>
+<p>Restore a SynxDB backup that was created using the <code>gpbackup</code> utility. By default <code>gprestore</code> uses backed up metadata files and DDL files located in the SynxDB master host data directory, with table data stored locally on segment hosts in CSV data files.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="synopsis"></a>Synopsis</a></h2>
+<pre><code>gprestore --timestamp &lt;YYYYMMDDHHMMSS&gt;
+   [--backup-dir &lt;directory&gt;]
+   [--copy-queue-size &lt;int&gt;
+   [--create-db]
+   [--debug]
+   [--exclude-schema &lt;schema_name&gt; [--exclude-schema &lt;schema_name&gt; ...]]
+   [--exclude-table &lt;schema.table&gt; [--exclude-table &lt;schema.table&gt; ...]]
+   [--exclude-table-file &lt;file_name&gt;]
+   [--exclude-schema-file &lt;file_name&gt;]
+   [--include-schema &lt;schema_name&gt; [--include-schema &lt;schema_name&gt; ...]]
+   [--include-table &lt;schema.table&gt; [--include-table &lt;schema.table&gt; ...]]
+   [--include-schema-file &lt;file_name&gt;]
+   [--include-table-file &lt;file_name&gt;]
+   [--truncate-table]
+   [--redirect-schema &lt;schema_name&gt;]
+   [--data-only | --metadata-only]
+   [--incremental]
+   [--jobs &lt;int&gt;]
+   [--on-error-continue]
+   [--plugin-config &lt;config_file_location&gt;]
+   [--quiet]
+   [--redirect-db &lt;database_name&gt;]
+   [--verbose]
+   [--version]
+   [--with-globals]
+   [--with-stats]
+   [--run-analyze]
+
+gprestore --help
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="desc"></a>Description</a></h2>
+<p>To use <code>gprestore</code> to restore from a backup set, you must include the <code>--timestamp</code> option to specify the exact timestamp value (<code>YYYYMMDDHHMMSS</code>) of the backup set to restore. If you specified a custom <code>--backup-dir</code> to consolidate the backup files, include the same <code>--backup-dir</code> option with <code>gprestore</code> to locate the backup files.</p>
+<p>If the backup you specify is an incremental backup, you need a complete set of backup files (a full backup and any required incremental backups). <code>gprestore</code> ensures that the complete backup set is available before attempting to restore a backup.</p>
+<p><strong>Important:</strong> For incremental backup sets, the backups must be on a single device. For example, a backup set must all be on a Data Domain system.</p>
+<p>For information about incremental backups, see <a href="../../admin_guide/managing/backup-gpbackup-incremental.html">Creating and Using Incremental Backups with gpbackup and gprestore</a>.</p>
+<p>When restoring from a backup set, <code>gprestore</code> restores to a database with the same name as the name specified when creating the backup set. If the target database exists and a table being restored exists in the database, the restore operation fails. Include the <code>--create-db</code> option if the target database does not exist in the cluster. You can optionally restore a backup set to a different database by using the <code>--redirect-db</code> option.</p>
+<p>When restoring a backup set that contains data from some leaf partitions of a partitioned tables, the partitioned table is restored along with the data for the leaf partitions. For example, you create a backup with the <code>gpbackup</code> option <code>--include-table-file</code> and the text file lists some leaf partitions of a partitioned table. Restoring the backup creates the partitioned table and restores the data only for the leaf partitions listed in the file.</p>
+<p>By default, only database objects in the backup set are restored. SynxDB system objects are automatically included in a <code>gpbackup</code> backup set, but these objects are only restored if you include the <code>--with-globals</code> option to <code>gprestore</code>.</p>
+<p>During a restore operation, automatic updating of table statistics is disabled for the tables being restored. If you backed up query plan statistics using the <code>--with-stats</code> option, you can restore those statistics by providing <code>--with-stats</code> to <code>gprestore</code>. If you did not use <code>--with-stats</code> during a backup, or you want to collect current statistics during the restore operation, you can use the <code>--run-analyze</code> option to run <code>ANALYZE</code> on the restored tables.</p>
+<p>When a materialized view is restored, the data is not restored. To populate the materialized view with data, use <code>REFRESH MATERIALIZED VIEW</code>. The tables that are referenced by the materialized view definition must be available. The <code>gprestore</code> log file lists the materialized views that were restored and the <code>REFRESH MATERIALIZED VIEW</code> commands that are used to populate the materialized views with data.</p>
+<p>Performance of restore operations can be improved by creating multiple parallel connections to restore table data and metadata. By default <code>gprestore</code> uses 1 connection, but you can increase this number with the <code>--jobs</code> option for large restore operations.</p>
+<p>When a restore operation completes, <code>gprestore</code> returns a status code. See <a href="#return_codes">Return Codes</a>.</p>
+<p><code>gprestore</code> can send status email notifications after a back up operation completes. You specify when the utility sends the mail and the email recipients in a configuration file. See <a href="../../admin_guide/managing/backup-gpbackup.html">Configuring Email Notifications</a>.</p>
+<p><strong>Note:</strong> This utility uses secure shell (SSH) connections between systems to perform its tasks. In large SynxDB deployments, cloud deployments, or deployments with a large number of segments per host, this utility may exceed the host’s maximum threshold for unauthenticated connections. Consider updating the SSH <code>MaxStartups</code> and <code>MaxSessions</code> configuration parameters to increase this threshold. For more information about SSH configuration options, refer to the SSH documentation for your Linux distribution.</p>
+<h2 id="options"><a class="header" href="#options"><a id="opts"></a>Options</a></h2>
+<h3 id="timestamp"><a class="header" href="#timestamp">–timestamp  <YYYYMMDDHHMMSS></a></h3>
+<p>Required. Specifies the timestamp of the <code>gpbackup</code> backup set to restore. By default <code>gprestore</code> tries to locate metadata files for the timestamp on the SynxDB master host in the $MASTER_DATA_DIRECTORY/backups/YYYYMMDD/YYYYMMDDhhmmss/ directory, and CSV data files in the &lt;seg_dir&gt;/backups/YYYYMMDD/YYYYMMDDhhmmss/ directory of each segment host.</p>
+<h3 id="backup-dir"><a class="header" href="#backup-dir">–backup-dir  <directory></a></h3>
+<p>Optional. Sources all backup files (metadata files and data files) from the specified directory. You must specify directory as an absolute path (not relative). If you do not supply this option, <code>gprestore</code> tries to locate metadata files for the timestamp on the SynxDB master host in the $MASTER_DATA_DIRECTORY/backups/YYYYMMDD/YYYYMMDDhhmmss/ directory. CSV data files must be available on each segment in the &lt;seg_dir&gt;/backups/YYYYMMDD/YYYYMMDDhhmmss/ directory. Include this option when you specify a custom backup directory with <code>gpbackup</code>.</p>
+<p>You cannot combine this option with the option <code>--plugin-config</code>.</p>
+<h3 id="create-db"><a class="header" href="#create-db">–create-db</a></h3>
+<p>Optional. Creates the database before restoring the database object metadata.</p>
+<p>The database is created by cloning the empty standard system database <code>template0</code>.</p>
+<h3 id="copy-queue-size"><a class="header" href="#copy-queue-size">–copy-queue-size  <int></a></h3>
+<p>Optional. Specifies the number of <code>COPY</code> commands <code>gprestore</code> should enqueue when restoring a backup set. This option optimizes restore performance by reducing the amount of time spent initializing <code>COPY</code> commands. If you do not set this option to 2 or greater, <code>gprestore</code> enqueues 1 <code>COPY</code> command at a time.</p>
+<h3 id="data-only"><a class="header" href="#data-only">–data-only</a></h3>
+<p>Optional. Restores table data from a backup created with the <code>gpbackup</code> utility, without creating the database tables. This option assumes the tables exist in the target database. To restore data for a specific set of tables from a backup set, you can specify an option to include tables or schemas or exclude tables or schemas. Specify the <code>--with-stats</code> option to restore table statistics from the backup.</p>
+<p>The backup set must contain the table data to be restored. For example, a backup created with the <code>gpbackup</code> option <code>--metadata-only</code> does not contain table data.</p>
+<p><code>SEQUENCE</code> values are updated to match the values taken at the time of the backup.</p>
+<p>To restore only database tables, without restoring the table data, use the option <code>--metadata-only</code>.</p>
+<h3 id="debug"><a class="header" href="#debug">–debug</a></h3>
+<p>Optional. Displays verbose and debug log messages during a restore operation.</p>
+<h3 id="exclude-schema--schema_name"><a class="header" href="#exclude-schema--schema_name">–exclude-schema  &lt;schema_name&gt;</a></h3>
+<p>Optional. Specifies a database schema to exclude from the restore operation. You can specify this option multiple times. You cannot combine this option with the option <code>--include-schema</code>, <code>--include-schema-file</code>, or a table filtering option such as <code>--include-table</code>.</p>
+<h3 id="exclude-schema-file--file_name"><a class="header" href="#exclude-schema-file--file_name">–exclude-schema-file  &lt;file_name&gt;</a></h3>
+<p>Optional. Specifies a text file containing a list of schemas to exclude from the backup. Each line in the text file must define a single schema. The file must not include trailing lines. If a schema name uses any character other than a lowercase letter, number, or an underscore character, then you must include that name in double quotes. You cannot combine this option with the option <code>--include-schema</code> or <code>--include-schema-file</code>, or a table filtering option such as <code>--include-table</code>.</p>
+<h3 id="exclude-table--schematable"><a class="header" href="#exclude-table--schematable">–exclude-table  &lt;schema.table&gt;</a></h3>
+<p>Optional. Specifies a table to exclude from the restore operation. You can specify this option multiple times. The table must be in the format <code>&lt;schema-name&gt;.&lt;table-name&gt;</code>. If a table or schema name uses any character other than a lowercase letter, number, or an underscore character, then you must include that name in double quotes. You can specify this option multiple times. If the table is not in the backup set, the restore operation fails. You cannot specify a leaf partition of a partitioned table.</p>
+<p>You cannot combine this option with the option <code>--exclude-schema</code>, <code>--exclude-schema-file</code>, or another a table filtering option such as <code>--include-table</code>.</p>
+<h3 id="exclude-table-file--file_name"><a class="header" href="#exclude-table-file--file_name">–exclude-table-file  &lt;file_name&gt;</a></h3>
+<p>Optional. Specifies a text file containing a list of tables to exclude from the restore operation. Each line in the text file must define a single table using the format <code>&lt;schema-name&gt;.&lt;table-name&gt;</code>. The file must not include trailing lines. If a table or schema name uses any character other than a lowercase letter, number, or an underscore character, then you must include that name in double quotes. If a table is not in the backup set, the restore operation fails. You cannot specify a leaf partition of a partitioned table.</p>
+<p>You cannot combine this option with the option <code>--exclude-schema</code>, <code>--exclude-schema-file</code>, or another a table filtering option such as <code>--include-table</code>.</p>
+<h3 id="include-schema--schema_name"><a class="header" href="#include-schema--schema_name">–include-schema  &lt;schema_name&gt;</a></h3>
+<p>Optional. Specifies a database schema to restore. You can specify this option multiple times. If you specify this option, any schemas that you specify must be available in the backup set. Any schemas that are not included in subsequent <code>--include-schema</code> options are omitted from the restore operation.</p>
+<p>If a schema that you specify for inclusion exists in the database, the utility issues an error and continues the operation. The utility fails if a table being restored exists in the database.</p>
+<p>You cannot use this option if objects in the backup set have dependencies on multiple schemas.</p>
+<p>See <a href="../../admin_guide/managing/backup-gpbackup.html">Filtering the Contents of a Backup or Restore</a> for more information.</p>
+<h3 id="include-schema-file--file_name"><a class="header" href="#include-schema-file--file_name">–include-schema-file  &lt;file_name&gt;</a></h3>
+<p>Optional. Specifies a text file containing a list of schemas to restore. Each line in the text file must define a single schema. The file must not include trailing lines. If a schema name uses any character other than a lowercase letter, number, or an underscore character, then you must include that name in double quotes.</p>
+<p>The schemas must exist in the backup set. Any schemas not listed in this file are omitted from the restore operation.</p>
+<p>You cannot use this option if objects in the backup set have dependencies on multiple schemas.</p>
+<h3 id="include-table--schematable"><a class="header" href="#include-table--schematable">–include-table  &lt;schema.table&gt;</a></h3>
+<p>Optional. Specifies a table to restore. The table must be in the format <schema-name>.<table-name>. You can specify this option multiple times. You cannot specify a leaf partition of a partitioned table. For information on specifying special characters in schema and table names, see the <code>gpbackup</code> <a href="gpbackup.html">Schema and Table Names</a> section.</p>
+<p>You can also specify the qualified name of a sequence, a view, or a materialized view.</p>
+<p>If you specify this option, the utility does not automatically restore dependent objects. You must also explicitly specify the dependent objects that are required. For example if you restore a view or a materialized view, you must also restore the tables that the view or the materialized view uses. If you restore a table that uses a sequence, you must also restore the sequence. The dependent objects must exist in the backup set.</p>
+<p>You cannot combine this option with a schema filtering option such as <code>--include-schema</code>, or another table filtering option such as <code>--exclude-table-file</code>.</p>
+<h3 id="include-table-file--file_name"><a class="header" href="#include-table-file--file_name">–include-table-file  &lt;file_name&gt;</a></h3>
+<p>Optional. Specifies a text file containing a list of tables to restore. Each line in the text file must define a single table using the format <code>&lt;schema-name&gt;.&lt;table-name&gt;</code>. The file must not include trailing lines. Any tables not listed in this file are omitted from the restore operation. You cannot specify a leaf partition of a partitioned table. For information on specifying special characters in schema and table names, see the <code>gpbackup</code> <a href="gpbackup.html">Schema and Table Names</a> section.</p>
+<p>You can also specify the qualified name of a sequence, a view, or a materialized view.</p>
+<p>If you specify this option, the utility does not automatically restore dependent objects. You must also explicitly specify dependent objects that are required. For example if you restore a view or a materialized view, you must also specify the tables that the view or the materialized uses. If you specify a table that uses a sequence, you must also specify the sequence. The dependent objects must exist in the backup set.</p>
+<p>For a materialized view, the data is not restored. To populate the materialized view with data, you must use <code>REFRESH MATERIALIZED VIEW</code> and the tables that are referenced by the materialized view definition must be available.</p>
+<p>If you use the <code>--include-table-file</code> option, <code>gprestore</code> does not create roles or set the owner of the tables. The utility restores table indexes and rules. Triggers are also restored but are not supported in SynxDB.</p>
+<p>See <a href="../../admin_guide/managing/backup-gpbackup.html">Filtering the Contents of a Backup or Restore</a> for more information.</p>
+<h3 id="incremental-beta"><a class="header" href="#incremental-beta">–incremental &lt;(Beta)&gt;</a></h3>
+<p>Optional. Requires the <code>--data-only option</code>. Restores only the table data in the incremental backup specified by the <code>--timestamp</code> option. Table data is not restored from previous incremental backups in the backup set. For information about incremental backups, see <a href="../../admin_guide/managing/backup-gpbackup-incremental.html">Creating and Using Incremental Backups with gpbackup and gprestore</a>.
+<br/><br/><strong>Warning:</strong> This is a Beta feature and is not supported in a production environment.</p>
+<p>An incremental backup contains the following table data that can be restored.</p>
+<ul>
+<li>Data from all heap tables.</li>
+<li>Data from append-optimized tables that have been modified since the previous backup.</li>
+<li>Data from leaf partitions that have been modified from the previous backup.</li>
+</ul>
+<p>When this option is specified, <code>gprestore</code> restores table data by truncating the table and reloading data into the table. <code>SEQUENCE</code> values are then updated to match the values taken at the time of the backup.</p>
+<p>Before performing the restore operation, <code>gprestore</code> ensures that the tables being restored exist. If a table does not exist, <code>gprestore</code> returns an error and exits. If the <code>--on-error-continue</code> option is specified, <code>gprestore</code> logs missing tables and attempts to complete the restore operation.</p>
+<p><strong>Warning:</strong> When this option is specified, <code>gpbackup</code> assumes that no changes have been made to the table definitions of the tables being restored, such as adding or removing columns.</p>
+<h3 id="truncate-table"><a class="header" href="#truncate-table">–truncate-table</a></h3>
+<p>Optional. Truncate data from a set of tables before restoring the table data from a backup. This option lets you replace table data with data from a backup. Otherwise, table data might be duplicated.</p>
+<p>You must specify the set of tables with either the option <code>--include-table</code> or <code>--include-table-file</code>. You must also specify <code>--data-only</code> to restore table data without creating the tables.</p>
+<p>You can use this option with the <code>--redirect-db</code> option. You cannot use this option with <code>--redirect-schema</code>.</p>
+<h3 id="redirect-schema--schema_name"><a class="header" href="#redirect-schema--schema_name">–redirect-schema  &lt;schema_name&gt;</a></h3>
+<p>Optional. Restore data in the specified schema instead of the original schemas. The specified schema must already exist. If the data being restored is in multiple schemas, all the data is redirected into the specified schema.</p>
+<p>This option must be used with an option that includes tables or schemas: <code>--include-table</code>, <code>--include-table-file</code>, <code>--include-schema</code>, or <code>--include-schema-file</code>.</p>
+<p>You cannot use this option with an option that excludes schemas or tables such as <code>--exclude-schema</code> or <code>--exclude-table</code>.</p>
+<p>You can use this option with the <code>--metadata-only</code> or <code>--data-only</code> options.</p>
+<h3 id="jobs"><a class="header" href="#jobs">–jobs  <int></a></h3>
+<p>Optional. Specifies the number of parallel connections to use when restoring table data and metadata. By default, <code>gprestore</code> uses 1 connection. Increasing this number can improve the speed of restoring data.
+<br/><br/><strong>Note:</strong> If you used the <code>gpbackup --single-data-file</code> option to combine table backups into a single file per segment, you cannot set <code>--jobs</code> to a value higher than 1 to perform a parallel restore operation.</p>
+<h3 id="metadata-only"><a class="header" href="#metadata-only">–metadata-only</a></h3>
+<p>Optional. Creates database tables from a backup created with the <code>gpbackup</code> utility, but does not restore the table data. This option assumes the tables do not exist in the target database. To create a specific set of tables from a backup set, you can specify an option to include tables or schemas or exclude tables or schemas. Specify the option <code>--with-globals</code> to restore the SynxDB system objects.</p>
+<p>The backup set must contain the DDL for tables to be restored. For example, a backup created with the <code>gpbackup</code> option <code>--data-only</code> does not contain the DDL for tables.</p>
+<p>To restore table data after you create the database tables, see the option <code>--data-only</code>.</p>
+<h3 id="on-error-continue"><a class="header" href="#on-error-continue">–on-error-continue</a></h3>
+<p>Optional. Specify this option to continue the restore operation if an SQL error occurs when creating database metadata (such as tables, roles, or functions) or restoring data. If another type of error occurs, the utility exits. The default is to exit on the first error.</p>
+<p>When this option is included, the utility displays an error summary and writes error information to the <code>gprestore</code> log file and continues the restore operation. The utility also creates text files in the backup directory that contain the list of tables that generated SQL errors.
+-   Tables with metadata errors - <code>gprestore_&lt;backup-timestamp&gt;_&lt;restore-time&gt;_error_tables_metadata</code>
+-   Tables with data errors - <code>gprestore_&lt;backup-timestamp&gt;_&lt;restore-time&gt;_error_tables_data</code></p>
+<h3 id="plugin-config--config-file_location"><a class="header" href="#plugin-config--config-file_location">–plugin-config  &lt;config-file_location&gt;</a></h3>
+<p>Specify the location of the <code>gpbackup</code> plugin configuration file, a YAML-formatted text file. The file contains configuration information for the plugin application that <code>gprestore</code> uses during the restore operation.</p>
+<p>If you specify the <code>--plugin-config</code> option when you back up a database, you must specify this option with configuration information for a corresponding plugin application when you restore the database from the backup.</p>
+<p>You cannot combine this option with the option <code>--backup-dir</code>.</p>
+<p>For information about using storage plugin applications, see <a href="../../admin_guide/managing/backup-plugins.html">Using gpbackup Storage Plugins</a>.</p>
+<h3 id="quiet"><a class="header" href="#quiet">–quiet</a></h3>
+<p>Optional. Suppress all non-warning, non-error log messages.</p>
+<h3 id="redirect-db--database_name"><a class="header" href="#redirect-db--database_name">–redirect-db  &lt;database_name&gt;</a></h3>
+<p>Optional. Restore to the specified database_name instead of to the database that was backed up.</p>
+<h3 id="verbose"><a class="header" href="#verbose">–verbose</a></h3>
+<p>Optional. Displays verbose log messages during a restore operation.</p>
+<h3 id="version"><a class="header" href="#version">–version</a></h3>
+<p>Optional. Print the version number and exit.</p>
+<h3 id="with-globals"><a class="header" href="#with-globals">–with-globals</a></h3>
+<p>Optional. Restores SynxDB system objects in the backup set, in addition to database objects. See <a href="../../admin_guide/managing/backup-gpbackup.html">Objects Included in a Backup or Restore</a>.</p>
+<h3 id="with-stats"><a class="header" href="#with-stats">–with-stats</a></h3>
+<p>Optional. Restore query plan statistics from the backup set. If the backup set was not created with the <code>--with-stats</code> option, an error is returned. Restored tables will only have statistics from the backup. You cannot use this option with <code>--run-analyze</code>.</p>
+<p>To collect current statistics for the restored tables during the restore operation, use the <code>--run-analyze</code> option. As an alternative, you can run the <code>ANALYZE</code> command on the tables after the tables are restored.</p>
+<h3 id="run-analyze"><a class="header" href="#run-analyze">–run-analyze</a></h3>
+<p>Optional. Run <code>ANALYZE</code> on the tables that are restored. For a partitioned table, <code>ANALYZE</code> is run on the root partitioned table. If <code>--with-stats</code> was specified for the backup, those statistics are ignored. You cannot use this option with <code>--with-stats</code>.</p>
+<p>If the backup being restored used the <code>gpbackup</code> option <code>--leaf-partition-data</code>, <code>gprestore</code> runs <code>ANALYZE</code> only on the individual leaf partitions that are restored, not the root partitioned table. For SynxDB 5, <code>ANALYZE</code> updates the root partitioned table statistics when all leaf partitions have statistics as the default. For SynxDB 4, you must run <code>ANALYZE</code> on the root partitioned table to update the root partition statistics.</p>
+<p>Depending the tables being restored, running <code>ANALYZE</code> on restored tables might increase the duration of the restore operation.</p>
+<h3 id="help"><a class="header" href="#help">–help</a></h3>
+<p>Displays the online help.</p>
+<h2 id="return-codes"><a class="header" href="#return-codes"><a id="return_codes"></a>Return Codes</a></h2>
+<p>One of these codes is returned after <code>gprestore</code> completes.</p>
+<ul>
+<li><strong>0</strong> – Restore completed with no problems.</li>
+<li><strong>1</strong> – Restore completed with non-fatal errors. See log file for more information.</li>
+<li><strong>2</strong> – Restore failed with a fatal error. See log file for more information.</li>
+</ul>
+<h2 id="examples"><a class="header" href="#examples"><a id="examples"></a>Examples</a></h2>
+<p>Create the demo database and restore all schemas and tables in the backup set for the indicated timestamp:</p>
+<pre><code>$ dropdb demo
+$ gprestore --timestamp 20171103152558 --create-db
+</code></pre>
+<p>Restore the backup set to the “demo2” database instead of the “demo” database that was backed up:</p>
+<pre><code>$ createdb demo2
+$ gprestore --timestamp 20171103152558 --redirect-db demo2
+</code></pre>
+<p>Restore global SynxDB metadata and query plan statistics in addition to the database objects:</p>
+<pre><code>$ gprestore --timestamp 20171103152558 --create-db --with-globals --with-stats
+</code></pre>
+<p>Restore, using backup files that were created in the /home/gpadmin/backup directory, creating 8 parallel connections:</p>
+<pre><code>$ gprestore --backup-dir /home/gpadmin/backups/ --timestamp 20171103153156 --create-db --jobs 8
+</code></pre>
+<p>Restore only the “wikipedia” schema included in the backup set:</p>
+<pre><code>$ dropdb demo
+$ gprestore --include-schema wikipedia --backup-dir /home/gpadmin/backups/ --timestamp 20171103153156 --create-db
+</code></pre>
+<p>If you restore from an incremental backup set, all the required files in the backup set must be available to <code>gprestore</code>. For example, the following timestamp keys specify an incremental backup set. 20170514054532 is the full backup and the others are incremental backups.</p>
+<pre><code>20170514054532 (full backup)
+20170714095512 
+20170914081205 
+20171114064330 
+20180114051246
+</code></pre>
+<p>The following <code>gprestore</code> command specifies the timestamp 20121114064330. The incremental backup with the timestamps 20120714095512 and 20120914081205 and the full backup must be available to perform a restore.</p>
+<pre><code>gprestore --timestamp 20121114064330 --redirect-db mystest --create-db
+</code></pre>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section9"></a>See Also</a></h2>
+<p><a href="gpbackup.html">gpbackup</a>, <a href="../../admin_guide/managing/backup-gpbackup.html">Parallel Backup with gpbackup and gprestore</a> and <a href="../../admin_guide/managing/backup-s3-plugin.html">Using the S3 Storage Plugin with gpbackup and gprestore</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../utility_guide/ref/gpreload.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../utility_guide/ref/gpscp.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../utility_guide/ref/gpreload.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../utility_guide/ref/gpscp.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

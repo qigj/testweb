@@ -1,0 +1,342 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Initializing New Segments - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="initializing-new-segments"><a class="header" href="#initializing-new-segments">Initializing New Segments</a></h1>
+<p>Use the <code>gpexpand</code> utility to create and initialize the new segment instances and create the expansion schema.</p>
+<p>The first time you run <a href="../../utility_guide/ref/gpexpand.html">gpexpand</a> with a valid input file it creates and initializes segment instances and creates the expansion schema. After these steps are completed, running <code>gpexpand</code> detects if the expansion schema has been created and, if so, performs table redistribution.</p>
+<blockquote>
+<p><strong>Note</strong> To prevent catalog inconsistency across existing and new segments, be sure that no DDL operations are running during the initialization phase.</p>
+</blockquote>
+<ul>
+<li><a href="#topic23">Creating an Input File for System Expansion</a></li>
+<li><a href="#topic26">Running gpexpand to Initialize New Segments</a></li>
+<li><a href="#topic27">Rolling Back a Failed Expansion Setup</a></li>
+</ul>
+<h2 id="creating-an-input-file-for-system-expansion"><a class="header" href="#creating-an-input-file-for-system-expansion"><a id="topic23"></a>Creating an Input File for System Expansion</a></h2>
+<p>To begin expansion, <code>gpexpand</code> requires an input file containing information about the new segments and hosts. If you run <code>gpexpand</code> without specifying an input file, the utility displays an interactive interview that collects the required information and automatically creates an input file.</p>
+<p>If you create the input file using the interactive interview, you may specify a file with a list of expansion hosts in the interview prompt. If your platform or command shell limits the length of the host list, specifying the hosts with <code>-f</code> may be mandatory.</p>
+<h3 id="creating-an-input-file-in-interactive-mode"><a class="header" href="#creating-an-input-file-in-interactive-mode"><a id="topic24"></a>Creating an input file in Interactive Mode</a></h3>
+<p>Before you run <code>gpexpand</code> to create an input file in interactive mode, ensure you know:</p>
+<ul>
+<li>The number of new hosts (or a hosts file)</li>
+<li>The new hostnames (or a hosts file)</li>
+<li>The mirroring strategy used in existing hosts, if any</li>
+<li>The number of segments to add per host, if any</li>
+</ul>
+<p>The utility automatically generates an input file based on this information, <code>dbid</code>, <code>content</code> ID, and data directory values stored in <em>gp_segment_configuration</em>, and saves the file in the current directory.</p>
+<h4 id="to-create-an-input-file-in-interactive-mode"><a class="header" href="#to-create-an-input-file-in-interactive-mode"><a id="no163887"></a>To create an input file in interactive mode</a></h4>
+<ol>
+<li>
+<p>Log in on the master host as the user who will run your SynxDB system; for example, <code>gpadmin</code>.</p>
+</li>
+<li>
+<p>Run <code>gpexpand</code>. The utility displays messages about how to prepare for an expansion operation, and it prompts you to quit or continue.</p>
+<p>Optionally, specify a hosts file using <code>-f</code>. For example:</p>
+<pre><code>$ gpexpand -f /home/gpadmin/&lt;new_hosts_file&gt;
+</code></pre>
+</li>
+<li>
+<p>At the prompt, select <code>Y</code> to continue.</p>
+</li>
+<li>
+<p>Unless you specified a hosts file using <code>-f</code>, you are prompted to enter hostnames. Enter a comma separated list of the hostnames of the new expansion hosts. Do not include interface hostnames. For example:</p>
+<pre><code>&gt; sdw4, sdw5, sdw6, sdw7
+</code></pre>
+<p>To add segments to existing hosts only, enter a blank line at this prompt. Do not specify <code>localhost</code> or any existing host name.</p>
+</li>
+<li>
+<p>Enter the mirroring strategy used in your system, if any. Options are <code>spread|grouped|none</code>. The default setting is <code>grouped</code>.</p>
+<p>Ensure you have enough hosts for the selected grouping strategy. For more information about mirroring, see <a href="expand-planning.html">Planning Mirror Segments</a>.</p>
+</li>
+<li>
+<p>Enter the number of new primary segments to add, if any. By default, new hosts are initialized with the same number of primary segments as existing hosts. Increase segments per host by entering a number greater than zero. The number you enter will be the number of additional segments initialized on all hosts. For example, if existing hosts currently have two segments each, entering a value of <code>2</code> initializes two more segments on existing hosts, and four segments on new hosts.</p>
+</li>
+<li>
+<p>If you are adding new primary segments, enter the new primary data directory root for the new segments. Do not specify the actual data directory name, which is created automatically by <code>gpexpand</code> based on the existing data directory names.</p>
+<p>For example, if your existing data directories are as follows:</p>
+<pre><code>/gpdata/primary/gp0
+/gpdata/primary/gp1
+</code></pre>
+<p>then enter the following (one at each prompt) to specify the data directories for two new primary segments:</p>
+<pre><code>/gpdata/primary
+/gpdata/primary
+</code></pre>
+<p>When the initialization runs, the utility creates the new directories <code>gp2</code> and <code>gp3</code> under <code>/gpdata/primary</code>.</p>
+</li>
+<li>
+<p>If you are adding new mirror segments, enter the new mirror data directory root for the new segments. Do not specify the data directory name; it is created automatically by <code>gpexpand</code> based on the existing data directory names.</p>
+<p>For example, if your existing data directories are as follows:</p>
+<pre><code>/gpdata/mirror/gp0
+/gpdata/mirror/gp1
+</code></pre>
+<p>enter the following (one at each prompt) to specify the data directories for two new mirror segments:</p>
+<pre><code>/gpdata/mirror
+/gpdata/mirror
+</code></pre>
+<p>When the initialization runs, the utility will create the new directories <code>gp2</code> and <code>gp3</code> under <code>/gpdata/mirror</code>.</p>
+<p>These primary and mirror root directories for new segments must exist on the hosts, and the user running <code>gpexpand</code> must have permissions to create directories in them.</p>
+<p>After you have entered all required information, the utility generates an input file and saves it in the current directory. For example:</p>
+<pre><code>gpexpand_inputfile_yyyymmdd_145134
+</code></pre>
+<p>If the SynxDB cluster is configured with tablespaces, the utility automatically generates an additional tablespace mapping file. This file is required for later parsing by the utility so make sure it is present before proceeding with the next step. For example:</p>
+<pre><code>gpexpand_inputfile_yyyymmdd_145134.ts
+</code></pre>
+</li>
+</ol>
+<h3 id="expansion-input-file-format"><a class="header" href="#expansion-input-file-format"><a id="topic25"></a>Expansion Input File Format</a></h3>
+<p>Use the interactive interview process to create your own input file unless your expansion scenario has atypical needs.</p>
+<p>The format for expansion input files is:</p>
+<pre><code>hostname|address|port|datadir|dbid|content|preferred_role
+</code></pre>
+<p>For example:</p>
+<pre><code>sdw5|sdw5-1|50011|/gpdata/primary/gp9|11|9|p
+sdw5|sdw5-2|50012|/gpdata/primary/gp10|12|10|p
+sdw5|sdw5-2|60011|/gpdata/mirror/gp9|13|9|m
+sdw5|sdw5-1|60012|/gpdata/mirror/gp10|14|10|m
+</code></pre>
+<p>For each new segment, this format of expansion input file requires the following:</p>
+<div class="table-wrapper"><table><thead><tr><th>Parameter</th><th>Valid Values</th><th>Description</th></tr></thead><tbody>
+<tr><td>hostname</td><td>Hostname</td><td>Hostname for the segment host.</td></tr>
+<tr><td>port</td><td>An available port number</td><td>Database listener port for the segment, incremented on the existing segment <em>port</em> base number.</td></tr>
+<tr><td>datadir</td><td>Directory name</td><td>The data directory location for a segment as per the gp_segment_configuration system catalog.</td></tr>
+<tr><td>dbid</td><td>Integer. Must not conflict with existing <em>dbid</em> values.</td><td>Database ID for the segment. The values you enter should be incremented sequentially from existing <em>dbid</em> values shown in the system catalog <code>gp_segment_configuration</code>. For example, to add four segment instances to an existing ten-segment array with <em>dbid</em> values of 1-10, list new <em>dbid</em> values of 11, 12, 13 and 14.</td></tr>
+<tr><td>content</td><td>Integer. Must not conflict with existing <em>content</em> values.</td><td>The content ID of the segment. A primary segment and its mirror should have the same content ID, incremented sequentially from existing values. For more information, see <em>content</em> in the reference for <code>gp_segment_configuration</code>.</td></tr>
+<tr><td>preferred_role</td><td><code>p</code> or <code>m</code></td><td>Determines whether this segment is a primary or mirror. Specify <code>p</code> for primary and <code>m</code> for mirror.</td></tr>
+</tbody></table>
+</div>
+<h2 id="running-gpexpand-to-initialize-new-segments"><a class="header" href="#running-gpexpand-to-initialize-new-segments"><a id="topic26"></a>Running gpexpand to Initialize New Segments</a></h2>
+<p>After you have created an input file, run <code>gpexpand</code> to initialize new segment instances.</p>
+<h3 id="to-run-gpexpand-with-an-input-file"><a class="header" href="#to-run-gpexpand-with-an-input-file"><a id="no160378"></a>To run gpexpand with an input file</a></h3>
+<ol>
+<li>
+<p>Log in on the master host as the user who will run your SynxDB system; for example, <code>gpadmin</code>.</p>
+</li>
+<li>
+<p>Run the <code>gpexpand</code> utility, specifying the input file with <code>-i</code>. For example:</p>
+<pre><code>$ gpexpand -i input_file
+</code></pre>
+<p>The utility detects if an expansion schema exists for the SynxDB system. If a <em>gpexpand</em> schema exists, remove it with <code>gpexpand -c</code> before you start a new expansion operation. See <a href="expand-post.html">Removing the Expansion Schema</a>.</p>
+<p>When the new segments are initialized and the expansion schema is created, the utility prints a success message and exits.</p>
+</li>
+</ol>
+<p>When the initialization process completes, you can connect to SynxDB and view the expansion schema. The <em>gpexpand</em> schema resides in the postgres database. For more information, see <a href="expand-planning.html">About the Expansion Schema</a>.</p>
+<p>After segment initialization is complete, <a href="expand-redistribute.html">redistribute the tables</a> to balance existing data over the new segments.</p>
+<h2 id="monitoring-the-cluster-expansion-state"><a class="header" href="#monitoring-the-cluster-expansion-state"><a id="topic_wkv_kkd_chb"></a>Monitoring the Cluster Expansion State</a></h2>
+<p>At any time, you can check the state of cluster expansion by running the <code>gpstate</code> utility with the <code>-x</code> flag:</p>
+<pre><code>$ gpstate -x
+</code></pre>
+<p>If the expansion schema exists in the postgres database, <code>gpstate -x</code> reports on the progress of the expansion. During the first expansion phase, <code>gpstate</code> reports on the progress of new segment initialization. During the second phase, <code>gpstate</code> reports on the progress of table redistribution, and whether redistribution is paused or active.</p>
+<p>You can also query the expansion schema to see expansion status. See <a href="expand-redistribute.html">Monitoring Table Redistribution</a> for more information.</p>
+<h2 id="rolling-back-a-failed-expansion-setup"><a class="header" href="#rolling-back-a-failed-expansion-setup"><a id="topic27"></a>Rolling Back a Failed Expansion Setup</a></h2>
+<p>You can roll back an expansion setup operation (adding segment instances and segment hosts) only if the operation fails.</p>
+<p>If the expansion fails during the initialization step, while the database is down, you must first restart the database in master-only mode by running the <code>gpstart -m</code> command.</p>
+<p>Roll back the failed expansion with the following command:</p>
+<pre><code>gpexpand --rollback
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/expand/expand-nodes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/expand/expand-redistribute.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/expand/expand-nodes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/expand/expand-redistribute.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

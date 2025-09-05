@@ -1,0 +1,855 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>PL/Java Language - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="pljava-language"><a class="header" href="#pljava-language">PL/Java Language</a></h1>
+<p>This section contains an overview of the SynxDB PL/Java language.</p>
+<ul>
+<li><a href="#topic2">About PL/Java</a></li>
+<li><a href="#topic10">About SynxDB PL/Java</a></li>
+<li><a href="#topic_qx1_xcp_w3b">Installing Java</a></li>
+<li><a href="#topic4">Installing PL/Java</a></li>
+<li><a href="#topic6">Enabling PL/Java and Installing JAR Files</a></li>
+<li><a href="#topic7">Uninstalling PL/Java</a></li>
+<li><a href="#topic13">Writing PL/Java functions</a></li>
+<li><a href="#topic24">Using JDBC</a></li>
+<li><a href="#topic25">Exception Handling</a></li>
+<li><a href="#topic26">Savepoints</a></li>
+<li><a href="#topic27">Logging</a></li>
+<li><a href="#topic28">Security</a></li>
+<li><a href="#topic33">Some PL/Java Issues and Solutions</a></li>
+<li><a href="#topic40">Example</a></li>
+<li><a href="#topic41">References</a></li>
+</ul>
+<h2 id="about-pljava"><a class="header" href="#about-pljava"><a id="topic2"></a>About PL/Java</a></h2>
+<p>With the SynxDB PL/Java extension, you can write Java methods using your favorite Java IDE and install the JAR files that contain those methods into SynxDB.</p>
+<p>SynxDB PL/Java package is based on the open source PL/Java 1.5.0. SynxDB PL/Java provides the following features.</p>
+<ul>
+<li>Ability to run PL/Java functions with Java 8 or Java 11.</li>
+<li>Ability to specify Java runtime.</li>
+<li>Standardized utilities (modeled after the SQL 2003 proposal) to install and maintain Java code in the database.</li>
+<li>Standardized mappings of parameters and result. Complex types as well as sets are supported.</li>
+<li>An embedded, high performance, JDBC driver utilizing the internal SynxDB SPI routines.</li>
+<li>Metadata support for the JDBC driver. Both <code>DatabaseMetaData</code> and <code>ResultSetMetaData</code> are included.</li>
+<li>The ability to return a ResultSet from a query as an alternative to building a ResultSet row by row.</li>
+<li>Full support for savepoints and exception handling.</li>
+<li>The ability to use IN, INOUT, and OUT parameters.</li>
+<li>Two separate SynxDB languages:
+<ul>
+<li>pljava, TRUSTED PL/Java language</li>
+<li>pljavau, UNTRUSTED PL/Java language</li>
+</ul>
+</li>
+<li>Transaction and Savepoint listeners enabling code execution when a transaction or savepoint is committed or rolled back.</li>
+<li>Integration with GNU GCJ on selected platforms.</li>
+</ul>
+<p>A function in SQL will appoint a static method in a Java class. In order for the function to run, the appointed class must available on the class path specified by the SynxDB server configuration parameter <code>pljava_classpath</code>. The PL/Java extension adds a set of functions that helps installing and maintaining the java classes. Classes are stored in normal Java archives, JAR files. A JAR file can optionally contain a deployment descriptor that in turn contains SQL commands to be run when the JAR is deployed or undeployed. The functions are modeled after the standards proposed for SQL 2003.</p>
+<p>PL/Java implements a standardized way of passing parameters and return values. Complex types and sets are passed using the standard JDBC ResultSet class.</p>
+<p>A JDBC driver is included in PL/Java. This driver calls SynxDB internal SPI routines. The driver is essential since it is common for functions to make calls back to the database to fetch data. When PL/Java functions fetch data, they must use the same transactional boundaries that are used by the main function that entered PL/Java execution context.</p>
+<p>PL/Java is optimized for performance. The Java virtual machine runs within the same process as the backend to minimize call overhead. PL/Java is designed with the objective to enable the power of Java to the database itself so that database intensive business logic can run as close to the actual data as possible.</p>
+<p>The standard Java Native Interface (JNI) is used when bridging calls between the backend and the Java VM.</p>
+<h2 id="about-synxdb-pljava"><a class="header" href="#about-synxdb-pljava"><a id="topic10"></a>About SynxDB PL/Java</a></h2>
+<p>There are a few key differences between the implementation of PL/Java in standard PostgreSQL and SynxDB.</p>
+<h3 id="functions"><a class="header" href="#functions"><a id="topic11"></a>Functions</a></h3>
+<p>The following functions are not supported in SynxDB. The classpath is handled differently in a distributed SynxDB environment than in the PostgreSQL environment.</p>
+<ul>
+<li><code>sqlj.install_jar</code></li>
+<li><code>sqlj.replace_jar</code></li>
+<li><code>sqlj.remove_jar</code></li>
+<li><code>sqlj.get_classpath</code></li>
+<li><code>sqlj.set_classpath</code></li>
+</ul>
+<p>SynxDB uses the <code>pljava_classpath</code> server configuration parameter in place of the <code>sqlj.set_classpath</code> function.</p>
+<h3 id="server-configuration-parameters"><a class="header" href="#server-configuration-parameters"><a id="topic12"></a>Server Configuration Parameters</a></h3>
+<p>The following server configuration parameters are used by PL/Java in SynxDB. These parameters replace the <code>pljava.*</code> parameters that are used in the standard PostgreSQL PL/Java implementation:</p>
+<ul>
+<li>
+<p><code>pljava_classpath</code></p>
+<p>A colon (<code>:</code>) separated list of the jar files containing the Java classes used in any PL/Java functions. The jar files must be installed in the same locations on all SynxDB hosts. With the trusted PL/Java language handler, jar file paths must be relative to the <code>$GPHOME/lib/postgresql/java/</code> directory. With the untrusted language handler (javaU language tag), paths may be relative to <code>$GPHOME/lib/postgresql/java/</code> or absolute.</p>
+<p>The server configuration parameter <code>pljava_classpath_insecure</code> controls whether the server configuration parameter <code>pljava_classpath</code> can be set by a user without SynxDB superuser privileges. When <code>pljava_classpath_insecure</code> is enabled, SynxDB developers who are working on PL/Java functions do not have to be database superusers to change <code>pljava_classpath</code>.</p>
+<blockquote>
+<p><strong>Caution</strong> Enabling <code>pljava_classpath_insecure</code> exposes a security risk by giving non-administrator database users the ability to run unauthorized Java methods.</p>
+</blockquote>
+</li>
+<li>
+<p><code>pljava_statement_cache_size</code></p>
+<p>Sets the size in KB of the Most Recently Used (MRU) cache for prepared statements.</p>
+</li>
+<li>
+<p><code>pljava_release_lingering_savepoints</code></p>
+<p>If <code>TRUE</code>, lingering savepoints will be released on function exit. If <code>FALSE</code>, they will be rolled back.</p>
+</li>
+<li>
+<p><code>pljava_vmoptions</code></p>
+<p>Defines the start up options for the SynxDB Java VM.</p>
+</li>
+</ul>
+<p>See the <em>SynxDB Reference Guide</em> for information about the SynxDB server configuration parameters.</p>
+<h2 id="installing-java"><a class="header" href="#installing-java"><a id="topic_qx1_xcp_w3b"></a>Installing Java</a></h2>
+<p>PL/Java requires a Java runtime environment on each SynxDB host. Ensure that the same Java environment is at the same location on all hosts: masters and segments. The command <code>java -version</code> displays the Java version.</p>
+<p>The commands that you use to install Java depend on the host system operating system and Java version. This list describes how to install OpenJDK 8 or 11 (Java 8 JDK or Java 11 JDK) on RHEL/CentOS or Ubuntu.</p>
+<ul>
+<li>
+<p>RHEL 7/CentOS 7 - This <code>yum</code> command installs OpenJDK 8 or 11.</p>
+<pre><code>$ sudo yum install java-&lt;version&gt;-openjdk-devel
+</code></pre>
+<p>For OpenJDK 8 the version is <code>1.8.0</code>, for OpenJDK 11 the version is <code>11</code>.</p>
+</li>
+<li>
+<p>RHEL 6/CentOS 6</p>
+<ul>
+<li>
+<p>Java 8 - This <code>yum</code> command installs OpenJDK 8.</p>
+<pre><code>$ sudo yum install java-1.8.0-openjdk-devel
+</code></pre>
+</li>
+<li>
+<p>Java 11 - Download the OpenJDK 11 tar file from <a href="http://jdk.java.net/archive/">http://jdk.java.net/archive/</a> and install and configure the operating system to use Java 11.</p>
+<ol>
+<li>
+<p>This example <code>tar</code> command installs the OpenJDK 11 in <code>/usr/lib/jvm</code>.</p>
+<pre><code>$ sudo tar xzf openjdk-11.0.2_linux-x64_bin.tar.gz --directory /usr/lib/jvm
+</code></pre>
+</li>
+<li>
+<p>Run these two commands to add OpenJDK 11 to the <code>update-alternatives</code> command. The <code>update-alternatives</code>command maintains symbolic links that determine the default version of operating system commands.</p>
+<pre><code>$ sudo sh -c 'for bin in /usr/lib/jvm/jdk-11.0.2/bin/*; do update-alternatives --install /usr/bin/$(basename $bin) $(basename $bin) $bin 100; done'
+$ sudo sh -c 'for bin in /usr/lib/jvm/jdk-11.0.2/bin/*; do update-alternatives --set $(basename $bin) $bin; done'
+</code></pre>
+<p>The second command returns some <code>failed to read link</code> errors that can be ignored.</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>
+<p>Ubuntu - These <code>apt</code> commands install OpenJDK 8 or 11.</p>
+<pre><code>$ sudo apt update
+$ sudo apt install openjdk-&lt;version&gt;-jdk
+</code></pre>
+<p>For OpenJDK 8 the version is <code>8</code>, for OpenJDK 11 the version is <code>11</code>.</p>
+</li>
+</ul>
+<p>After installing OpenJDK on a RHEL or CentOS system, run this <code>update-alternatives</code> command to change the default Java. Enter the number that represents the OpenJDK version to use as the default.</p>
+<pre><code>$ sudo update-alternatives --config java 
+</code></pre>
+<p>The <code>update-alternatives</code> command is not required on Ubuntu systems.</p>
+<blockquote>
+<p><strong>Note</strong> When configuring host systems, you can use the <a href="../utility_guide/ref/gpssh.html">gpssh</a> utility to run bash shell commands on multiple remote hosts.</p>
+</blockquote>
+<h2 id="installing-pljava"><a class="header" href="#installing-pljava"><a id="topic4"></a>Installing PL/Java</a></h2>
+<p>For SynxDB, the PL/Java extension is available as a package. Download the package and then install the software with the SynxDB Package Manager (<code>gppkg</code>).</p>
+<p>The <a href="../utility_guide/ref/gppkg.html">gppkg</a> utility installs SynxDB extensions, along with any dependencies, on all hosts across a cluster. It also automatically installs extensions on new hosts in the case of system expansion and segment recovery.</p>
+<p>To install and use PL/Java:</p>
+<ol>
+<li>Specify the Java version used by PL/Java. Set the environment variables <code>JAVA_HOME</code> and <code>LD_LIBRARY_PATH</code> in the <code>synxdb_path.sh</code>.</li>
+<li>Install the SynxDB PL/Java extension.</li>
+<li>Enable the language for each database where you intend to use PL/Java.</li>
+<li>Install user-created JAR files containing Java methods into the same directory on all SynxDB hosts.</li>
+<li>Add the name of the JAR file to the SynxDB server configuration parameter <code>pljava_classpath</code>. The parameter lists the installed JAR files. For information about the parameter, see the <em>SynxDB Reference Guide</em>.</li>
+</ol>
+<h3 id="installing-the-synxdb-pljava-extension"><a class="header" href="#installing-the-synxdb-pljava-extension"><a id="topic5"></a>Installing the SynxDB PL/Java Extension</a></h3>
+<p>Before you install the PL/Java extension, make sure that your SynxDB is running, you have sourced <code>synxdb_path.sh</code>, and that the <code>$MASTER_DATA_DIRECTORY</code> and <code>$GPHOME</code> variables are set.</p>
+<ol>
+<li>
+<p>Download the PL/Java extension package and copy it to the master host.</p>
+</li>
+<li>
+<p>Install the software extension package by running the <code>gppkg</code> command. This example installs the PL/Java extension package on a Linux system:</p>
+<pre><code>$ gppkg -i pljava-1.4.3-gp5-rhel&lt;osversion&gt;_x86_64.gppkg
+</code></pre>
+</li>
+<li>
+<p>Ensure that the environment variables <code>JAVA_HOME</code> and <code>LD_LIBRARY_PATH</code> are set properly in <code>$GPHOME/synxdb_path.sh</code> on all SynxDB hosts.</p>
+<ul>
+<li>
+<p>Set the <code>JAVA_HOME</code> variable to the directory where your Java Runtime is installed. For example, for Oracle JRE this directory would be <code>/usr/java/latest</code>. For OpenJDK, the directory is <code>/usr/lib/jvm</code>. This example changes the environment variable to use <code>/usr/lib/jvm</code>.</p>
+<pre><code>export JAVA_HOME=/usr/lib/jvm
+</code></pre>
+</li>
+<li>
+<p>Set the <code>LD_LIBRARY_PATH</code> to include the directory with the Java server runtime libraries. PL/Java depends on <code>libjvm.so</code> and the shared object should be in your <code>LD_LIBRARY_PATH</code>. By default, <code>libjvm.so</code> is available in <code>$JAVA_HOME/lib/server</code> with JDK 11, or in <code>$JAVA_HOME/jre/lib/amd64/server</code> with JDK 8. This example adds the JDK 11 directory to the environment variable.</p>
+<pre><code>export LD_LIBRARY_PATH=$GPHOME/lib:$GPHOME/ext/python/lib:$JAVA_HOME/lib/server:$LD_LIBRARY_PATH
+</code></pre>
+</li>
+</ul>
+<p>This example <a href="../utility_guide/ref/gpscp.html">gpscp</a> command copies the file to all hosts specified in the file <code>gphosts_file</code>.</p>
+<pre><code>$ gpscp -f gphosts_file $GPHOME/synxdb_path.sh 
+=:$GPHOME/synxdb_path.sh
+</code></pre>
+</li>
+<li>
+<p>Reload <code>synxdb_path.sh</code>.</p>
+<pre><code>$ source $GPHOME/synxdb_path.sh
+</code></pre>
+</li>
+<li>
+<p>Restart SynxDB.</p>
+<pre><code>$ gpstop -r
+</code></pre>
+</li>
+</ol>
+<h2 id="enabling-pljava-and-installing-jar-files"><a class="header" href="#enabling-pljava-and-installing-jar-files"><a id="topic6"></a>Enabling PL/Java and Installing JAR Files</a></h2>
+<p>Perform the following steps as the SynxDB administrator <code>gpadmin</code>.</p>
+<ol>
+<li>
+<p>Enable PL/Java in a database by running the <code>CREATE EXTENSION</code> command to register the language. For example, this command enables PL/Java in the <code>testdb</code> database:</p>
+<pre><code>$ psql -d testdb -c 'CREATE EXTENSION pljava;'
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> The PL/Java <code>install.sql</code> script, used in previous releases to register the language, is deprecated.</p>
+</blockquote>
+</li>
+<li>
+<p>Copy your Java archives (JAR files) to the same directory on all SynxDB hosts. This example uses the SynxDB <code>gpscp</code> utility to copy the file <code>myclasses.jar</code> to the directory <code>$GPHOME/lib/postgresql/java/</code>:</p>
+<pre><code>$ gpscp -f gphosts_file myclasses.jar 
+=:/usr/local/synxdb/lib/postgresql/java/
+</code></pre>
+<p>The file <code>gphosts_file</code> contains a list of the SynxDB hosts.</p>
+</li>
+<li>
+<p>Set the <code>pljava_classpath</code> server configuration parameter in the master <code>postgresql.conf</code> file. For this example, the parameter value is a colon (:) separated list of the JAR files. For example:</p>
+<pre><code>$ gpconfig -c pljava_classpath -v 'examples.jar:myclasses.jar'
+</code></pre>
+<p>The file <code>examples.jar</code> is installed when you install the PL/Java extension package with the <code>gppkg</code> utility.</p>
+<blockquote>
+<p><strong>Note</strong> If you install JAR files in a directory other than <code>$GPHOME/lib/postgresql/java/</code>, you must specify the absolute path to the JAR file. Each JAR file must be in the same location on all SynxDB hosts. For more information about specifying the location of JAR files, see the information about the <code>pljava_classpath</code> server configuration parameter in the <em>SynxDB Reference Guide</em>.</p>
+</blockquote>
+</li>
+<li>
+<p>Reload the <code>postgresql.conf</code> file.</p>
+<pre><code>$ gpstop -u
+</code></pre>
+</li>
+<li>
+<p>(optional) SynxDB provides an <code>examples.sql</code> file containing sample PL/Java functions that you can use for testing. Run the commands in this file to create the test functions (which use the Java classes in <code>examples.jar</code>).</p>
+<pre><code>$ psql -f $GPHOME/share/postgresql/pljava/examples.sql
+</code></pre>
+</li>
+</ol>
+<h2 id="uninstalling-pljava"><a class="header" href="#uninstalling-pljava"><a id="topic7"></a>Uninstalling PL/Java</a></h2>
+<ul>
+<li><a href="#topic8">Remove PL/Java Support for a Database</a></li>
+<li><a href="#topic_tgt_nfg_mjb">Uninstall the Java JAR files and Software Package</a></li>
+</ul>
+<h3 id="remove-pljava-support-for-a-database"><a class="header" href="#remove-pljava-support-for-a-database"><a id="topic8"></a>Remove PL/Java Support for a Database</a></h3>
+<p>Use the <code>DROP EXTENSION</code> command to remove support for PL/Java from a database. For example, this command deactivates the PL/Java language in the <code>testdb</code> database:</p>
+<pre><code>$ psql -d testdb -c 'DROP EXTENSION pljava;'
+</code></pre>
+<p>The default command fails if any existing objects (such as functions) depend on the language. Specify the <code>CASCADE</code> option to also drop all dependent objects, including functions that you created with PL/Java.</p>
+<blockquote>
+<p><strong>Note</strong> The PL/Java <code>uninstall.sql</code> script, used in previous releases to remove the language registration, is deprecated.</p>
+</blockquote>
+<h3 id="uninstall-the-java-jar-files-and-software-package"><a class="header" href="#uninstall-the-java-jar-files-and-software-package"><a id="topic_tgt_nfg_mjb"></a>Uninstall the Java JAR files and Software Package</a></h3>
+<p>If no databases have PL/Java as a registered language, remove the Java JAR files and uninstall the SynxDB PL/Java extension with the <code>gppkg</code> utility.</p>
+<ol>
+<li>
+<p>Remove the <code>pljava_classpath</code> server configuration parameter from the <code>postgresql.conf</code> file on all SynxDB hosts. For example:</p>
+<pre><code>$ gpconfig -r pljava_classpath
+</code></pre>
+</li>
+<li>
+<p>Remove the JAR files from the directories where they were installed on all SynxDB hosts. For information about JAR file installation directories, see <a href="#topic6">Enabling PL/Java and Installing JAR Files</a>.</p>
+</li>
+<li>
+<p>Use the SynxDB <code>gppkg</code> utility with the <code>-r</code> option to uninstall the PL/Java extension. This example uninstalls the PL/Java extension on a Linux system:</p>
+<pre><code>$ gppkg -r pljava-1.4.3
+</code></pre>
+<p>You can run the <code>gppkg</code> utility with the options <code>-q --all</code> to list the installed extensions and their versions.</p>
+</li>
+<li>
+<p>Remove any updates you made to <code>synxdb_path.sh</code> for PL/Java.</p>
+</li>
+<li>
+<p>Reload <code>synxdb_path.sh</code> and restart the database</p>
+<pre><code>$ source $GPHOME/synxdb_path.sh
+$ gpstop -r 
+</code></pre>
+</li>
+</ol>
+<h2 id="writing-pljava-functions"><a class="header" href="#writing-pljava-functions"><a id="topic13"></a>Writing PL/Java functions</a></h2>
+<p>Information about writing functions with PL/Java.</p>
+<ul>
+<li><a href="#topic14">SQL Declaration</a></li>
+<li><a href="#topic15">Type Mapping</a></li>
+<li><a href="#topic16">NULL Handling</a></li>
+<li><a href="#topic17">Complex Types</a></li>
+<li><a href="#topic18">Returning Complex Types</a></li>
+<li><a href="#topic18">Returning Complex Types</a></li>
+<li><a href="#topic19">Functions That Return Sets</a></li>
+<li><a href="#topic20">Returning a SETOF &lt;scalar type&gt;</a></li>
+<li><a href="#topic21">Returning a SETOF &lt;complex type&gt;</a></li>
+</ul>
+<h3 id="sql-declaration"><a class="header" href="#sql-declaration"><a id="topic14"></a>SQL Declaration</a></h3>
+<p>A Java function is declared with the name of a class and a static method on that class. The class will be resolved using the classpath that has been defined for the schema where the function is declared. If no classpath has been defined for that schema, the public schema is used. If no classpath is found there either, the class is resolved using the system classloader.</p>
+<p>The following function can be declared to access the static method <code>getProperty</code> on <code>java.lang.System</code> class:</p>
+<pre><code>CREATE FUNCTION getsysprop(VARCHAR)
+  RETURNS VARCHAR
+  AS 'java.lang.System.getProperty'
+  LANGUAGE java;
+</code></pre>
+<p>Run the following command to return the Java <code>user.home</code> property:</p>
+<pre><code>SELECT getsysprop('user.home');
+</code></pre>
+<h3 id="type-mapping"><a class="header" href="#type-mapping"><a id="topic15"></a>Type Mapping</a></h3>
+<p>Scalar types are mapped in a straight forward way. This table lists the current mappings.</p>
+<div class="table-wrapper"><table><thead><tr><th>PostgreSQL</th><th>Java</th></tr></thead><tbody>
+<tr><td>bool</td><td>boolean</td></tr>
+<tr><td>char</td><td>byte</td></tr>
+<tr><td>int2</td><td>short</td></tr>
+<tr><td>int4</td><td>int</td></tr>
+<tr><td>int8</td><td>long</td></tr>
+<tr><td>varchar</td><td>java.lang.String</td></tr>
+<tr><td>text</td><td>java.lang.String</td></tr>
+<tr><td>bytea</td><td>byte[ ]</td></tr>
+<tr><td>date</td><td>java.sql.Date</td></tr>
+<tr><td>time</td><td>java.sql.Time (stored value treated as local time)</td></tr>
+<tr><td>timetz</td><td>java.sql.Time</td></tr>
+<tr><td>timestamp</td><td>java.sql.Timestamp (stored value treated as local time)</td></tr>
+<tr><td>timestamptz</td><td>java.sql.Timestamp</td></tr>
+<tr><td>complex</td><td>java.sql.ResultSet</td></tr>
+<tr><td>setof complex</td><td>java.sql.ResultSet</td></tr>
+</tbody></table>
+</div>
+<p>All other types are mapped to java.lang.String and will utilize the standard <code>textin</code>/<code>textout</code> routines registered for respective type.</p>
+<h3 id="null-handling"><a class="header" href="#null-handling"><a id="topic16"></a>NULL Handling</a></h3>
+<p>The scalar types that map to Java primitives can not be passed as <code>NULL</code> values. To pass <code>NULL</code> values, those types can have an alternative mapping. You enable this mapping by explicitly denoting it in the method reference.</p>
+<pre><code>CREATE FUNCTION trueIfEvenOrNull(integer)
+  RETURNS bool
+  AS 'foo.fee.Fum.trueIfEvenOrNull(java.lang.Integer)'
+  LANGUAGE java;
+</code></pre>
+<p>The Java code would be similar to this:</p>
+<pre><code>package foo.fee;
+public class Fum
+{
+  static boolean trueIfEvenOrNull(Integer value)
+  {
+    return (value == null)
+      ? true
+      : (value.intValue() % 2) == 0;
+  }
+}
+</code></pre>
+<p>The following two statements both yield true:</p>
+<pre><code>SELECT trueIfEvenOrNull(NULL);
+SELECT trueIfEvenOrNull(4);
+</code></pre>
+<p>In order to return <code>NULL</code> values from a Java method, you use the object type that corresponds to the primitive (for example, you return <code>java.lang.Integer</code> instead of <code>int</code>). The PL/Java resolve mechanism finds the method regardless. Since Java cannot have different return types for methods with the same name, this does not introduce any ambiguity.</p>
+<h3 id="complex-types"><a class="header" href="#complex-types"><a id="topic17"></a>Complex Types</a></h3>
+<p>A complex type will always be passed as a read-only <code>java.sql.ResultSet</code> with exactly one row. The ResultSet is positioned on its row so a call to <code>next()</code> should not be made. The values of the complex type are retrieved using the standard getter methods of the ResultSet.</p>
+<p>Example:</p>
+<pre><code>CREATE TYPE complexTest
+  AS(base integer, incbase integer, ctime timestamptz);
+CREATE FUNCTION useComplexTest(complexTest)
+  RETURNS VARCHAR
+  AS 'foo.fee.Fum.useComplexTest'
+  IMMUTABLE LANGUAGE java;
+</code></pre>
+<p>In the Java class <code>Fum</code>, we add the following static method:</p>
+<pre><code>public static String useComplexTest(ResultSet complexTest)
+throws SQLException
+{
+  int base = complexTest.getInt(1);
+  int incbase = complexTest.getInt(2);
+  Timestamp ctime = complexTest.getTimestamp(3);
+  return "Base = \"" + base +
+    "\", incbase = \"" + incbase +
+    "\", ctime = \"" + ctime + "\"";
+}
+</code></pre>
+<h3 id="returning-complex-types"><a class="header" href="#returning-complex-types"><a id="topic18"></a>Returning Complex Types</a></h3>
+<p>Java does not stipulate any way to create a ResultSet. Hence, returning a ResultSet is not an option. The SQL-2003 draft suggests that a complex return value should be handled as an IN/OUT parameter. PL/Java implements a ResultSet that way. If you declare a function that returns a complex type, you will need to use a Java method with boolean return type with a last parameter of type <code>java.sql.ResultSet</code>. The parameter will be initialized to an empty updateable ResultSet that contains exactly one row.</p>
+<p>Assume that the <code>complexTest</code> type in previous section has been created.</p>
+<pre><code>CREATE FUNCTION createComplexTest(int, int)
+  RETURNS complexTest
+  AS 'foo.fee.Fum.createComplexTest'
+  IMMUTABLE LANGUAGE java;
+</code></pre>
+<p>The PL/Java method resolve will now find the following method in the <code>Fum</code> class:</p>
+<pre><code>public static boolean complexReturn(int base, int increment, 
+  ResultSet receiver)
+throws SQLException
+{
+  receiver.updateInt(1, base);
+  receiver.updateInt(2, base + increment);
+  receiver.updateTimestamp(3, new 
+    Timestamp(System.currentTimeMillis()));
+  return true;
+}
+</code></pre>
+<p>The return value denotes if the receiver should be considered as a valid tuple (true) or NULL (false).</p>
+<h3 id="functions-that-return-sets"><a class="header" href="#functions-that-return-sets"><a id="topic19"></a>Functions That Return Sets</a></h3>
+<p>When returning result sets, you should not build a result set before returning it, because building a large result set would consume a large amount of resources. It is better to produce one row at a time. Incidentally, that is what the SynxDB backend expects a function with SETOF return to do. You can return a SETOF a scalar type such as an <code>int</code>, <code>float</code> or <code>varchar</code>, or you can return a SETOF a complex type.</p>
+<h3 id="returning-a-setof-scalar-type"><a class="header" href="#returning-a-setof-scalar-type"><a id="topic20"></a>Returning a SETOF &lt;scalar type&gt;</a></h3>
+<p>In order to return a set of a scalar type, you need create a Java method that returns something that implements the <code>java.util.Iterator</code> interface. Here is an example of a method that returns a SETOF <code>varchar</code>:</p>
+<pre><code>CREATE FUNCTION javatest.getSystemProperties()
+  RETURNS SETOF varchar
+  AS 'foo.fee.Bar.getNames'
+  IMMUTABLE LANGUAGE java;
+</code></pre>
+<p>This simple Java method returns an iterator:</p>
+<pre><code>package foo.fee;
+import java.util.Iterator;
+
+public class Bar
+{
+    public static Iterator getNames()
+    {
+        ArrayList names = new ArrayList();
+        names.add("Lisa");
+        names.add("Bob");
+        names.add("Bill");
+        names.add("Sally");
+        return names.iterator();
+    }
+}
+</code></pre>
+<h3 id="returning-a-setof-complex-type"><a class="header" href="#returning-a-setof-complex-type"><a id="topic21"></a>Returning a SETOF &lt;complex type&gt;</a></h3>
+<p>A method returning a SETOF &lt;complex type&gt; must use either the interface <code>org.postgresql.pljava.ResultSetProvider</code> or <code>org.postgresql.pljava.ResultSetHandle</code>. The reason for having two interfaces is that they cater for optimal handling of two distinct use cases. The former is for cases when you want to dynamically create each row that is to be returned from the SETOF function. The latter makes sense in cases where you want to return the result of a query after it runs.</p>
+<h4 id="using-the-resultsetprovider-interface"><a class="header" href="#using-the-resultsetprovider-interface"><a id="topic22"></a>Using the ResultSetProvider Interface</a></h4>
+<p>This interface has two methods. The boolean <code>assignRowValues(java.sql.ResultSet tupleBuilder, int rowNumber)</code> and the <code>void close()</code> method. The SynxDB query evaluator will call the <code>assignRowValues</code> repeatedly until it returns false or until the evaluator decides that it does not need any more rows. Then it calls close.</p>
+<p>You can use this interface the following way:</p>
+<pre><code>CREATE FUNCTION javatest.listComplexTests(int, int)
+  RETURNS SETOF complexTest
+  AS 'foo.fee.Fum.listComplexTest'
+  IMMUTABLE LANGUAGE java;
+</code></pre>
+<p>The function maps to a static java method that returns an instance that implements the <code>ResultSetProvider</code> interface.</p>
+<pre><code>public class Fum implements ResultSetProvider
+{
+  private final int m_base;
+  private final int m_increment;
+  public Fum(int base, int increment)
+  {
+    m_base = base;
+    m_increment = increment;
+  }
+  public boolean assignRowValues(ResultSet receiver, int 
+currentRow)
+  throws SQLException
+  {
+    // Stop when we reach 12 rows.
+    //
+    if(currentRow &gt;= 12)
+      return false;
+    receiver.updateInt(1, m_base);
+    receiver.updateInt(2, m_base + m_increment * currentRow);
+    receiver.updateTimestamp(3, new 
+Timestamp(System.currentTimeMillis()));
+    return true;
+  }
+  public void close()
+  {
+   // Nothing needed in this example
+  }
+  public static ResultSetProvider listComplexTests(int base, 
+int increment)
+  throws SQLException
+  {
+    return new Fum(base, increment);
+  }
+}
+</code></pre>
+<p>The <code>listComplextTests</code> method is called once. It may return <code>NULL</code> if no results are available or an instance of the <code>ResultSetProvider</code>. Here the Java class <code>Fum</code> implements this interface so it returns an instance of itself. The method <code>assignRowValues</code> will then be called repeatedly until it returns false. At that time, close will be called.</p>
+<h4 id="using-the-resultsethandle-interface"><a class="header" href="#using-the-resultsethandle-interface"><a id="topic23"></a>Using the ResultSetHandle Interface</a></h4>
+<p>This interface is similar to the <code>ResultSetProvider</code> interface in that it has a <code>close()</code> method that will be called at the end. But instead of having the evaluator call a method that builds one row at a time, this method has a method that returns a ResultSet. The query evaluator will iterate over this set and deliver the RestulSet contents, one tuple at a time, to the caller until a call to <code>next()</code> returns false or the evaluator decides that no more rows are needed.</p>
+<p>Here is an example that runs a query using a statement that it obtained using the default connection. The SQL suitable for the deployment descriptor looks like this:</p>
+<pre><code>CREATE FUNCTION javatest.listSupers()
+  RETURNS SETOF pg_user
+  AS 'org.postgresql.pljava.example.Users.listSupers'
+  LANGUAGE java;
+CREATE FUNCTION javatest.listNonSupers()
+  RETURNS SETOF pg_user
+  AS 'org.postgresql.pljava.example.Users.listNonSupers'
+  LANGUAGE java;
+</code></pre>
+<p>And in the Java package <code>org.postgresql.pljava.example</code> a class <code>Users</code> is added:</p>
+<pre><code>public class Users implements ResultSetHandle
+{
+  private final String m_filter;
+  private Statement m_statement;
+  public Users(String filter)
+  {
+    m_filter = filter;
+  }
+  public ResultSet getResultSet()
+  throws SQLException
+  {
+    m_statement = 
+      DriverManager.getConnection("jdbc:default:connection").cr
+eateStatement();
+    return m_statement.executeQuery("SELECT * FROM pg_user 
+       WHERE " + m_filter);
+  }
+
+  public void close()
+  throws SQLException
+  {
+    m_statement.close();
+  }
+
+  public static ResultSetHandle listSupers()
+  {
+    return new Users("usesuper = true");
+  }
+
+  public static ResultSetHandle listNonSupers()
+  {
+    return new Users("usesuper = false");
+  }
+}
+</code></pre>
+<h2 id="using-jdbc"><a class="header" href="#using-jdbc"><a id="topic24"></a>Using JDBC</a></h2>
+<p>PL/Java contains a JDBC driver that maps to the PostgreSQL SPI functions. A connection that maps to the current transaction can be obtained using the following statement:</p>
+<pre><code>Connection conn = 
+  DriverManager.getConnection("jdbc:default:connection"); 
+</code></pre>
+<p>After obtaining a connection, you can prepare and run statements similar to other JDBC connections. These are limitations for the PL/Java JDBC driver:</p>
+<ul>
+<li>The transaction cannot be managed in any way. Thus, you cannot use methods on the connection such as:
+<ul>
+<li><code>commit()</code></li>
+<li><code>rollback()</code></li>
+<li><code>setAutoCommit()</code></li>
+<li><code>setTransactionIsolation()</code></li>
+</ul>
+</li>
+<li>Savepoints are available with some restrictions. A savepoint cannot outlive the function in which it was set and it must be rolled back or released by that same function.</li>
+<li>A ResultSet returned from <code>executeQuery()</code> are always <code>FETCH_FORWARD</code> and <code>CONCUR_READ_ONLY</code>.</li>
+<li>Metadata is only available in PL/Java 1.1 or higher.</li>
+<li><code>CallableStatement</code> (for stored procedures) is not implemented.</li>
+<li>The types <code>Clob</code> or <code>Blob</code> are not completely implemented, they need more work. The types <code>byte[]</code> and <code>String</code> can be used for <code>bytea</code> and <code>text</code> respectively.</li>
+</ul>
+<h2 id="exception-handling"><a class="header" href="#exception-handling"><a id="topic25"></a>Exception Handling</a></h2>
+<p>You can catch and handle an exception in the SynxDB backend just like any other exception. The backend ErrorData structure is exposed as a property in a class called <code>org.postgresql.pljava.ServerException</code> (derived from <code>java.sql.SQLException</code>) and the Java try/catch mechanism is synchronized with the backend mechanism.</p>
+<blockquote>
+<p><strong>Important</strong> You will not be able to continue running backend functions until your function has returned and the error has been propagated when the backend has generated an exception unless you have used a savepoint. When a savepoint is rolled back, the exceptional condition is reset and you can continue your execution.</p>
+</blockquote>
+<h2 id="savepoints"><a class="header" href="#savepoints"><a id="topic26"></a>Savepoints</a></h2>
+<p>SynxDB savepoints are exposed using the java.sql.Connection interface. Two restrictions apply.</p>
+<ul>
+<li>A savepoint must be rolled back or released in the function where it was set.</li>
+<li>A savepoint must not outlive the function where it was set.</li>
+</ul>
+<h2 id="logging"><a class="header" href="#logging"><a id="topic27"></a>Logging</a></h2>
+<p>PL/Java uses the standard Java Logger. Hence, you can write things like:</p>
+<pre><code>Logger.getAnonymousLogger().info( "Time is " + new 
+Date(System.currentTimeMillis()));
+</code></pre>
+<p>At present, the logger uses a handler that maps the current state of the SynxDB configuration setting <code>log_min_messages</code> to a valid Logger level and that outputs all messages using the SynxDB backend function <code>elog()</code>.</p>
+<blockquote>
+<p><strong>Note</strong> The <code>log_min_messages</code> setting is read from the database the first time a PL/Java function in a session is run. On the Java side, the setting does not change after the first PL/Java function execution in a specific session until the SynxDB session that is working with PL/Java is restarted.</p>
+</blockquote>
+<p>The following mapping apply between the Logger levels and the SynxDB backend levels.</p>
+<div class="table-wrapper"><table><thead><tr><th>java.util.logging.Level</th><th>SynxDB Level</th></tr></thead><tbody>
+<tr><td>SEVERE ERROR</td><td>ERROR</td></tr>
+<tr><td>WARNING</td><td>WARNING</td></tr>
+<tr><td>CONFIG</td><td>LOG</td></tr>
+<tr><td>INFO</td><td>INFO</td></tr>
+<tr><td>FINE</td><td>DEBUG1</td></tr>
+<tr><td>FINER</td><td>DEBUG2</td></tr>
+<tr><td>FINEST</td><td>DEBUG3</td></tr>
+</tbody></table>
+</div>
+<h2 id="security"><a class="header" href="#security"><a id="topic28"></a>Security</a></h2>
+<ul>
+<li><a href="#topic29">Installation</a></li>
+<li><a href="#topic30">Trusted Language</a></li>
+</ul>
+<h3 id="installation"><a class="header" href="#installation"><a id="topic29"></a>Installation</a></h3>
+<p>Only a database superuser can install PL/Java. The PL/Java utility functions are installed using SECURITY DEFINER so that they run with the access permissions that were granted to the creator of the functions.</p>
+<h3 id="trusted-language"><a class="header" href="#trusted-language"><a id="topic30"></a>Trusted Language</a></h3>
+<p>PL/Java is a <em>trusted</em> language. The trusted PL/Java language has no access to the file system as stipulated by PostgreSQL definition of a trusted language. Any database user can create and access functions in a trusted language.</p>
+<p>PL/Java also installs a language handler for the language <code>javau</code>. This version is <em>not trusted</em> and only a superuser can create new functions that use it. Any user can call the functions.</p>
+<p>To install both the trusted and untrusted languages, register the extension by running the <code>'CREATE EXTENSION pljava'</code> command when <a href="#topic6">Enabling PL/Java and Installing JAR Files</a>.</p>
+<p>To install only the trusted language, register the extension by running the <code>'CREATE EXTENSION pljavat'</code> command when <a href="#topic6">Enabling PL/Java and Installing JAR Files</a>.</p>
+<h2 id="some-pljava-issues-and-solutions"><a class="header" href="#some-pljava-issues-and-solutions"><a id="topic33"></a>Some PL/Java Issues and Solutions</a></h2>
+<p>When writing the PL/Java, mapping the JVM into the same process-space as the SynxDB backend code, some concerns have been raised regarding multiple threads, exception handling, and memory management. Here are brief descriptions explaining how these issues where resolved.</p>
+<ul>
+<li><a href="#topic34">Multi-threading</a></li>
+<li><a href="#topic36">Exception Handling</a></li>
+<li><a href="#topic38">Java Garbage Collector Versus palloc() and Stack Allocation</a></li>
+</ul>
+<h3 id="multi-threading"><a class="header" href="#multi-threading"><a id="topic34"></a>Multi-threading</a></h3>
+<p>Java is inherently multi-threaded. The SynxDB backend is not. There is nothing stopping a developer from utilizing multiple Threads class in the Java code. Finalizers that call out to the backend might have been spawned from a background Garbage Collection thread. Several third party Java-packages that are likely to be used make use of multiple threads. How can this model coexist with the SynxDB backend in the same process?</p>
+<h4 id="solution"><a class="header" href="#solution"><a id="topic35"></a>Solution</a></h4>
+<p>The solution is simple. PL/Java defines a special object called the <code>Backend.THREADLOCK</code>. When PL/Java is initialized, the backend immediately grabs this objects monitor (i.e. it will synchronize on this object). When the backend calls a Java function, the monitor is released and then immediately regained when the call returns. All calls from Java out to backend code are synchronized on the same lock. This ensures that only one thread at a time can call the backend from Java, and only at a time when the backend is awaiting the return of a Java function call.</p>
+<h3 id="exception-handling-1"><a class="header" href="#exception-handling-1"><a id="topic36"></a>Exception Handling</a></h3>
+<p>Java makes frequent use of try/catch/finally blocks. SynxDB sometimes use an exception mechanism that calls <code>longjmp</code> to transfer control to a known state. Such a jump would normally effectively bypass the JVM.</p>
+<h4 id="solution-1"><a class="header" href="#solution-1"><a id="topic37"></a>Solution</a></h4>
+<p>The backend now allows errors to be caught using the macros <code>PG_TRY/PG_CATCH</code>/<code>PG_END_TRY</code> and in the catch block, the error can be examined using the ErrorData structure. PL/Java implements a <code>java.sql.SQLException</code> subclass called <code>org.postgresql.pljava.ServerException</code>. The ErrorData can be retrieved and examined from that exception. A catch handler is allowed to issue a rollback to a savepoint. After a successful rollback, execution can continue.</p>
+<h3 id="java-garbage-collector-versus-palloc-and-stack-allocation"><a class="header" href="#java-garbage-collector-versus-palloc-and-stack-allocation"><a id="topic38"></a>Java Garbage Collector Versus palloc() and Stack Allocation</a></h3>
+<p>Primitive types are always be passed by value. This includes the <code>String</code> type (this is a must since Java uses double byte characters). Complex types are often wrapped in Java objects and passed by reference. For example, a Java object can contain a pointer to a palloc’ed or stack allocated memory and use native JNI calls to extract and manipulate data. Such data will become stale once a call has ended. Further attempts to access such data will at best give very unpredictable results but more likely cause a memory fault and a crash.</p>
+<h4 id="solution-2"><a class="header" href="#solution-2"><a id="topic39"></a>Solution</a></h4>
+<p>The PL/Java contains code that ensures that stale pointers are cleared when the MemoryContext or stack where they were allocated goes out of scope. The Java wrapper objects might live on but any attempt to use them will result in a stale native handle exception.</p>
+<h2 id="example"><a class="header" href="#example"><a id="topic40"></a>Example</a></h2>
+<p>The following simple Java example creates a JAR file that contains a single method and runs the method.</p>
+<blockquote>
+<p><strong>Note</strong> The example requires Java SDK to compile the Java file.</p>
+</blockquote>
+<p>The following method returns a substring.</p>
+<pre><code class="language-pre">{
+public static String substring(String text, int beginIndex,
+  int endIndex)
+    {
+    return text.substring(beginIndex, endIndex);
+    }
+}
+</code></pre>
+<p>Enter the java code in a text file <code>example.class</code>.</p>
+<p>Contents of the file <code>manifest.txt</code>:</p>
+<pre><code>Manifest-Version: 1.0
+Main-Class: Example
+Specification-Title: "Example"
+Specification-Version: "1.0"
+Created-By: 1.6.0_35-b10-428-11M3811
+Build-Date: 01/20/2013 10:09 AM
+</code></pre>
+<p>Compile the java code:</p>
+<pre><code>javac *.java
+</code></pre>
+<p>Create a JAR archive named analytics.jar that contains the class file and the manifest file MANIFEST file in the JAR.</p>
+<pre><code>jar cfm analytics.jar manifest.txt *.class
+</code></pre>
+<p>Upload the jar file to the SynxDB master host.</p>
+<p>Run the <code>gpscp</code> utility to copy the jar file to the SynxDB Java directory. Use the <code>-f</code> option to specify the file that contains a list of the master and segment hosts.</p>
+<pre><code>gpscp -f gphosts_file analytics.jar 
+=:/usr/local/synxdb/lib/postgresql/java/
+</code></pre>
+<p>Use the <code>gpconfig</code> utility to set the SynxDB <code>pljava_classpath</code> server configuration parameter. The parameter lists the installed jar files.</p>
+<pre><code>gpconfig -c pljava_classpath -v 'analytics.jar'
+</code></pre>
+<p>Run the <code>gpstop</code> utility with the <code>-u</code> option to reload the configuration files.</p>
+<pre><code>gpstop -u
+</code></pre>
+<p>From the <code>psql</code> command line, run the following command to show the installed jar files.</p>
+<pre><code>show pljava_classpath
+</code></pre>
+<p>The following SQL commands create a table and define a Java function to test the method in the jar file:</p>
+<pre><code>create table temp (a varchar) distributed randomly; 
+insert into temp values ('my string'); 
+--Example function 
+create or replace function java_substring(varchar, int, int) 
+returns varchar as 'Example.substring' language java; 
+--Example execution 
+select java_substring(a, 1, 5) from temp;
+</code></pre>
+<p>You can place the contents in a file, <code>mysample.sql</code> and run the command from a <code>psql</code> command line:</p>
+<pre><code>&gt; \i mysample.sql 
+</code></pre>
+<p>The output is similar to this:</p>
+<pre><code>java_substring
+----------------
+ y st
+(1 row)
+</code></pre>
+<h2 id="references"><a class="header" href="#references"><a id="topic41"></a>References</a></h2>
+<p>The PL/Java Github wiki page - <a href="https://github.com/tada/pljava/wiki">https://github.com/tada/pljava/wiki</a>.</p>
+<p>PL/Java 1.5.0 release - <a href="https://github.com/tada/pljava/tree/REL1_5_STABLE">https://github.com/tada/pljava/tree/REL1_5_STABLE</a>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../analytics/pl_container_using.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../analytics/pl_perl.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../analytics/pl_container_using.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../analytics/pl_perl.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

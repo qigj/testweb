@@ -1,0 +1,393 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Configuring the JDBC Connector for Hive Access (Optional) - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="configuring-the-jdbc-connector-for-hive-access-optional"><a class="header" href="#configuring-the-jdbc-connector-for-hive-access-optional">Configuring the JDBC Connector for Hive Access (Optional)</a></h1>
+<p>You can use the PXF JDBC Connector to retrieve data from Hive. You can also use a JDBC named query to submit a custom SQL query to Hive and retrieve the results using the JDBC Connector.</p>
+<p>This topic describes how to configure the PXF JDBC Connector to access Hive. When you configure Hive access with JDBC, you must take into account the Hive user impersonation setting, as well as whether or not the Hadoop cluster is secured with Kerberos.</p>
+<p><em>If you do not plan to use the PXF JDBC Connector to access Hive, then you do not need to perform this procedure.</em></p>
+<h2 id="jdbc-server-configuration"><a class="header" href="#jdbc-server-configuration"><a id="hive_cfg_server"></a>JDBC Server Configuration</a></h2>
+<p>The PXF JDBC Connector is installed with the JAR files required to access Hive via JDBC, <code>hive-jdbc-&lt;version&gt;.jar</code> and <code>hive-service-&lt;version&gt;.jar</code>, and automatically registers these JARs.</p>
+<p>When you configure a PXF JDBC server for Hive access, you must specify the JDBC driver class name, database URL, and client credentials just as you would when configuring a client connection to an SQL database.</p>
+<p>To access Hive via JDBC, you must specify the following properties and values in the <code>jdbc-site.xml</code> server configuration file:</p>
+<div class="table-wrapper"><table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+<tr><td>jdbc.driver</td><td>org.apache.hive.jdbc.HiveDriver</td></tr>
+<tr><td>jdbc.url</td><td>jdbc:hive2://&lt;hiveserver2_host&gt;:&lt;hiveserver2_port&gt;/&lt;database&gt;</td></tr>
+</tbody></table>
+</div>
+<p>The value of the HiveServer2 authentication (<code>hive.server2.authentication</code>) and impersonation (<code>hive.server2.enable.doAs</code>) properties, and whether or not the Hive service is utilizing Kerberos authentication, will inform the setting of other JDBC server configuration properties. These properties are defined in the <code>hive-site.xml</code> configuration file in the Hadoop cluster. You will need to obtain the values of these properties.</p>
+<p>The following table enumerates the Hive2 authentication and impersonation combinations supported by the PXF JDBC Connector. It identifies the possible Hive user identities and the JDBC server configuration required for each.</p>
+<p>Table heading key:</p>
+<ul>
+<li><em>authentication</em> -&gt; Hive <code>hive.server2.authentication</code> Setting</li>
+<li><em>enable.doAs</em> -&gt; Hive <code>hive.server2.enable.doAs</code> Setting</li>
+<li><em>User Identity</em> -&gt; Identity that HiveServer2 will use to access data</li>
+<li><em>Configuration Required</em> -&gt; PXF JDBC Connector or Hive configuration required for <em>User Identity</em></li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>authentication</th><th>enable.doAs</th><th>User Identity</th><th>Configuration Required</th></tr></thead><tbody>
+<tr><td><code>NOSASL</code></td><td>n/a</td><td>No authentication</td><td>Must set <code>jdbc.connection.property.auth</code> = <code>noSasl</code>.</td></tr>
+<tr><td><code>NONE</code>, or not specified</td><td><code>TRUE</code></td><td>User name that you provide</td><td>Set <code>jdbc.user</code>.</td></tr>
+<tr><td><code>NONE</code>, or not specified</td><td><code>TRUE</code></td><td>SynxDB user name</td><td>Set <code>pxf.service.user.impersonation</code> to <code>true</code> in <code>jdbc-site.xml</code>.</td></tr>
+<tr><td><code>NONE</code>, or not specified</td><td><code>FALSE</code></td><td>Name of the user who started Hive, typically <code>hive</code></td><td>None</td></tr>
+<tr><td><code>KERBEROS</code></td><td><code>TRUE</code></td><td>Identity provided in the PXF Kerberos principal, typically <code>gpadmin</code></td><td>Must set <code>hadoop.security.authentication</code> to <code>kerberos</code> in <code>jdbc-site.xml</code>.</td></tr>
+<tr><td><code>KERBEROS</code></td><td><code>TRUE</code></td><td>User name that you provide</td><td>Set <code>hive.server2.proxy.user</code> in <code>jdbc.url</code> and set <code>hadoop.security.authentication</code> to <code>kerberos</code> in <code>jdbc-site.xml</code>.</td></tr>
+<tr><td><code>KERBEROS</code></td><td><code>TRUE</code></td><td>SynxDB user name</td><td>Set <code>pxf.service.user.impersonation</code> to <code>true</code> and <code>hadoop.security.authentication</code> to <code>kerberos</code> in <code>jdbc-site.xml</code>.</td></tr>
+<tr><td><code>KERBEROS</code></td><td><code>FALSE</code></td><td>Identity provided in the <code>jdbc.url</code> <code>principal</code> parameter, typically <code>hive</code></td><td>Must set <code>hadoop.security.authentication</code> to <code>kerberos</code> in <code>jdbc-site.xml</code>.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Note</strong>: There are additional configuration steps required when Hive utilizes Kerberos authentication.</p>
+<h2 id="example-configuration-procedure"><a class="header" href="#example-configuration-procedure"><a id="hive_cfg_server_proc"></a>Example Configuration Procedure</a></h2>
+<p>Perform the following procedure to configure a PXF JDBC server for Hive:</p>
+<ol>
+<li>
+<p>Log in to your SynxDB coordinator host:</p>
+<pre><code class="language-shell">$ ssh gpadmin@&lt;coordinator&gt;
+</code></pre>
+</li>
+<li>
+<p>Choose a name for the JDBC server.</p>
+</li>
+<li>
+<p>Create the <code>$PXF_BASE/servers/&lt;server_name&gt;</code> directory. For example, use the following command to create a JDBC server configuration named <code>hivejdbc1</code>:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ mkdir $PXF_BASE/servers/hivejdbc1
+</code></pre>
+</li>
+<li>
+<p>Navigate to the server configuration directory. For example:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cd $PXF_BASE/servers/hivejdbc1
+</code></pre>
+</li>
+<li>
+<p>Copy the PXF JDBC server template file to the server configuration directory. For example:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cp &lt;PXF_INSTALL_DIR&gt;/templates/jdbc-site.xml .
+</code></pre>
+</li>
+<li>
+<p>When you access Hive secured with Kerberos, you also need to specify configuration properties in the <code>pxf-site.xml</code> file. <em>If this file does not yet exist in your server configuration</em>, copy the <code>pxf-site.xml</code> template file to the server config directory. For example:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cp &lt;PXF_INSTALL_DIR&gt;/templates/pxf-site.xml .
+</code></pre>
+</li>
+<li>
+<p>Open the <code>jdbc-site.xml</code> file in the editor of your choice and set the <code>jdbc.driver</code> and <code>jdbc.url</code> properties. Be sure to specify your Hive host, port, and database name:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;jdbc.driver&lt;/name&gt;
+    &lt;value&gt;org.apache.hive.jdbc.HiveDriver&lt;/value&gt;
+&lt;/property&gt;
+&lt;property&gt;
+    &lt;name&gt;jdbc.url&lt;/name&gt;
+    &lt;value&gt;jdbc:hive2://&lt;hiveserver2_host&gt;:&lt;hiveserver2_port&gt;/&lt;database&gt;&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+</li>
+<li>
+<p>Obtain the <code>hive-site.xml</code> file from your Hadoop cluster and examine the file.</p>
+</li>
+<li>
+<p>If the <code>hive.server2.authentication</code> property in <code>hive-site.xml</code> is set to <code>NOSASL</code>, HiveServer2 performs no authentication. Add the following connection-level property to <code>jdbc-site.xml</code>:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;jdbc.connection.property.auth&lt;/name&gt;
+    &lt;value&gt;noSasl&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<p>Alternatively, you may choose to add <code>;auth=noSasl</code> to the <code>jdbc.url</code>.</p>
+</li>
+<li>
+<p>If the <code>hive.server2.authentication</code> property in <code>hive-site.xml</code> is set to <code>NONE</code>, or the property is not specified, you must set the <code>jdbc.user</code> property. The value to which you set the <code>jdbc.user</code> property is dependent upon the <code>hive.server2.enable.doAs</code> impersonation setting in <code>hive-site.xml</code>:</p>
+<ol>
+<li>
+<p>If <code>hive.server2.enable.doAs</code> is set to <code>TRUE</code> (the default), Hive runs Hadoop operations on behalf of the user connecting to Hive. <em>Choose/perform one of the following options</em>:</p>
+<p><strong>Set</strong> <code>jdbc.user</code> to specify the user that has read permission on all Hive data accessed by SynxDB. For example, to connect to Hive and run all requests as user <code>gpadmin</code>:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;jdbc.user&lt;/name&gt;
+    &lt;value&gt;gpadmin&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<p><strong>Or</strong>, turn on JDBC server-level user impersonation so that PXF automatically uses the SynxDB user name to connect to Hive; uncomment the <code>pxf.service.user.impersonation</code> property in <code>jdbc-site.xml</code> and set the value to `true:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;pxf.service.user.impersonation&lt;/name&gt;
+    &lt;value&gt;true&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<p>If you enable JDBC impersonation in this manner, you must not specify a <code>jdbc.user</code> nor include the setting in the <code>jdbc.url</code>.</p>
+</li>
+<li>
+<p>If required, create a PXF user configuration file as described in <a href="cfg_server.html#usercfg">Configuring a PXF User</a> to manage the password setting.</p>
+</li>
+<li>
+<p>If <code>hive.server2.enable.doAs</code> is set to <code>FALSE</code>, Hive runs Hadoop operations as the user who started the HiveServer2 process, usually the user <code>hive</code>. PXF ignores the <code>jdbc.user</code> setting in this circumstance.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>If the <code>hive.server2.authentication</code> property in <code>hive-site.xml</code> is set to <code>KERBEROS</code>:</p>
+<ol>
+<li>
+<p>Identify the name of the server configuration.</p>
+</li>
+<li>
+<p>Ensure that you have configured Kerberos authentication for PXF as described in <a href="pxf_kerbhdfs.html">Configuring PXF for Secure HDFS</a>, and that you have specified the Kerberos principal and keytab in the <code>pxf-site.xml</code> properties as described in the procedure.</p>
+</li>
+<li>
+<p>Comment out the <code>pxf.service.user.impersonation</code> property in the <code>pxf-site.xml</code> file. If you require user impersonation, you will uncomment and set the property in an upcoming step.</p>
+</li>
+<li>
+<p>Uncomment the <code>hadoop.security.authentication</code> setting in <code>$PXF_BASE/servers/&lt;name&gt;/jdbc-site.xml</code>:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;hadoop.security.authentication&lt;/name&gt;
+    &lt;value&gt;kerberos&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+</li>
+<li>
+<p>Add the <code>saslQop</code> property to <code>jdbc.url</code>, and set it to match the <code>hive.server2.thrift.sasl.qop</code> property setting in <code>hive-site.xml</code>. For example, if the <code>hive-site.xml</code> file includes the following property setting:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;hive.server2.thrift.sasl.qop&lt;/name&gt;
+    &lt;value&gt;auth-conf&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<p>You would add <code>;saslQop=auth-conf</code> to the <code>jdbc.url</code>.</p>
+</li>
+<li>
+<p>Add the HiverServer2 <code>principal</code> name to the <code>jdbc.url</code>. For example:</p>
+ <pre>
+ jdbc:hive2://hs2server:10000/default;<b>principal=hive/hs2server@REALM</b>;saslQop=auth-conf
+ </pre>
+</li>
+<li>
+<p>If <code>hive.server2.enable.doAs</code> is set to <code>TRUE</code> (the default), Hive runs Hadoop operations on behalf of the user connecting to Hive. <em>Choose/perform one of the following options</em>:</p>
+<p><strong>Do not</strong> specify any additional properties. In this case, PXF initiates all Hadoop access with the identity provided in the PXF Kerberos principal (usually <code>gpadmin</code>).</p>
+<p><strong>Or</strong>, set the <code>hive.server2.proxy.user</code> property in the <code>jdbc.url</code> to specify the user that has read permission on all Hive data. For example, to connect to Hive and run all requests as the user named <code>integration</code> use the following <code>jdbc.url</code>:</p>
+ <pre>
+ jdbc:hive2://hs2server:10000/default;principal=hive/hs2server@REALM;saslQop=auth-conf;<b>hive.server2.proxy.user=integration</b>
+ </pre>
+<p><strong>Or</strong>, enable PXF JDBC impersonation in the <code>pxf-site.xml</code> file so that PXF automatically uses the SynxDB user name to connect to Hive. Add or uncomment the <code>pxf.service.user.impersonation</code> property and set the value to <code>true</code>. For example:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;pxf.service.user.impersonation&lt;/name&gt;
+    &lt;value&gt;true&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<p>If you enable JDBC impersonation, you must not explicitly specify a <code>hive.server2.proxy.user</code> in the <code>jdbc.url</code>.</p>
+</li>
+<li>
+<p>If required, create a PXF user configuration file to manage the password setting.</p>
+</li>
+<li>
+<p>If <code>hive.server2.enable.doAs</code> is set to <code>FALSE</code>, Hive runs Hadoop operations with the identity provided by the PXF Kerberos principal (usually <code>gpadmin</code>).</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Save your changes and exit the editor.</p>
+</li>
+<li>
+<p>Use the <code>pxf cluster sync</code> command to copy the new server configuration to the SynxDB cluster:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ pxf cluster sync
+</code></pre>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pxf/jdbc_cfg.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pxf/cfginitstart_pxf.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pxf/jdbc_cfg.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pxf/cfginitstart_pxf.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

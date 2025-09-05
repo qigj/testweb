@@ -1,0 +1,35 @@
+# Query Performance Overview
+
+Query performance is optimized by dynamically eliminating irrelevant partitions to reduce memory allocation. This mechanism can significantly reduce the amount of data scanned by queries, speed up query execution, and enhance the system's concurrent processing capabilities.
+
+:::{tip}
+{{ product_name }} enables the GPORCA optimizer by default, which extends the query planning and optimization capabilities of the native Postgres optimizer.
+:::
+
+## Dynamic partition elimination
+
+In {{ product_name }}, the system dynamically prunes partitions using values that can only be determined at query execution time, thereby improving query processing speed. This feature is called Dynamic Partition Elimination (DPE).
+
+DPE is applicable to the following types of join operations:
+
+- `Hash Inner Join`
+- `Hash Left Join`
+- `Hash Right Join`
+
+The following conditions must be met to enable DPE:
+
+- The partitioned table must be the outer table of the join.
+
+- The join condition must be an equality condition based on the partitioning key.
+
+- Statistics must be collected on the partitioned table, for example:
+
+  ``` sql
+  ANALYZE <root partition>;
+  ```
+
+The `gp_dynamic_partition_pruning` parameter controls whether DPE is enabled and is `ON` by default. This parameter only affects the Postgres optimizer. You can check if DPE is active by using `EXPLAIN` to see if the execution plan contains a `Partition Selector` node.
+
+## Memory optimization
+
+{{ product_name }} dynamically allocates memory based on the characteristics of each operator in a query. It also proactively releases or reallocates memory resources at different stages of the query, leading to more efficient resource utilization and query execution.

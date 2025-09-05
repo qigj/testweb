@@ -1,0 +1,2039 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>SQL Syntax Summary - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="sql-syntax-summary"><a class="header" href="#sql-syntax-summary">SQL Syntax Summary</a></h1>
+<h2 id="abort"><a class="header" href="#abort"><a id="ae1903297"></a>ABORT</a></h2>
+<p>Terminates the current transaction.</p>
+<pre><code>ABORT [WORK | TRANSACTION]
+</code></pre>
+<p>See <a href="sql_commands/ABORT.html">ABORT</a> for more information.</p>
+<h2 id="alter-aggregate"><a class="header" href="#alter-aggregate"><a id="ae1903303"></a>ALTER AGGREGATE</a></h2>
+<p>Changes the definition of an aggregate function</p>
+<pre><code>ALTER AGGREGATE &lt;name&gt; ( &lt;aggregate_signature&gt; )  RENAME TO &lt;new_name&gt;
+
+ALTER AGGREGATE &lt;name&gt; ( &lt;aggregate_signature&gt; ) OWNER TO &lt;new_owner&gt;
+
+ALTER AGGREGATE &lt;name&gt; ( &lt;aggregate_signature&gt; ) SET SCHEMA &lt;new_schema&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_AGGREGATE.html">ALTER AGGREGATE</a> for more information.</p>
+<h2 id="alter-collation"><a class="header" href="#alter-collation"><a id="altc"></a>ALTER COLLATION</a></h2>
+<p>Changes the definition of a collation.</p>
+<pre><code>ALTER COLLATION &lt;name&gt; RENAME TO &lt;new_name&gt;
+
+ALTER COLLATION &lt;name&gt; OWNER TO &lt;new_owner&gt;
+
+ALTER COLLATION &lt;name&gt; SET SCHEMA &lt;new_schema&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_COLLATION.html">ALTER COLLATION</a> for more information.</p>
+<h2 id="alter-conversion"><a class="header" href="#alter-conversion"><a id="ae1903313"></a>ALTER CONVERSION</a></h2>
+<p>Changes the definition of a conversion.</p>
+<pre><code>ALTER CONVERSION &lt;name&gt; RENAME TO &lt;newname&gt;
+
+ALTER CONVERSION &lt;name&gt; OWNER TO &lt;newowner&gt;
+
+ALTER CONVERSION &lt;name&gt; SET SCHEMA &lt;new_schema&gt;
+
+</code></pre>
+<p>See <a href="sql_commands/ALTER_CONVERSION.html">ALTER CONVERSION</a> for more information.</p>
+<h2 id="alter-database"><a class="header" href="#alter-database"><a id="ae1903321"></a>ALTER DATABASE</a></h2>
+<p>Changes the attributes of a database.</p>
+<pre><code>ALTER DATABASE &lt;name&gt; [ WITH CONNECTION LIMIT &lt;connlimit&gt; ]
+
+ALTER DATABASE &lt;name&gt; RENAME TO &lt;newname&gt;
+
+ALTER DATABASE &lt;name&gt; OWNER TO &lt;new_owner&gt;
+
+ALTER DATABASE &lt;name&gt; SET TABLESPACE &lt;new_tablespace&gt;
+
+ALTER DATABASE &lt;name&gt; SET &lt;parameter&gt; { TO | = } { &lt;value&gt; | DEFAULT }
+ALTER DATABASE &lt;name&gt; SET &lt;parameter&gt; FROM CURRENT
+ALTER DATABASE &lt;name&gt; RESET &lt;parameter&gt;
+ALTER DATABASE &lt;name&gt; RESET ALL
+
+</code></pre>
+<p>See <a href="sql_commands/ALTER_DATABASE.html">ALTER DATABASE</a> for more information.</p>
+<h2 id="alter-default-privileges"><a class="header" href="#alter-default-privileges"><a id="altdefpr"></a>ALTER DEFAULT PRIVILEGES</a></h2>
+<p>Changes default access privileges.</p>
+<pre><code>
+ALTER DEFAULT PRIVILEGES
+    [ FOR { ROLE | USER } &lt;target_role&gt; [, ...] ]
+    [ IN SCHEMA &lt;schema_name&gt; [, ...] ]
+    &lt;abbreviated_grant_or_revoke&gt;
+
+where &lt;abbreviated_grant_or_revoke&gt; is one of:
+
+GRANT { { SELECT | INSERT | UPDATE | DELETE | TRUNCATE | REFERENCES | TRIGGER }
+    [, ...] | ALL [ PRIVILEGES ] }
+    ON TABLES
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { { USAGE | SELECT | UPDATE }
+    [, ...] | ALL [ PRIVILEGES ] }
+    ON SEQUENCES
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { EXECUTE | ALL [ PRIVILEGES ] }
+    ON FUNCTIONS
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { USAGE | ALL [ PRIVILEGES ] }
+    ON TYPES
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+REVOKE [ GRANT OPTION FOR ]
+    { { SELECT | INSERT | UPDATE | DELETE | TRUNCATE | REFERENCES | TRIGGER }
+    [, ...] | ALL [ PRIVILEGES ] }
+    ON TABLES
+    FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+    [ CASCADE | RESTRICT ]
+
+REVOKE [ GRANT OPTION FOR ]
+    { { USAGE | SELECT | UPDATE }
+    [, ...] | ALL [ PRIVILEGES ] }
+    ON SEQUENCES
+    FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+    [ CASCADE | RESTRICT ]
+
+REVOKE [ GRANT OPTION FOR ]
+    { EXECUTE | ALL [ PRIVILEGES ] }
+    ON FUNCTIONS
+    FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+    [ CASCADE | RESTRICT ]
+
+REVOKE [ GRANT OPTION FOR ]
+    { USAGE | ALL [ PRIVILEGES ] }
+    ON TYPES
+    FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+    [ CASCADE | RESTRICT ]
+
+</code></pre>
+<p>See <a href="sql_commands/ALTER_DEFAULT_PRIVILEGES.html">ALTER DEFAULT PRIVILEGES</a> for more information.</p>
+<h2 id="alter-domain"><a class="header" href="#alter-domain"><a id="ae1903335"></a>ALTER DOMAIN</a></h2>
+<p>Changes the definition of a domain.</p>
+<pre><code>ALTER DOMAIN &lt;name&gt; { SET DEFAULT &lt;expression&gt; | DROP DEFAULT }
+
+ALTER DOMAIN &lt;name&gt; { SET | DROP } NOT NULL
+
+ALTER DOMAIN &lt;name&gt; ADD &lt;domain_constraint&gt; [ NOT VALID ]
+
+ALTER DOMAIN &lt;name&gt; DROP CONSTRAINT [ IF EXISTS ] &lt;constraint_name&gt; [RESTRICT | CASCADE]
+
+ALTER DOMAIN &lt;name&gt; RENAME CONSTRAINT &lt;constraint_name&gt; TO &lt;new_constraint_name&gt;
+
+ALTER DOMAIN &lt;name&gt; VALIDATE CONSTRAINT &lt;constraint_name&gt;
+  
+ALTER DOMAIN &lt;name&gt; OWNER TO &lt;new_owner&gt;
+  
+ALTER DOMAIN &lt;name&gt; RENAME TO &lt;new_name&gt;
+
+ALTER DOMAIN &lt;name&gt; SET SCHEMA &lt;new_schema&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_DOMAIN.html">ALTER DOMAIN</a> for more information.</p>
+<h2 id="alter-extension"><a class="header" href="#alter-extension"><a id="altext"></a>ALTER EXTENSION</a></h2>
+<p>Change the definition of an extension that is registered in a SynxDB database.</p>
+<pre><code>ALTER EXTENSION &lt;name&gt; UPDATE [ TO &lt;new_version&gt; ]
+ALTER EXTENSION &lt;name&gt; SET SCHEMA &lt;new_schema&gt;
+ALTER EXTENSION &lt;name&gt; ADD &lt;member_object&gt;
+ALTER EXTENSION &lt;name&gt; DROP &lt;member_object&gt;
+
+where &lt;member_object&gt; is:
+
+  ACCESS METHOD &lt;object_name&gt; |
+  AGGREGATE &lt;aggregate_name&gt; ( &lt;aggregate_signature&gt; ) |
+  CAST (&lt;source_type&gt; AS &lt;target_type&gt;) |
+  COLLATION &lt;object_name&gt; |
+  CONVERSION &lt;object_name&gt; |
+  DOMAIN &lt;object_name&gt; |
+  EVENT TRIGGER &lt;object_name&gt; |
+  FOREIGN DATA WRAPPER &lt;object_name&gt; |
+  FOREIGN TABLE &lt;object_name&gt; |
+  FUNCTION &lt;function_name&gt; ( [ [ &lt;argmode&gt; ] [ &lt;argname&gt; ] &lt;argtype&gt; [, ...] ] ) |
+  MATERIALIZED VIEW &lt;object_name&gt; |
+  OPERATOR &lt;operator_name&gt; (&lt;left_type&gt;, &lt;right_type&gt;) |
+  OPERATOR CLASS &lt;object_name&gt; USING &lt;index_method&gt; |
+  OPERATOR FAMILY &lt;object_name&gt; USING &lt;index_method&gt; |
+  [ PROCEDURAL ] LANGUAGE &lt;object_name&gt; |
+  SCHEMA &lt;object_name&gt; |
+  SEQUENCE &lt;object_name&gt; |
+  SERVER &lt;object_name&gt; |
+  TABLE &lt;object_name&gt; |
+  TEXT SEARCH CONFIGURATION &lt;object_name&gt; |
+  TEXT SEARCH DICTIONARY &lt;object_name&gt; |
+  TEXT SEARCH PARSER &lt;object_name&gt; |
+  TEXT SEARCH TEMPLATE &lt;object_name&gt; |
+  TRANSFORM FOR &lt;type_name&gt; LANGUAGE &lt;lang_name&gt; |
+  TYPE &lt;object_name&gt; |
+  VIEW &lt;object_name&gt;
+
+and &lt;aggregate_signature&gt; is:
+
+* |
+[ &lt;argmode&gt; ] [ &lt;argname&gt; ] &lt;argtype&gt; [ , ... ] |
+[ [ &lt;argmode&gt; ] [ &lt;argname&gt; ] &lt;argtype&gt; [ , ... ] ] ORDER BY [ &lt;argmode&gt; ] [ &lt;argname&gt; ] &lt;argtype&gt; [ , ... ]
+</code></pre>
+<p>See <a href="sql_commands/ALTER_EXTENSION.html">ALTER EXTENSION</a> for more information.</p>
+<h2 id="alter-external-table"><a class="header" href="#alter-external-table"><a id="ae1903351"></a>ALTER EXTERNAL TABLE</a></h2>
+<p>Changes the definition of an external table.</p>
+<pre><code class="language-{#d95e24}">ALTER EXTERNAL TABLE &lt;name&gt; &lt;action&gt; [, ... ]
+</code></pre>
+<p>where action is one of:</p>
+<pre><code>  ADD [COLUMN] &lt;new_column&gt; &lt;type&gt;
+  DROP [COLUMN] &lt;column&gt; [RESTRICT|CASCADE]
+  ALTER [COLUMN] &lt;column&gt; TYPE &lt;type&gt;
+  OWNER TO &lt;new_owner&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_EXTERNAL_TABLE.html">ALTER EXTERNAL TABLE</a> for more information.</p>
+<h2 id="alter-foreign-data-wrapper"><a class="header" href="#alter-foreign-data-wrapper"><a id="ae1903381w"></a>ALTER FOREIGN DATA WRAPPER</a></h2>
+<p>Changes the definition of a foreign-data wrapper.</p>
+<pre><code>ALTER FOREIGN DATA WRAPPER &lt;name&gt;
+    [ HANDLER &lt;handler_function&gt; | NO HANDLER ]
+    [ VALIDATOR &lt;validator_function&gt; | NO VALIDATOR ]
+    [ OPTIONS ( [ ADD | SET | DROP ] &lt;option&gt; ['&lt;value&gt;'] [, ... ] ) ]
+
+ALTER FOREIGN DATA WRAPPER &lt;name&gt; OWNER TO &lt;new_owner&gt;
+ALTER FOREIGN DATA WRAPPER &lt;name&gt; RENAME TO &lt;new_name&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_FOREIGN_DATA_WRAPPER.html">ALTER FOREIGN DATA WRAPPER</a> for more information.</p>
+<h2 id="alter-foreign-table"><a class="header" href="#alter-foreign-table"><a id="ae1903381t"></a>ALTER FOREIGN TABLE</a></h2>
+<p>Changes the definition of a foreign table.</p>
+<pre><code>ALTER FOREIGN TABLE [ IF EXISTS ] &lt;name&gt;
+    &lt;action&gt; [, ... ]
+ALTER FOREIGN TABLE [ IF EXISTS ] &lt;name&gt;
+    RENAME [ COLUMN ] &lt;column_name&gt; TO &lt;new_column_name&gt;
+ALTER FOREIGN TABLE [ IF EXISTS ] &lt;name&gt;
+    RENAME TO &lt;new_name&gt;
+ALTER FOREIGN TABLE [ IF EXISTS ] &lt;name&gt;
+    SET SCHEMA &lt;new_schema&gt;
+
+</code></pre>
+<p>See <a href="sql_commands/ALTER_FOREIGN_TABLE.html">ALTER FOREIGN TABLE</a> for more information.</p>
+<h2 id="alter-function"><a class="header" href="#alter-function"><a id="ae1903381"></a>ALTER FUNCTION</a></h2>
+<p>Changes the definition of a function.</p>
+<pre><code>ALTER FUNCTION &lt;name&gt; ( [ [&lt;argmode&gt;] [&lt;argname&gt;] &lt;argtype&gt; [, ...] ] ) 
+   &lt;action&gt; [, ... ] [RESTRICT]
+
+ALTER FUNCTION &lt;name&gt; ( [ [&lt;argmode&gt;] [&lt;argname&gt;] &lt;argtype&gt; [, ...] ] )
+   RENAME TO &lt;new_name&gt;
+
+ALTER FUNCTION &lt;name&gt; ( [ [&lt;argmode&gt;] [&lt;argname&gt;] &lt;argtype&gt; [, ...] ] ) 
+   OWNER TO &lt;new_owner&gt;
+
+ALTER FUNCTION &lt;name&gt; ( [ [&lt;argmode&gt;] [&lt;argname&gt;] &lt;argtype&gt; [, ...] ] ) 
+   SET SCHEMA &lt;new_schema&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_FUNCTION.html">ALTER FUNCTION</a> for more information.</p>
+<h2 id="alter-group"><a class="header" href="#alter-group"><a id="ae1903401"></a>ALTER GROUP</a></h2>
+<p>Changes a role name or membership.</p>
+<pre><code>ALTER GROUP &lt;groupname&gt; ADD USER &lt;username&gt; [, ... ]
+
+ALTER GROUP &lt;groupname&gt; DROP USER &lt;username&gt; [, ... ]
+
+ALTER GROUP &lt;groupname&gt; RENAME TO &lt;newname&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_GROUP.html">ALTER GROUP</a> for more information.</p>
+<h2 id="alter-index"><a class="header" href="#alter-index"><a id="ae1903411"></a>ALTER INDEX</a></h2>
+<p>Changes the definition of an index.</p>
+<pre><code>ALTER INDEX [ IF EXISTS ] &lt;name&gt; RENAME TO &lt;new_name&gt;
+
+ALTER INDEX [ IF EXISTS ] &lt;name&gt; SET TABLESPACE &lt;tablespace_name&gt;
+
+ALTER INDEX [ IF EXISTS ] &lt;name&gt; SET ( &lt;storage_parameter&gt; = &lt;value&gt; [, ...] )
+
+ALTER INDEX [ IF EXISTS ] &lt;name&gt; RESET ( &lt;storage_parameter&gt;  [, ...] )
+
+ALTER INDEX ALL IN TABLESPACE &lt;name&gt; [ OWNED BY &lt;role_name&gt; [, ... ] ]
+  SET TABLESPACE &lt;new_tablespace&gt; [ NOWAIT ]
+
+</code></pre>
+<p>See <a href="sql_commands/ALTER_INDEX.html">ALTER INDEX</a> for more information.</p>
+<h2 id="alter-language"><a class="header" href="#alter-language"><a id="ae1903423"></a>ALTER LANGUAGE</a></h2>
+<p>Changes the name of a procedural language.</p>
+<pre><code>ALTER LANGUAGE &lt;name&gt; RENAME TO &lt;newname&gt;
+ALTER LANGUAGE &lt;name&gt; OWNER TO &lt;new_owner&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_LANGUAGE.html">ALTER LANGUAGE</a> for more information.</p>
+<h2 id="alter-materialized-view"><a class="header" href="#alter-materialized-view"><a id="altmatv"></a>ALTER MATERIALIZED VIEW</a></h2>
+<p>Changes the definition of a materialized view.</p>
+<pre><code>ALTER MATERIALIZED VIEW [ IF EXISTS ] &lt;name&gt; &lt;action&gt; [, ... ]
+ALTER MATERIALIZED VIEW [ IF EXISTS ] &lt;name&gt;
+    RENAME [ COLUMN ] &lt;column_name&gt; TO &lt;new_column_name&gt;
+ALTER MATERIALIZED VIEW [ IF EXISTS ] &lt;name&gt;
+    RENAME TO &lt;new_name&gt;
+ALTER MATERIALIZED VIEW [ IF EXISTS ] &lt;name&gt;
+    SET SCHEMA &lt;new_schema&gt;
+ALTER MATERIALIZED VIEW ALL IN TABLESPACE &lt;name&gt; [ OWNED BY &lt;role_name&gt; [, ... ] ]
+    SET TABLESPACE &lt;new_tablespace&gt; [ NOWAIT ]
+
+where &lt;action&gt; is one of:
+
+    ALTER [ COLUMN ] &lt;column_name&gt; SET STATISTICS &lt;integer&gt;
+    ALTER [ COLUMN ] &lt;column_name&gt; SET ( &lt;attribute_option&gt; = &lt;value&gt; [, ... ] )
+    ALTER [ COLUMN ] &lt;column_name&gt; RESET ( &lt;attribute_option&gt; [, ... ] )
+    ALTER [ COLUMN ] &lt;column_name&gt; SET STORAGE { PLAIN | EXTERNAL | EXTENDED | MAIN }
+    CLUSTER ON &lt;index_name&gt;
+    SET WITHOUT CLUSTER
+    SET ( &lt;storage_paramete&gt;r = &lt;value&gt; [, ... ] )
+    RESET ( &lt;storage_parameter&gt; [, ... ] )
+    OWNER TO &lt;new_owner&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_MATERIALIZED_VIEW.html">ALTER MATERIALIZED VIEW</a> for more information.</p>
+<h2 id="alter-operator"><a class="header" href="#alter-operator"><a id="ae1903429"></a>ALTER OPERATOR</a></h2>
+<p>Changes the definition of an operator.</p>
+<pre><code>ALTER OPERATOR &lt;name&gt; ( {&lt;left_type&gt; | NONE} , {&lt;right_type&gt; | NONE} ) 
+   OWNER TO &lt;new_owner&gt;
+
+ALTER OPERATOR &lt;name&gt; ( {&lt;left_type&gt; | NONE} , {&lt;right_type&gt; | NONE} ) 
+    SET SCHEMA &lt;new_schema&gt;
+
+</code></pre>
+<p>See <a href="sql_commands/ALTER_OPERATOR.html">ALTER OPERATOR</a> for more information.</p>
+<h2 id="alter-operator-class"><a class="header" href="#alter-operator-class"><a id="ae1903435"></a>ALTER OPERATOR CLASS</a></h2>
+<p>Changes the definition of an operator class.</p>
+<pre><code>ALTER OPERATOR CLASS &lt;name&gt; USING &lt;index_method&gt; RENAME TO &lt;new_name&gt;
+
+ALTER OPERATOR CLASS &lt;name&gt; USING &lt;index_method&gt; OWNER TO &lt;new_owner&gt;
+
+ALTER OPERATOR CLASS &lt;name&gt; USING &lt;index_method&gt; SET SCHEMA &lt;new_schema&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_OPERATOR_CLASS.html">ALTER OPERATOR CLASS</a> for more information.</p>
+<h2 id="alter-operator-family"><a class="header" href="#alter-operator-family"><a id="altopfam"></a>ALTER OPERATOR FAMILY</a></h2>
+<p>Changes the definition of an operator family.</p>
+<pre><code>ALTER OPERATOR FAMILY &lt;name&gt; USING &lt;index_method&gt; ADD
+  {  OPERATOR &lt;strategy_number&gt; &lt;operator_name&gt; ( &lt;op_type&gt;, &lt;op_type&gt; ) [ FOR SEARCH | FOR ORDER BY &lt;sort_family_name&gt; ]
+    | FUNCTION &lt;support_number&gt; [ ( &lt;op_type&gt; [ , &lt;op_type&gt; ] ) ] &lt;funcname&gt; ( &lt;argument_type&gt; [, ...] )
+  } [, ... ]
+
+ALTER OPERATOR FAMILY &lt;name&gt; USING &lt;index_method&gt; DROP
+  {  OPERATOR &lt;strategy_number&gt; ( &lt;op_type&gt;, &lt;op_type&gt; ) 
+    | FUNCTION &lt;support_number&gt; [ ( &lt;op_type&gt; [ , &lt;op_type&gt; ] ) 
+  } [, ... ]
+
+ALTER OPERATOR FAMILY &lt;name&gt; USING &lt;index_method&gt; RENAME TO &lt;new_name&gt;
+
+ALTER OPERATOR FAMILY &lt;name&gt; USING &lt;index_method&gt; OWNER TO &lt;new_owner&gt;
+
+ALTER OPERATOR FAMILY &lt;name&gt; USING &lt;index_method&gt; SET SCHEMA &lt;new_schema&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_OPERATOR_FAMILY.html">ALTER OPERATOR FAMILY</a> for more information.</p>
+<h2 id="alter-protocol"><a class="header" href="#alter-protocol"><a id="ae1903443"></a>ALTER PROTOCOL</a></h2>
+<p>Changes the definition of a protocol.</p>
+<pre><code>ALTER PROTOCOL &lt;name&gt; RENAME TO &lt;newname&gt;
+
+ALTER PROTOCOL &lt;name&gt; OWNER TO &lt;newowner&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_PROTOCOL.html">ALTER PROTOCOL</a> for more information.</p>
+<h2 id="alter-resource-group"><a class="header" href="#alter-resource-group"><a id="ae19034513"></a>ALTER RESOURCE GROUP</a></h2>
+<p>Changes the limits of a resource group.</p>
+<pre><code>ALTER RESOURCE GROUP &lt;name&gt; SET &lt;group_attribute&gt; &lt;value&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_RESOURCE_GROUP.html">ALTER RESOURCE GROUP</a> for more information.</p>
+<h2 id="alter-resource-queue"><a class="header" href="#alter-resource-queue"><a id="ae1903451"></a>ALTER RESOURCE QUEUE</a></h2>
+<p>Changes the limits of a resource queue.</p>
+<pre><code>ALTER RESOURCE QUEUE &lt;name&gt; WITH ( &lt;queue_attribute&gt;=&lt;value&gt; [, ... ] ) 
+</code></pre>
+<p>See <a href="sql_commands/ALTER_RESOURCE_QUEUE.html">ALTER RESOURCE QUEUE</a> for more information.</p>
+<h2 id="alter-role"><a class="header" href="#alter-role"><a id="ae1903487"></a>ALTER ROLE</a></h2>
+<p>Changes a database role (user or group).</p>
+<pre><code>ALTER ROLE &lt;name&gt; [ [ WITH ] &lt;option&gt; [ ... ] ]
+
+where &lt;option&gt; can be:
+
+    SUPERUSER | NOSUPERUSER
+  | CREATEDB | NOCREATEDB
+  | CREATEROLE | NOCREATEROLE
+  | CREATEEXTTABLE | NOCREATEEXTTABLE  [ ( attribute='value' [, ...] )
+     where attributes and values are:
+       type='readable'|'writable'
+       protocol='gpfdist'|'http'
+  | INHERIT | NOINHERIT
+  | LOGIN | NOLOGIN
+  | REPLICATION | NOREPLICATION
+  | CONNECTION LIMIT &lt;connlimit&gt;
+  | [ ENCRYPTED | UNENCRYPTED ] PASSWORD '&lt;password&gt;'
+  | VALID UNTIL '&lt;timestamp&gt;'
+
+ALTER ROLE &lt;name&gt; RENAME TO &lt;new_name&gt;
+
+ALTER ROLE { &lt;name&gt; | ALL } [ IN DATABASE &lt;database_name&gt; ] SET &lt;configuration_parameter&gt; { TO | = } { &lt;value&gt; | DEFAULT }
+ALTER ROLE { &lt;name&gt; | ALL } [ IN DATABASE &lt;database_name&gt; ] SET &lt;configuration_parameter&gt; FROM CURRENT
+ALTER ROLE { &lt;name&gt; | ALL } [ IN DATABASE &lt;database_name&gt; ] RESET &lt;configuration_parameter&gt;
+ALTER ROLE { &lt;name&gt; | ALL } [ IN DATABASE &lt;database_name&gt; ] RESET ALL
+ALTER ROLE &lt;name&gt; RESOURCE QUEUE {&lt;queue_name&gt; | NONE}
+ALTER ROLE &lt;name&gt; RESOURCE GROUP {&lt;group_name&gt; | NONE}
+
+</code></pre>
+<p>See <a href="sql_commands/ALTER_ROLE.html">ALTER ROLE</a> for more information.</p>
+<h2 id="alter-rule"><a class="header" href="#alter-rule"><a id="section_ssp_1hy_xgb"></a>ALTER RULE</a></h2>
+<p>Changes the definition of a rule.</p>
+<pre><code>ALTER RULE name ON table\_name RENAME TO new\_name
+</code></pre>
+<p>See <a href="sql_commands/ALTER_RULE.html">ALTER RULE</a> for more information.</p>
+<h2 id="alter-schema"><a class="header" href="#alter-schema"><a id="ae1903537"></a>ALTER SCHEMA</a></h2>
+<p>Changes the definition of a schema.</p>
+<pre><code>ALTER SCHEMA &lt;name&gt; RENAME TO &lt;newname&gt;
+
+ALTER SCHEMA &lt;name&gt; OWNER TO &lt;newowner&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_SCHEMA.html">ALTER SCHEMA</a> for more information.</p>
+<h2 id="alter-sequence"><a class="header" href="#alter-sequence"><a id="ae1903545"></a>ALTER SEQUENCE</a></h2>
+<p>Changes the definition of a sequence generator.</p>
+<pre><code>ALTER SEQUENCE [ IF EXISTS ] &lt;name&gt; [INCREMENT [ BY ] &lt;increment&gt;] 
+     [MINVALUE &lt;minvalue&gt; | NO MINVALUE] 
+     [MAXVALUE &lt;maxvalue&gt; | NO MAXVALUE] 
+     [START [ WITH ] &lt;start&gt; ]
+     [RESTART [ [ WITH ] &lt;restart&gt;] ]
+     [CACHE &lt;cache&gt;] [[ NO ] CYCLE] 
+     [OWNED BY {&lt;table.column&gt; | NONE}]
+
+ALTER SEQUENCE [ IF EXISTS ] &lt;name&gt; OWNER TO &lt;new_owner&gt;
+
+ALTER SEQUENCE [ IF EXISTS ] &lt;name&gt; RENAME TO &lt;new_name&gt;
+
+ALTER SEQUENCE [ IF EXISTS ] &lt;name&gt; SET SCHEMA &lt;new_schema&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_SEQUENCE.html">ALTER SEQUENCE</a> for more information.</p>
+<h2 id="alter-server"><a class="header" href="#alter-server"><a id="ae1903545s"></a>ALTER SERVER</a></h2>
+<p>Changes the definition of a foreign server.</p>
+<pre><code>ALTER SERVER &lt;server_name&gt; [ VERSION '&lt;new_version&gt;' ]
+    [ OPTIONS ( [ ADD | SET | DROP ] &lt;option&gt; ['&lt;value&gt;'] [, ... ] ) ]
+
+ALTER SERVER &lt;server_name&gt; OWNER TO &lt;new_owner&gt;
+                
+ALTER SERVER &lt;server_name&gt; RENAME TO &lt;new_name&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_SERVER.html">ALTER SERVER</a> for more information.</p>
+<h2 id="alter-table"><a class="header" href="#alter-table"><a id="ae1903563"></a>ALTER TABLE</a></h2>
+<p>Changes the definition of a table.</p>
+<pre><code>ALTER TABLE [IF EXISTS] [ONLY] &lt;name&gt; 
+    &lt;action&gt; [, ... ]
+
+ALTER TABLE [IF EXISTS] [ONLY] &lt;name&gt; 
+    RENAME [COLUMN] &lt;column_name&gt; TO &lt;new_column_name&gt;
+
+ALTER TABLE [ IF EXISTS ] [ ONLY ] &lt;name&gt; 
+    RENAME CONSTRAINT &lt;constraint_name&gt; TO &lt;new_constraint_name&gt;
+
+ALTER TABLE [IF EXISTS] &lt;name&gt; 
+    RENAME TO &lt;new_name&gt;
+
+ALTER TABLE [IF EXISTS] &lt;name&gt; 
+    SET SCHEMA &lt;new_schema&gt;
+
+ALTER TABLE ALL IN TABLESPACE &lt;name&gt; [ OWNED BY &lt;role_name&gt; [, ... ] ]
+    SET TABLESPACE &lt;new_tablespace&gt; [ NOWAIT ]
+
+ALTER TABLE [IF EXISTS] [ONLY] &lt;name&gt; SET 
+     WITH (REORGANIZE=true|false)
+   | DISTRIBUTED BY ({&lt;column_name&gt; [&lt;opclass&gt;]} [, ... ] )
+   | DISTRIBUTED RANDOMLY
+   | DISTRIBUTED REPLICATED 
+
+ALTER TABLE &lt;name&gt;
+   [ ALTER PARTITION { &lt;partition_name&gt; | FOR (RANK(&lt;number&gt;)) 
+   | FOR (&lt;value&gt;) } [...] ] &lt;partition_action&gt;
+
+where &lt;action&gt; is one of:
+                        
+  ADD [COLUMN] &lt;column_name data_type&gt; [ DEFAULT &lt;default_expr&gt; ]
+      [&lt;column_constraint&gt; [ ... ]]
+      [ COLLATE &lt;collation&gt; ]
+      [ ENCODING ( &lt;storage_parameter&gt; [,...] ) ]
+  DROP [COLUMN] [IF EXISTS] &lt;column_name&gt; [RESTRICT | CASCADE]
+  ALTER [COLUMN] &lt;column_name&gt; [ SET DATA ] TYPE &lt;type&gt; [COLLATE &lt;collation&gt;] [USING &lt;expression&gt;]
+  ALTER [COLUMN] &lt;column_name&gt; SET DEFAULT &lt;expression&gt;
+  ALTER [COLUMN] &lt;column_name&gt; DROP DEFAULT
+  ALTER [COLUMN] &lt;column_name&gt; { SET | DROP } NOT NULL
+  ALTER [COLUMN] &lt;column_name&gt; SET STATISTICS &lt;integer&gt;
+  ALTER [COLUMN] column SET ( &lt;attribute_option&gt; = &lt;value&gt; [, ... ] )
+  ALTER [COLUMN] column RESET ( &lt;attribute_option&gt; [, ... ] )
+  ADD &lt;table_constraint&gt; [NOT VALID]
+  ADD &lt;table_constraint_using_index&gt;
+  VALIDATE CONSTRAINT &lt;constraint_name&gt;
+  DROP CONSTRAINT [IF EXISTS] &lt;constraint_name&gt; [RESTRICT | CASCADE]
+  DISABLE TRIGGER [&lt;trigger_name&gt; | ALL | USER]
+  ENABLE TRIGGER [&lt;trigger_name&gt; | ALL | USER]
+  CLUSTER ON &lt;index_name&gt;
+  SET WITHOUT CLUSTER
+  SET WITHOUT OIDS
+  SET (&lt;storage_parameter&gt; = &lt;value&gt;)
+  RESET (&lt;storage_parameter&gt; [, ... ])
+  INHERIT &lt;parent_table&gt;
+  NO INHERIT &lt;parent_table&gt;
+  OF `type_name`
+  NOT OF
+  OWNER TO &lt;new_owner&gt;
+  SET TABLESPACE &lt;new_tablespace&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_TABLE.html">ALTER TABLE</a> for more information.</p>
+<h2 id="alter-tablespace"><a class="header" href="#alter-tablespace"><a id="ae1903767"></a>ALTER TABLESPACE</a></h2>
+<p>Changes the definition of a tablespace.</p>
+<pre><code>ALTER TABLESPACE &lt;name&gt; RENAME TO &lt;new_name&gt;
+
+ALTER TABLESPACE &lt;name&gt; OWNER TO &lt;new_owner&gt;
+
+ALTER TABLESPACE &lt;name&gt; SET ( &lt;tablespace_option&gt; = &lt;value&gt; [, ... ] )
+
+ALTER TABLESPACE &lt;name&gt; RESET ( &lt;tablespace_option&gt; [, ... ] )
+
+
+</code></pre>
+<p>See <a href="sql_commands/ALTER_TABLESPACE.html">ALTER TABLESPACE</a> for more information.</p>
+<h2 id="alter-text-search-configuration"><a class="header" href="#alter-text-search-configuration"><a id="atsconf"></a>ALTER TEXT SEARCH CONFIGURATION</a></h2>
+<p>Changes the definition of a text search configuration.</p>
+<pre><code>ALTER TEXT SEARCH CONFIGURATION &lt;name&gt;
+    ALTER MAPPING FOR &lt;token_type&gt; [, ... ] WITH &lt;dictionary_name&gt; [, ... ]
+ALTER TEXT SEARCH CONFIGURATION &lt;name&gt;
+    ALTER MAPPING REPLACE &lt;old_dictionary&gt; WITH &lt;new_dictionary&gt;
+ALTER TEXT SEARCH CONFIGURATION &lt;name&gt;
+    ALTER MAPPING FOR &lt;token_type&gt; [, ... ] REPLACE &lt;old_dictionary&gt; WITH &lt;new_dictionary&gt;
+ALTER TEXT SEARCH CONFIGURATION &lt;name&gt;
+    DROP MAPPING [ IF EXISTS ] FOR &lt;token_type&gt; [, ... ]
+ALTER TEXT SEARCH CONFIGURATION &lt;name&gt; RENAME TO &lt;new_name&gt;
+ALTER TEXT SEARCH CONFIGURATION &lt;name&gt; OWNER TO &lt;new_owner&gt;
+ALTER TEXT SEARCH CONFIGURATION &lt;name&gt; SET SCHEMA &lt;new_schema&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_TEXT_SEARCH_CONFIGURATION.html">ALTER TEXT SEARCH CONFIGURATION</a> for more information.</p>
+<h2 id="alter-text-search-dictionary"><a class="header" href="#alter-text-search-dictionary"><a id="atsdict"></a>ALTER TEXT SEARCH DICTIONARY</a></h2>
+<p>Changes the definition of a text search dictionary.</p>
+<pre><code>ALTER TEXT SEARCH DICTIONARY &lt;name&gt; (
+    &lt;option&gt; [ = &lt;value&gt; ] [, ... ]
+)
+ALTER TEXT SEARCH DICTIONARY &lt;name&gt; RENAME TO &lt;new_name&gt;
+ALTER TEXT SEARCH DICTIONARY &lt;name&gt; OWNER TO &lt;new_owner&gt;
+ALTER TEXT SEARCH DICTIONARY &lt;name&gt; SET SCHEMA &lt;new_schema&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_TEXT_SEARCH_DICTIONARY.html">ALTER TEXT SEARCH DICTIONARY</a> for more information.</p>
+<h2 id="alter-text-search-parser"><a class="header" href="#alter-text-search-parser"><a id="atspars"></a>ALTER TEXT SEARCH PARSER</a></h2>
+<p>Changes the definition of a text search parser.</p>
+<pre><code>ALTER TEXT SEARCH PARSER &lt;name&gt; RENAME TO &lt;new_name&gt;
+ALTER TEXT SEARCH PARSER &lt;name&gt; SET SCHEMA &lt;new_schema&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_TEXT_SEARCH_PARSER.html">ALTER TEXT SEARCH PARSER</a> for more information.</p>
+<h2 id="alter-text-search-template"><a class="header" href="#alter-text-search-template"><a id="atstemp"></a>ALTER TEXT SEARCH TEMPLATE</a></h2>
+<p>Changes the definition of a text search template.</p>
+<pre><code>ALTER TEXT SEARCH TEMPLATE &lt;name&gt; RENAME TO &lt;new_name&gt;
+ALTER TEXT SEARCH TEMPLATE &lt;name&gt; SET SCHEMA &lt;new_schema&gt;
+</code></pre>
+<p>See <a href="sql_commands/ALTER_TEXT_SEARCH_TEMPLATE.html">ALTER TEXT SEARCH TEMPLATE</a> for more information.</p>
+<h2 id="alter-type"><a class="header" href="#alter-type"><a id="ae1903781"></a>ALTER TYPE</a></h2>
+<p>Changes the definition of a data type.</p>
+<pre><code>
+ALTER TYPE &lt;name&gt; &lt;action&gt; [, ... ]
+ALTER TYPE &lt;name&gt; OWNER TO &lt;new_owner&gt;
+ALTER TYPE &lt;name&gt; RENAME ATTRIBUTE &lt;attribute_name&gt; TO &lt;new_attribute_name&gt; [ CASCADE | RESTRICT ]
+ALTER TYPE &lt;name&gt; RENAME TO &lt;new_name&gt;
+ALTER TYPE &lt;name&gt; SET SCHEMA &lt;new_schema&gt;
+ALTER TYPE &lt;name&gt; ADD VALUE [ IF NOT EXISTS ] &lt;new_enum_value&gt; [ { BEFORE | AFTER } &lt;existing_enum_value&gt; ]
+ALTER TYPE &lt;name&gt; SET DEFAULT ENCODING ( &lt;storage_directive&gt; )
+
+where &lt;action&gt; is one of:
+  
+  ADD ATTRIBUTE &lt;attribute_name&gt; &lt;data_type&gt; [ COLLATE &lt;collation&gt; ] [ CASCADE | RESTRICT ]
+  DROP ATTRIBUTE [ IF EXISTS ] &lt;attribute_name&gt; [ CASCADE | RESTRICT ]
+  ALTER ATTRIBUTE &lt;attribute_name&gt; [ SET DATA ] TYPE &lt;data_type&gt; [ COLLATE &lt;collation&gt; ] [ CASCADE | RESTRICT ]
+
+</code></pre>
+<p>See <a href="sql_commands/ALTER_TYPE.html">ALTER TYPE</a> for more information.</p>
+<h2 id="alter-user"><a class="header" href="#alter-user"><a id="ae1903787"></a>ALTER USER</a></h2>
+<p>Changes the definition of a database role (user).</p>
+<pre><code>ALTER USER &lt;name&gt; RENAME TO &lt;newname&gt;
+
+ALTER USER &lt;name&gt; SET &lt;config_parameter&gt; {TO | =} {&lt;value&gt; | DEFAULT}
+
+ALTER USER &lt;name&gt; RESET &lt;config_parameter&gt;
+
+ALTER USER &lt;name&gt; RESOURCE QUEUE {&lt;queue_name&gt; | NONE}
+
+ALTER USER &lt;name&gt; RESOURCE GROUP {&lt;group_name&gt; | NONE}
+
+ALTER USER &lt;name&gt; [ [WITH] &lt;option&gt; [ ... ] ]
+</code></pre>
+<p>See <a href="sql_commands/ALTER_USER.html">ALTER USER</a> for more information.</p>
+<h2 id="alter-user-mapping"><a class="header" href="#alter-user-mapping"><a id="ae1903787u"></a>ALTER USER MAPPING</a></h2>
+<p>Changes the definition of a user mapping for a foreign server.</p>
+<pre><code>ALTER USER MAPPING FOR { &lt;username&gt; | USER | CURRENT_USER | PUBLIC }
+    SERVER &lt;servername&gt;
+    OPTIONS ( [ ADD | SET | DROP ] &lt;option&gt; ['&lt;value&gt;'] [, ... ] )
+</code></pre>
+<p>See <a href="sql_commands/ALTER_USER_MAPPING.html">ALTER USER MAPPING</a> for more information.</p>
+<h2 id="alter-view"><a class="header" href="#alter-view"><a id="aview"></a>ALTER VIEW</a></h2>
+<p>Changes properties of a view.</p>
+<pre><code>ALTER VIEW [ IF EXISTS ] &lt;name&gt; ALTER [ COLUMN ] &lt;column_name&gt; SET DEFAULT &lt;expression&gt;
+
+ALTER VIEW [ IF EXISTS ] &lt;name&gt; ALTER [ COLUMN ] &lt;column_name&gt; DROP DEFAULT
+
+ALTER VIEW [ IF EXISTS ] &lt;name&gt; OWNER TO &lt;new_owner&gt;
+
+ALTER VIEW [ IF EXISTS ] &lt;name&gt; RENAME TO &lt;new_name&gt;
+
+ALTER VIEW [ IF EXISTS ] &lt;name&gt; SET SCHEMA &lt;new_schema&gt;
+
+ALTER VIEW [ IF EXISTS ] &lt;name&gt; SET ( &lt;view_option_name&gt; [= &lt;view_option_value&gt;] [, ... ] )
+
+ALTER VIEW [ IF EXISTS ] &lt;name&gt; RESET ( &lt;view_option_name&gt; [, ... ] )
+</code></pre>
+<p>See <a href="sql_commands/ALTER_VIEW.html">ALTER VIEW</a> for more information.</p>
+<h2 id="analyze"><a class="header" href="#analyze"><a id="ae1903817"></a>ANALYZE</a></h2>
+<p>Collects statistics about a database.</p>
+<pre><code>ANALYZE [VERBOSE] [&lt;table&gt; [ (&lt;column&gt; [, ...] ) ]]
+
+ANALYZE [VERBOSE] {&lt;root_partition_table_name&gt;|&lt;leaf_partition_table_name&gt;} [ (&lt;column&gt; [, ...] )] 
+
+ANALYZE [VERBOSE] ROOTPARTITION {ALL | &lt;root_partition_table_name&gt; [ (&lt;column&gt; [, ...] )]}
+</code></pre>
+<p>See <a href="sql_commands/ANALYZE.html">ANALYZE</a> for more information.</p>
+<h2 id="begin"><a class="header" href="#begin"><a id="ae1903823"></a>BEGIN</a></h2>
+<p>Starts a transaction block.</p>
+<pre><code>BEGIN [WORK | TRANSACTION] [&lt;transaction_mode&gt;]
+</code></pre>
+<p>See <a href="sql_commands/BEGIN.html">BEGIN</a> for more information.</p>
+<h2 id="checkpoint"><a class="header" href="#checkpoint"><a id="ae1903829"></a>CHECKPOINT</a></h2>
+<p>Forces a transaction log checkpoint.</p>
+<pre><code>CHECKPOINT
+</code></pre>
+<p>See <a href="sql_commands/CHECKPOINT.html">CHECKPOINT</a> for more information.</p>
+<h2 id="close"><a class="header" href="#close"><a id="ae1903835"></a>CLOSE</a></h2>
+<p>Closes a cursor.</p>
+<pre><code>CLOSE &lt;cursor_name&gt;
+</code></pre>
+<p>See <a href="sql_commands/CLOSE.html">CLOSE</a> for more information.</p>
+<h2 id="cluster"><a class="header" href="#cluster"><a id="ae1903841"></a>CLUSTER</a></h2>
+<p>Physically reorders a heap storage table on disk according to an index. Not a recommended operation in SynxDB.</p>
+<pre><code>CLUSTER &lt;indexname&gt; ON &lt;tablename&gt;
+
+CLUSTER [VERBOSE] &lt;tablename&gt; [ USING index_name ]
+
+CLUSTER [VERBOSE]
+</code></pre>
+<p>See <a href="sql_commands/CLUSTER.html">CLUSTER</a> for more information.</p>
+<h2 id="comment"><a class="header" href="#comment"><a id="ae1903851"></a>COMMENT</a></h2>
+<p>Defines or changes the comment of an object.</p>
+<pre><code>COMMENT ON
+{ TABLE &lt;object_name&gt; |
+  COLUMN &lt;relation_name.column_name&gt; |
+  AGGREGATE &lt;agg_name&gt; (&lt;agg_signature&gt;) |
+  CAST (&lt;source_type&gt; AS &lt;target_type&gt;) |
+  COLLATION &lt;object_name&gt;
+  CONSTRAINT &lt;constraint_name&gt; ON &lt;table_name&gt; |
+  CONVERSION &lt;object_name&gt; |
+  DATABASE &lt;object_name&gt; |
+  DOMAIN &lt;object_name&gt; |
+  EXTENSION &lt;object_name&gt; |
+  FOREIGN DATA WRAPPER &lt;object_name&gt; |
+  FOREIGN TABLE &lt;object_name&gt; |
+  FUNCTION &lt;func_name&gt; ([[&lt;argmode&gt;] [&lt;argname&gt;] &lt;argtype&gt; [, ...]]) |
+  INDEX &lt;object_name&gt; |
+  LARGE OBJECT &lt;large_object_oid&gt; |
+  MATERIALIZED VIEW &lt;object_name&gt; |
+  OPERATOR &lt;operator_name&gt; (&lt;left_type&gt;, &lt;right_type&gt;) |
+  OPERATOR CLASS &lt;object_name&gt; USING &lt;index_method&gt; |
+  [PROCEDURAL] LANGUAGE &lt;object_name&gt; |
+  RESOURCE GROUP &lt;object_name&gt; |
+  RESOURCE QUEUE &lt;object_name&gt; |
+  ROLE &lt;object_name&gt; |
+  RULE &lt;rule_name&gt; ON &lt;table_name&gt; |
+  SCHEMA &lt;object_name&gt; |
+  SEQUENCE &lt;object_name&gt; |
+  SERVER &lt;object_name&gt; |
+  TABLESPACE &lt;object_name&gt; |
+  TEXT SEARCH CONFIGURATION &lt;object_name&gt; |
+  TEXT SEARCH DICTIONARY &lt;object_name&gt; |
+  TEXT SEARCH PARSER &lt;object_name&gt; |
+  TEXT SEARCH TEMPLATE &lt;object_name&gt; |
+  TRIGGER &lt;trigger_name&gt; ON &lt;table_name&gt; |
+  TYPE &lt;object_name&gt; |
+  VIEW &lt;object_name&gt; } 
+IS '&lt;text&gt;'
+</code></pre>
+<p>See <a href="sql_commands/COMMENT.html">COMMENT</a> for more information.</p>
+<h2 id="commit"><a class="header" href="#commit"><a id="ae1903907"></a>COMMIT</a></h2>
+<p>Commits the current transaction.</p>
+<pre><code>COMMIT [WORK | TRANSACTION]
+</code></pre>
+<p>See <a href="sql_commands/COMMIT.html">COMMIT</a> for more information.</p>
+<h2 id="copy"><a class="header" href="#copy"><a id="ae1903913"></a>COPY</a></h2>
+<p>Copies data between a file and a table.</p>
+<pre><code>COPY &lt;table_name&gt; [(&lt;column_name&gt; [, ...])] 
+     FROM {'&lt;filename&gt;' | PROGRAM '&lt;command&gt;' | STDIN}
+     [ [ WITH ] ( &lt;option&gt; [, ...] ) ]
+     [ ON SEGMENT ]
+
+COPY { &lt;table_name&gt; [(&lt;column_name&gt; [, ...])] | (&lt;query&gt;)} 
+     TO {'&lt;filename&gt;' | PROGRAM '&lt;command&gt;' | STDOUT}
+     [ [ WITH ] ( &lt;option&gt; [, ...] ) ]
+     [ ON SEGMENT ]
+</code></pre>
+<p>See <a href="sql_commands/COPY.html">COPY</a> for more information.</p>
+<h2 id="create-aggregate"><a class="header" href="#create-aggregate"><a id="ae1903961"></a>CREATE AGGREGATE</a></h2>
+<p>Defines a new aggregate function.</p>
+<pre><code>CREATE AGGREGATE &lt;name&gt; ( [ &lt;argmode&gt; ] [ &lt;argname&gt; ] &lt;arg_data_type&gt; [ , ... ] ) (
+    SFUNC = &lt;statefunc&gt;,
+    STYPE = &lt;state_data_type&gt;
+    [ , SSPACE = &lt;state_data_size&gt; ]
+    [ , FINALFUNC = &lt;ffunc&gt; ]
+    [ , FINALFUNC_EXTRA ]
+    [ , COMBINEFUNC = &lt;combinefunc&gt; ]
+    [ , SERIALFUNC = &lt;serialfunc&gt; ]
+    [ , DESERIALFUNC = &lt;deserialfunc&gt; ]
+    [ , INITCOND = &lt;initial_condition&gt; ]
+    [ , MSFUNC = &lt;msfunc&gt; ]
+    [ , MINVFUNC = &lt;minvfunc&gt; ]
+    [ , MSTYPE = &lt;mstate_data_type&gt; ]
+    [ , MSSPACE = &lt;mstate_data_size&gt; ]
+    [ , MFINALFUNC = &lt;mffunc&gt; ]
+    [ , MFINALFUNC_EXTRA ]
+    [ , MINITCOND = &lt;minitial_condition&gt; ]
+    [ , SORTOP = &lt;sort_operator&gt; ]
+  )
+  
+  CREATE AGGREGATE &lt;name&gt; ( [ [ &lt;argmode&gt; ] [ &lt;argname&gt; ] &lt;arg_data_type&gt; [ , ... ] ]
+      ORDER BY [ &lt;argmode&gt; ] [ &lt;argname&gt; ] &lt;arg_data_type&gt; [ , ... ] ) (
+    SFUNC = &lt;statefunc&gt;,
+    STYPE = &lt;state_data_type&gt;
+    [ , SSPACE = &lt;state_data_size&gt; ]
+    [ , FINALFUNC = &lt;ffunc&gt; ]
+    [ , FINALFUNC_EXTRA ]
+    [ , COMBINEFUNC = &lt;combinefunc&gt; ]
+    [ , SERIALFUNC = &lt;serialfunc&gt; ]
+    [ , DESERIALFUNC = &lt;deserialfunc&gt; ]
+    [ , INITCOND = &lt;initial_condition&gt; ]
+    [ , HYPOTHETICAL ]
+  )
+  
+  or the old syntax
+  
+  CREATE AGGREGATE &lt;name&gt; (
+    BASETYPE = &lt;base_type&gt;,
+    SFUNC = &lt;statefunc&gt;,
+    STYPE = &lt;state_data_type&gt;
+    [ , SSPACE = &lt;state_data_size&gt; ]
+    [ , FINALFUNC = &lt;ffunc&gt; ]
+    [ , FINALFUNC_EXTRA ]
+    [ , COMBINEFUNC = &lt;combinefunc&gt; ]
+    [ , SERIALFUNC = &lt;serialfunc&gt; ]
+    [ , DESERIALFUNC = &lt;deserialfunc&gt; ]
+    [ , INITCOND = &lt;initial_condition&gt; ]
+    [ , MSFUNC = &lt;msfunc&gt; ]
+    [ , MINVFUNC = &lt;minvfunc&gt; ]
+    [ , MSTYPE = &lt;mstate_data_type&gt; ]
+    [ , MSSPACE = &lt;mstate_data_size&gt; ]
+    [ , MFINALFUNC = &lt;mffunc&gt; ]
+    [ , MFINALFUNC_EXTRA ]
+    [ , MINITCOND = &lt;minitial_condition&gt; ]
+    [ , SORTOP = &lt;sort_operator&gt; ]
+  )
+</code></pre>
+<p>See <a href="sql_commands/CREATE_AGGREGATE.html">CREATE AGGREGATE</a> for more information.</p>
+<h2 id="create-cast"><a class="header" href="#create-cast"><a id="ae1903979"></a>CREATE CAST</a></h2>
+<p>Defines a new cast.</p>
+<pre><code>CREATE CAST (&lt;sourcetype&gt; AS &lt;targettype&gt;) 
+       WITH FUNCTION &lt;funcname&gt; (&lt;argtype&gt; [, ...]) 
+       [AS ASSIGNMENT | AS IMPLICIT]
+
+CREATE CAST (&lt;sourcetype&gt; AS &lt;targettype&gt;)
+       WITHOUT FUNCTION 
+       [AS ASSIGNMENT | AS IMPLICIT]
+
+CREATE CAST (&lt;sourcetype&gt; AS &lt;targettype&gt;)
+       WITH INOUT 
+       [AS ASSIGNMENT | AS IMPLICIT]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_CAST.html">CREATE CAST</a> for more information.</p>
+<h2 id="create-collation"><a class="header" href="#create-collation"><a id="ae1903993"></a>CREATE COLLATION</a></h2>
+<p>Defines a new collation using the specified operating system locale settings, or by copying an existing collation.</p>
+<pre><code>CREATE COLLATION &lt;name&gt; (    
+    [ LOCALE = &lt;locale&gt;, ]    
+    [ LC_COLLATE = &lt;lc_collate&gt;, ]    
+    [ LC_CTYPE = &lt;lc_ctype&gt; ])
+
+CREATE COLLATION &lt;name&gt; FROM &lt;existing_collation&gt;
+</code></pre>
+<p>See <a href="sql_commands/CREATE_COLLATION.html">CREATE COLLATION</a> for more information.</p>
+<h2 id="create-conversion"><a class="header" href="#create-conversion"><a id="section_wct_xx3_sgb"></a>CREATE CONVERSION</a></h2>
+<p>Defines a new encoding conversion.</p>
+<pre><code>CREATE [DEFAULT] CONVERSION &lt;name&gt; FOR &lt;source_encoding&gt; TO 
+     &lt;dest_encoding&gt; FROM &lt;funcname&gt;
+</code></pre>
+<p>See <a href="sql_commands/CREATE_CONVERSION.html">CREATE CONVERSION</a> for more information.</p>
+<h2 id="create-database"><a class="header" href="#create-database"><a id="ae1903999"></a>CREATE DATABASE</a></h2>
+<p>Creates a new database.</p>
+<pre><code>CREATE DATABASE name [ [WITH] [OWNER [=] &lt;user_name&gt;]
+                     [TEMPLATE [=] &lt;template&gt;]
+                     [ENCODING [=] &lt;encoding&gt;]
+                     [LC_COLLATE [=] &lt;lc_collate&gt;]
+                     [LC_CTYPE [=] &lt;lc_ctype&gt;]
+                     [TABLESPACE [=] &lt;tablespace&gt;]
+                     [CONNECTION LIMIT [=] connlimit ] ]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_DATABASE.html">CREATE DATABASE</a> for more information.</p>
+<h2 id="create-domain"><a class="header" href="#create-domain"><a id="ae1904013"></a>CREATE DOMAIN</a></h2>
+<p>Defines a new domain.</p>
+<pre><code>CREATE DOMAIN &lt;name&gt; [AS] &lt;data_type&gt; [DEFAULT &lt;expression&gt;]
+       [ COLLATE &lt;collation&gt; ] 
+       [ CONSTRAINT &lt;constraint_name&gt;
+       | NOT NULL | NULL 
+       | CHECK (&lt;expression&gt;) [...]]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_DOMAIN.html">CREATE DOMAIN</a> for more information.</p>
+<h2 id="create-extension"><a class="header" href="#create-extension"><a id="cext"></a>CREATE EXTENSION</a></h2>
+<p>Registers an extension in a SynxDB database.</p>
+<pre><code>CREATE EXTENSION [ IF NOT EXISTS ] &lt;extension_name&gt;
+  [ WITH ] [ SCHEMA &lt;schema_name&gt; ]
+           [ VERSION &lt;version&gt; ]
+           [ FROM &lt;old_version&gt; ]
+           [ CASCADE ]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_EXTENSION.html">CREATE EXTENSION</a> for more information.</p>
+<h2 id="create-external-table"><a class="header" href="#create-external-table"><a id="ae1904025"></a>CREATE EXTERNAL TABLE</a></h2>
+<p>Defines a new external table.</p>
+<pre><code>CREATE [READABLE] EXTERNAL [TEMPORARY | TEMP] TABLE &lt;table_name&gt;     
+    ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table &gt;)
+     LOCATION ('file://&lt;seghost&gt;[:&lt;port&gt;]/&lt;path&gt;/&lt;file&gt;' [, ...])
+       | ('gpfdist://&lt;filehost&gt;[:&lt;port&gt;]/&lt;file_pattern&gt;[#transform=&lt;trans_name&gt;]'
+           [, ...]
+       | ('gpfdists://&lt;filehost&gt;[:&lt;port&gt;]/&lt;file_pattern&gt;[#transform=&lt;trans_name&gt;]'
+           [, ...])
+       | ('pxf://&lt;path-to-data&gt;?PROFILE=&lt;profile_name&gt;[&amp;SERVER=&lt;server_name&gt;][&amp;&lt;custom-option&gt;=&lt;value&gt;[...]]'))
+       | ('s3://&lt;S3_endpoint&gt;[:&lt;port&gt;]/&lt;bucket_name&gt;/[&lt;S3_prefix&gt;] [region=&lt;S3-region&gt;] [config=&lt;config_file&gt; | config_server=&lt;url&gt;]')
+     [ON MASTER]
+     FORMAT 'TEXT' 
+           [( [HEADER]
+              [DELIMITER [AS] '&lt;delimiter&gt;' | 'OFF']
+              [NULL [AS] '&lt;null string&gt;']
+              [ESCAPE [AS] '&lt;escape&gt;' | 'OFF']
+              [NEWLINE [ AS ] 'LF' | 'CR' | 'CRLF']
+              [FILL MISSING FIELDS] )]
+          | 'CSV'
+           [( [HEADER]
+              [QUOTE [AS] '&lt;quote&gt;'] 
+              [DELIMITER [AS] '&lt;delimiter&gt;']
+              [NULL [AS] '&lt;null string&gt;']
+              [FORCE NOT NULL &lt;column&gt; [, ...]]
+              [ESCAPE [AS] '&lt;escape&gt;']
+              [NEWLINE [ AS ] 'LF' | 'CR' | 'CRLF']
+              [FILL MISSING FIELDS] )]
+          | 'CUSTOM' (Formatter=&lt;&lt;formatter_specifications&gt;&gt;)
+    [ ENCODING '&lt;encoding&gt;' ]
+      [ [LOG ERRORS [PERSISTENTLY]] SEGMENT REJECT LIMIT &lt;count&gt;
+      [ROWS | PERCENT] ]
+
+CREATE [READABLE] EXTERNAL WEB [TEMPORARY | TEMP] TABLE &lt;table_name&gt;     
+   ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table &gt;)
+      LOCATION ('http://&lt;webhost&gt;[:&lt;port&gt;]/&lt;path&gt;/&lt;file&gt;' [, ...])
+    | EXECUTE '&lt;command&gt;' [ON ALL 
+                          | MASTER
+                          | &lt;number_of_segments&gt;
+                          | HOST ['&lt;segment_hostname&gt;'] 
+                          | SEGMENT &lt;segment_id&gt; ]
+      FORMAT 'TEXT' 
+            [( [HEADER]
+               [DELIMITER [AS] '&lt;delimiter&gt;' | 'OFF']
+               [NULL [AS] '&lt;null string&gt;']
+               [ESCAPE [AS] '&lt;escape&gt;' | 'OFF']
+               [NEWLINE [ AS ] 'LF' | 'CR' | 'CRLF']
+               [FILL MISSING FIELDS] )]
+           | 'CSV'
+            [( [HEADER]
+               [QUOTE [AS] '&lt;quote&gt;'] 
+               [DELIMITER [AS] '&lt;delimiter&gt;']
+               [NULL [AS] '&lt;null string&gt;']
+               [FORCE NOT NULL &lt;column&gt; [, ...]]
+               [ESCAPE [AS] '&lt;escape&gt;']
+               [NEWLINE [ AS ] 'LF' | 'CR' | 'CRLF']
+               [FILL MISSING FIELDS] )]
+           | 'CUSTOM' (Formatter=&lt;&lt;formatter specifications&gt;&gt;)
+     [ ENCODING '&lt;encoding&gt;' ]
+     [ [LOG ERRORS [PERSISTENTLY]] SEGMENT REJECT LIMIT &lt;count&gt;
+       [ROWS | PERCENT] ]
+
+CREATE WRITABLE EXTERNAL [TEMPORARY | TEMP] TABLE &lt;table_name&gt;
+    ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table &gt;)
+     LOCATION('gpfdist://&lt;outputhost&gt;[:&lt;port&gt;]/&lt;filename&gt;[#transform=&lt;trans_name&gt;]'
+          [, ...])
+      | ('gpfdists://&lt;outputhost&gt;[:&lt;port&gt;]/&lt;file_pattern&gt;[#transform=&lt;trans_name&gt;]'
+          [, ...])
+      FORMAT 'TEXT' 
+               [( [DELIMITER [AS] '&lt;delimiter&gt;']
+               [NULL [AS] '&lt;null string&gt;']
+               [ESCAPE [AS] '&lt;escape&gt;' | 'OFF'] )]
+          | 'CSV'
+               [([QUOTE [AS] '&lt;quote&gt;'] 
+               [DELIMITER [AS] '&lt;delimiter&gt;']
+               [NULL [AS] '&lt;null string&gt;']
+               [FORCE QUOTE &lt;column&gt; [, ...]] | * ]
+               [ESCAPE [AS] '&lt;escape&gt;'] )]
+
+           | 'CUSTOM' (Formatter=&lt;&lt;formatter specifications&gt;&gt;)
+    [ ENCODING '&lt;write_encoding&gt;' ]
+    [ DISTRIBUTED BY ({&lt;column&gt; [&lt;opclass&gt;]}, [ ... ] ) | DISTRIBUTED RANDOMLY ]
+
+CREATE WRITABLE EXTERNAL [TEMPORARY | TEMP] TABLE &lt;table_name&gt;
+    ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table &gt;)
+     LOCATION('s3://&lt;S3_endpoint&gt;[:&lt;port&gt;]/&lt;bucket_name&gt;/[&lt;S3_prefix&gt;] [region=&lt;S3-region&gt;] [config=&lt;config_file&gt; | config_server=&lt;url&gt;]')
+      [ON MASTER]
+      FORMAT 'TEXT' 
+               [( [DELIMITER [AS] '&lt;delimiter&gt;']
+               [NULL [AS] '&lt;null string&gt;']
+               [ESCAPE [AS] '&lt;escape&gt;' | 'OFF'] )]
+          | 'CSV'
+               [([QUOTE [AS] '&lt;quote&gt;'] 
+               [DELIMITER [AS] '&lt;delimiter&gt;']
+               [NULL [AS] '&lt;null string&gt;']
+               [FORCE QUOTE &lt;column&gt; [, ...]] | * ]
+               [ESCAPE [AS] '&lt;escape&gt;'] )]
+
+CREATE WRITABLE EXTERNAL WEB [TEMPORARY | TEMP] TABLE &lt;table_name&gt;
+    ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table&gt; )
+    EXECUTE '&lt;command&gt;' [ON ALL]
+    FORMAT 'TEXT' 
+               [( [DELIMITER [AS] '&lt;delimiter&gt;']
+               [NULL [AS] '&lt;null string&gt;']
+               [ESCAPE [AS] '&lt;escape&gt;' | 'OFF'] )]
+          | 'CSV'
+               [([QUOTE [AS] '&lt;quote&gt;'] 
+               [DELIMITER [AS] '&lt;delimiter&gt;']
+               [NULL [AS] '&lt;null string&gt;']
+               [FORCE QUOTE &lt;column&gt; [, ...]] | * ]
+               [ESCAPE [AS] '&lt;escape&gt;'] )]
+           | 'CUSTOM' (Formatter=&lt;&lt;formatter specifications&gt;&gt;)
+    [ ENCODING '&lt;write_encoding&gt;' ]
+    [ DISTRIBUTED BY ({&lt;column&gt; [&lt;opclass&gt;]}, [ ... ] ) | DISTRIBUTED RANDOMLY ]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_EXTERNAL_TABLE.html">CREATE EXTERNAL TABLE</a> for more information.</p>
+<h2 id="create-foreign-data-wrapper"><a class="header" href="#create-foreign-data-wrapper"><a id="ae1904203w"></a>CREATE FOREIGN DATA WRAPPER</a></h2>
+<p>Defines a new foreign-data wrapper.</p>
+<pre><code>CREATE FOREIGN DATA WRAPPER &lt;name&gt;
+    [ HANDLER &lt;handler_function&gt; | NO HANDLER ]
+    [ VALIDATOR &lt;validator_function&gt; | NO VALIDATOR ]
+    [ OPTIONS ( [ mpp_execute { 'master' | 'any' | 'all segments' } [, ] ] &lt;option&gt; '&lt;value&gt;' [, ... ] ) ]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_FOREIGN_DATA_WRAPPER.html">CREATE FOREIGN DATA WRAPPER</a> for more information.</p>
+<h2 id="create-foreign-table"><a class="header" href="#create-foreign-table"><a id="ae1904203t"></a>CREATE FOREIGN TABLE</a></h2>
+<p>Defines a new foreign table.</p>
+<pre><code>CREATE FOREIGN TABLE [ IF NOT EXISTS ] &lt;table_name&gt; ( [
+    &lt;column_name&gt; &lt;data_type&gt; [ OPTIONS ( &lt;option&gt; '&lt;value&gt;' [, ... ] ) ] [ COLLATE &lt;collation&gt; ] [ &lt;column_constraint&gt; [ ... ] ]
+      [, ... ]
+] )
+    SERVER &lt;server_name&gt;
+  [ OPTIONS ( [ mpp_execute { 'master' | 'any' | 'all segments' } [, ] ] &lt;option&gt; '&lt;value&gt;' [, ... ] ) ]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_FOREIGN_TABLE.html">CREATE FOREIGN TABLE</a> for more information.</p>
+<h2 id="create-function"><a class="header" href="#create-function"><a id="ae1904203"></a>CREATE FUNCTION</a></h2>
+<p>Defines a new function.</p>
+<pre><code>CREATE [OR REPLACE] FUNCTION &lt;name&gt;    
+    ( [ [&lt;argmode&gt;] [&lt;argname&gt;] &lt;argtype&gt; [ { DEFAULT | = } &lt;default_expr&gt; ] [, ...] ] )
+      [ RETURNS &lt;rettype&gt; 
+        | RETURNS TABLE ( &lt;column_name&gt; &lt;column_type&gt; [, ...] ) ]
+    { LANGUAGE &lt;langname&gt;
+    | WINDOW
+    | IMMUTABLE | STABLE | VOLATILE | [NOT] LEAKPROOF
+    | CALLED ON NULL INPUT | RETURNS NULL ON NULL INPUT | STRICT
+    | NO SQL | CONTAINS SQL | READS SQL DATA | MODIFIES SQL
+    | [EXTERNAL] SECURITY INVOKER | [EXTERNAL] SECURITY DEFINER
+    | EXECUTE ON { ANY | MASTER | ALL SEGMENTS | INITPLAN }
+    | COST &lt;execution_cost&gt;
+    | SET &lt;configuration_parameter&gt; { TO &lt;value&gt; | = &lt;value&gt; | FROM CURRENT }
+    | AS '&lt;definition&gt;'
+    | AS '&lt;obj_file&gt;', '&lt;link_symbol&gt;' } ...
+    [ WITH ({ DESCRIBE = describe_function
+           } [, ...] ) ]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_FUNCTION.html">CREATE FUNCTION</a> for more information.</p>
+<h2 id="create-group"><a class="header" href="#create-group"><a id="ae1904233"></a>CREATE GROUP</a></h2>
+<p>Defines a new database role.</p>
+<pre><code>CREATE GROUP &lt;name&gt; [[WITH] &lt;option&gt; [ ... ]]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_GROUP.html">CREATE GROUP</a> for more information.</p>
+<h2 id="create-index"><a class="header" href="#create-index"><a id="ae1904269"></a>CREATE INDEX</a></h2>
+<p>Defines a new index.</p>
+<pre><code>CREATE [UNIQUE] INDEX [&lt;name&gt;] ON &lt;table_name&gt; [USING &lt;method&gt;]
+       ( {&lt;column_name&gt; | (&lt;expression&gt;)} [COLLATE &lt;parameter&gt;] [&lt;opclass&gt;] [ ASC | DESC ] [ NULLS { FIRST | LAST } ] [, ...] )
+       [ WITH ( &lt;storage_parameter&gt; = &lt;value&gt; [, ... ] ) ]
+       [ TABLESPACE &lt;tablespace&gt; ]
+       [ WHERE &lt;predicate&gt; ]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_INDEX.html">CREATE INDEX</a> for more information.</p>
+<h2 id="create-language"><a class="header" href="#create-language"><a id="ae1904285"></a>CREATE LANGUAGE</a></h2>
+<p>Defines a new procedural language.</p>
+<pre><code>CREATE [ OR REPLACE ] [ PROCEDURAL ] LANGUAGE &lt;name&gt;
+
+CREATE [ OR REPLACE ] [ TRUSTED ] [ PROCEDURAL ] LANGUAGE &lt;name&gt;
+    HANDLER &lt;call_handler&gt; [ INLINE &lt;inline_handler&gt; ] 
+   [ VALIDATOR &lt;valfunction&gt; ]
+            
+</code></pre>
+<p>See <a href="sql_commands/CREATE_LANGUAGE.html">CREATE LANGUAGE</a> for more information.</p>
+<h2 id="create-materialized-view"><a class="header" href="#create-materialized-view"><a id="cmatview"></a>CREATE MATERIALIZED VIEW</a></h2>
+<p>Defines a new materialized view.</p>
+<pre><code>CREATE MATERIALIZED VIEW &lt;table_name&gt;
+    [ (&lt;column_name&gt; [, ...] ) ]
+    [ WITH ( &lt;storage_parameter&gt; [= &lt;value&gt;] [, ... ] ) ]
+    [ TABLESPACE &lt;tablespace_name&gt; ]
+    AS &lt;query&gt;
+    [ WITH [ NO ] DATA ]
+    [DISTRIBUTED {| BY &lt;column&gt; [&lt;opclass&gt;], [ ... ] | RANDOMLY | REPLICATED }]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_MATERIALIZED_VIEW.html">CREATE MATERIALIZED VIEW</a> for more information.</p>
+<h2 id="create-operator"><a class="header" href="#create-operator"><a id="ae1904295"></a>CREATE OPERATOR</a></h2>
+<p>Defines a new operator.</p>
+<pre><code>CREATE OPERATOR &lt;name&gt; ( 
+       PROCEDURE = &lt;funcname&gt;
+       [, LEFTARG = &lt;lefttype&gt;] [, RIGHTARG = &lt;righttype&gt;]
+       [, COMMUTATOR = &lt;com_op&gt;] [, NEGATOR = &lt;neg_op&gt;]
+       [, RESTRICT = &lt;res_proc&gt;] [, JOIN = &lt;join_proc&gt;]
+       [, HASHES] [, MERGES] )
+</code></pre>
+<p>See <a href="sql_commands/CREATE_OPERATOR.html">CREATE OPERATOR</a> for more information.</p>
+<h2 id="create-operator-class"><a class="header" href="#create-operator-class"><a id="ae1904315"></a>CREATE OPERATOR CLASS</a></h2>
+<p>Defines a new operator class.</p>
+<pre><code>CREATE OPERATOR CLASS &lt;name&gt; [DEFAULT] FOR TYPE &lt;data_type&gt;  
+  USING &lt;index_method&gt; [ FAMILY &lt;family_name&gt; ] AS 
+  { OPERATOR &lt;strategy_number&gt; &lt;operator_name&gt; [ ( &lt;op_type&gt;, &lt;op_type&gt; ) ] [ FOR SEARCH | FOR ORDER BY &lt;sort_family_name&gt; ]
+  | FUNCTION &lt;support_number&gt; &lt;funcname&gt; (&lt;argument_type&gt; [, ...] )
+  | STORAGE &lt;storage_type&gt;
+  } [, ... ]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_OPERATOR_CLASS.html">CREATE OPERATOR CLASS</a> for more information.</p>
+<h2 id="create-operator-family"><a class="header" href="#create-operator-family"><a id="copfam"></a>CREATE OPERATOR FAMILY</a></h2>
+<p>Defines a new operator family.</p>
+<pre><code>CREATE OPERATOR FAMILY &lt;name&gt;  USING &lt;index_method&gt;  
+</code></pre>
+<p>See <a href="sql_commands/CREATE_OPERATOR_FAMILY.html">CREATE OPERATOR FAMILY</a> for more information.</p>
+<h2 id="create-protocol"><a class="header" href="#create-protocol"><a id="cprot"></a>CREATE PROTOCOL</a></h2>
+<p>Registers a custom data access protocol that can be specified when defining a SynxDB external table.</p>
+<pre><code>CREATE [TRUSTED] PROTOCOL &lt;name&gt; (
+   [readfunc='&lt;read_call_handler&gt;'] [, writefunc='&lt;write_call_handler&gt;']
+   [, validatorfunc='&lt;validate_handler&gt;' ])
+</code></pre>
+<p>See <a href="sql_commands/CREATE_PROTOCOL.html">CREATE PROTOCOL</a> for more information.</p>
+<h2 id="create-resource-group"><a class="header" href="#create-resource-group"><a id="ae19043333"></a>CREATE RESOURCE GROUP</a></h2>
+<p>Defines a new resource group.</p>
+<pre><code>CREATE RESOURCE GROUP &lt;name&gt; WITH (&lt;group_attribute&gt;=&lt;value&gt; [, ... ])
+</code></pre>
+<p>See <a href="sql_commands/CREATE_RESOURCE_GROUP.html">CREATE RESOURCE GROUP</a> for more information.</p>
+<h2 id="create-resource-queue"><a class="header" href="#create-resource-queue"><a id="ae1904333"></a>CREATE RESOURCE QUEUE</a></h2>
+<p>Defines a new resource queue.</p>
+<pre><code>CREATE RESOURCE QUEUE &lt;name&gt; WITH (&lt;queue_attribute&gt;=&lt;value&gt; [, ... ])
+</code></pre>
+<p>See <a href="sql_commands/CREATE_RESOURCE_QUEUE.html">CREATE RESOURCE QUEUE</a> for more information.</p>
+<h2 id="create-role"><a class="header" href="#create-role"><a id="ae1904361"></a>CREATE ROLE</a></h2>
+<p>Defines a new database role (user or group).</p>
+<pre><code>CREATE ROLE &lt;name&gt; [[WITH] &lt;option&gt; [ ... ]]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_ROLE.html">CREATE ROLE</a> for more information.</p>
+<h2 id="create-rule"><a class="header" href="#create-rule"><a id="ae1904407"></a>CREATE RULE</a></h2>
+<p>Defines a new rewrite rule.</p>
+<pre><code>CREATE [OR REPLACE] RULE &lt;name&gt; AS ON &lt;event&gt;
+  TO &lt;table_name&gt; [WHERE &lt;condition&gt;] 
+  DO [ALSO | INSTEAD] { NOTHING | &lt;command&gt; | (&lt;command&gt;; &lt;command&gt; 
+  ...) }
+</code></pre>
+<p>See <a href="sql_commands/CREATE_RULE.html">CREATE RULE</a> for more information.</p>
+<h2 id="create-schema"><a class="header" href="#create-schema"><a id="ae1904417"></a>CREATE SCHEMA</a></h2>
+<p>Defines a new schema.</p>
+<pre><code>CREATE SCHEMA &lt;schema_name&gt; [AUTHORIZATION &lt;username&gt;] 
+   [&lt;schema_element&gt; [ ... ]]
+
+CREATE SCHEMA AUTHORIZATION &lt;rolename&gt; [&lt;schema_element&gt; [ ... ]]
+
+CREATE SCHEMA IF NOT EXISTS &lt;schema_name&gt; [ AUTHORIZATION &lt;user_name&gt; ]
+
+CREATE SCHEMA IF NOT EXISTS AUTHORIZATION &lt;user_name&gt;
+
+</code></pre>
+<p>See <a href="sql_commands/CREATE_SCHEMA.html">CREATE SCHEMA</a> for more information.</p>
+<h2 id="create-sequence"><a class="header" href="#create-sequence"><a id="ae1904425"></a>CREATE SEQUENCE</a></h2>
+<p>Defines a new sequence generator.</p>
+<pre><code>CREATE [TEMPORARY | TEMP] SEQUENCE &lt;name&gt;
+       [INCREMENT [BY] &lt;value&gt;] 
+       [MINVALUE &lt;minvalue&gt; | NO MINVALUE] 
+       [MAXVALUE &lt;maxvalue&gt; | NO MAXVALUE] 
+       [START [ WITH ] &lt;start&gt;] 
+       [CACHE &lt;cache&gt;] 
+       [[NO] CYCLE] 
+       [OWNED BY { &lt;table&gt;.&lt;column&gt; | NONE }]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_SEQUENCE.html">CREATE SEQUENCE</a> for more information.</p>
+<h2 id="create-server"><a class="header" href="#create-server"><a id="ae1904425s"></a>CREATE SERVER</a></h2>
+<p>Defines a new foreign server.</p>
+<pre><code>CREATE SERVER &lt;server_name&gt; [ TYPE '&lt;server_type&gt;' ] [ VERSION '&lt;server_version&gt;' ]
+    FOREIGN DATA WRAPPER &lt;fdw_name&gt;
+    [ OPTIONS ( [ mpp_execute { 'master' | 'any' | 'all segments' } [, ] ]
+                [ num_segments '&lt;num&gt;' [, ] ]
+                [ &lt;option&gt; '&lt;value&gt;' [, ... ]] ) ]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_SERVER.html">CREATE SERVER</a> for more information.</p>
+<h2 id="create-table"><a class="header" href="#create-table"><a id="ae1904445"></a>CREATE TABLE</a></h2>
+<p>Defines a new table.</p>
+<pre><code>
+CREATE [ [GLOBAL | LOCAL] {TEMPORARY | TEMP } | UNLOGGED] TABLE [IF NOT EXISTS] 
+  &lt;table_name&gt; ( 
+  [ { &lt;column_name&gt; &lt;data_type&gt; [ COLLATE &lt;collation&gt; ] [&lt;column_constraint&gt; [ ... ] ]
+[ ENCODING ( &lt;storage_directive&gt; [, ...] ) ]
+    | &lt;table_constraint&gt;
+    | LIKE &lt;source_table&gt; [ &lt;like_option&gt; ... ] }
+    | [ &lt;column_reference_storage_directive&gt; [, ...]
+    [, ... ]
+] )
+[ INHERITS ( &lt;parent_table&gt; [, ... ] ) ]
+[ WITH ( &lt;storage_parameter&gt; [=&lt;value&gt;] [, ... ] ) ]
+[ ON COMMIT { PRESERVE ROWS | DELETE ROWS | DROP } ]
+[ TABLESPACE &lt;tablespace_name&gt; ]
+[ DISTRIBUTED BY (&lt;column&gt; [&lt;opclass&gt;], [ ... ] ) 
+       | DISTRIBUTED RANDOMLY | DISTRIBUTED REPLICATED ]
+
+{ --partitioned table using SUBPARTITION TEMPLATE
+[ PARTITION BY &lt;partition_type&gt; (&lt;column&gt;) 
+  {  [ SUBPARTITION BY &lt;partition_type&gt; (&lt;column1&gt;) 
+       SUBPARTITION TEMPLATE ( &lt;template_spec&gt; ) ]
+          [ SUBPARTITION BY partition_type (&lt;column2&gt;) 
+            SUBPARTITION TEMPLATE ( &lt;template_spec&gt; ) ]
+              [...]  }
+  ( &lt;partition_spec&gt; ) ]
+} |
+
+{ **-- partitioned table without SUBPARTITION TEMPLATE
+**[ PARTITION BY &lt;partition_type&gt; (&lt;column&gt;)
+   [ SUBPARTITION BY &lt;partition_type&gt; (&lt;column1&gt;) ]
+      [ SUBPARTITION BY &lt;partition_type&gt; (&lt;column2&gt;) ]
+         [...]
+  ( &lt;partition_spec&gt;
+     [ ( &lt;subpartition_spec_column1&gt;
+          [ ( &lt;subpartition_spec_column2&gt;
+               [...] ) ] ) ],
+  [ &lt;partition_spec&gt;
+     [ ( &lt;subpartition_spec_column1&gt;
+        [ ( &lt;subpartition_spec_column2&gt;
+             [...] ) ] ) ], ]
+    [...]
+  ) ]
+}
+
+CREATE [ [GLOBAL | LOCAL] {TEMPORARY | TEMP} | UNLOGGED ] TABLE [IF NOT EXISTS] 
+   &lt;table_name&gt;
+    OF &lt;type_name&gt; [ (
+  { &lt;column_name&gt; WITH OPTIONS [ &lt;column_constraint&gt; [ ... ] ]
+    | &lt;table_constraint&gt; } 
+    [, ... ]
+) ]
+[ WITH ( &lt;storage_parameter&gt; [=&lt;value&gt;] [, ... ] ) ]
+[ ON COMMIT { PRESERVE ROWS | DELETE ROWS | DROP } ]
+[ TABLESPACE &lt;tablespace_name&gt; ]
+
+</code></pre>
+<p>See <a href="sql_commands/CREATE_TABLE.html">CREATE TABLE</a> for more information.</p>
+<h2 id="create-table-as"><a class="header" href="#create-table-as"><a id="ae1904649"></a>CREATE TABLE AS</a></h2>
+<p>Defines a new table from the results of a query.</p>
+<pre><code>CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE &lt;table_name&gt;
+        [ (&lt;column_name&gt; [, ...] ) ]
+        [ WITH ( &lt;storage_parameter&gt; [= &lt;value&gt;] [, ... ] ) | WITHOUT OIDS ]
+        [ ON COMMIT { PRESERVE ROWS | DELETE ROWS | DROP } ]
+        [ TABLESPACE &lt;tablespace_name&gt; ]
+        AS &lt;query&gt;
+        [ WITH [ NO ] DATA ]
+        [ DISTRIBUTED BY (column [, ... ] ) | DISTRIBUTED RANDOMLY | DISTRIBUTED REPLICATED ]
+      
+</code></pre>
+<p>See <a href="sql_commands/CREATE_TABLE_AS.html">CREATE TABLE AS</a> for more information.</p>
+<h2 id="create-tablespace"><a class="header" href="#create-tablespace"><a id="ae1904683"></a>CREATE TABLESPACE</a></h2>
+<p>Defines a new tablespace.</p>
+<pre><code>CREATE TABLESPACE &lt;tablespace_name&gt; [OWNER &lt;username&gt;]  LOCATION '&lt;/path/to/dir&gt;' 
+   [WITH (content&lt;ID_1&gt;='&lt;/path/to/dir1&gt;'[, content&lt;ID_2&gt;='&lt;/path/to/dir2&gt;' ... ])]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_TABLESPACE.html">CREATE TABLESPACE</a> for more information.</p>
+<h2 id="create-text-search-configuration"><a class="header" href="#create-text-search-configuration"><a id="ctscon"></a>CREATE TEXT SEARCH CONFIGURATION</a></h2>
+<p>Defines a new text search configuration.</p>
+<pre><code>CREATE TEXT SEARCH CONFIGURATION &lt;name&gt; (
+    PARSER = &lt;parser_name&gt; |
+    COPY = &lt;source_config&gt;
+)
+</code></pre>
+<p>See <a href="sql_commands/CREATE_TEXT_SEARCH_CONFIGURATION.html">CREATE TEXT SEARCH CONFIGURATION</a> for more information.</p>
+<h2 id="create-text-search-dictionary"><a class="header" href="#create-text-search-dictionary"><a id="ctsdict"></a>CREATE TEXT SEARCH DICTIONARY</a></h2>
+<p>Defines a new text search dictionary.</p>
+<pre><code>CREATE TEXT SEARCH DICTIONARY &lt;name&gt; (
+    TEMPLATE = &lt;template&gt;
+    [, &lt;option&gt; = &lt;value&gt; [, ... ]]
+)
+</code></pre>
+<p>See <a href="sql_commands/CREATE_TEXT_SEARCH_DICTIONARY.html">CREATE TEXT SEARCH DICTIONARY</a> for more information.</p>
+<h2 id="create-text-search-parser"><a class="header" href="#create-text-search-parser"><a id="ctspar"></a>CREATE TEXT SEARCH PARSER</a></h2>
+<p>Defines a new text search parser.</p>
+<pre><code>CREATE TEXT SEARCH PARSER name (
+    START = start_function ,
+    GETTOKEN = gettoken_function ,
+    END = end_function ,
+    LEXTYPES = lextypes_function
+    [, HEADLINE = headline_function ]
+)
+</code></pre>
+<p>See <a href="sql_commands/CREATE_TEXT_SEARCH_PARSER.html">CREATE TEXT SEARCH PARSER</a> for more information.</p>
+<h2 id="create-text-search-template"><a class="header" href="#create-text-search-template"><a id="ctstemp"></a>CREATE TEXT SEARCH TEMPLATE</a></h2>
+<p>Defines a new text search template.</p>
+<pre><code>CREATE TEXT SEARCH TEMPLATE &lt;name&gt; (
+    [ INIT = &lt;init_function&gt; , ]
+    LEXIZE = &lt;lexize_function&gt;
+)
+</code></pre>
+<p>See <a href="sql_commands/CREATE_TEXT_SEARCH_TEMPLATE.html">CREATE TEXT SEARCH TEMPLATE</a> for more information.</p>
+<h2 id="create-type"><a class="header" href="#create-type"><a id="ae1904701"></a>CREATE TYPE</a></h2>
+<p>Defines a new data type.</p>
+<pre><code>CREATE TYPE &lt;name&gt; AS 
+    ( &lt;attribute_name&gt; &lt;data_type&gt; [ COLLATE &lt;collation&gt; ] [, ... ] ] )
+
+CREATE TYPE &lt;name&gt; AS ENUM 
+    ( [ '&lt;label&gt;' [, ... ] ] )
+
+CREATE TYPE &lt;name&gt; AS RANGE (
+    SUBTYPE = &lt;subtype&gt;
+    [ , SUBTYPE_OPCLASS = &lt;subtype_operator_class&gt; ]
+    [ , COLLATION = &lt;collation&gt; ]
+    [ , CANONICAL = &lt;canonical_function&gt; ]
+    [ , SUBTYPE_DIFF = &lt;subtype_diff_function&gt; ]
+)
+
+CREATE TYPE &lt;name&gt; (
+    INPUT = &lt;input_function&gt;,
+    OUTPUT = &lt;output_function&gt;
+    [, RECEIVE = &lt;receive_function&gt;]
+    [, SEND = &lt;send_function&gt;]
+    [, TYPMOD_IN = &lt;type_modifier_input_function&gt; ]
+    [, TYPMOD_OUT = &lt;type_modifier_output_function&gt; ]
+    [, INTERNALLENGTH = {&lt;internallength&gt; | VARIABLE}]
+    [, PASSEDBYVALUE]
+    [, ALIGNMENT = &lt;alignment&gt;]
+    [, STORAGE = &lt;storage&gt;]
+    [, LIKE = &lt;like_type&gt;
+    [, CATEGORY = &lt;category&gt;]
+    [, PREFERRED = &lt;preferred&gt;]
+    [, DEFAULT = &lt;default&gt;]
+    [, ELEMENT = &lt;element&gt;]
+    [, DELIMITER = &lt;delimiter&gt;]
+    [, COLLATABLE = &lt;collatable&gt;]
+    [, COMPRESSTYPE = &lt;compression_type&gt;]
+    [, COMPRESSLEVEL = &lt;compression_level&gt;]
+    [, BLOCKSIZE = &lt;blocksize&gt;] )
+
+CREATE TYPE &lt;name&gt;
+</code></pre>
+<p>See <a href="sql_commands/CREATE_TYPE.html">CREATE TYPE</a> for more information.</p>
+<h2 id="create-user"><a class="header" href="#create-user"><a id="ae1904741"></a>CREATE USER</a></h2>
+<p>Defines a new database role with the <code>LOGIN</code> privilege by default.</p>
+<pre><code>CREATE USER &lt;name&gt; [[WITH] &lt;option&gt; [ ... ]]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_USER.html">CREATE USER</a> for more information.</p>
+<h2 id="create-user-mapping"><a class="header" href="#create-user-mapping"><a id="ae1904741u"></a>CREATE USER MAPPING</a></h2>
+<p>Defines a new mapping of a user to a foreign server.</p>
+<pre><code>CREATE USER MAPPING FOR { &lt;username&gt; | USER | CURRENT_USER | PUBLIC }
+    SERVER &lt;servername&gt;
+    [ OPTIONS ( &lt;option&gt; '&lt;value&gt;' [, ... ] ) ]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_USER_MAPPING.html">CREATE USER MAPPING</a> for more information.</p>
+<h2 id="create-view"><a class="header" href="#create-view"><a id="ae1904779"></a>CREATE VIEW</a></h2>
+<p>Defines a new view.</p>
+<pre><code>CREATE [OR REPLACE] [TEMP | TEMPORARY] [RECURSIVE] VIEW &lt;name&gt; [ ( &lt;column_name&gt; [, ...] ) ]
+    [ WITH ( view_option_name [= view_option_value] [, ... ] ) ]
+    AS &lt;query&gt;
+    [ WITH [ CASCADED | LOCAL ] CHECK OPTION ]
+</code></pre>
+<p>See <a href="sql_commands/CREATE_VIEW.html">CREATE VIEW</a> for more information.</p>
+<h2 id="deallocate"><a class="header" href="#deallocate"><a id="ae1904789"></a>DEALLOCATE</a></h2>
+<p>Deallocates a prepared statement.</p>
+<pre><code>DEALLOCATE [PREPARE] &lt;name&gt;
+</code></pre>
+<p>See <a href="sql_commands/DEALLOCATE.html">DEALLOCATE</a> for more information.</p>
+<h2 id="declare"><a class="header" href="#declare"><a id="ae1904795"></a>DECLARE</a></h2>
+<p>Defines a cursor.</p>
+<pre><code>DECLARE &lt;name&gt; [BINARY] [INSENSITIVE] [NO SCROLL] [PARALLEL RETRIEVE] CURSOR 
+     [{WITH | WITHOUT} HOLD] 
+     FOR &lt;query&gt; [FOR READ ONLY]
+</code></pre>
+<p>See <a href="sql_commands/DECLARE.html">DECLARE</a> for more information.</p>
+<h2 id="delete"><a class="header" href="#delete"><a id="ae1904805"></a>DELETE</a></h2>
+<p>Deletes rows from a table.</p>
+<pre><code>[ WITH [ RECURSIVE ] &lt;with_query&gt; [, ...] ]
+DELETE FROM [ONLY] &lt;table&gt; [[AS] &lt;alias&gt;]
+      [USING &lt;usinglist&gt;]
+      [WHERE &lt;condition&gt; | WHERE CURRENT OF &lt;cursor_name&gt;]
+      [RETURNING * | &lt;output_expression&gt; [[AS] &lt;output_name&gt;] [, …]]
+</code></pre>
+<p>See <a href="sql_commands/DELETE.html">DELETE</a> for more information.</p>
+<h2 id="discard"><a class="header" href="#discard"><a id="disc"></a>DISCARD</a></h2>
+<p>Discards the session state.</p>
+<pre><code>DISCARD { ALL | PLANS | TEMPORARY | TEMP }
+</code></pre>
+<p>See <a href="sql_commands/DISCARD.html">DISCARD</a> for more information.</p>
+<h2 id="drop-aggregate"><a class="header" href="#drop-aggregate"><a id="ae1904815"></a>DROP AGGREGATE</a></h2>
+<p>Removes an aggregate function.</p>
+<pre><code>DROP AGGREGATE [IF EXISTS] &lt;name&gt; ( &lt;aggregate_signature&gt; ) [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_AGGREGATE.html">DROP AGGREGATE</a> for more information.</p>
+<h2 id="do"><a class="header" href="#do"><a id="sqldo"></a>DO</a></h2>
+<p>Runs anonymous code block as a transient anonymous function.</p>
+<pre><code>DO [ LANGUAGE &lt;lang_name&gt; ] &lt;code&gt;
+</code></pre>
+<p>See <a href="sql_commands/DO.html">DO</a> for more information.</p>
+<h2 id="drop-cast"><a class="header" href="#drop-cast"><a id="ae1904821"></a>DROP CAST</a></h2>
+<p>Removes a cast.</p>
+<pre><code>DROP CAST [IF EXISTS] (&lt;sourcetype&gt; AS &lt;targettype&gt;) [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_CAST.html">DROP CAST</a> for more information.</p>
+<h2 id="drop-collation"><a class="header" href="#drop-collation"><a id="dcoll"></a>DROP COLLATION</a></h2>
+<p>Removes a previously defined collation.</p>
+<pre><code>DROP COLLATION [ IF EXISTS ] &lt;name&gt; [ CASCADE | RESTRICT ]
+</code></pre>
+<p>See <a href="sql_commands/DROP_COLLATION.html">DROP COLLATION</a> for more information.</p>
+<h2 id="drop-conversion"><a class="header" href="#drop-conversion"><a id="section_s4r_fgy_xgb"></a>DROP CONVERSION</a></h2>
+<p>Removes a conversion.</p>
+<pre><code>DROP CONVERSION [IF EXISTS] &lt;name&gt; [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_CONVERSION.html">DROP CONVERSION</a> for more information.</p>
+<h2 id="drop-database"><a class="header" href="#drop-database"><a id="ae1904833"></a>DROP DATABASE</a></h2>
+<p>Removes a database.</p>
+<pre><code>DROP DATABASE [IF EXISTS] &lt;name&gt;
+</code></pre>
+<p>See <a href="sql_commands/DROP_DATABASE.html">DROP DATABASE</a> for more information.</p>
+<h2 id="drop-domain"><a class="header" href="#drop-domain"><a id="ae1904839"></a>DROP DOMAIN</a></h2>
+<p>Removes a domain.</p>
+<pre><code>DROP DOMAIN [IF EXISTS] &lt;name&gt; [, ...]  [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_DOMAIN.html">DROP DOMAIN</a> for more information.</p>
+<h2 id="drop-extension"><a class="header" href="#drop-extension"><a id="dext"></a>DROP EXTENSION</a></h2>
+<p>Removes an extension from a SynxDB database.</p>
+<pre><code>DROP EXTENSION [ IF EXISTS ] &lt;name&gt; [, ...] [ CASCADE | RESTRICT ]
+</code></pre>
+<p>See <a href="sql_commands/DROP_EXTENSION.html">DROP EXTENSION</a> for more information.</p>
+<h2 id="drop-external-table"><a class="header" href="#drop-external-table"><a id="ae1904845"></a>DROP EXTERNAL TABLE</a></h2>
+<p>Removes an external table definition.</p>
+<pre><code>DROP EXTERNAL [WEB] TABLE [IF EXISTS] &lt;name&gt; [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_EXTERNAL_TABLE.html">DROP EXTERNAL TABLE</a> for more information.</p>
+<h2 id="drop-foreign-data-wrapper"><a class="header" href="#drop-foreign-data-wrapper"><a id="ae1904845w"></a>DROP FOREIGN DATA WRAPPER</a></h2>
+<p>Removes a foreign-data wrapper.</p>
+<pre><code>DROP FOREIGN DATA WRAPPER [ IF EXISTS ] &lt;name&gt; [ CASCADE | RESTRICT ]
+</code></pre>
+<p>See <a href="sql_commands/DROP_FOREIGN_DATA_WRAPPER.html">DROP FOREIGN DATA WRAPPER</a> for more information.</p>
+<h2 id="drop-foreign-table"><a class="header" href="#drop-foreign-table"><a id="ae1904845t"></a>DROP FOREIGN TABLE</a></h2>
+<p>Removes a foreign table.</p>
+<pre><code>DROP FOREIGN TABLE [ IF EXISTS ] &lt;name&gt; [, ...] [ CASCADE | RESTRICT ]
+</code></pre>
+<p>See <a href="sql_commands/DROP_FOREIGN_TABLE.html">DROP FOREIGN TABLE</a> for more information.</p>
+<h2 id="drop-function"><a class="header" href="#drop-function"><a id="ae1904857"></a>DROP FUNCTION</a></h2>
+<p>Removes a function.</p>
+<pre><code>DROP FUNCTION [IF EXISTS] name ( [ [argmode] [argname] argtype 
+    [, ...] ] ) [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_FUNCTION.html">DROP FUNCTION</a> for more information.</p>
+<h2 id="drop-group"><a class="header" href="#drop-group"><a id="ae1904863"></a>DROP GROUP</a></h2>
+<p>Removes a database role.</p>
+<pre><code>DROP GROUP [IF EXISTS] &lt;name&gt; [, ...]
+</code></pre>
+<p>See <a href="sql_commands/DROP_GROUP.html">DROP GROUP</a> for more information.</p>
+<h2 id="drop-index"><a class="header" href="#drop-index"><a id="ae1904869"></a>DROP INDEX</a></h2>
+<p>Removes an index.</p>
+<pre><code>DROP INDEX [ CONCURRENTLY ] [ IF EXISTS ] &lt;name&gt; [, ...] [ CASCADE | RESTRICT ]
+</code></pre>
+<p>See <a href="sql_commands/DROP_INDEX.html">DROP INDEX</a> for more information.</p>
+<h2 id="drop-language"><a class="header" href="#drop-language"><a id="ae1904875"></a>DROP LANGUAGE</a></h2>
+<p>Removes a procedural language.</p>
+<pre><code>DROP [PROCEDURAL] LANGUAGE [IF EXISTS] &lt;name&gt; [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_LANGUAGE.html">DROP LANGUAGE</a> for more information.</p>
+<h2 id="drop-materialized-view"><a class="header" href="#drop-materialized-view"><a id="dmatview"></a>DROP MATERIALIZED VIEW</a></h2>
+<p>Removes a materialized view.</p>
+<pre><code>DROP MATERIALIZED VIEW [ IF EXISTS ] &lt;name&gt; [, ...] [ CASCADE | RESTRICT ]
+</code></pre>
+<p>See <a href="sql_commands/DROP_MATERIALIZED_VIEW.html">DROP MATERIALIZED VIEW</a> for more information.</p>
+<h2 id="drop-operator"><a class="header" href="#drop-operator"><a id="ae1904881"></a>DROP OPERATOR</a></h2>
+<p>Removes an operator.</p>
+<pre><code>DROP OPERATOR [IF EXISTS] &lt;name&gt; ( {&lt;lefttype&gt; | NONE} , 
+    {&lt;righttype&gt; | NONE} ) [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_OPERATOR.html">DROP OPERATOR</a> for more information.</p>
+<h2 id="drop-operator-class"><a class="header" href="#drop-operator-class"><a id="ae1904887"></a>DROP OPERATOR CLASS</a></h2>
+<p>Removes an operator class.</p>
+<pre><code>DROP OPERATOR CLASS [IF EXISTS] &lt;name&gt; USING &lt;index_method&gt; [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_OPERATOR_CLASS.html">DROP OPERATOR CLASS</a> for more information.</p>
+<h2 id="drop-operator-family"><a class="header" href="#drop-operator-family"><a id="dopfam"></a>DROP OPERATOR FAMILY</a></h2>
+<p>Removes an operator family.</p>
+<pre><code>DROP OPERATOR FAMILY [IF EXISTS] &lt;name&gt; USING &lt;index_method&gt; [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_OPERATOR_FAMILY.html">DROP OPERATOR FAMILY</a> for more information.</p>
+<h2 id="drop-owned"><a class="header" href="#drop-owned"><a id="ae1904893"></a>DROP OWNED</a></h2>
+<p>Removes database objects owned by a database role.</p>
+<pre><code>DROP OWNED BY &lt;name&gt; [, ...] [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_OWNED.html">DROP OWNED</a> for more information.</p>
+<h2 id="drop-protocol"><a class="header" href="#drop-protocol"><a id="dprot"></a>DROP PROTOCOL</a></h2>
+<p>Removes a external table data access protocol from a database.</p>
+<pre><code>DROP PROTOCOL [IF EXISTS] &lt;name&gt;
+</code></pre>
+<p>See <a href="sql_commands/DROP_PROTOCOL.html">DROP PROTOCOL</a> for more information.</p>
+<h2 id="drop-resource-group"><a class="header" href="#drop-resource-group"><a id="ae19048993"></a>DROP RESOURCE GROUP</a></h2>
+<p>Removes a resource group.</p>
+<pre><code>DROP RESOURCE GROUP &lt;group_name&gt;
+</code></pre>
+<p>See <a href="sql_commands/DROP_RESOURCE_GROUP.html">DROP RESOURCE GROUP</a> for more information.</p>
+<h2 id="drop-resource-queue"><a class="header" href="#drop-resource-queue"><a id="ae1904899"></a>DROP RESOURCE QUEUE</a></h2>
+<p>Removes a resource queue.</p>
+<pre><code>DROP RESOURCE QUEUE &lt;queue_name&gt;
+</code></pre>
+<p>See <a href="sql_commands/DROP_RESOURCE_QUEUE.html">DROP RESOURCE QUEUE</a> for more information.</p>
+<h2 id="drop-role"><a class="header" href="#drop-role"><a id="ae1904905"></a>DROP ROLE</a></h2>
+<p>Removes a database role.</p>
+<pre><code>DROP ROLE [IF EXISTS] &lt;name&gt; [, ...]
+</code></pre>
+<p>See <a href="sql_commands/DROP_ROLE.html">DROP ROLE</a> for more information.</p>
+<h2 id="drop-rule"><a class="header" href="#drop-rule"><a id="ae1904911"></a>DROP RULE</a></h2>
+<p>Removes a rewrite rule.</p>
+<pre><code>DROP RULE [IF EXISTS] &lt;name&gt; ON &lt;table_name&gt; [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_RULE.html">DROP RULE</a> for more information.</p>
+<h2 id="drop-schema"><a class="header" href="#drop-schema"><a id="ae1904917"></a>DROP SCHEMA</a></h2>
+<p>Removes a schema.</p>
+<pre><code>DROP SCHEMA [IF EXISTS] &lt;name&gt; [, ...] [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_SCHEMA.html">DROP SCHEMA</a> for more information.</p>
+<h2 id="drop-sequence"><a class="header" href="#drop-sequence"><a id="ae1904923"></a>DROP SEQUENCE</a></h2>
+<p>Removes a sequence.</p>
+<pre><code>DROP SEQUENCE [IF EXISTS] &lt;name&gt; [, ...] [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_SEQUENCE.html">DROP SEQUENCE</a> for more information.</p>
+<h2 id="drop-server"><a class="header" href="#drop-server"><a id="ae1904923s"></a>DROP SERVER</a></h2>
+<p>Removes a foreign server descriptor.</p>
+<pre><code>DROP SERVER [ IF EXISTS ] &lt;servername&gt; [ CASCADE | RESTRICT ]
+</code></pre>
+<p>See <a href="sql_commands/DROP_SERVER.html">DROP SERVER</a> for more information.</p>
+<h2 id="drop-table"><a class="header" href="#drop-table"><a id="ae1904929"></a>DROP TABLE</a></h2>
+<p>Removes a table.</p>
+<pre><code>DROP TABLE [IF EXISTS] &lt;name&gt; [, ...] [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_TABLE.html">DROP TABLE</a> for more information.</p>
+<h2 id="drop-tablespace"><a class="header" href="#drop-tablespace"><a id="ae1904935"></a>DROP TABLESPACE</a></h2>
+<p>Removes a tablespace.</p>
+<pre><code>DROP TABLESPACE [IF EXISTS] &lt;tablespacename&gt;
+</code></pre>
+<p>See <a href="sql_commands/DROP_TABLESPACE.html">DROP TABLESPACE</a> for more information.</p>
+<h2 id="drop-text-search-configuration"><a class="header" href="#drop-text-search-configuration"><a id="dtscon"></a>DROP TEXT SEARCH CONFIGURATION</a></h2>
+<p>Removes a text search configuration.</p>
+<pre><code>DROP TEXT SEARCH CONFIGURATION [ IF EXISTS ] &lt;name&gt; [ CASCADE | RESTRICT ]
+</code></pre>
+<p>See <a href="sql_commands/DROP_TEXT_SEARCH_CONFIGURATION.html">DROP TEXT SEARCH CONFIGURATION</a> for more information.</p>
+<h2 id="drop-text-search-dictionary"><a class="header" href="#drop-text-search-dictionary"><a id="dtsdict"></a>DROP TEXT SEARCH DICTIONARY</a></h2>
+<p>Removes a text search dictionary.</p>
+<pre><code>DROP TEXT SEARCH DICTIONARY [ IF EXISTS ] &lt;name&gt; [ CASCADE | RESTRICT ]
+</code></pre>
+<p>See <a href="sql_commands/DROP_TEXT_SEARCH_DICTIONARY.html">DROP TEXT SEARCH DICTIONARY</a> for more information.</p>
+<h2 id="drop-text-search-parser"><a class="header" href="#drop-text-search-parser"><a id="dtspar"></a>DROP TEXT SEARCH PARSER</a></h2>
+<p>Remove a text search parser.</p>
+<pre><code>DROP TEXT SEARCH PARSER [ IF EXISTS ] &lt;name&gt; [ CASCADE | RESTRICT ]
+</code></pre>
+<p>See <a href="sql_commands/DROP_TEXT_SEARCH_PARSER.html">DROP TEXT SEARCH PARSER</a> for more information.</p>
+<h2 id="drop-text-search-template"><a class="header" href="#drop-text-search-template"><a id="dtstemp"></a>DROP TEXT SEARCH TEMPLATE</a></h2>
+<p>Removes a text search template.</p>
+<pre><code>DROP TEXT SEARCH TEMPLATE [ IF EXISTS ] &lt;name&gt; [ CASCADE | RESTRICT ]
+</code></pre>
+<p>See <a href="sql_commands/DROP_TEXT_SEARCH_TEMPLATE.html">DROP TEXT SEARCH TEMPLATE</a> for more information.</p>
+<h2 id="drop-type"><a class="header" href="#drop-type"><a id="ae1904947"></a>DROP TYPE</a></h2>
+<p>Removes a data type.</p>
+<pre><code>DROP TYPE [IF EXISTS] &lt;name&gt; [, ...] [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_TYPE.html">DROP TYPE</a> for more information.</p>
+<h2 id="drop-user"><a class="header" href="#drop-user"><a id="ae1904953"></a>DROP USER</a></h2>
+<p>Removes a database role.</p>
+<pre><code>DROP USER [IF EXISTS] &lt;name&gt; [, ...]
+</code></pre>
+<p>See <a href="sql_commands/DROP_USER.html">DROP USER</a> for more information.</p>
+<h2 id="drop-user-mapping"><a class="header" href="#drop-user-mapping"><a id="ae1904953u"></a>DROP USER MAPPING</a></h2>
+<p>Removes a user mapping for a foreign server.</p>
+<pre><code>DROP USER MAPPING [ IF EXISTS ] { &lt;username&gt; | USER | CURRENT_USER | PUBLIC } 
+    SERVER &lt;servername&gt;
+</code></pre>
+<p>See <a href="sql_commands/DROP_USER_MAPPING.html">DROP USER MAPPING</a> for more information.</p>
+<h2 id="drop-view"><a class="header" href="#drop-view"><a id="ae1904959"></a>DROP VIEW</a></h2>
+<p>Removes a view.</p>
+<pre><code>DROP VIEW [IF EXISTS] &lt;name&gt; [, ...] [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/DROP_VIEW.html">DROP VIEW</a> for more information.</p>
+<h2 id="end"><a class="header" href="#end"><a id="ae1904965"></a>END</a></h2>
+<p>Commits the current transaction.</p>
+<pre><code>END [WORK | TRANSACTION]
+</code></pre>
+<p>See <a href="sql_commands/END.html">END</a> for more information.</p>
+<h2 id="execute"><a class="header" href="#execute"><a id="ae1904971"></a>EXECUTE</a></h2>
+<p>Runs a prepared SQL statement.</p>
+<pre><code>EXECUTE &lt;name&gt; [ (&lt;parameter&gt; [, ...] ) ]
+</code></pre>
+<p>See <a href="sql_commands/EXECUTE.html">EXECUTE</a> for more information.</p>
+<h2 id="explain"><a class="header" href="#explain"><a id="ae1904977"></a>EXPLAIN</a></h2>
+<p>Shows the query plan of a statement.</p>
+<pre><code>EXPLAIN [ ( &lt;option&gt; [, ...] ) ] &lt;statement&gt;
+EXPLAIN [ANALYZE] [VERBOSE] &lt;statement&gt;
+</code></pre>
+<p>See <a href="sql_commands/EXPLAIN.html">EXPLAIN</a> for more information.</p>
+<h2 id="fetch"><a class="header" href="#fetch"><a id="ae1904983"></a>FETCH</a></h2>
+<p>Retrieves rows from a query using a cursor.</p>
+<pre><code>FETCH [ &lt;forward_direction&gt; { FROM | IN } ] &lt;cursor_name&gt;
+</code></pre>
+<p>See <a href="sql_commands/FETCH.html">FETCH</a> for more information.</p>
+<h2 id="grant"><a class="header" href="#grant"><a id="ae1905011"></a>GRANT</a></h2>
+<p>Defines access privileges.</p>
+<pre><code>GRANT { {SELECT | INSERT | UPDATE | DELETE | REFERENCES | 
+TRIGGER | TRUNCATE } [, ...] | ALL [PRIVILEGES] }
+    ON { [TABLE] &lt;table_name&gt; [, ...]
+         | ALL TABLES IN SCHEMA &lt;schema_name&gt; [, ...] }
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC} [, ...] [ WITH GRANT OPTION ] 
+
+GRANT { { SELECT | INSERT | UPDATE | REFERENCES } ( &lt;column_name&gt; [, ...] )
+    [, ...] | ALL [ PRIVILEGES ] ( &lt;column_name&gt; [, ...] ) }
+    ON [ TABLE ] &lt;table_name&gt; [, ...]
+    TO { &lt;role_name&gt; | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { {USAGE | SELECT | UPDATE} [, ...] | ALL [PRIVILEGES] }
+    ON { SEQUENCE &lt;sequence_name&gt; [, ...]
+         | ALL SEQUENCES IN SCHEMA &lt;schema_name&gt; [, ...] }
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...] [ WITH GRANT OPTION ] 
+
+GRANT { {CREATE | CONNECT | TEMPORARY | TEMP} [, ...] | ALL 
+[PRIVILEGES] }
+    ON DATABASE &lt;database_name&gt; [, ...]
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { USAGE | ALL [ PRIVILEGES ] }
+    ON DOMAIN &lt;domain_name&gt; [, ...]
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { USAGE | ALL [ PRIVILEGES ] }
+    ON FOREIGN DATA WRAPPER &lt;fdw_name&gt; [, ...]
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { USAGE | ALL [ PRIVILEGES ] }
+    ON FOREIGN SERVER &lt;server_name&gt; [, ...]
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { EXECUTE | ALL [PRIVILEGES] }
+    ON { FUNCTION &lt;function_name&gt; ( [ [ &lt;argmode&gt; ] [ &lt;argname&gt; ] &lt;argtype&gt; [, ...] 
+] ) [, ...]
+        | ALL FUNCTIONS IN SCHEMA &lt;schema_name&gt; [, ...] }
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { USAGE | ALL [PRIVILEGES] }
+    ON LANGUAGE &lt;lang_name&gt; [, ...]
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { { CREATE | USAGE } [, ...] | ALL [PRIVILEGES] }
+    ON SCHEMA &lt;schema_name&gt; [, ...]
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC}  [, ...] [ WITH GRANT OPTION ]
+
+GRANT { CREATE | ALL [PRIVILEGES] }
+    ON TABLESPACE &lt;tablespace_name&gt; [, ...]
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { USAGE | ALL [ PRIVILEGES ] }
+    ON TYPE &lt;type_name&gt; [, ...]
+    TO { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT &lt;parent_role&gt; [, ...] 
+    TO &lt;member_role&gt; [, ...] [WITH ADMIN OPTION]
+
+GRANT { SELECT | INSERT | ALL [PRIVILEGES] } 
+    ON PROTOCOL &lt;protocolname&gt;
+    TO &lt;username&gt;
+</code></pre>
+<p>See <a href="sql_commands/GRANT.html">GRANT</a> for more information.</p>
+<h2 id="insert"><a class="header" href="#insert"><a id="ae1905069"></a>INSERT</a></h2>
+<p>Creates new rows in a table.</p>
+<pre><code>[ WITH [ RECURSIVE ] &lt;with_query&gt; [, ...] ]
+INSERT INTO &lt;table&gt; [( &lt;column&gt; [, ...] )]
+   {DEFAULT VALUES | VALUES ( {&lt;expression&gt; | DEFAULT} [, ...] ) [, ...] | &lt;query&gt;}
+   [RETURNING * | &lt;output_expression&gt; [[AS] &lt;output_name&gt;] [, ...]]
+</code></pre>
+<p>See <a href="sql_commands/INSERT.html">INSERT</a> for more information.</p>
+<h2 id="load"><a class="header" href="#load"><a id="ae1905077"></a>LOAD</a></h2>
+<p>Loads or reloads a shared library file.</p>
+<pre><code>LOAD '&lt;filename&gt;'
+</code></pre>
+<p>See <a href="sql_commands/LOAD.html">LOAD</a> for more information.</p>
+<h2 id="lock"><a class="header" href="#lock"><a id="ae1905083"></a>LOCK</a></h2>
+<p>Locks a table.</p>
+<pre><code>LOCK [TABLE] [ONLY] name [ * ] [, ...] [IN &lt;lockmode&gt; MODE] [NOWAIT]
+</code></pre>
+<p>See <a href="sql_commands/LOCK.html">LOCK</a> for more information.</p>
+<h2 id="move"><a class="header" href="#move"><a id="ae1905093"></a>MOVE</a></h2>
+<p>Positions a cursor.</p>
+<pre><code>MOVE [ &lt;forward_direction&gt; [ FROM | IN ] ] &lt;cursor_name&gt;
+</code></pre>
+<p>See <a href="sql_commands/MOVE.html">MOVE</a> for more information.</p>
+<h2 id="prepare"><a class="header" href="#prepare"><a id="ae1905121"></a>PREPARE</a></h2>
+<p>Prepare a statement for execution.</p>
+<pre><code>PREPARE &lt;name&gt; [ (&lt;datatype&gt; [, ...] ) ] AS &lt;statement&gt;
+</code></pre>
+<p>See <a href="sql_commands/PREPARE.html">PREPARE</a> for more information.</p>
+<h2 id="reassign-owned"><a class="header" href="#reassign-owned"><a id="ae1905127"></a>REASSIGN OWNED</a></h2>
+<p>Changes the ownership of database objects owned by a database role.</p>
+<pre><code>REASSIGN OWNED BY &lt;old_role&gt; [, ...] TO &lt;new_role&gt;
+</code></pre>
+<p>See <a href="sql_commands/REASSIGN_OWNED.html">REASSIGN OWNED</a> for more information.</p>
+<h2 id="refresh-materialized-view"><a class="header" href="#refresh-materialized-view"><a id="refmatview"></a>REFRESH MATERIALIZED VIEW</a></h2>
+<p>Replaces the contents of a materialized view.</p>
+<pre><code>REFRESH MATERIALIZED VIEW [ CONCURRENTLY ] &lt;name&gt;
+    [ WITH [ NO ] DATA ]
+</code></pre>
+<p>See <a href="sql_commands/REFRESH_MATERIALIZED_VIEW.html">REFRESH MATERIALIZED VIEW</a> for more information.</p>
+<h2 id="reindex"><a class="header" href="#reindex"><a id="ae1905133"></a>REINDEX</a></h2>
+<p>Rebuilds indexes.</p>
+<pre><code>REINDEX {INDEX | TABLE | DATABASE | SYSTEM} &lt;name&gt;
+</code></pre>
+<p>See <a href="sql_commands/REINDEX.html">REINDEX</a> for more information.</p>
+<h2 id="release-savepoint"><a class="header" href="#release-savepoint"><a id="ae1905139"></a>RELEASE SAVEPOINT</a></h2>
+<p>Destroys a previously defined savepoint.</p>
+<pre><code>RELEASE [SAVEPOINT] &lt;savepoint_name&gt;
+</code></pre>
+<p>See <a href="sql_commands/RELEASE_SAVEPOINT.html">RELEASE SAVEPOINT</a> for more information.</p>
+<h2 id="reset"><a class="header" href="#reset"><a id="ae1905145"></a>RESET</a></h2>
+<p>Restores the value of a system configuration parameter to the default value.</p>
+<pre><code>RESET &lt;configuration_parameter&gt;
+
+RESET ALL
+</code></pre>
+<p>See <a href="sql_commands/RESET.html">RESET</a> for more information.</p>
+<h2 id="retrieve"><a class="header" href="#retrieve"><a id="retrieve"></a>RETRIEVE</a></h2>
+<p>Retrieves rows from a query using a parallel retrieve cursor.</p>
+<pre><code>RETRIEVE { &lt;count&gt; | ALL } FROM ENDPOINT &lt;endpoint_name&gt;
+</code></pre>
+<p>See <a href="sql_commands/RETRIEVE.html">RETRIEVE</a> for more information.</p>
+<h2 id="revoke"><a class="header" href="#revoke"><a id="ae1905153"></a>REVOKE</a></h2>
+<p>Removes access privileges.</p>
+<pre><code>REVOKE [GRANT OPTION FOR] { {SELECT | INSERT | UPDATE | DELETE 
+       | REFERENCES | TRIGGER | TRUNCATE } [, ...] | ALL [PRIVILEGES] }
+
+       ON { [TABLE] &lt;table_name&gt; [, ...]
+            | ALL TABLES IN SCHEMA schema_name [, ...] }
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC} [, ...]
+       [CASCADE | RESTRICT]
+
+REVOKE [ GRANT OPTION FOR ] { { SELECT | INSERT | UPDATE 
+       | REFERENCES } ( &lt;column_name&gt; [, ...] )
+       [, ...] | ALL [ PRIVILEGES ] ( &lt;column_name&gt; [, ...] ) }
+       ON [ TABLE ] &lt;table_name&gt; [, ...]
+       FROM { [ GROUP ]  &lt;role_name&gt; | PUBLIC } [, ...]
+       [ CASCADE | RESTRICT ]
+
+REVOKE [GRANT OPTION FOR] { {USAGE | SELECT | UPDATE} [,...] 
+       | ALL [PRIVILEGES] }
+       ON { SEQUENCE &lt;sequence_name&gt; [, ...]
+            | ALL SEQUENCES IN SCHEMA schema_name [, ...] }
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+       [CASCADE | RESTRICT]
+
+REVOKE [GRANT OPTION FOR] { {CREATE | CONNECT 
+       | TEMPORARY | TEMP} [, ...] | ALL [PRIVILEGES] }
+       ON DATABASE &lt;database_name&gt; [, ...]
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC} [, ...]
+       [CASCADE | RESTRICT]
+
+REVOKE [ GRANT OPTION FOR ]
+       { USAGE | ALL [ PRIVILEGES ] }
+       ON DOMAIN &lt;domain_name&gt; [, ...]
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+       [ CASCADE | RESTRICT ]
+
+
+REVOKE [ GRANT OPTION FOR ]
+       { USAGE | ALL [ PRIVILEGES ] }
+       ON FOREIGN DATA WRAPPER &lt;fdw_name&gt; [, ...]
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+       [ CASCADE | RESTRICT ]
+
+REVOKE [ GRANT OPTION FOR ]
+       { USAGE | ALL [ PRIVILEGES ] }
+       ON FOREIGN SERVER &lt;server_name&gt; [, ...]
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+       [ CASCADE | RESTRICT ]
+
+REVOKE [GRANT OPTION FOR] {EXECUTE | ALL [PRIVILEGES]}
+       ON { FUNCTION &lt;funcname&gt; ( [[&lt;argmode&gt;] [&lt;argname&gt;] &lt;argtype&gt;
+                              [, ...]] ) [, ...]
+            | ALL FUNCTIONS IN SCHEMA schema_name [, ...] }
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC} [, ...]
+       [CASCADE | RESTRICT]
+
+REVOKE [GRANT OPTION FOR] {USAGE | ALL [PRIVILEGES]}
+       ON LANGUAGE &lt;langname&gt; [, ...]
+       FROM { [ GROUP ]  &lt;role_name&gt; | PUBLIC} [, ...]
+       [ CASCADE | RESTRICT ]
+
+REVOKE [GRANT OPTION FOR] { {CREATE | USAGE} [, ...] 
+       | ALL [PRIVILEGES] }
+       ON SCHEMA &lt;schema_name&gt; [, ...]
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC} [, ...]
+       [CASCADE | RESTRICT]
+
+REVOKE [GRANT OPTION FOR] { CREATE | ALL [PRIVILEGES] }
+       ON TABLESPACE &lt;tablespacename&gt; [, ...]
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+       [CASCADE | RESTRICT]
+
+REVOKE [ GRANT OPTION FOR ]
+       { USAGE | ALL [ PRIVILEGES ] }
+       ON TYPE &lt;type_name&gt; [, ...]
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+       [ CASCADE | RESTRICT ] 
+
+REVOKE [ADMIN OPTION FOR] &lt;parent_role&gt; [, ...] 
+       FROM [ GROUP ] &lt;member_role&gt; [, ...]
+       [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/REVOKE.html">REVOKE</a> for more information.</p>
+<h2 id="rollback"><a class="header" href="#rollback"><a id="ae1905229"></a>ROLLBACK</a></h2>
+<p>Stops the current transaction.</p>
+<pre><code>ROLLBACK [WORK | TRANSACTION]
+</code></pre>
+<p>See <a href="sql_commands/ROLLBACK.html">ROLLBACK</a> for more information.</p>
+<h2 id="rollback-to-savepoint"><a class="header" href="#rollback-to-savepoint"><a id="ae1905235"></a>ROLLBACK TO SAVEPOINT</a></h2>
+<p>Rolls back the current transaction to a savepoint.</p>
+<pre><code>ROLLBACK [WORK | TRANSACTION] TO [SAVEPOINT] &lt;savepoint_name&gt;
+</code></pre>
+<p>See <a href="sql_commands/ROLLBACK_TO_SAVEPOINT.html">ROLLBACK TO SAVEPOINT</a> for more information.</p>
+<h2 id="savepoint"><a class="header" href="#savepoint"><a id="ae1905241"></a>SAVEPOINT</a></h2>
+<p>Defines a new savepoint within the current transaction.</p>
+<pre><code>SAVEPOINT &lt;savepoint_name&gt;
+</code></pre>
+<p>See <a href="sql_commands/SAVEPOINT.html">SAVEPOINT</a> for more information.</p>
+<h2 id="select"><a class="header" href="#select"><a id="ae1905247"></a>SELECT</a></h2>
+<p>Retrieves rows from a table or view.</p>
+<pre><code>[ WITH [ RECURSIVE ] &lt;with_query&gt; [, ...] ]
+SELECT [ALL | DISTINCT [ON (&lt;expression&gt; [, ...])]]
+  * | &lt;expression &gt;[[AS] &lt;output_name&gt;] [, ...]
+  [FROM &lt;from_item&gt; [, ...]]
+  [WHERE &lt;condition&gt;]
+  [GROUP BY &lt;grouping_element&gt; [, ...]]
+  [HAVING &lt;condition&gt; [, ...]]
+  [WINDOW &lt;window_name&gt; AS (&lt;window_definition&gt;) [, ...] ]
+  [{UNION | INTERSECT | EXCEPT} [ALL | DISTINCT] &lt;select&gt;]
+  [ORDER BY &lt;expression&gt; [ASC | DESC | USING &lt;operator&gt;] [NULLS {FIRST | LAST}] [, ...]]
+  [LIMIT {&lt;count&gt; | ALL}]
+  [OFFSET &lt;start&gt; [ ROW | ROWS ] ]
+  [FETCH { FIRST | NEXT } [ &lt;count&gt; ] { ROW | ROWS } ONLY]
+  [FOR {UPDATE | NO KEY UPDATE | SHARE | KEY SHARE} [OF &lt;table_name&gt; [, ...]] [NOWAIT] [...]]
+
+TABLE { [ ONLY ] &lt;table_name&gt; [ * ] | &lt;with_query_name&gt; }
+
+</code></pre>
+<p>See <a href="sql_commands/SELECT.html">SELECT</a> for more information.</p>
+<h2 id="select-into"><a class="header" href="#select-into"><a id="ae1905337"></a>SELECT INTO</a></h2>
+<p>Defines a new table from the results of a query.</p>
+<pre><code>[ WITH [ RECURSIVE ] &lt;with_query&gt; [, ...] ]
+SELECT [ALL | DISTINCT [ON ( &lt;expression&gt; [, ...] )]]
+    * | &lt;expression&gt; [AS &lt;output_name&gt;] [, ...]
+    INTO [TEMPORARY | TEMP | UNLOGGED ] [TABLE] &lt;new_table&gt;
+    [FROM &lt;from_item&gt; [, ...]]
+    [WHERE &lt;condition&gt;]
+    [GROUP BY &lt;expression&gt; [, ...]]
+    [HAVING &lt;condition&gt; [, ...]]
+    [{UNION | INTERSECT | EXCEPT} [ALL | DISTINCT ] &lt;select&gt;]
+    [ORDER BY &lt;expression&gt; [ASC | DESC | USING &lt;operator&gt;] [NULLS {FIRST | LAST}] [, ...]]
+    [LIMIT {&lt;count&gt; | ALL}]
+    [OFFSET &lt;start&gt; [ ROW | ROWS ] ]
+    [FETCH { FIRST | NEXT } [ &lt;count&gt; ] { ROW | ROWS } ONLY ]
+    [FOR {UPDATE | SHARE} [OF &lt;table_name&gt; [, ...]] [NOWAIT] 
+    [...]]
+</code></pre>
+<p>See <a href="sql_commands/SELECT_INTO.html">SELECT INTO</a> for more information.</p>
+<h2 id="set"><a class="header" href="#set"><a id="ae1905365"></a>SET</a></h2>
+<p>Changes the value of a SynxDB configuration parameter.</p>
+<pre><code>SET [SESSION | LOCAL] &lt;configuration_parameter&gt; {TO | =} &lt;value&gt; | 
+    '&lt;value&gt;' | DEFAULT}
+
+SET [SESSION | LOCAL] TIME ZONE {&lt;timezone&gt; | LOCAL | DEFAULT}
+</code></pre>
+<p>See <a href="sql_commands/SET.html">SET</a> for more information.</p>
+<h2 id="set-constraints"><a class="header" href="#set-constraints"><a id="az1905373"></a>SET CONSTRAINTS</a></h2>
+<p>Sets constraint check timing for the current transaction.</p>
+<pre><code>SET CONSTRAINTS { ALL | &lt;name&gt; [, ...] } { DEFERRED | IMMEDIATE }
+</code></pre>
+<p>See <a href="sql_commands/SET_CONSTRAINTS.html">SET CONSTRAINTS</a> for more information.</p>
+<h2 id="set-role"><a class="header" href="#set-role"><a id="ae1905373"></a>SET ROLE</a></h2>
+<p>Sets the current role identifier of the current session.</p>
+<pre><code>SET [SESSION | LOCAL] ROLE &lt;rolename&gt;
+
+SET [SESSION | LOCAL] ROLE NONE
+
+RESET ROLE
+</code></pre>
+<p>See <a href="sql_commands/SET_ROLE.html">SET ROLE</a> for more information.</p>
+<h2 id="set-session-authorization"><a class="header" href="#set-session-authorization"><a id="ae1905383"></a>SET SESSION AUTHORIZATION</a></h2>
+<p>Sets the session role identifier and the current role identifier of the current session.</p>
+<pre><code>SET [SESSION | LOCAL] SESSION AUTHORIZATION &lt;rolename&gt;
+
+SET [SESSION | LOCAL] SESSION AUTHORIZATION DEFAULT
+
+RESET SESSION AUTHORIZATION
+</code></pre>
+<p>See <a href="sql_commands/SET_SESSION_AUTHORIZATION.html">SET SESSION AUTHORIZATION</a> for more information.</p>
+<h2 id="set-transaction"><a class="header" href="#set-transaction"><a id="ae1905393"></a>SET TRANSACTION</a></h2>
+<p>Sets the characteristics of the current transaction.</p>
+<pre><code>SET TRANSACTION [&lt;transaction_mode&gt;] [READ ONLY | READ WRITE]
+
+SET TRANSACTION SNAPSHOT &lt;snapshot_id&gt;
+
+SET SESSION CHARACTERISTICS AS TRANSACTION &lt;transaction_mode&gt; 
+     [READ ONLY | READ WRITE]
+     [NOT] DEFERRABLE
+</code></pre>
+<p>See <a href="sql_commands/SET_TRANSACTION.html">SET TRANSACTION</a> for more information.</p>
+<h2 id="show"><a class="header" href="#show"><a id="ae1905407"></a>SHOW</a></h2>
+<p>Shows the value of a system configuration parameter.</p>
+<pre><code>SHOW &lt;configuration_parameter&gt;
+
+SHOW ALL
+</code></pre>
+<p>See <a href="sql_commands/SHOW.html">SHOW</a> for more information.</p>
+<h2 id="start-transaction"><a class="header" href="#start-transaction"><a id="ae1905415"></a>START TRANSACTION</a></h2>
+<p>Starts a transaction block.</p>
+<pre><code>START TRANSACTION [&lt;transaction_mode&gt;] [READ WRITE | READ ONLY]
+</code></pre>
+<p>See <a href="sql_commands/START_TRANSACTION.html">START TRANSACTION</a> for more information.</p>
+<h2 id="truncate"><a class="header" href="#truncate"><a id="ae1905421"></a>TRUNCATE</a></h2>
+<p>Empties a table of all rows.</p>
+<pre><code>TRUNCATE [TABLE] [ONLY] &lt;name&gt; [ * ] [, ...] 
+    [ RESTART IDENTITY | CONTINUE IDENTITY ] [CASCADE | RESTRICT]
+</code></pre>
+<p>See <a href="sql_commands/TRUNCATE.html">TRUNCATE</a> for more information.</p>
+<h2 id="update"><a class="header" href="#update"><a id="ae1905427"></a>UPDATE</a></h2>
+<p>Updates rows of a table.</p>
+<pre><code>[ WITH [ RECURSIVE ] &lt;with_query&gt; [, ...] ]
+UPDATE [ONLY] &lt;table&gt; [[AS] &lt;alias&gt;]
+   SET {&lt;column&gt; = {&lt;expression&gt; | DEFAULT} |
+   (&lt;column&gt; [, ...]) = ({&lt;expression&gt; | DEFAULT} [, ...])} [, ...]
+   [FROM &lt;fromlist&gt;]
+   [WHERE &lt;condition &gt;| WHERE CURRENT OF &lt;cursor_name&gt; ]
+</code></pre>
+<p>See <a href="sql_commands/UPDATE.html">UPDATE</a> for more information.</p>
+<h2 id="vacuum"><a class="header" href="#vacuum"><a id="ae1905441"></a>VACUUM</a></h2>
+<p>Garbage-collects and optionally analyzes a database.</p>
+<pre><code>VACUUM [({ FULL | FREEZE | VERBOSE | ANALYZE } [, ...])] [&lt;table&gt; [(&lt;column&gt; [, ...] )]]
+        
+VACUUM [FULL] [FREEZE] [VERBOSE] [&lt;table&gt;]
+
+VACUUM [FULL] [FREEZE] [VERBOSE] ANALYZE
+              [&lt;table&gt; [(&lt;column&gt; [, ...] )]]
+</code></pre>
+<p>See <a href="sql_commands/VACUUM.html">VACUUM</a> for more information.</p>
+<h2 id="values"><a class="header" href="#values"><a id="ae1905451"></a>VALUES</a></h2>
+<p>Computes a set of rows.</p>
+<pre><code>VALUES ( &lt;expression&gt; [, ...] ) [, ...]
+   [ORDER BY &lt;sort_expression&gt; [ ASC | DESC | USING &lt;operator&gt; ] [, ...] ]
+   [LIMIT { &lt;count&gt; | ALL } ] 
+   [OFFSET &lt;start&gt; [ ROW | ROWS ] ]
+   [FETCH { FIRST | NEXT } [&lt;count&gt; ] { ROW | ROWS } ONLY ]
+</code></pre>
+<p>See <a href="sql_commands/VALUES.html">VALUES</a> for more information.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ref_guide/sql_commands/sql_ref.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ref_guide/sql_commands/ABORT.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ref_guide/sql_commands/sql_ref.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ref_guide/sql_commands/ABORT.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

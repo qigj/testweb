@@ -1,0 +1,229 @@
+# Architecture and Services
+
+{{ product_name }} employs a cloud-native, storage-compute separated architecture that consists of four distinct layers: the metadata service layer, compute service layer, storage service layer, and data science and AI services layer. This design enables efficient resource utilization, horizontal scalability, and optimal performance for diverse analytical and machine learning workloads.
+
+## Architecture Overview
+
+The four-layer architecture provides clear functional separation and enables independent scaling of each component:
+
+- **Metadata Service Layer**: Manages metadata persistence and access, handles transaction management and state persistence
+- **Compute Service Layer**: Processes query requests with coordinator nodes handling query optimization and segment nodes executing queries, supports multiple warehouses for independent compute clusters
+- **Storage Service Layer**: Provides data persistence and access, supporting both row storage and column storage engines for different workload scenarios
+- **Data Science and AI Services**: Provides comprehensive machine learning and AI capabilities through the SynxML Platform
+
+## Metadata Service Layer
+
+{{ product_name }} offers two metadata service options: FoundationDB (FDB)-based metadata service and UnionStore-based metadata service.
+
+### FoundationDB-based Metadata Service
+
+The Metadata Service is an independent cluster built upon FoundationDB, specifically engineered to manage the diverse metadata required by a computing cluster. This service implements a compute-storage separation design principle, isolating metadata management operations. This architectural choice not only reduces the overall system coupling but also significantly enhances scalability. Its underlying storage leverages FoundationDB, an industry-recognized, highly available, distributed key-value (KV) database renowned for its exceptional scalability and reliability. FoundationDB supports both independent and multi-tenant deployment models, thereby balancing security requirements with cost-effectiveness.
+
+The overall Metadata Service architecture comprises three core components, which collaborate to deliver its functionality:
+
+- **Coordination and Session Management Service**: A session management cluster responsible for service discovery and the allocation of metadata service nodes.
+- **Metadata Service**: A stateless service cluster providing critical metadata access, access control, lock management, and distributed transaction capabilities. Internally, this service is further modularized into specific functional components:
+
+  - Object Definition Manager: Manages queries, modifications, and deletions of database object definitions (e.g., tables, views) and handles their associated access permissions.
+  - Manifest Manager: Provides multi-version management for data manifest files.
+  - Sequence Server: Offers sequence value allocation services.
+  - WAL Manager: Handles the storage and application of metadata Write-Ahead Logs (WAL).
+  - Concurrent Controller: Provides lock-based concurrency control to ensure data consistency during concurrent access.
+
+- **Metadata Storage Service**: A distributed key-value storage engine implemented using FoundationDB, responsible for the actual storage of metadata. This includes, for example, mappings from tables to storage objects, data dictionaries, WAL logs, and index information.
+
+#### Operational Workflow
+Upon receipt of a metadata request, the Coordination and Session Management Service allocates an appropriate Metadata Service node to process the request. The designated node then retrieves the necessary metadata from the Metadata Storage Service and returns the results to the requester. Furthermore, the Coordination and Session Management Service functions as the connection entry point for Database Proxy nodes, managing communication with other nodes within the system.
+
+### UnionStore-based Metadata Service
+
+UnionStore serves as an alternative metadata service, providing data persistence and access capabilities. The core concept is "log is database". It persists redo logs and provides external access through log replay. UnionStore consists of two main components:
+
+#### WAL Service
+
+- Receives data logs from the compute layer and persists them with 3-replica reliability
+- Synchronizes persisted logs to the Page Service
+
+#### Page Service
+
+- Retrieves and parses persisted logs from WAL Service
+- Applies log modifications to corresponding pages to obtain the latest page versions
+- Provides page read requests, returning the appropriate version of pages to clients
+
+#### UnionStore Features
+
+- **Multi-version Data**: Supports accessing any version of retained data (Time Travel capability)
+- **Multi-tenancy**: A single metadata service cluster can serve multiple users, improving resource utilization and cost-effectiveness
+- **Backup and Recovery**: 
+
+  - WAL Service backs up persisted logs to object storage for enhanced reliability and cost reduction
+  - Page Service backs up current data snapshots to object storage as checkpoints
+  - Recovery involves retrieving the latest snapshot from object storage and synchronizing data from the snapshot's log position
+
+#### Using UnionStore as Metadata Service
+
+- All metadata modifications and transaction information are persisted to UnionStore through WAL
+- Each cluster uses a single tenant, with all cluster nodes accessing the tenant's metadata (including system table data and transaction data)
+- Cluster nodes maintain metadata caches, accessing the metadata service only on cache misses
+
+## Compute Service Layer
+
+The compute layer consists of two primary components: Coordinator and Segment nodes, where segments are the minimum units of a compute cluster (Warehouse).
+
+### Coordinator (Proxy)
+
+Coordinator nodes primarily handle client request reception, query optimization, and query plan distribution to segments for execution.
+
+#### Key Features
+
+- **Metadata Distribution**: 
+
+  - Coordinator nodes distribute all relevant metadata along with query plans, avoiding segment access to metadata services
+  - Significantly reduces metadata service pressure
+  - Eliminates network interaction delays with metadata services
+- **Lightweight and Stateless**: 
+
+  - Primarily handles query optimization and forwarding, with minimal computation involvement
+  - Metadata access primarily uses cache
+  - Metadata and data are stored separately, enabling fast startup and reconstruction
+
+### Warehouse
+
+A Warehouse is a compute cluster composed of one or more segments, responsible for receiving and executing query plans from the coordinator and returning results.
+
+#### Key Features
+
+- **Multiple Warehouses**: 
+
+  - Supports launching multiple independent warehouses that share the same data while performing concurrent read/write operations
+  - Different warehouses can be configured with varying specifications and scales for different business workloads on the same data
+- **Stateless and Rapid Scaling**:
+
+  - Warehouses can quickly scale segments without business impact to improve query performance
+  - Warehouses can be created, started, and stopped rapidly (within seconds) based on business requirements, improving compute resource utilization
+
+## Storage Service Layer
+
+The storage service layer supports both row storage and column storage engines to accommodate different workload scenarios. Data is persisted to:
+
+1. **PAX Column Storage (Object Storage)**: Provides unlimited expansion capabilities
+2. **UnionStore**: Supports fast row storage read/write operations
+
+All cluster nodes maintain data caches for efficient data access.
+
+### UnionStore Row Storage
+
+UnionStore serves as a row storage engine that can provide storage and access for user row tables in addition to metadata services. Users can create and use row tables through specific syntax.
+
+#### Data Organization
+
+- Data is organized at the tuple level and sequentially written to different pages (8K/32K)
+- Page headers contain pointers for quick tuple location
+
+#### Key Benefits
+
+- Fast reading and writing of complete records
+- More efficient DML operations
+- Supports OLTP (Online Transaction Processing) workloads with frequent DML operations and high latency requirements
+- Handles continuous, batch data writing scenarios
+- Compatible with PostgreSQL ecosystem, supporting special requirements such as PostGIS
+
+### PAX Column Storage
+
+PAX is a new column storage engine that organizes data by columns in continuous storage, grouping multiple column data into row groups within files stored in object storage.
+
+#### Key Features
+
+- **Statistical Information**: 
+
+  - Collects file-level and row group-level statistics during data writing to accelerate queries
+  - Uses statistics as query results to avoid data scanning and computation (e.g., for aggregates)
+  - Employs min-max filtering for file-level and row group-level data filtering during scanning
+
+- **Vectorized Engine**: 
+
+  - Integrates with vectorized engines, generating internal column storage formats for enhanced data processing and query capabilities
+
+- **Data Writing and Updates**: 
+
+  - Uses append-only writing for data insertion
+  - Employs visibility map (visimap) for delete marking
+  - Data reading determines record visibility based on visimap
+  - Visimap is stored with data rather than as metadata, avoiding excessive metadata growth and frequent metadata access during data reads
+  - Provides Copy on Write writing strategy for delete operations, rewriting related data files to avoid visimap generation, suitable for read-heavy, write-light scenarios
+
+- **Data Clustering**: 
+
+  - Groups "adjacent data" together to enable more effective data filtering through min-max filters
+
+- **File Management**: 
+
+  - Merges multiple data writes into single files to avoid small file generation
+  - Periodically deletes unnecessary files and merges small files to improve data scanning efficiency
+
+### Gopher Cache
+
+Gopher is a distributed cache system that supports high-concurrency, low-latency access to massive small and large files. It is deployed to each node in the data warehouse compute layer to accelerate computing I/O access.
+
+- Adopts a decentralized design where each cache instance is a self-contained client/server service
+- Acts as a local file system with two-level caches for data warehouse computing services
+- Avoids potential intra-cluster network communication constraints observed in centralized master-slave distributed cache systems
+
+#### Core Components
+
+1. **Metadata Service**: The core of the cache system, managing metadata such as task status, file names, and block IDs, interfacing with other modules to facilitate client data access
+2. **User File System**: Stores destination storage information including target file systems, ports, and buckets
+3. **Block Manager and File Manager**: Provide data access for blocks and files respectively, utilizing stream reads and writes for large file processing in small memory buffers
+4. **Cache Manager**: Implements a two-level cache (memory pool and SSD cache) to efficiently utilize limited cache space and improve data access speed
+5. **Persistent Storage Module**: Incorporates network transmission libraries for S3 object storage, HDFS, and local storage connections
+6. **Session Manager**: Utilizes epoll multiplexing to handle multiple client connections simultaneously
+
+#### Key Features
+
+- File prefetching, batch reading, shared memory, asynchronous write optimization
+- Concurrent multiple reads and small file memory merging
+- High-performance and highly available caching system supporting efficient concurrent processing and rapid scaling
+
+## Data Science and AI Services
+
+{{ product_name }} includes the SynxML Platform, a high-performance distributed computing platform designed for enterprise-grade AI applications. The platform integrates the strengths of open-source technologies and enhances them with enterprise-grade features, offering a complete end-to-end solution covering data preparation, feature engineering, model training, and production deployment.
+
+### SynxML Platform Core Features
+
+#### Visual Modeling
+
+- Offers an intuitive graphical interface that lets users train models by selecting algorithms, datasets, and setting hyperparameters
+- After training, models can be deployed as services with a single click
+- Supports A/B testing and staged rollouts
+
+#### Notebook-based Development
+
+- Comes with a built-in professional-grade Jupyter environment
+- Developers can write and debug Python code flexibly, enabling customization and experimentation with complex algorithms
+
+#### Algorithm and Model Library
+
+- Includes a rich collection of built-in algorithms such as Logistic Regression and XGBoost
+- Deep learning models like MLP, ResNet, and Bert
+- Fine-tuning algorithms for large language models (supporting QLoRA and Unsloth)
+- Users can also extend the library with custom algorithms
+
+### SynxML Platform Use Cases
+
+#### Private Model Training for Enterprises
+
+- Enables organizations to train machine learning models on sensitive internal data without leaving the enterprise network
+- Ensures secure end-to-end management and high-performance training
+- Helps businesses build accurate, compliant, and domain-specific models
+
+#### Fine-tuning Large Language Models
+
+- Integrates efficient fine-tuning methods such as QLoRA and Unsloth to support popular LLMs
+- Enterprises can quickly adapt LLMs to specialized domains using few-shot learning
+- Reduces training costs while improving task accuracy and semantic understanding
+
+#### Model Deployment
+
+- Allows trained models to be deployed as RESTful API services in one click
+- Seamlessly integrates with business systems
+- Supports A/B testing, phased rollouts, and auto-scaling to maintain stable performance under high concurrency 

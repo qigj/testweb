@@ -1,0 +1,140 @@
+.. raw:: latex
+
+   \newpage
+
+Execute Queries in Parallel
+===========================
+
+This document describes the use cases, methods, limitations, and frequently asked questions for executing queries in parallel in |product_name|. |product_name| introduces the parallel query feature, where the number of computing nodes (including the ``SeqScan`` operator) is dynamically adjusted based on the data volume during query execution. Parallel query aims to improve query performance by utilizing multiple CPU cores to process a single query.
+
+Use cases
+---------
+
+-  Deploy a small number of segments on a single physical machine and improve performance by dynamically adjusting the degree of parallelism instead of deploying a large number of segments.
+
+-  Enabling operator parallelism provides a performance advantage when the host CPU and disk load are not high.
+
+How to use
+----------
+
+|product_name| supports parallel queries on AO/AOCO tables and Heap tables.
+
+Query heap tables in parallel
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Before enabling the parallel query feature, you need to disable the GPORCA optimizer.
+
+   .. code:: sql
+
+      SET enable_parallel = ON;
+      SET optimizer = OFF;
+
+2. Set the maximum degree of parallelism.
+
+   .. code:: sql
+
+      -- The setting should consider the number of CPU cores and segments.
+      SET max_parallel_workers_per_gather = 4;
+
+    Query example:
+
+    .. code:: sql
+
+    CREATE TABLE t1 (c1 int,c2 int, c3 int, c4 box) distributed by (c1);
+    INSERT INTO t1 SELECT x, 2*x, 3*x, box('6,6,6,6') FROM generate_series(1,1000000) AS x;
+    SELECT count(*) from t1;
+
+Query AO/AOCO tables in parallel
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Before enabling the parallel query feature, you need to disable the GPORCA optimizer.
+
+   .. code:: sql
+
+      SET enable_parallel = ON;
+      SET optimizer = OFF;
+
+2. Set the maximum degree of parallelism.
+
+   .. code:: sql
+
+      -- The setting should consider the number of CPU cores and segments.
+      SET max_parallel_workers_per_gather = 4;
+
+      -- Set how many files to insert data into within one transaction. A larger value might decrease performance, especially for AOCO tables.
+      SET gp_appendonly_insert_files = 8;
+
+      -- Switch to the next file for data insertion every 100,000 rows. This can be adjusted to distribute data as evenly as possible across multiple files.
+      SET gp_appendonly_insert_files_tuples_range = 100000;
+
+3. Insert and query.
+
+   .. code:: sql
+
+      CREATE TABLE ao(x INT) USING ao_row;
+      INSERT INTO ao SELECT i FROM generate_series(1, 1000000) i;
+      -- It is recommended to update statistics first.
+      ANALYZE ao;
+      SELECT COUNT(*) FROM ao;
+
+Parameter descriptions
+----------------------
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+   :widths: 13 10 7 7 15
+
+   * - Parameter
+     - Description
+     - Default
+     - Required
+     - Example
+   * - ``enable_parallel``
+     - Whether to enable the parallel feature.
+     - ``OFF``
+     - Yes
+     - ``SET enable_parallel = ON;``
+   * - ``optimizer``
+     - Whether to enable the GPORCA optimizer.
+     - ``ON``
+     - Yes
+     - ``SET optimizer = OFF;``
+   * - ``gp_appendonly_insert_files``
+     - The number of files to insert data into within one transaction.
+     - ``4``
+     - No
+     - ``SET gp_appendonly_insert_files = 8;``
+   * - ``gp_appendonly_insert_files_tuples_range``
+     - The number of rows after which to switch to the next file for data insertion.
+     - ``100000``
+     - No
+     - ``SET gp_appendonly_insert_files_tuples_range = 100000;``
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+Frequently asked questions
+--------------------------
+
+-  Currently, parallel execution is supported for queries containing the following operators. |product_name| does not currently support queries with other operators.
+
+   .. code:: sql
+
+      sequence scan      
+      index scan      
+      index only scan      
+      bitmap heap scan      
+      append
+      hash join      
+      nestloop join      
+      merge join
+
+-  Parallel query does not always improve query performance. An excessively high degree of parallelism can cause an overload, leading to a decrease in performance.
+
+-  Enabling parallelism multiplies memory consumption, which might lead to "out of memory" errors.

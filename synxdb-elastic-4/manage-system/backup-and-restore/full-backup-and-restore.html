@@ -1,0 +1,544 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perform Full Backup and Restore &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Perform Incremental Backup and Restore" href="incremental-backup-and-restore.html" />
+    <link rel="prev" title="Backup and Restore Overview" href="br-overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../manage-system-index.html">Manage System</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../configure-database-system.html">Configure Database System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../routine-maintenance.html">Routine Maintenance Operations</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="br-index.html">Backup and Restore</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="br-overview.html">Backup and Restore Overview</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Perform Full Backup and Restore</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#back-up-the-full-database">Back up the full database</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#restore-the-full-database">Restore the full database</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#filter-the-contents-of-a-backup-or-restore">Filter the contents of a backup or restore</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#check-report-files">Check report files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configure-email-notifications">Configure email notifications</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="incremental-backup-and-restore.html">Perform Incremental Backup and Restore</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../high-availability/ha-index.html">High Availability</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../manage-system-index.html">Manage System</a></li>
+          <li class="breadcrumb-item"><a href="br-index.html">Backup and Restore</a></li>
+      <li class="breadcrumb-item active">Perform Full Backup and Restore</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="perform-full-backup-and-restore">
+<h1>Perform Full Backup and Restore<a class="headerlink" href="#perform-full-backup-and-restore" title="Link to this heading"></a></h1>
+<p>SynxDB Elastic supports backing up and restoring the full database in parallel. Parallel operations scale regardless of the number of segments in your system, because segment hosts each write their data to local disk storage at the same time.</p>
+<p><code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> and <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> are SynxDB Elastic command-line utilities that create and restore backup sets for SynxDB Elastic. By default, <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> stores only the object metadata files and DDL files for a backup in the SynxDB Elastic coordinator data directory. SynxDB Elastic segments use the <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">...</span> <span class="pre">ON</span> <span class="pre">SEGMENT</span></code> command to store their data for backed-up tables in compressed CSV data files, located in each segment’s backups directory.</p>
+<p>The backup metadata files contain all of the information that <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> needs to restore a full backup set in parallel. Each <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> task uses a single transaction in SynxDB Elastic. During this transaction, metadata is backed up on the coordinator host, and data for each table on each segment host is written to CSV backup files using <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">...</span> <span class="pre">ON</span> <span class="pre">SEGMENT</span></code> commands in parallel. The backup process acquires an <code class="docutils literal notranslate"><span class="pre">ACCESS</span> <span class="pre">SHARE</span></code> lock on each table that is backed up.</p>
+<section id="back-up-the-full-database">
+<h2>Back up the full database<a class="headerlink" href="#back-up-the-full-database" title="Link to this heading"></a></h2>
+<p>To perform a complete backup of a database, as well as SynxDB Elastic system metadata, use the command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gpbackup<span class="w"> </span>--dbname<span class="w"> </span>&lt;database_name&gt;
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gpbackup<span class="w"> </span>--dbname<span class="w"> </span>test_04
+
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-gpbackup<span class="w"> </span><span class="nv">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>.2.7-beta1+dev.7
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-<span class="p">|</span>product_name<span class="p">|</span><span class="w"> </span><span class="nv">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>oudberry<span class="w"> </span>Database<span class="w"> </span><span class="m">1</span>.0.0<span class="w"> </span>build<span class="w"> </span><span class="m">5551471267</span>
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Starting<span class="w"> </span>backup<span class="w"> </span>of<span class="w"> </span>database<span class="w"> </span>test_04
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Backup<span class="w"> </span><span class="nv">Timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20240108171718</span>
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Backup<span class="w"> </span><span class="nv">Database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>test_04
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Gathering<span class="w"> </span>table<span class="w"> </span>state<span class="w"> </span>information
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Acquiring<span class="w"> </span>ACCESS<span class="w"> </span>SHARE<span class="w"> </span>locks<span class="w"> </span>on<span class="w"> </span>tables
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Gathering<span class="w"> </span>additional<span class="w"> </span>table<span class="w"> </span>metadata
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Getting<span class="w"> </span>storage<span class="w"> </span>information
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>WARNING<span class="o">]</span>:-No<span class="w"> </span>tables<span class="w"> </span><span class="k">in</span><span class="w"> </span>backup<span class="w"> </span><span class="nb">set</span><span class="w"> </span>contain<span class="w"> </span>data.<span class="w"> </span>Performing<span class="w"> </span>metadata-only<span class="w"> </span>backup<span class="w"> </span>instead.
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Metadata<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>written<span class="w"> </span>to<span class="w"> </span>/data0/coordinator/gpseg-1/backups/20240108/20240108171718/gpbackup_20240108171718_metadata.sql
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Writing<span class="w"> </span>global<span class="w"> </span>database<span class="w"> </span>metadata
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Global<span class="w"> </span>database<span class="w"> </span>metadata<span class="w"> </span>backup<span class="w"> </span><span class="nb">complete</span>
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Writing<span class="w"> </span>pre-data<span class="w"> </span>metadata
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Pre-data<span class="w"> </span>metadata<span class="w"> </span>metadata<span class="w"> </span>backup<span class="w"> </span><span class="nb">complete</span>
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Writing<span class="w"> </span>post-data<span class="w"> </span>metadata
+<span class="m">20240108</span>:17:17:18<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Post-data<span class="w"> </span>metadata<span class="w"> </span>backup<span class="w"> </span><span class="nb">complete</span>
+<span class="m">20240108</span>:17:17:19<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Found<span class="w"> </span>neither<span class="w"> </span>/usr/local/cloudberry-db-1.0.0/bin/gp_email_contacts.yaml<span class="w"> </span>nor<span class="w"> </span>/home/gpadmin//gp_email_contacts.yaml
+<span class="m">20240108</span>:17:17:19<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Email<span class="w"> </span>containing<span class="w"> </span>gpbackup<span class="w"> </span>report<span class="w"> </span>/data0/coordinator/gpseg-1/backups/20240108/20240108171718/gpbackup_20240108171718_report<span class="w"> </span>will<span class="w"> </span>not<span class="w"> </span>be<span class="w"> </span>sent
+<span class="m">20240108</span>:17:17:19<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:001945-<span class="o">[</span>INFO<span class="o">]</span>:-Backup<span class="w"> </span>completed<span class="w"> </span>successfully
+</pre></div>
+</div>
+<p>The above command creates a file that contains global and database-specific metadata on the SynxDB Elastic coordinator host in the default directory, <code class="docutils literal notranslate"><span class="pre">$COORDINATOR_DATA_DIRECTORY/backups/&lt;YYYYMMDD&gt;/&lt;YYYYMMDDHHMMSS&gt;/</span></code>. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls<span class="w"> </span><span class="nv">$COORDINATOR_DATA_DIRECTORY</span>/backups/20240108/20240108171718
+
+gpbackup_20240108171718_config.yaml<span class="w">   </span>gpbackup_20240108171718_report
+gpbackup_20240108171718_metadata.sql<span class="w">  </span>gpbackup_20240108171718_toc.yaml
+</pre></div>
+</div>
+<p>By default, each segment stores each table’s data for the backup in a separate compressed CSV file in <code class="docutils literal notranslate"><span class="pre">&lt;seg_dir&gt;/backups/&lt;YYYYMMDD&gt;/&lt;YYYYMMDDHHMMSS&gt;/</span></code>. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls<span class="w"> </span>/data1/primary/gpseg1/backups/20240108/20240108171718/
+
+gpbackup_0_20240108171718_17166.gz<span class="w">  </span>gpbackup_0_20240108171718_26303.gz
+gpbackup_0_20240108171718_21816.gz
+</pre></div>
+</div>
+<p>To consolidate all backup files into a single directory, include the <code class="docutils literal notranslate"><span class="pre">--backup-dir</span></code> option. Note that you need to specify an absolute path with this option:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gpbackup<span class="w"> </span>--dbname<span class="w"> </span>test_04<span class="w"> </span>--backup-dir<span class="w"> </span>/home/gpadmin/backups
+
+<span class="m">20240108</span>:17:34:10<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:003348-<span class="o">[</span>INFO<span class="o">]</span>:-gpbackup<span class="w"> </span><span class="nv">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>.2.7-beta1+dev.7
+<span class="m">20240108</span>:17:34:10<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:003348-<span class="o">[</span>INFO<span class="o">]</span>:-<span class="p">|</span>product_name<span class="p">|</span><span class="w"> </span><span class="nv">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>oudberry<span class="w"> </span>Database<span class="w"> </span><span class="m">1</span>.0.0<span class="w"> </span>build<span class="w"> </span><span class="m">5551471267</span>
+...
+<span class="m">20240108</span>:17:34:12<span class="w"> </span>gpbackup:gpadmin:cbdb-coordinator:003348-<span class="o">[</span>INFO<span class="o">]</span>:-Backup<span class="w"> </span>completed<span class="w"> </span>successfully
+
+$<span class="w"> </span>find<span class="w"> </span>/home/gpadmin/backups/<span class="w"> </span>-type<span class="w"> </span>f
+
+/home/gpadmin/backups/gpseg0/backups/20240108/20240108173410/gpbackup_0_20240108173410_16593.gz
+/home/gpadmin/backups/gpseg-1/backups/20240108/20240108173410/gpbackup_20240108173410_config.yaml
+/home/gpadmin/backups/gpseg-1/backups/20240108/20240108173410/gpbackup_20240108173410_report
+/home/gpadmin/backups/gpseg-1/backups/20240108/20240108173410/gpbackup_20240108173410_toc.yaml
+/home/gpadmin/backups/gpseg-1/backups/20240108/20240108173410/gpbackup_20240108173410_metadata.sql
+/home/gpadmin/backups/gpseg1/backups/20240108/20240108173410/gpbackup_1_20240108173410_16593.gz
+</pre></div>
+</div>
+<p>When performing a backup operation, you can use the <code class="docutils literal notranslate"><span class="pre">--single-data-file</span></code> in situations where the additional overhead of multiple files might be prohibitive. For example, if you use a third party storage solution such as Data Domain with backups.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Backing up a materialized view does not back up the materialized view data. Only the materialized view definition is backed up.</p>
+</div>
+</section>
+<section id="restore-the-full-database">
+<h2>Restore the full database<a class="headerlink" href="#restore-the-full-database" title="Link to this heading"></a></h2>
+<p>To use <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> to restore from a backup set, you must use the <code class="docutils literal notranslate"><span class="pre">--timestamp</span></code> option to specify the exact timestamp value (<code class="docutils literal notranslate"><span class="pre">YYYYMMDDHHMMSS</span></code>) to restore. Include the <code class="docutils literal notranslate"><span class="pre">--create-db</span></code> option if the database does not exist in the cluster. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>dropdb<span class="w"> </span>demo
+$<span class="w"> </span>gprestore<span class="w"> </span>--timestamp<span class="w"> </span><span class="m">20240108171718</span><span class="w"> </span>--create-db
+
+<span class="m">20240108</span>:17:42:26<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:004115-<span class="o">[</span>INFO<span class="o">]</span>:-Restore<span class="w"> </span><span class="nv">Key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20240108171718</span>
+<span class="m">20240108</span>:17:42:26<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:004115-<span class="o">[</span>INFO<span class="o">]</span>:-gpbackup<span class="w"> </span><span class="nv">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>.2.7-beta1+dev.7
+<span class="m">20240108</span>:17:42:26<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:004115-<span class="o">[</span>INFO<span class="o">]</span>:-gprestore<span class="w"> </span><span class="nv">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>.2.7-beta1+dev.7
+<span class="m">20240108</span>:17:42:26<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:004115-<span class="o">[</span>INFO<span class="o">]</span>:-<span class="p">|</span>product_name<span class="p">|</span><span class="w"> </span><span class="nv">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>oudberry<span class="w"> </span>Database<span class="w"> </span><span class="m">1</span>.0.0<span class="w"> </span>build<span class="w"> </span><span class="m">5551471267</span>
+<span class="m">20240108</span>:17:42:26<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:004115-<span class="o">[</span>INFO<span class="o">]</span>:-Creating<span class="w"> </span>database
+<span class="m">20240108</span>:17:42:26<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:004115-<span class="o">[</span>INFO<span class="o">]</span>:-Database<span class="w"> </span>creation<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="k">for</span>:<span class="w"> </span>test_04
+<span class="m">20240108</span>:17:42:26<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:004115-<span class="o">[</span>INFO<span class="o">]</span>:-Restoring<span class="w"> </span>pre-data<span class="w"> </span>metadata
+Pre-data<span class="w"> </span>objects<span class="w"> </span>restored:<span class="w">  </span><span class="m">3</span><span class="w"> </span>/<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="o">[=================================]</span><span class="w"> </span><span class="m">100</span>.00%<span class="w"> </span>0s
+<span class="m">20240108</span>:17:42:26<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:004115-<span class="o">[</span>INFO<span class="o">]</span>:-Pre-data<span class="w"> </span>metadata<span class="w"> </span>restore<span class="w"> </span><span class="nb">complete</span>
+<span class="m">20240108</span>:17:42:26<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:004115-<span class="o">[</span>INFO<span class="o">]</span>:-Restoring<span class="w"> </span>post-data<span class="w"> </span>metadata
+<span class="m">20240108</span>:17:42:26<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:004115-<span class="o">[</span>INFO<span class="o">]</span>:-Post-data<span class="w"> </span>metadata<span class="w"> </span>restore<span class="w"> </span><span class="nb">complete</span>
+<span class="m">20240108</span>:17:42:26<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:004115-<span class="o">[</span>INFO<span class="o">]</span>:-Found<span class="w"> </span>neither<span class="w"> </span>/usr/local/cloudberry-db-1.0.0/bin/gp_email_contacts.yaml<span class="w"> </span>nor<span class="w"> </span>/home/gpadmin//gp_email_contacts.yaml
+<span class="m">20240108</span>:17:42:26<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:004115-<span class="o">[</span>INFO<span class="o">]</span>:-Email<span class="w"> </span>containing<span class="w"> </span>gprestore<span class="w"> </span>report<span class="w"> </span>/data0/coordinator/gpseg-1/backups/20240108/20240108171718/gprestore_20240108171718_20240108174226_report<span class="w"> </span>will<span class="w"> </span>not<span class="w"> </span>be<span class="w"> </span>sent
+<span class="m">20240108</span>:17:42:26<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:004115-<span class="o">[</span>INFO<span class="o">]</span>:-Restore<span class="w"> </span>completed<span class="w"> </span>successfully
+</pre></div>
+</div>
+<p>If you specified a custom <code class="docutils literal notranslate"><span class="pre">--backup-dir</span></code> to consolidate the backup files, include the same <code class="docutils literal notranslate"><span class="pre">--backup-dir</span></code> option when using <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> to locate the backup files:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>dropdb<span class="w"> </span>test_04
+$<span class="w"> </span>gprestore<span class="w"> </span>--backup-dir<span class="w"> </span>/home/gpadmin/backups/<span class="w"> </span>--timestamp<span class="w"> </span><span class="m">20240109102646</span><span class="w"> </span>--create-db
+
+<span class="m">20240109</span>:10:33:17<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:017112-<span class="o">[</span>INFO<span class="o">]</span>:-Restore<span class="w"> </span><span class="nv">Key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20240109102646</span>
+...
+<span class="m">20240109</span>:10:33:17<span class="w"> </span>gprestore:gpadmin:cbdb-coordinator:017112-<span class="o">[</span>INFO<span class="o">]</span>:-Restore<span class="w"> </span>completed<span class="w"> </span>successfully
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">gprestore</span></code> does not attempt to restore global metadata for the SynxDB Elastic system by default. If this is required, include the <code class="docutils literal notranslate"><span class="pre">--with-globals</span></code> argument.</p>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> uses 1 connection to restore table data and metadata. If you have a large backup set, you can improve performance of the restore by increasing the number of parallel connections with the <code class="docutils literal notranslate"><span class="pre">--jobs</span></code> option. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gprestore<span class="w"> </span>--backup-dir<span class="w"> </span>/home/gpadmin/backups/<span class="w"> </span>--timestamp<span class="w"> </span><span class="m">20240109102646</span><span class="w"> </span>--create-db<span class="w"> </span>--jobs<span class="w"> </span><span class="m">4</span>
+</pre></div>
+</div>
+<p>Test the number of parallel connections with your backup set to determine the ideal number for fast recovery.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You cannot perform a parallel restore operation with <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> if the backup combines table backups into a single file per segment with the gpbackup option <code class="docutils literal notranslate"><span class="pre">--single-data-file</span></code>.</p>
+</div>
+<p>Restoring a materialized view does not restore materialized view data. Only the materialized view definition is restored. To populate the materialized view with data, use <code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code>. When you refresh the materialized view, the tables that are referenced by the materialized view definition must be available. The <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> log file lists the materialized views that have been restored and the <code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code> commands that are used to populate the materialized views with data.</p>
+</section>
+<section id="filter-the-contents-of-a-backup-or-restore">
+<h2>Filter the contents of a backup or restore<a class="headerlink" href="#filter-the-contents-of-a-backup-or-restore" title="Link to this heading"></a></h2>
+<section id="filter-by-schema">
+<h3>Filter by schema<a class="headerlink" href="#filter-by-schema" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> backs up all schemas and tables in the specified database, unless you exclude or include individual schema or table objects with schema level or table level filter options.</p>
+<p>The schema level options are <code class="docutils literal notranslate"><span class="pre">--include-schema</span></code>, <code class="docutils literal notranslate"><span class="pre">--include-schema-file</span></code>, or <code class="docutils literal notranslate"><span class="pre">--exclude-schema</span></code>, <code class="docutils literal notranslate"><span class="pre">--exclude-schema-file</span></code> command-line options to gpbackup. For example, if the <code class="docutils literal notranslate"><span class="pre">test_04</span></code> database includes only 2 schemas, <code class="docutils literal notranslate"><span class="pre">schema1</span></code> and <code class="docutils literal notranslate"><span class="pre">schema2</span></code>, both of the following commands back up only the <code class="docutils literal notranslate"><span class="pre">schema1</span></code> schema:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gpbackup<span class="w"> </span>--dbname<span class="w"> </span>test_04<span class="w"> </span>--include-schema<span class="w"> </span>schema1
+$<span class="w"> </span>gpbackup<span class="w"> </span>--dbname<span class="w"> </span>test_04<span class="w"> </span>--exclude-schema<span class="w"> </span>schema2
+</pre></div>
+</div>
+<p>You can include multiple <code class="docutils literal notranslate"><span class="pre">--include-schema</span></code> options in a <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> or multiple <code class="docutils literal notranslate"><span class="pre">--exclude-schema</span></code> options. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gpbackup<span class="w"> </span>--dbname<span class="w"> </span>test_04<span class="w"> </span>--include-schema<span class="w"> </span>schema1<span class="w"> </span>--include-schema<span class="w"> </span>schema2
+</pre></div>
+</div>
+<p>If you have a large number of schemas, you can list the schemas in a text file and specify the file with the <code class="docutils literal notranslate"><span class="pre">--include-schema-file</span></code> or <code class="docutils literal notranslate"><span class="pre">--exclude-schema-file</span></code> options in a <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> command. Each line in the file must define a single schema, and the file cannot contain trailing lines. For example, this command uses a file in the <code class="docutils literal notranslate"><span class="pre">gpadmin</span></code> home directory to include a set of schemas.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gpbackup<span class="w"> </span>--dbname<span class="w"> </span>test_04<span class="w"> </span>--include-schema-file<span class="w"> </span>/home/gpadmin/backup-schemas.txt<span class="w"> </span>--backup-dir<span class="w"> </span>/home/gpadmin/backups
+</pre></div>
+</div>
+</section>
+<section id="filter-by-table">
+<h3>Filter by table<a class="headerlink" href="#filter-by-table" title="Link to this heading"></a></h3>
+<p>To filter the individual tables that are included in a backup set, or excluded from a backup set, specify individual tables with the <code class="docutils literal notranslate"><span class="pre">--include-table</span></code> option or the <code class="docutils literal notranslate"><span class="pre">--exclude-table</span></code> option. The table must be schema qualified, <code class="docutils literal notranslate"><span class="pre">&lt;schema-name&gt;.&lt;table-name&gt;</span></code>. The individual table filtering options can be specified multiple times. However, <code class="docutils literal notranslate"><span class="pre">--include-table</span></code> and <code class="docutils literal notranslate"><span class="pre">--exclude-table</span></code> cannot both be used in the same command.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you have used the <code class="docutils literal notranslate"><span class="pre">--include-table</span></code> option in a <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> command, the database, schema, and the sequence related to the target table you specified are not backed up. Before you restore the backup set, you must create the database, schema, and sequence manually.</p>
+<p>For example, if you have used <code class="docutils literal notranslate"><span class="pre">gpbackup</span> <span class="pre">--dbname</span> <span class="pre">test_04</span> <span class="pre">--include-table</span> <span class="pre">schema1.table1</span> <span class="pre">--backup-dir</span> <span class="pre">/home/gpadmin/backups</span></code> to back up the <code class="docutils literal notranslate"><span class="pre">test_04</span></code> database, you must create the <code class="docutils literal notranslate"><span class="pre">test_04</span></code> database, <code class="docutils literal notranslate"><span class="pre">schema1</span></code> schema, and <code class="docutils literal notranslate"><span class="pre">schema1.table1_id_seq</span></code> sequence manually before you restore the backup set. Otherwise, the restore operation fails with the error message indicating that the database, schema, or sequence does not exist.</p>
+</div>
+<p>If a table or schema name uses any character other than a lowercase letter, number, or an underscore character, then you must include that name in double quotes. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gpbackup<span class="w"> </span>--dbname<span class="w"> </span>test1<span class="w"> </span>--include-table<span class="w"> </span><span class="s2">&quot;schema1&quot;</span>.<span class="s2">&quot;ComplexName Table&quot;</span><span class="w"> </span>--backup-dir<span class="w"> </span>/home/gpadmin/backups
+</pre></div>
+</div>
+<p>You can create a list of qualified table names in a text file. When listing tables in a file, each line in the text file must define a single table using the format <code class="docutils literal notranslate"><span class="pre">&lt;schema-name&gt;.&lt;table-name&gt;</span></code>. The file must not include trailing lines or double quotes even if table or schema name uses any character other than a lowercase letter, number, or an underscore character. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">schema1</span><span class="o">.</span><span class="n">table1</span>
+<span class="n">schema2</span><span class="o">.</span><span class="n">table2</span>
+<span class="n">schema1</span><span class="o">.</span><span class="n">ComplexName</span> <span class="n">Table</span>
+</pre></div>
+</div>
+<p>After creating the file, you can use it either to include or exclude tables with the gpbackup options <code class="docutils literal notranslate"><span class="pre">--include-table-file</span></code> or <code class="docutils literal notranslate"><span class="pre">--exclude-table-file</span></code>. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gpbackup<span class="w"> </span>--dbname<span class="w"> </span>test_04<span class="w"> </span>--include-table-file<span class="w"> </span>/home/gpadmin/table-list.txt
+</pre></div>
+</div>
+<p>You can combine <code class="docutils literal notranslate"><span class="pre">--include</span> <span class="pre">schema</span></code> with <code class="docutils literal notranslate"><span class="pre">--exclude-table</span></code> or <code class="docutils literal notranslate"><span class="pre">--exclude-table-file</span></code> for a backup. The following example uses <code class="docutils literal notranslate"><span class="pre">--include-schema</span></code> with <code class="docutils literal notranslate"><span class="pre">--exclude-table</span></code> to back up a schema except for a single table.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gpbackup<span class="w"> </span>--dbname<span class="w"> </span>test_04<span class="w"> </span>--include-schema<span class="w"> </span>schema1<span class="w"> </span>--exclude-table<span class="w"> </span>schema2.table2
+</pre></div>
+</div>
+<p>You cannot combine <code class="docutils literal notranslate"><span class="pre">--include-schema</span></code> with <code class="docutils literal notranslate"><span class="pre">--include-table</span></code> or <code class="docutils literal notranslate"><span class="pre">--include-table-file</span></code>, and you cannot combine <code class="docutils literal notranslate"><span class="pre">--exclude-schema</span></code> with any table filtering option such as <code class="docutils literal notranslate"><span class="pre">--exclude-table</span></code> or <code class="docutils literal notranslate"><span class="pre">--include-table</span></code>.</p>
+<p>When you use <code class="docutils literal notranslate"><span class="pre">--include-table</span></code> or <code class="docutils literal notranslate"><span class="pre">--include-table-file</span></code> dependent objects are not automatically backed up or restored, you must explicitly specify the dependent objects that are required. For example, if you back up or restore a view or materialized view, you must also specify the tables that the view or the materialized view uses. If you backup or restore a table that uses a sequence, you must also specify the sequence.</p>
+</section>
+<section id="filter-with-gprestore">
+<h3>Filter with <code class="docutils literal notranslate"><span class="pre">gprestore</span></code><a class="headerlink" href="#filter-with-gprestore" title="Link to this heading"></a></h3>
+<p>After creating a backup set with <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code>, you can filter the schemas and tables that you want to restore from the backup set using the <code class="docutils literal notranslate"><span class="pre">gprestore</span> <span class="pre">--include-schema</span></code> and <code class="docutils literal notranslate"><span class="pre">--include-table-file</span></code> options. These options work in the same way as their <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> counterparts, but have the following restrictions:</p>
+<ul>
+<li><p>The tables that you attempt to restore must not already exist in the database.</p></li>
+<li><p>If you attempt to restore a schema or table that does not exist in the backup set, the <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> does not execute.</p></li>
+<li><p>If you use the <code class="docutils literal notranslate"><span class="pre">--include-schema</span></code> option, <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> cannot restore objects that have dependencies on multiple schemas.</p></li>
+<li><p>If you use the <code class="docutils literal notranslate"><span class="pre">--include-table-file</span></code> option, <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> does not create roles or set the owner of the tables. The utility restores table rules. Triggers are also restored but are not supported in SynxDB Elastic.</p></li>
+<li><p>The file that you specify with <code class="docutils literal notranslate"><span class="pre">--include-table-file</span></code> cannot include a leaf partition name, as it can when you specify this option with <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code>. If you specified leaf partitions in the backup set, specify the partitioned table to restore the leaf partition data.</p>
+<p>When restoring a backup set that contains data from some leaf partitions of a partitioned table, the partitioned table is restored along with the data for the leaf partitions. For example, you create a backup with the <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> option <code class="docutils literal notranslate"><span class="pre">--include-table-file</span></code> and the text file lists some leaf partitions of a partitioned table. Restoring the backup creates the partitioned table and restores the data only for the leaf partitions listed in the file.</p>
+</li>
+</ul>
+</section>
+<section id="filter-by-leaf-partition">
+<h3>Filter by leaf partition<a class="headerlink" href="#filter-by-leaf-partition" title="Link to this heading"></a></h3>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> creates one file for each table on a segment. You can specify the <code class="docutils literal notranslate"><span class="pre">--leaf-partition-data</span></code> option to create one data file per leaf partition of a partitioned table, instead of a single file. You can also filter backups to specific leaf partitions by listing the leaf partition names in a text file to include. For example, consider a table that was created using the statement:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">sales</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span><span class="w"> </span><span class="nb">date</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span><span class="w"> </span><span class="n">amt</span><span class="w"> </span><span class="nb">decimal</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">RANGE</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="p">)</span>
+<span class="p">(</span><span class="w"> </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">Jan23</span><span class="w"> </span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2023-01-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="p">,</span>
+<span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">Feb23</span><span class="w"> </span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2023-02-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="p">,</span>
+<span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">Mar23</span><span class="w"> </span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2023-03-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="p">,</span>
+<span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">Apr23</span><span class="w"> </span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2023-04-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="p">,</span>
+<span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">May23</span><span class="w"> </span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2023-05-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="p">,</span>
+<span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">Jun23</span><span class="w"> </span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2023-06-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="p">,</span>
+<span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">Jul23</span><span class="w"> </span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2023-07-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="p">,</span>
+<span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">Aug23</span><span class="w"> </span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2023-08-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="p">,</span>
+<span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">Sep23</span><span class="w"> </span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2023-09-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="p">,</span>
+<span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">Oct23</span><span class="w"> </span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2023-10-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="p">,</span>
+<span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">Nov23</span><span class="w"> </span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2023-11-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="p">,</span>
+<span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">Dec23</span><span class="w"> </span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2023-12-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span>
+<span class="w">  </span><span class="k">END</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2024-01-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">EXCLUSIVE</span><span class="w"> </span><span class="p">);</span>
+
+<span class="n">NOTICE</span><span class="p">:</span><span class="w">  </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">partition</span><span class="w"> </span><span class="ss">&quot;sales_1_prt_jan23&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="ss">&quot;sales&quot;</span>
+<span class="n">NOTICE</span><span class="p">:</span><span class="w">  </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">partition</span><span class="w"> </span><span class="ss">&quot;sales_1_prt_feb23&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="ss">&quot;sales&quot;</span>
+<span class="n">NOTICE</span><span class="p">:</span><span class="w">  </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">partition</span><span class="w"> </span><span class="ss">&quot;sales_1_prt_mar23&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="ss">&quot;sales&quot;</span>
+<span class="n">NOTICE</span><span class="p">:</span><span class="w">  </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">partition</span><span class="w"> </span><span class="ss">&quot;sales_1_prt_apr23&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="ss">&quot;sales&quot;</span>
+<span class="n">NOTICE</span><span class="p">:</span><span class="w">  </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">partition</span><span class="w"> </span><span class="ss">&quot;sales_1_prt_may23&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="ss">&quot;sales&quot;</span>
+<span class="n">NOTICE</span><span class="p">:</span><span class="w">  </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">partition</span><span class="w"> </span><span class="ss">&quot;sales_1_prt_jun23&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="ss">&quot;sales&quot;</span>
+<span class="n">NOTICE</span><span class="p">:</span><span class="w">  </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">partition</span><span class="w"> </span><span class="ss">&quot;sales_1_prt_jul23&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="ss">&quot;sales&quot;</span>
+<span class="n">NOTICE</span><span class="p">:</span><span class="w">  </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">partition</span><span class="w"> </span><span class="ss">&quot;sales_1_prt_aug23&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="ss">&quot;sales&quot;</span>
+<span class="n">NOTICE</span><span class="p">:</span><span class="w">  </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">partition</span><span class="w"> </span><span class="ss">&quot;sales_1_prt_sep23&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="ss">&quot;sales&quot;</span>
+<span class="n">NOTICE</span><span class="p">:</span><span class="w">  </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">partition</span><span class="w"> </span><span class="ss">&quot;sales_1_prt_oct23&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="ss">&quot;sales&quot;</span>
+<span class="n">NOTICE</span><span class="p">:</span><span class="w">  </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">partition</span><span class="w"> </span><span class="ss">&quot;sales_1_prt_nov23&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="ss">&quot;sales&quot;</span>
+<span class="n">NOTICE</span><span class="p">:</span><span class="w">  </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">partition</span><span class="w"> </span><span class="ss">&quot;sales_1_prt_dec23&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="ss">&quot;sales&quot;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span>
+</pre></div>
+</div>
+<p>To back up only data for the last quarter of the year, first create a text file that lists those leaf partition names instead of the full table name:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span><span class="o">.</span><span class="n">sales_1_prt_oct23</span>
+<span class="n">public</span><span class="o">.</span><span class="n">sales_1_prt_nov23</span>
+<span class="n">public</span><span class="o">.</span><span class="n">sales_1_prt_dec23</span>
+</pre></div>
+</div>
+<p>Then specify the file with the <code class="docutils literal notranslate"><span class="pre">--include-table-file</span></code> option to generate one data file per leaf partition:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gpbackup<span class="w"> </span>--dbname<span class="w"> </span>test_04<span class="w"> </span>--include-table-file<span class="w"> </span>last-quarter.txt<span class="w"> </span>--leaf-partition-data
+</pre></div>
+</div>
+<p>When you specify <code class="docutils literal notranslate"><span class="pre">--leaf-partition-data</span></code>, <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> generates one data file per leaf partition when backing up a partitioned table. For example, this command generates one data file for each leaf partition:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gpbackup<span class="w"> </span>--dbname<span class="w"> </span>test_04<span class="w"> </span>--include-table<span class="w"> </span>public.sales<span class="w"> </span>--leaf-partition-data
+</pre></div>
+</div>
+<p>When leaf partitions are backed up, the leaf partition data is backed up along with the metadata for the entire partitioned table.</p>
+</section>
+</section>
+<section id="check-report-files">
+<h2>Check report files<a class="headerlink" href="#check-report-files" title="Link to this heading"></a></h2>
+<p>When performing a backup or restore operation, <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> and <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> generate a report file that contains the detailed information of the operations. When email notification is configured, the email sent contains the contents of the report file. For information about email notification, see <a class="reference internal" href="#configure-email-notifications"><span class="std std-ref">Configure email notifications</span></a>.</p>
+<p>The report file is placed in the SynxDB Elastic coordinator backup directory. The report file name contains the timestamp of the operation. Thes following are the formats of the <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> and <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> report file names.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpbackup_</span><span class="o">&lt;</span><span class="n">backup_timestamp</span><span class="o">&gt;</span><span class="n">_report</span>
+<span class="n">gprestore_</span><span class="o">&lt;</span><span class="n">backup_timestamp</span><span class="o">&gt;</span><span class="n">_</span><span class="o">&lt;</span><span class="n">restore_timesamp</span><span class="o">&gt;</span><span class="n">_report</span>
+</pre></div>
+</div>
+<p>For these example report file names, <code class="docutils literal notranslate"><span class="pre">20240109111719</span></code> is the timestamp of the backup and <code class="docutils literal notranslate"><span class="pre">20240109112545</span></code> is the timestamp of the restore operation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpbackup_20240109111719_report</span>
+<span class="n">gprestore_20240109111719_20240109112545_report</span>
+</pre></div>
+</div>
+<p>This backup directory on a SynxDB Elastic coordinator host contains both a <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> and <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> report file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>ls<span class="w"> </span>-l<span class="w"> </span>/data0/coordinator/gpseg-1/backups/20240109/20240109111719/
+total<span class="w"> </span><span class="m">24</span>
+
+-r--r--r--<span class="w"> </span><span class="m">1</span><span class="w"> </span>gpadmin<span class="w"> </span>gpadmin<span class="w">  </span><span class="m">715</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">9</span><span class="w"> </span><span class="m">11</span>:17<span class="w"> </span>gpbackup_20240109111719_config.yaml
+-r--r--r--<span class="w"> </span><span class="m">1</span><span class="w"> </span>gpadmin<span class="w"> </span>gpadmin<span class="w">  </span><span class="m">895</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">9</span><span class="w"> </span><span class="m">11</span>:17<span class="w"> </span>gpbackup_20240109111719_metadata.sql
+-r--r--r--<span class="w"> </span><span class="m">1</span><span class="w"> </span>gpadmin<span class="w"> </span>gpadmin<span class="w"> </span><span class="m">1441</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">9</span><span class="w"> </span><span class="m">11</span>:17<span class="w"> </span>gpbackup_20240109111719_report
+-r--r--r--<span class="w"> </span><span class="m">1</span><span class="w"> </span>gpadmin<span class="w"> </span>gpadmin<span class="w"> </span><span class="m">1226</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">9</span><span class="w"> </span><span class="m">11</span>:17<span class="w"> </span>gpbackup_20240109111719_toc.yaml
+-r--r--r--<span class="w"> </span><span class="m">1</span><span class="w"> </span>gpadmin<span class="w"> </span>gpadmin<span class="w">  </span><span class="m">569</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">9</span><span class="w"> </span><span class="m">11</span>:21<span class="w"> </span>gprestore_20240109111719_20240109112128_report
+-r--r--r--<span class="w"> </span><span class="m">1</span><span class="w"> </span>gpadmin<span class="w"> </span>gpadmin<span class="w">  </span><span class="m">514</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">9</span><span class="w"> </span><span class="m">11</span>:25<span class="w"> </span>gprestore_20240109111719_20240109112545_report
+</pre></div>
+</div>
+<p>The contents of the report files are similar. This is an example of the contents of a <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> report file.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">|</span><span class="n">product_name</span><span class="o">|</span> <span class="n">Restore</span> <span class="n">Report</span>
+
+<span class="n">timestamp</span> <span class="n">key</span><span class="p">:</span>           <span class="mi">20240109111719</span>
+<span class="n">gpdb</span> <span class="n">version</span><span class="p">:</span>            <span class="n">oudberry</span> <span class="n">Database</span> <span class="mf">1.0.0</span> <span class="n">build</span> <span class="mi">5551471267</span>
+<span class="n">gprestore</span> <span class="n">version</span><span class="p">:</span>       <span class="mf">1.2.7</span><span class="o">-</span><span class="n">beta1</span><span class="o">+</span><span class="n">dev</span><span class="mf">.7</span>
+
+<span class="n">database</span> <span class="n">name</span><span class="p">:</span>           <span class="n">test_04</span>
+<span class="n">command</span> <span class="n">line</span><span class="p">:</span>            <span class="n">gprestore</span> <span class="o">--</span><span class="n">timestamp</span> <span class="mi">20240109111719</span> <span class="o">--</span><span class="n">create</span><span class="o">-</span><span class="n">db</span>
+
+<span class="n">backup</span> <span class="n">segment</span> <span class="n">count</span><span class="p">:</span>    <span class="mi">2</span>
+<span class="n">restore</span> <span class="n">segment</span> <span class="n">count</span><span class="p">:</span>   <span class="mi">2</span>
+<span class="n">start</span> <span class="n">time</span><span class="p">:</span>              <span class="n">Tue</span> <span class="n">Jan</span> <span class="mi">09</span> <span class="mi">2024</span> <span class="mi">11</span><span class="p">:</span><span class="mi">25</span><span class="p">:</span><span class="mi">45</span>
+<span class="n">end</span> <span class="n">time</span><span class="p">:</span>                <span class="n">Tue</span> <span class="n">Jan</span> <span class="mi">09</span> <span class="mi">2024</span> <span class="mi">11</span><span class="p">:</span><span class="mi">25</span><span class="p">:</span><span class="mi">46</span>
+<span class="n">duration</span><span class="p">:</span>                <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span>
+
+<span class="n">restore</span> <span class="n">status</span><span class="p">:</span>          <span class="n">Success</span>
+</pre></div>
+</div>
+</section>
+<section id="configure-email-notifications">
+<h2>Configure email notifications<a class="headerlink" href="#configure-email-notifications" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> and <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> can send email notifications after a back up or restore operation completes.</p>
+<p>To have <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> or <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> send out status email notifications, you need place a file named <code class="docutils literal notranslate"><span class="pre">gp_email_contacts.yaml</span></code> in the home directory of the user running <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> or <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> in the same directory as the utilities (<code class="docutils literal notranslate"><span class="pre">$GPHOME/bin</span></code>). A utility issues a message if it cannot locate a <code class="docutils literal notranslate"><span class="pre">gp_email_contacts.yaml</span></code> file in either location. If both locations contain a <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file, the utility uses the file in user <code class="docutils literal notranslate"><span class="pre">$HOME</span></code>.</p>
+<p>The email subject line includes the utility name, timestamp, job status (Success or Failure), and the name of the SynxDB Elastic host <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> or <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> is called from. These are example subject lines for <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> emails.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gpbackup<span class="w"> </span><span class="m">20180202133601</span><span class="w"> </span>on<span class="w"> </span>gp-master<span class="w"> </span>completed:<span class="w"> </span>Success
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gpbackup<span class="w"> </span><span class="m">20200925140738</span><span class="w"> </span>on<span class="w"> </span>mdw<span class="w"> </span>completed:<span class="w"> </span>Failure
+</pre></div>
+</div>
+<p>The email contains summary information about the operation including options, duration, and number of objects backed up or restored. For information about the contents of a notification email, see Report Files.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The UNIX mail utility must be running on the SynxDB Elastic host and must be configured to allow the SynxDB Elastic superuser (<code class="docutils literal notranslate"><span class="pre">gpadmin</span></code>) to send email. Also ensure that the mail program executable is locatable via the <code class="docutils literal notranslate"><span class="pre">gpadmin</span></code> user’s <code class="docutils literal notranslate"><span class="pre">$PATH</span></code>.</p>
+</div>
+<section id="gpbackup-and-gprestore-email-file-format">
+<h3>gpbackup and gprestore email file format<a class="headerlink" href="#gpbackup-and-gprestore-email-file-format" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> and <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> email notification YAML file <code class="docutils literal notranslate"><span class="pre">gp_email_contacts.yaml</span></code> uses indentation (spaces) to determine the document hierarchy and the relationships of the sections to one another. The use of white space is significant. White space should not be used simply for formatting purposes, and tabs should not be used at all.</p>
+<p>If the status parameters are not specified correctly, the utility does not issue a warning. For example, if the success parameter is misspelled and is set to true, a warning is not issued and an email is not sent to the email address after a successful operation. To ensure email notification is configured correctly, run tests with email notifications configured.</p>
+<p>This is the format of the <code class="docutils literal notranslate"><span class="pre">gp_email_contacts.yaml</span></code> YAML file for gpbackup email notifications:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">contacts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gpbackup</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;user&gt;@&lt;domain&gt;</span>
+<span class="w">    </span><span class="nt">status</span><span class="p">:</span>
+<span class="w">         </span><span class="nt">success</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">true | false</span><span class="p p-Indicator">]</span>
+<span class="w">         </span><span class="nt">success_with_errors</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">true | false</span><span class="p p-Indicator">]</span>
+<span class="w">         </span><span class="nt">failure</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">true | false</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">gprestore</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;user&gt;@&lt;domain&gt;</span>
+<span class="w">    </span><span class="nt">status</span><span class="p">:</span>
+<span class="w">         </span><span class="nt">success</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">true | false</span><span class="p p-Indicator">]</span>
+<span class="w">         </span><span class="nt">success_with_errors</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">true | false</span><span class="p p-Indicator">]</span>
+<span class="w">         </span><span class="nt">failure</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">true | false</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+</section>
+<section id="email-yaml-file-sections">
+<h3>Email YAML file sections<a class="headerlink" href="#email-yaml-file-sections" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">contacts</span></code></p>
+<blockquote>
+<div><p>Required. The section that contains the gpbackup and gprestore sections. The YAML file can contain a gpbackup section, a gprestore section, or one of each.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">gpbackup</span></code></p>
+<blockquote>
+<div><p>Optional. Begins the gpbackup email section.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">address</span></code></p>
+<blockquote>
+<div><p>Required. At least one email address must be specified. Multiple email address parameters can be specified. Each address requires a status section. <code class="docutils literal notranslate"><span class="pre">user&#64;domain</span></code> is a single, valid email address.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">status</span></code></p>
+<blockquote>
+<div><p>Required. Specify when the utility sends an email to the specified email address. The default is to not send email notification. You specify sending email notifications based on the completion status of a backup or restore operation. At least one of these parameters must be specified and each parameter can appear at most once.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">success</span></code></p>
+<blockquote>
+<div><p>Optional. Specify whether an email is sent if the operation completes without errors. If the value is <code class="docutils literal notranslate"><span class="pre">true</span></code>, an email is sent if the operation completes without errors. If the value is <code class="docutils literal notranslate"><span class="pre">false</span></code> (the default), an email is not sent.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">success_with_errors</span></code></p>
+<blockquote>
+<div><p>Optional. Specify whether an email is sent if the operation completes with errors. If the value is <code class="docutils literal notranslate"><span class="pre">true</span></code>, an email is sent if the operation completes with errors. If the value is <code class="docutils literal notranslate"><span class="pre">false</span></code> (the default), an email is not sent.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">failure</span></code></p>
+<blockquote>
+<div><p>Optional. Specify if an email is sent if the operation fails. If the value is <code class="docutils literal notranslate"><span class="pre">true</span></code>, an email is sent if the operation fails. If the value is <code class="docutils literal notranslate"><span class="pre">false</span></code> (the default), an email is not sent.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">gprestore</span></code></p>
+<blockquote>
+<div><p>Optional. Begins the gprestore email section. This section contains the address and status parameters that are used to send an email notification after a gprestore operation. The syntax is the same as the gpbackup section.</p>
+</div></blockquote>
+</section>
+<section id="email-examples">
+<h3>Email examples<a class="headerlink" href="#email-examples" title="Link to this heading"></a></h3>
+<p>This example YAML file specifies sending email to email addresses depending on the success or failure of an operation. For a backup operation, an email is sent to a different address depending on the success or failure of the backup operation. For a restore operation, an email is sent to <code class="docutils literal notranslate"><span class="pre">gpadmin&#64;example.com</span></code> only when the operation succeeds or completes with errors.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">contacts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gpbackup</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpadmin@example.com</span>
+<span class="w">    </span><span class="nt">status</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">success</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">success_with_errors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">gprestore</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpadmin@example.com</span>
+<span class="w">    </span><span class="nt">status</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">success</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">success_with_errors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="incremental-backup-and-restore.html" class="btn btn-neutral float-right" title="Perform Incremental Backup and Restore" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="br-overview.html" class="btn btn-neutral float-left" title="Backup and Restore Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

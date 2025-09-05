@@ -1,0 +1,371 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>gp_sparse_vector - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gp_sparse_vector"><a class="header" href="#gp_sparse_vector">gp_sparse_vector</a></h1>
+<p>The <code>gp_sparse_vector</code> module implements a SynxDB data type and associated functions that use compressed storage of zeros to make vector computations on floating point numbers faster.</p>
+<p>The <code>gp_sparse_vector</code> module is a SynxDB extension.</p>
+<h2 id="installing-and-registering-the-module"><a class="header" href="#installing-and-registering-the-module"><a id="topic_reg"></a>Installing and Registering the Module</a></h2>
+<p>The <code>gp_sparse_vector</code> module is installed when you install SynxDB. Before you can use any of the functions defined in the module, you must register the <code>gp_sparse_vector</code> extension in each database where you want to use the functions. Refer to <a href="../../install_guide/install_modules.html">Installing Additional Supplied Modules</a> for more information.</p>
+<h2 id="upgrading-the-module"><a class="header" href="#upgrading-the-module"><a id="topic_upgrade"></a>Upgrading the Module</a></h2>
+<p>You must upgrade the <code>gp_sparse_vector</code> module to obtain bug fixes.</p>
+<blockquote>
+<p><strong>Note</strong> <code>gp_sparse_vector</code> functions and objects are installed in the schema named <code>sparse_vector</code>. Upgrading the module requires that you update any scripts that reference the module’s objects. You must also adjust how you reference these objects in a client session. <strong>If you have not done this already, you will need to</strong> either add the <code>sparse_vector</code> schema to a <code>search_path</code>, or alternatively you can choose to prepend <code>sparse_vector.</code> to all non-<code>CAST</code> <code>gp_sparse_vector</code> function or object name references.</p>
+</blockquote>
+<p>Update the <code>gp_sparse_vector</code> module in each database in which you are using the module:</p>
+<pre><code>DROP EXTENSION gp_sparse_vector;
+CREATE EXTENSION gp_sparse_vector;
+</code></pre>
+<h2 id="about-the-gp_sparse_vector-module"><a class="header" href="#about-the-gp_sparse_vector-module"><a id="topic_about"></a>About the gp_sparse_vector Module</a></h2>
+<p>To access <code>gp_sparse_vector</code> objects, you must add <code>sparse_vector</code> to a <code>search_path</code>, or alternative you can prepend <code>sparse_vector.</code> to the function or object name. For example:</p>
+<pre><code>SELECT sparse_vector.array_agg( col1 ) FROM table1;
+</code></pre>
+<p><code>CAST</code>s that are created by the <code>gp_sparse_vector</code> module remain in the <code>public</code> schema.</p>
+<h2 id="using-the-gp_sparse_vector-module"><a class="header" href="#using-the-gp_sparse_vector-module"><a id="topic_doc"></a>Using the gp_sparse_vector Module</a></h2>
+<p>When you use arrays of floating point numbers for various calculations, you will often have long runs of zeros. This is common in scientific, retail optimization, and text processing applications. Each floating point number takes 8 bytes of storage in memory and/or disk. Saving those zeros is often impractical. There are also many computations that benefit from skipping over the zeros.</p>
+<p>For example, suppose the following array of <code>double</code>s is stored as a <code>float8[]</code> in SynxDB:</p>
+<pre><code>'{0, 33, &lt;40,000 zeros&gt;, 12, 22 }'::float8[]
+</code></pre>
+<p>This type of array arises often in text processing, where a dictionary may have 40-100K terms and the number of words in a particular document is stored in a vector. This array would occupy slightly more than 320KB of memory/disk, most of it zeros. Any operation that you perform on this data works on 40,001 fields that are not important.</p>
+<p>The SynxDB built-in <code>array</code> datatype utilizes a bitmap for null values, but it is a poor choice for this use case because it is not optimized for <code>float8[]</code> or for long runs of zeros instead of nulls, and the bitmap is not run-length-encoding- (RLE) compressed. Even if each zero were stored as a <code>NULL</code> in the array, the bitmap for nulls would use 5KB to mark the nulls, which is not nearly as efficient as it could be.</p>
+<p>The SynxDB <code>gp_sparse_vector</code> module defines a data type and a simple RLE-based scheme that is biased toward being efficient for zero value bitmaps. This scheme uses only 6 bytes for bitmap storage.</p>
+<blockquote>
+<p><strong>Note</strong> The sparse vector data type defined by the <code>gp_sparse_vector</code> module is named <code>svec</code>. <code>svec</code> supports only <code>float8</code> vector values.</p>
+</blockquote>
+<p>You can construct an <code>svec</code> directly from a float array as follows:</p>
+<pre><code>SELECT ('{0, 13, 37, 53, 0, 71 }'::float8[])::svec;
+</code></pre>
+<p>The <code>gp_sparse_vector</code> module supports the vector operators <code>&lt;</code>, <code>&gt;</code>, <code>*</code>, <code>**</code>, <code>/</code>, <code>=</code>, <code>+</code>, <code>sum()</code>, <code>vec_count_nonzero()</code>, and so on. These operators take advantage of the efficient sparse storage format, making computations on <code>svec</code>s faster.</p>
+<p>The plus (<code>+</code>) operator adds each of the terms of two vectors of the same dimension together. For example, if vector <code>a = {0,1,5}</code> and vector <code>b = {4,3,2}</code>, you would compute the vector addition as follows:</p>
+<pre><code>SELECT ('{0,1,5}'::float8[]::svec + '{4,3,2}'::float8[]::svec)::float8[];
+ float8  
+---------
+ {4,4,7}
+</code></pre>
+<p>A vector dot product (<code>%*%</code>) between vectors <code>a</code> and <code>b</code> returns a scalar result of type <code>float8</code>. Compute the dot product (<code>(0*4+1*3+5*2)=13</code>) as follows:</p>
+<pre><code>SELECT '{0,1,5}'::float8[]::svec %*% '{4,3,2}'::float8[]::svec;
+ ?column? 
+----------
+       13
+</code></pre>
+<p>Special vector aggregate functions are also useful. <code>sum()</code> is self explanatory. <code>vec_count_nonzero()</code> evaluates the count of non-zero terms found in a set of <code>svec</code> and returns an <code>svec</code> with the counts. For instance, for the set of vectors <code>{0,1,5},{10,0,3},{0,0,3},{0,1,0}</code>, the count of non-zero terms would be <code>{1,2,3}</code>. Use <code>vec_count_nonzero()</code> to compute the count of these vectors:</p>
+<pre><code>CREATE TABLE listvecs( a svec );
+
+INSERT INTO listvecs VALUES ('{0,1,5}'::float8[]),
+    ('{10,0,3}'::float8[]),
+    ('{0,0,3}'::float8[]),
+    ('{0,1,0}'::float8[]);
+
+SELECT vec_count_nonzero( a )::float8[] FROM listvecs;
+ count_vec 
+-----------
+ {1,2,3}
+(1 row)
+</code></pre>
+<h2 id="additional-module-documentation"><a class="header" href="#additional-module-documentation"><a id="topic_info"></a>Additional Module Documentation</a></h2>
+<p>Refer to the <code>gp_sparse_vector</code> READMEs in the <a href="https://github.com/apache/cloudberry/blob/main/gpcontrib/gp_sparse_vector/README">SynxDB github repository</a> for additional information about this module.</p>
+<p>Apache MADlib includes an extended implementation of sparse vectors. See the <a href="http://madlib.apache.org/docs/latest/group__grp__svec.html">MADlib Documentation</a> for a description of this MADlib module.</p>
+<h2 id="example"><a class="header" href="#example"><a id="topic_examples"></a>Example</a></h2>
+<p>A text classification example that describes a dictionary and some documents follows. You will create SynxDB tables representing a dictionary and some documents. You then perform document classification using vector arithmetic on word counts and proportions of dictionary words in each document.</p>
+<p>Suppose that you have a dictionary composed of words in a text array. Create a table to store the dictionary data and insert some data (words) into the table. For example:</p>
+<pre><code>CREATE TABLE features (dictionary text[][]) DISTRIBUTED RANDOMLY;
+INSERT INTO features 
+    VALUES ('{am,before,being,bothered,corpus,document,i,in,is,me,never,now,'
+            'one,really,second,the,third,this,until}');
+</code></pre>
+<p>You have a set of documents, also defined as an array of words. Create a table to represent the documents and insert some data into the table:</p>
+<pre><code>CREATE TABLE documents(docnum int, document text[]) DISTRIBUTED RANDOMLY;
+INSERT INTO documents VALUES 
+    (1,'{this,is,one,document,in,the,corpus}'),
+    (2,'{i,am,the,second,document,in,the,corpus}'),
+    (3,'{being,third,never,really,bothered,me,until,now}'),
+    (4,'{the,document,before,me,is,the,third,document}');
+</code></pre>
+<p>Using the dictionary and document tables, find the dictionary words that are present in each document. To do this, you first prepare a <em>Sparse Feature Vector</em>, or SFV, for each document. An SFV is a vector of dimension <em>N</em>, where <em>N</em> is the number of dictionary words, and each SFV contains a count of each dictionary word in the document.</p>
+<p>You can use the <code>gp_extract_feature_histogram()</code> function to create an SFV from a document. <code>gp_extract_feature_histogram()</code> outputs an <code>svec</code> for each document that contains the count of each of the dictionary words in the ordinal positions of the dictionary.</p>
+<pre><code>SELECT gp_extract_feature_histogram(
+    (SELECT dictionary FROM features LIMIT 1), document)::float8[], document
+        FROM documents ORDER BY docnum;
+
+     gp_extract_feature_histogram        |                     document                         
+-----------------------------------------+--------------------------------------------------
+ {0,0,0,0,1,1,0,1,1,0,0,0,1,0,0,1,0,1,0} | {this,is,one,document,in,the,corpus}
+ {1,0,0,0,1,1,1,1,0,0,0,0,0,0,1,2,0,0,0} | {i,am,the,second,document,in,the,corpus}
+ {0,0,1,1,0,0,0,0,0,1,1,1,0,1,0,0,1,0,1} | {being,third,never,really,bothered,me,until,now}
+ {0,1,0,0,0,2,0,0,1,1,0,0,0,0,0,2,1,0,0} | {the,document,before,me,is,the,third,document}
+
+SELECT * FROM features;
+                                               dictionary
+--------------------------------------------------------------------------------------------------------
+ {am,before,being,bothered,corpus,document,i,in,is,me,never,now,one,really,second,the,third,this,until}
+</code></pre>
+<p>The SFV of the second document, “i am the second document in the corpus”, is <code>{1,3*0,1,1,1,1,6*0,1,2}</code>. The word “am” is the first ordinate in the dictionary, and there is <code>1</code> instance of it in the SFV. The word “before” has no instances in the document, so its value is <code>0</code>; and so on.</p>
+<p><code>gp_extract_feature_histogram()</code> is very speed optimized - it is a single routine version of a hash join that processes large numbers of documents into their SFVs in parallel at the highest possible speeds.</p>
+<p>For the next part of the processing, generate a sparse vector of the dictionary dimension (19). The vectors that you generate for each document are referred to as the <em>corpus</em>.</p>
+<pre><code>CREATE table corpus (docnum int, feature_vector svec) DISTRIBUTED RANDOMLY;
+
+INSERT INTO corpus
+    (SELECT docnum, 
+        gp_extract_feature_histogram(
+            (select dictionary FROM features LIMIT 1), document) from documents);
+</code></pre>
+<p>Count the number of times each feature occurs at least once in all documents:</p>
+<pre><code>SELECT (vec_count_nonzero(feature_vector))::float8[] AS count_in_document FROM corpus;
+
+            count_in_document
+-----------------------------------------
+ {1,1,1,1,2,3,1,2,2,2,1,1,1,1,1,3,2,1,1}
+</code></pre>
+<p>Count all occurrences of each term in all documents:</p>
+<pre><code>SELECT (sum(feature_vector))::float8[] AS sum_in_document FROM corpus;
+
+             sum_in_document
+-----------------------------------------
+ {1,1,1,1,2,4,1,2,2,2,1,1,1,1,1,5,2,1,1}
+</code></pre>
+<p>The remainder of the classification process is vector math. The count is turned into a weight that reflects <em>Term Frequency / Inverse Document Frequency</em> (tf/idf). The calculation for a given term in a given document is:</p>
+<pre><code>#_times_term_appears_in_this_doc * log( #_docs / #_docs_the_term_appears_in )
+</code></pre>
+<p><code>#_docs</code> is the total number of documents (4 in this case). Note that there is one divisor for each dictionary word and its value is the number of times that word appears in the document.</p>
+<p>For example, the term “document” in document 1 would have a weight of <code>1 * log( 4/3 )</code>. In document 4, the term would have a weight of <code>2 * log( 4/3 )</code>. Terms that appear in every document would have weight <code>0</code>.</p>
+<p>This single vector for the whole corpus is then scalar product multiplied by each document SFV to produce the tf/idf.</p>
+<p>Calculate the tf/idf:</p>
+<pre><code>SELECT docnum, (feature_vector*logidf)::float8[] AS tf_idf 
+    FROM (SELECT log(count(feature_vector)/vec_count_nonzero(feature_vector)) AS logidf FROM corpus)
+    AS foo, corpus ORDER BY docnum;
+ docnum |                                                                          tf_idf                                                                          
+--------+----------------------------------------------------------------------------------------------------------------------------------------------------------
+      1 | {0,0,0,0,0.693147180559945,0.287682072451781,0,0.693147180559945,0.693147180559945,0,0,0,1.38629436111989,0,0,0.287682072451781,0,1.38629436111989,0}
+      2 | {1.38629436111989,0,0,0,0.693147180559945,0.287682072451781,1.38629436111989,0.693147180559945,0,0,0,0,0,0,1.38629436111989,0.575364144903562,0,0,0}
+      3 | {0,0,1.38629436111989,1.38629436111989,0,0,0,0,0,0.693147180559945,1.38629436111989,1.38629436111989,0,1.38629436111989,0,0,0.693147180559945,0,1.38629436111989
+}
+      4 | {0,1.38629436111989,0,0,0,0.575364144903562,0,0,0.693147180559945,0.693147180559945,0,0,0,0,0,0.575364144903562,0.693147180559945,0,0}
+
+</code></pre>
+<p>You can determine the <em>angular distance</em> between one document and the rest of the documents using the ACOS of the dot product of the document vectors:</p>
+<pre><code>CREATE TABLE weights AS 
+    (SELECT docnum, (feature_vector*logidf) tf_idf 
+        FROM (SELECT log(count(feature_vector)/vec_count_nonzero(feature_vector))
+       AS logidf FROM corpus) foo, corpus ORDER BY docnum)
+    DISTRIBUTED RANDOMLY;
+</code></pre>
+<p>Calculate the angular distance between the first document and every other document:</p>
+<pre><code>SELECT docnum, trunc((180.*(ACOS(dmin(1.,(tf_idf%*%testdoc)/(l2norm(tf_idf)*l2norm(testdoc))))/(4.*ATAN(1.))))::numeric,2)
+     AS angular_distance FROM weights,
+     (SELECT tf_idf testdoc FROM weights WHERE docnum = 1 LIMIT 1) foo
+ORDER BY 1;
+
+ docnum | angular_distance 
+--------+------------------
+      1 |             0.00
+      2 |            78.82
+      3 |            90.00
+      4 |            80.02
+</code></pre>
+<p>You can see that the angular distance between document 1 and itself is 0 degrees, and between document 1 and 3 is 90 degrees because they share no features at all.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/modules/gp_pitr.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/modules/gp_subtransaction_overflow.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/modules/gp_pitr.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/modules/gp_subtransaction_overflow.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

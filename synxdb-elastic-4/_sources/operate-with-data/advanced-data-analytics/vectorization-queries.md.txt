@@ -1,0 +1,212 @@
+# Vectorization Query Computing
+
+When handling large datasets, the vectorization execution engine can greatly improve computing efficiency. By vectorizing data, multiple data elements can be processed at the same time, using parallel computing and SIMD instruction sets to speed up the process. {{ product_name }} Vectorization (referred to as Vectorization) is a vectorization plugin based on the {{ product_name }} kernel, designed to optimize query performance.
+
+## Enable vectorization
+
+```sql
+SET vector.enable_vectorization = ON;
+```
+
+## Usage
+
+Vectorization provides two parameters for users: `vector.enable_vectorization` and `vector.max_batch_size`.
+
+| **Parameter name**            | **Description**                                                                                                                                                   |
+|-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `vector.enable_vectorization` | Controls whether vectorized queries are enabled. It is disabled by default.                                                                                       |
+| `vector.max_batch_size`       | The size of the vectorized batch, which controls how many rows the executor processes in one cycle. The range is `[0, 600000]`, and the default value is `16384`. |
+
+### Enable or disable vectorization queries
+
+You can temporarily enable or disable the vectorization feature in a connection by setting the `vector.enable_vectorization` variable. This setting is effective only for the current connection, and it will reset to the default value after disconnecting.
+
+After uninstalling vectorization, setting the `vector.enable_vectorization` variable will have no effect. When you reinstall it, the `vector.enable_vectorization` will be restored to the default value `on`.
+
+```sql
+SET vector.enable_vectorization TO [on|off];
+```
+
+### Set vectorization batch size
+
+The batch size of vectorization greatly affects performance. If the value is too small, queries might slow down. If the value is too large, it might increase memory usage without improving performance.
+
+```sql
+SET vector.max_batch_size TO <batch_number>;
+```
+
+### Verify whether a query is vectorized
+
+You can use `EXPLAIN` to check whether a query is a vectorization query.
+
+- If the first line of the `QUERY PLAN` has a "Vec" label, it means the query uses vectorization.
+
+    ```sql
+    gpadmin=# EXPLAIN SELECT * FROM int8_tbl;
+                                        QUERY PLAN                                     
+    -----------------------------------------------------------------------------------
+    Vec Gather Motion 3:1  (slice1; segments: 3)  (cost=0.00..431.00 rows=1 width=16)
+    ->  Vec Seq Scan on int8_tbl  (cost=0.00..431.00 rows=1 width=16)
+    Optimizer: Pivotal Optimizer (GPORCA)
+    (3 rows)
+    ```
+
+- If the first line of the `QUERY PLAN` does not have a "Vec" label, it means the query does not use vectorization.
+
+    ```sql
+    gpadmin=# EXPLAIN SELECT * FROM int8_tbl;
+                                    QUERY PLAN                                   
+    -------------------------------------------------------------------------------
+    Gather Motion 3:1  (slice1; segments: 3)  (cost=0.00..431.00 rows=1 width=16)
+    ->  Seq Scan on int8_tbl  (cost=0.00..431.00 rows=1 width=16)
+    Optimizer: Pivotal Optimizer (GPORCA)
+    (3 rows)
+    ```
+
+### Supported features
+
+The following table describes the operators, functions, and data types supported by vectorized execution.
+
+```{list-table}
+:header-rows: 1
+:widths: 25 15 60
+:name: vectorization-queries-support-matrix-en
+:class: longtable
+
+* - Feature
+  - Supported or not
+  - Description
+* - **Storage format**
+  - Supported
+  - AOCS
+* - **Storage format**
+  - Not supported
+  - HEAP
+* - **Data types**
+  - Supported
+  - int2, int4, int8, float8, bool, char, tid, date, time, timestamp, timestamptz, varchar, text, numeric
+* - **Data types**
+  - Not supported
+  - Custom type
+* - **Scan operator**
+  - Supported
+  - Scanning AOCS tables, complex filter conditions
+* - **Scan operator**
+  - Not supported
+  - Non-AOCS tables
+* - **Agg operator**
+  - Supported
+  - Aggregate functions: min, max, count, sum, avg Aggregation plans: PlanAggregate (simple aggregate), GroupAggregate (sorted aggregate), HashAggregate (hash aggregate)
+* - **Agg operator**
+  - Not Supported
+  - Aggregate functions: sum(int8), sum(float8), stddev (standard deviation), variance Aggregation plans: MixedAggregate (mixed aggregate)
+* - **Limit operator**
+  - Supported
+  - All
+* - **ForeignScan operator**
+  - Supported
+  - All
+* - **Result operator**
+  - Supported
+  - All
+* - **Append operator**
+  - Supported
+  - All
+* - **Subquery operator**
+  - Supported
+  - All
+* - **Sequence operator**
+  - Supported
+  - All
+* - **NestedLoopJoin operator**
+  - Supported
+  - Join types: inner join, left join, semi join, anti join
+* - **NestedLoopJoin operator**
+  - Not supported
+  - Join types: right join, full join, semi-anti join Join conditions: different data types, complex inequality conditions
+* - **Material operator**
+  - Supported
+  - All
+* - **ShareInputScan operator**
+  - Supported
+  - All
+* - **ForeignScan operator**
+  - Supported
+  - All
+* - **HashJoin operator**
+  - Supported
+  - Join types: inner join, left join, right join, full join, semi join, anti join, semi-anti join
+* - **HashJoin operator**
+  - Not Supported
+  - Join conditions: different data types, complex inequality conditions
+* - **Sort operator**
+  - Supported
+  - Sorting order: ascending, descending algorithms: order by, order by limit
+* - **Motion operator**
+  - Supported
+  - GATHER (sending tuples from multiple senders to one receiver), GATHER_SINGLE (single-node gathering), HASH (simple hash conditions), BROADCAST (broadcast gathering), EXPLICIT (explicit gathering)
+* - **Motion operator**
+  - Not supported
+  - Hash gathering (complex hash conditions)
+* - **Expressions**
+  - Supported
+  - case when, is distinct, is not distinct, grouping, groupid, stddev_sample, abs, round, upper, textcat, date_pli, coalesce, substr
+* - **Bench**
+  - Supported
+  - ClickHouse, TPC-H, TPC-DS, ICW, ICW-ORCA
+```
+
+### Single-node threaded execution
+
+By performing threaded parallel computation within the execution node, better utilization of multi-core machine resources can be achieved, reducing query time and improving query performance. The following vectorized operators support threaded acceleration:
+
+- Scan (Filter)
+- Join
+- Agg
+- Sort
+
+Currently, the vectorized query feature supports enabling threaded queries in a single-node deployment. To enable it, the following GUC values need to be configured:
+
+```sql
+set vector.enable_vectorization=on;  -- Enables vectorized query.
+set vector.enable_plan_merge=on; -- Enables Pipeline scheduling execution.
+set vector.pool_threads=8;  -- Configures the number of execution threads.
+```
+
+Vectorized threaded execution relies on the underlying PAX storage file format. Take the `tpcds` PAX table `store_sales` as an example. When threaded execution is not enabled:
+
+```sql
+gpadmin=# set vector.pool_threads=0;
+SET
+gpadmin=# explain analyze select ss_quantity from store_sales 
+where ss_quantity between 6 and 10 and ss_list_price between 5 and 5+10;
+                                                               QUERY PLAN                                 
+
+------------------------------------------------------------------------------------------------------------
+---------------------------------
+Vec Seq Scan on store_sales  (cost=0.00..661957.82 rows=28801 width=4) (actual time=8804.432..8805.236 rows
+=94117 loops=1)
+   Filter: ((ss_quantity >= 6) AND (ss_quantity <= 10) AND (ss_list_price >= '5'::numeric(15,2)) AND (ss_lis
+t_price <= '15'::numeric(15,2)))
+Planning Time: 0.475 ms
+   (slice0)    Executor memory: 114K bytes.
+Memory used:  128000kB
+Optimizer: Postgres query optimizer
+Execution Time: 8809.841 ms
+(7 rows)
+```
+
+When threaded execution is enabled and the `pool_threads` parameter is set to `8`:
+
+```sql
+gpadmin=# set vector.pool_threads=8;
+SET
+gpadmin=# explain analyze select ss_quantity from store_sales 
+where ss_quantity between 6 and 10 and ss_list_price between 5 and 5+10;
+                                                               QUERY PLAN                                 
+
+------------------------------------------------------------------------------------------------------------
+---------------------------------
+```
+
+After enabling threaded queries, the query time is significantly reduced.

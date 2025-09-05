@@ -1,0 +1,258 @@
+# Deploy {{ product_name }}
+
+This guide provides a step-by-step walkthrough for installing the {{ product_name }}, from the initial setup to accessing the console for the first time.
+
+## Step 1. Prerequisites
+
+Before beginning the installation, ensure your environment is ready.
+
+### Environment and system requirements
+
+Ensure your environment meets the following criteria before proceeding:
+
+- **Operating system:** A Linux server with proper network access.
+- **Container runtime:** Docker is installed on your server.
+- **Kubernetes cluster:** A running Kubernetes cluster that can:
+    - Automatically generate an external hostname/IP for `LoadBalancer` type services.
+    - Automatically provision `PersistentVolumes` for `PersistentVolumeClaims`.
+- **Object storage:** An S3-compatible object storage service (for example, MinIO) with proper read and write access is available.
+- **Client tools:** `kubectl` and `Helm` are installed on your server. If Helm is not installed, follow the official instructions on the [Helm website](https://helm.sh/docs/intro/install/).
+
+### Obtain the installation package
+
+The official installation package is required.
+
+- **Action:** Contact {{ company_name }} technical support to get the installation package.
+- **Package size:** About 5.7 GB
+- **MD5 checksum:** `fe2e0ea4559bacaee7c3dab39bdb76af`
+
+To ensure the package is complete and not corrupted, verify the checksum after downloading.
+
+### Configure Kubernetes CSIDriver
+
+The installation requires a specific setting in the Kubernetes cluster's CSI (Container Storage Interface) Driver.
+
+1. Check the current CSIDriver configuration:
+
+    ```bash
+    kubectl get csidriver
+    ```
+
+2. Edit the CSIDriver. Set `fsGroupPolicy` to `None`.
+
+    Open the driver configuration for editing. For example, if the driver is named `named-disk.csi.cloud-director.vmware.com`, use the following command:
+
+    ```bash
+    kubectl edit csidriver <your-csi-driver-name>
+    ```
+
+3. Update the `spec` section. In the YAML file that opens, find the `spec` section and add or modify the `fsGroupPolicy` line as shown below:
+
+    ```yaml
+    spec:
+      attachRequired: true
+      fsGroupPolicy: None # <-- Adds or modifies this line.
+      podInfoOnMount: false
+      # ... other settings
+    ```
+
+    Save and close the file to apply the changes.
+
+### Import Docker images
+
+The installation package includes several Docker images that need to be loaded and pushed to a container image registry.
+
+1. Load the images. The images are provided as `.tar.gz` files in the `image/` directory of the installation package. Load each one using the `docker load` command. For example:
+
+    ```bash
+    docker load < image/synxdb/synxdb-lakehouse-4.0.0-117013.tar.gz
+    docker load < image/synxdb/synxdb-elastic-dbaas-1.0-RELEASE-117134.tar.gz
+    docker load < image/foundationdb/fdb-kubernetes-operator-v2.10.0.tar.gz
+    docker load < image/foundationdb/fdb-kubernetes-sidecar-7.3.63-1.tar.gz
+    docker load < image/foundationdb/fdb-kubernetes-monitor-7.3.63.tar.gz
+    docker load < image/dbeaver/cloudbeaver-23.3.5-884-g156f14-117016-release.tar.gz
+    docker load < image/minio/minio-RELEASE.2023-10-25T06-33-25Z.tar.gz
+    docker load < image/minio/mc-RELEASE.2024-11-21T17-21-54Z.tar.gz
+    ```
+
+2. Tag and push the images. After loading, tag the images to match the private registry's URL and then push them. For example:
+
+    ```bash
+    # Tags the image.
+    docker tag <image_name>:<tag> <your_registry_url>/<repository>/<image_name>:<tag>
+
+    # Pushes the image.
+    docker push <your_registry_url>/<repository>/<image_name>:<tag>
+    ```
+
+    Repeat this for all loaded images.
+
+## Step 2. Install dependencies
+
+The service console relies on a few external services. Install these services before proceeding.
+
+### Set up S3-compatible object storage
+
+The service console requires an S3-compatible object storage service for metadata backups. Ensure that the service supports the s3v4 authentication protocol.
+
+For testing purposes, you can set up a MinIO instance for metadata backup. To avoid potential conflicts, install it in a dedicated namespace, `minio-metabak`.
+
+1. Install MinIO using the provided Helm chart.
+
+    ```bash
+    helm install minio helm/minio-5.4.0.tgz \
+      --namespace minio-metabak \
+      --timeout 10m \
+      --wait \
+      --create-namespace \
+      -f example/minio-values.yaml
+    ```
+
+    :::{note}
+    Before running, you might need to edit `example/minio-values.yaml` to point to the MinIO image that you have pushed to the private registry.
+    :::
+
+### Install FoundationDB operator
+
+[FoundationDB](https://github.com/apple/foundationdb) is used by the service console for its metadata layer.
+
+- **Action:** Install the FoundationDB operator using the Helm chart.
+- **Command:**
+
+    ```bash
+    helm install fdb-operator helm/fdb-operator-0.2.0.tgz \
+       --namespace fdb \
+       --timeout 30m \
+       --wait \
+       --create-namespace \
+       -f example/foundationdb-values.yaml
+    ```
+
+    :::{note}
+    Remember to update `example/foundationdb-values.yaml` with the correct image paths from the registry.
+    :::
+
+### Install CloudBeaver
+
+[CloudBeaver](https://github.com/dbeaver/cloudbeaver) provides a web-based SQL client.
+
+- **Action:** Install CloudBeaver using its Helm chart.
+- **Command:**
+
+    ```bash
+    helm install cloudbeaver helm/cloudbeaver-0.0.1.tgz \
+       --namespace cloudbeaver \
+       --timeout 10m \
+       --wait \
+       --create-namespace \
+       -f example/cloudbeaver-values.yaml
+    ```
+
+    :::{note}
+    Update `example/cloudbeaver-values.yaml` with the correct image paths.
+    :::
+
+### Optional: Install monitoring tools
+
+Prometheus and AlertManager are required to enable monitoring and alert features. Follow their [official instructions](https://prometheus.io/docs/prometheus/latest/installation/) for installation.
+
+## Step 3. Install the service console
+
+With the prerequisites and dependencies in place, you can go ahead and install the main service console application.
+
+### A note on the database (production vs. testing)
+
+For a production deployment, an external PostgreSQL-compatible database is required for reliability and data persistence. For testing purposes, the service console uses a simpler embedded database by default. This choice is configured in the next step.
+
+### Prepare the configuration file
+
+The configuration for the service console is managed in a YAML file. An example is provided at `example/dbaas-values.yaml`.
+
+- **Action:** Open `example/dbaas-values.yaml` and modify it for the environment.
+- **Key sections to modify:**
+
+    1. **Images:** Replace all image names with the full paths to the images in the private registry.
+    2. **OSS configuration:** This section configures the connection to the S3 object storage. If MinIO was installed in the previous step, the default values should work. The endpoint will be `http://minio.minio-metabak:32000`.
+
+        ```yaml
+        oss:
+          moscow:
+            vendor: aws
+            internal-region: default
+            public-region: default
+            endpoint: http://minio.minio-metabak:32000 # <-- Check this
+            signatureVersion: s3v4
+            access-key-id: minio
+            access-key-secret: password
+        ```
+
+    3. **Database (for production):** Based on the note above, for a production environment, modify the `datasource` section with the external PostgreSQL connection string. Otherwise, the default settings can be used for testing.
+    4. **Region and profile:** Modify the default region (`moscow`) and deployment profiles to match production requirements. To change the region, globally replace all occurrences of `moscow` with the new name (for example, `ru-central1`).
+
+        :::{note}
+        When you change the region name, you also need to update all other configuration items that refer to the old region name to ensure the settings are consistent.
+        :::
+
+### Run the installation command
+
+Once the configuration file is ready, use Helm to deploy the service console.
+
+- **Action:** Run the `helm install` command.
+- **Command:**
+
+    ```bash
+    helm install dbaas-integration helm/dbaas-integration-1.0-RELEASE.tgz \
+       --namespace dbaas \
+       --timeout 10m \
+       --wait \
+       --create-namespace \
+       -f example/dbaas-values.yaml
+    ```
+
+This command creates a new namespace called `dbaas` and deploys all the necessary components. The `--wait` flag ensures that the command only finishes after the deployment is successful.
+
+## Step 4. Access the service console
+
+By default, the service console is not exposed outside the Kubernetes cluster.
+
+### Access for testing: port forwarding
+
+For testing, the easiest way to access it is by using port forwarding.
+
+1. Set up port forwarding. Run these commands in the terminal. They will find the correct pod and forward its port to the local machine.
+
+    ```bash
+    # Gets the pod name and saves it to a variable.
+    export POD_NAME=$(kubectl get pods --namespace dbaas -l "app.kubernetes.io/name=dbaas-integration,app.kubernetes.io/instance=dbaas-integration" -o jsonpath="{.items[0].metadata.name}")
+
+    # Gets the container port.
+    export CONTAINER_PORT=$(kubectl get pod --namespace dbaas $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+
+    # Starts port forwarding.
+    echo "Visit http://127.0.0.1:8080 to use your application"
+    kubectl --namespace dbaas port-forward $POD_NAME 8080:$CONTAINER_PORT
+    ```
+
+2. Open the web console. Keep the port-forwarding command running. You can now access the consoles in a web browser:
+
+    - **User console:** `http://localhost:8080/`
+    - **Ops console:** `http://localhost:8080/ops/`
+
+- **Default credentials:**
+
+    - **Username:** `admin`
+    - **Password:** `admin`
+
+### Access for production: ingress or reverse proxy
+
+For a production environment, set up a Kubernetes Ingress or an HTTP reverse proxy in front of the service console. For security reasons, configure it in the following way:
+
+- **Enable HTTPS:** Expose the service via the HTTPS protocol and redirect all HTTP connections to HTTPS.
+- **Restrict console access:** Only expose the user console (`/`) to customers. The ops console (`/ops/`) should only be exposed to the internal network.
+- **Redirect for customers:** For customers, configure a redirect from the ops console path to the user console path.
+
+The {{ product_name }} service console is now installed and accessible.
+
+## What's next
+
+After the deployment, see the [quick-start guide](../tutorials/quick-start.rst) for a quick try of creating necessary resources (such as accounts, users, and warehouses), running SQL queries via the client or console, loading external data, and scaling clusters.

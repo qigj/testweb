@@ -1,0 +1,7 @@
+SQL Queries
+****************************
+
+.. toctree:: 
+   :maxdepth: 2
+
+   join-queries

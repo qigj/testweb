@@ -1,0 +1,11 @@
+Optimize Performance
+***********************
+
+.. toctree::
+   :maxdepth: 2
+
+   optimize-queries/optimize-queries-index
+   create-index-in-parallel
+   create-ao-aoco-tables-in-parallel-and-refresh-mtv
+   manage-resources-using-resource-groups
+   use-dynamic-tables

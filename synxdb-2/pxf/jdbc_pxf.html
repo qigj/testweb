@@ -1,0 +1,410 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Accessing an SQL Database (JDBC) - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="accessing-an-sql-database-jdbc"><a class="header" href="#accessing-an-sql-database-jdbc">Accessing an SQL Database (JDBC)</a></h1>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<p>Some of your data may already reside in an external SQL database. PXF provides access to this data via the PXF JDBC connector. The JDBC connector is a JDBC client. It can read data from and write data to SQL databases including MySQL, ORACLE, Microsoft SQL Server, DB2, PostgreSQL, Hive, and Apache Ignite.</p>
+<p>This section describes how to use the PXF JDBC connector to access data in an external SQL database, including how to create and query or insert data into a PXF external table that references a table in an external database.</p>
+<div class="note"><b>Note:</b> The JDBC connector does not guarantee consistency when writing to an external SQL database. Be aware that if an <code>INSERT</code> operation fails, some data may be written to the external database table. If you require consistency for writes, consider writing to a staging table in the external database, and loading to the target table only after verifying the write operation.</div>
+<h2 id="prerequisites"><a class="header" href="#prerequisites"><a id="prereq"></a>Prerequisites</a></h2>
+<p>Before you access an external SQL database using the PXF JDBC connector, ensure that:</p>
+<ul>
+<li>You can identify the PXF runtime configuration directory (<code>$PXF_BASE</code>).</li>
+<li>You have configured PXF, and PXF is running on each SynxDB host. See <a href="instcfg_pxf.html">Configuring PXF</a> for additional information.</li>
+<li>Connectivity exists between all SynxDB hosts and the external SQL database.</li>
+<li>You have configured your external SQL database for user access from all SynxDB hosts.</li>
+<li>You have registered any JDBC driver JAR dependencies.</li>
+<li>(Recommended) You have created one or more named PXF JDBC connector server configurations as described in <a href="jdbc_cfg.html">Configuring the PXF JDBC Connector</a>.</li>
+</ul>
+<h2 id="data-types-supported"><a class="header" href="#data-types-supported"><a id="datatypes"></a>Data Types Supported</a></h2>
+<p>The PXF JDBC connector supports the following data types:</p>
+<ul>
+<li>INTEGER, BIGINT, SMALLINT</li>
+<li>REAL, FLOAT8</li>
+<li>NUMERIC</li>
+<li>BOOLEAN</li>
+<li>VARCHAR, BPCHAR, TEXT</li>
+<li>DATE</li>
+<li>TIMESTAMP</li>
+<li>TIMESTAMPTZ</li>
+<li>BYTEA</li>
+<li>UUID</li>
+</ul>
+<p>Any data type not listed above is not supported by the PXF JDBC connector.</p>
+<h3 id="about-accessing-hive-via-jdbc"><a class="header" href="#about-accessing-hive-via-jdbc"><a id="datatypes_hive"></a>About Accessing Hive via JDBC</a></h3>
+<p>PXF includes version 1.1.0 of the Hive JDBC driver. This version does <strong>not</strong> support the following data types when you use the PXF JDBC connector to operate on a Hive table:</p>
+<div class="table-wrapper"><table><thead><tr><th>Data Type</th><th>Fixed in Hive JDBC Driver</th><th>Upstream Issue</th><th>Operations Not Supported</th></tr></thead><tbody>
+<tr><td>NUMERIC</td><td>2.3.0</td><td><a href="https://issues.apache.org/jira/browse/HIVE-13614">HIVE-13614</a></td><td>Write</td></tr>
+<tr><td>TIMESTAMP</td><td>2.0.0</td><td><a href="https://issues.apache.org/jira/browse/HIVE-11748">HIVE-11748</a></td><td>Write</td></tr>
+<tr><td>DATE</td><td>1.3.0, 2.0.0</td><td><a href="https://issues.apache.org/jira/browse/HIVE-11024">HIVE-11024</a></td><td>Write</td></tr>
+<tr><td>TIMESTAMPTZ</td><td>N/A</td><td><a href="https://issues.apache.org/jira/browse/HIVE-576">HIVE-576</a></td><td>Read, Write</td></tr>
+<tr><td>BYTEA</td><td>N/A</td><td>N/A</td><td>Read, Write</td></tr>
+</tbody></table>
+</div>
+<h2 id="accessing-an-external-sql-database"><a class="header" href="#accessing-an-external-sql-database"><a id="queryextdata"></a>Accessing an External SQL Database</a></h2>
+<p>The PXF JDBC connector supports a single profile named <code>jdbc</code>. You can both read data from and write data to an external SQL database table with this profile. You can also use the connector to run a static, named query in external SQL database and read the results.</p>
+<p>To access data in a remote SQL database, you create a readable or writable SynxDB external table that references the remote database table. The SynxDB external table and the remote database table or query result tuple must have the same definition; the column names and types must match.</p>
+<p>Use the following syntax to create a SynxDB external table that references a remote SQL database table or a query result from the remote database:</p>
+<pre>
+CREATE [READABLE | WRITABLE] EXTERNAL TABLE &lt;table_name>
+    ( &lt;column_name> &lt;data_type> [, ...] | LIKE &lt;other_table> )
+LOCATION ('pxf://&lt;external-table-name>|query:&lt;query_name>?<b>PROFILE=jdbc[&SERVER=&lt;server_name>]</b>[&&lt;custom-option>=&lt;value>[...]]')
+FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import'|'pxfwritable_export');
+</pre>
+<p>The specific keywords and values used in the SynxDB <a href="../ref_guide/sql_commands/CREATE_EXTERNAL_TABLE.html">CREATE EXTERNAL TABLE</a> command are described in the table below.</p>
+<div class="table-wrapper"><table><thead><tr><th>Keyword</th><th>Value</th></tr></thead><tbody>
+<tr><td>&lt;external‑table‑name&gt;</td><td>The full name of the external table. Depends on the external SQL database, may include a schema name and a table name.</td></tr>
+<tr><td>query:&lt;query_name&gt;</td><td>The name of the query to run in the remote SQL database.</td></tr>
+<tr><td>PROFILE</td><td>The <code>PROFILE</code> keyword value must specify <code>jdbc</code>.</td></tr>
+<tr><td>SERVER=&lt;server_name&gt;</td><td>The named server configuration that PXF uses to access the data. PXF uses the <code>default</code> server if not specified.</td></tr>
+<tr><td>&lt;custom‑option&gt;=&lt;value&gt;</td><td>&lt;custom-option&gt; is profile-specific. <code>jdbc</code> profile-specific options are discussed in the next section.</td></tr>
+<tr><td>FORMAT ‘CUSTOM’</td><td>The JDBC <code>CUSTOM</code> <code>FORMAT</code> supports the built-in <code>'pxfwritable_import'</code> <code>FORMATTER</code> function for read operations and the built-in <code>'pxfwritable_export'</code> function for write operations.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Note</strong>: You cannot use the <code>HEADER</code> option in your <code>FORMAT</code> specification when you create a PXF external table.</p>
+<h3 id="jdbc-custom-options"><a class="header" href="#jdbc-custom-options"><a id="jdbcoptions"></a>JDBC Custom Options</a></h3>
+<p>You include JDBC connector custom options in the <code>LOCATION</code> URI, prefacing each option with an ampersand <code>&amp;</code>. <code>CREATE EXTERNAL TABLE</code> &lt;custom-option&gt;s supported by the <code>jdbc</code> profile include:</p>
+<div class="table-wrapper"><table><thead><tr><th>Option Name</th><th>Operation</th><th>Description</th></tr></thead><tbody>
+<tr><td>BATCH_SIZE</td><td>Write</td><td>Integer that identifies the number of <code>INSERT</code> operations to batch to the external SQL database. Write batching is activated by default; the default value is 100.</td></tr>
+<tr><td>FETCH_SIZE</td><td>Read</td><td>Integer that identifies the number of rows to buffer when reading from an external SQL database. Read row batching is activated by default. The default read fetch size for MySQL is <code>-2147483648</code> (<code>Integer.MIN_VALUE</code>). The default read fetch size for all other databases is 1000.</td></tr>
+<tr><td>QUERY_TIMEOUT</td><td>Read/Write</td><td>Integer that identifies the amount of time (in seconds) that the JDBC driver waits for a statement to run. The default wait time is infinite.</td></tr>
+<tr><td>DATE_WIDE_RANGE</td><td>Read/Write</td><td>Boolean that enables support for <code>date</code> and <code>timestamp</code> data types that specify <code>BC</code> or <code>AD</code>. Set this value to <code>true</code> to ensure eras data is not lost and to improve performance in cases where the year contains more than 4 digits. The default value is <code>false</code>.</td></tr>
+<tr><td>POOL_SIZE</td><td>Write</td><td>Activate thread pooling on <code>INSERT</code> operations and identify the number of threads in the pool. Thread pooling is deactivated by default.</td></tr>
+<tr><td>PARTITION_BY</td><td>Read</td><td>Activates read partitioning. The partition column, &lt;column-name&gt;:&lt;column-type&gt;. You may specify only one partition column. The JDBC connector supports <code>date</code>, <code>int</code>, and <code>enum</code> &lt;column-type&gt; values, where <code>int</code> represents any JDBC integral type. If you do not identify a <code>PARTITION_BY</code> column, a single PXF instance services the read request.</td></tr>
+<tr><td>RANGE</td><td>Read</td><td>Required when <code>PARTITION_BY</code> is specified. The query range; used as a hint to aid the creation of partitions. The <code>RANGE</code> format is dependent upon the data type of the partition column. When the partition column is an <code>enum</code> type, <code>RANGE</code> must specify a list of values, &lt;value&gt;:&lt;value&gt;[:&lt;value&gt;[…]], each of which forms its own fragment. If the partition column is an <code>int</code> or <code>date</code> type, <code>RANGE</code> must specify &lt;start-value&gt;:&lt;end-value&gt; and represents the interval from &lt;start-value&gt; through &lt;end-value&gt;, inclusive. The <code>RANGE</code> for an <code>int</code> partition column may span any 64-bit signed integer values. If the partition column is a <code>date</code> type, use the <code>yyyy-MM-dd</code> date format.</td></tr>
+<tr><td>INTERVAL</td><td>Read</td><td>Required when <code>PARTITION_BY</code> is specified and of the <code>int</code>, <code>bigint</code>, or <code>date</code> type. The interval, &lt;interval-value&gt;[:&lt;interval-unit&gt;], of one fragment. Used with <code>RANGE</code> as a hint to aid the creation of partitions. Specify the size of the fragment in &lt;interval-value&gt;. If the partition column is a <code>date</code> type, use the &lt;interval-unit&gt; to specify <code>year</code>, <code>month</code>, or <code>day</code>. PXF ignores <code>INTERVAL</code> when the <code>PARTITION_BY</code> column is of the <code>enum</code> type.</td></tr>
+<tr><td>QUOTE_COLUMNS</td><td>Read</td><td>Controls whether PXF should quote column names when constructing an SQL query to the external database. Specify <code>true</code> to force PXF to quote all column names; PXF does not quote column names if any other value is provided. If <code>QUOTE_COLUMNS</code> is not specified (the default), PXF automatically quotes <em>all</em> column names in the query when <em>any</em> column name:<br>- includes special characters, or <br>- is mixed case and the external database does not support unquoted mixed case identifiers.</td></tr>
+</tbody></table>
+</div>
+<h4 id="batching-insert-operations-write"><a class="header" href="#batching-insert-operations-write"><a id="batching"></a>Batching Insert Operations (Write)</a></h4>
+<p><em>When the JDBC driver of the external SQL database supports it</em>, batching of <code>INSERT</code> operations may significantly increase performance.</p>
+<p>Write batching is activated by default, and the default batch size is 100. To deactivate batching or to modify the default batch size value, create the PXF external table with a <code>BATCH_SIZE</code> setting:</p>
+<ul>
+<li><code>BATCH_SIZE=0</code> or <code>BATCH_SIZE=1</code> - deactivates batching</li>
+<li><code>BATCH_SIZE=(n&gt;1)</code> - sets the <code>BATCH_SIZE</code> to <code>n</code></li>
+</ul>
+<p>When the external database JDBC driver does not support batching, the behaviour of the PXF JDBC connector depends on the <code>BATCH_SIZE</code> setting as follows:</p>
+<ul>
+<li><code>BATCH_SIZE</code> omitted - The JDBC connector inserts without batching.</li>
+<li><code>BATCH_SIZE=(n&gt;1)</code> - The <code>INSERT</code> operation fails and the connector returns an error.</li>
+</ul>
+<h4 id="batching-on-read-operations"><a class="header" href="#batching-on-read-operations"><a id="fetching"></a>Batching on Read Operations</a></h4>
+<p>By default, the PXF JDBC connector automatically batches the rows it fetches from an external database table. The default row fetch size is 1000. To modify the default fetch size value, specify a <code>FETCH_SIZE</code> when you create the PXF external table. For example:</p>
+<pre><code class="language-pre">FETCH_SIZE=5000
+</code></pre>
+<p>If the external database JDBC driver does not support batching on read, you must explicitly deactivate read row batching by setting <code>FETCH_SIZE=0</code>.</p>
+<h4 id="thread-pooling-write"><a class="header" href="#thread-pooling-write"><a id="threadpool"></a>Thread Pooling (Write)</a></h4>
+<p>The PXF JDBC connector can further increase write performance by processing <code>INSERT</code> operations in multiple threads when threading is supported by the JDBC driver of the external SQL database.</p>
+<p>Consider using batching together with a thread pool. When used together, each thread receives and processes one complete batch of data. If you use a thread pool without batching, each thread in the pool receives exactly one tuple.</p>
+<p>The JDBC connector returns an error when any thread in the thread pool fails. Be aware that if an <code>INSERT</code> operation fails, some data may be written to the external database table.</p>
+<p>To deactivate or activate a thread pool and set the pool size, create the PXF external table with a <code>POOL_SIZE</code> setting as follows:</p>
+<ul>
+<li><code>POOL_SIZE=(n&lt;1)</code> - thread pool size is the number of CPUs in the system</li>
+<li><code>POOL_SIZE=1</code> - deactivate thread pooling</li>
+<li><code>POOL_SIZE=(n&gt;1)</code>- set the <code>POOL_SIZE</code> to <code>n</code></li>
+</ul>
+<h4 id="partitioning-read"><a class="header" href="#partitioning-read"><a id="partitioning"></a>Partitioning (Read)</a></h4>
+<p>The PXF JDBC connector supports simultaneous read access from PXF instances running on multiple SynxDB hosts to an external SQL table. This feature is referred to as partitioning. Read partitioning is not activated by default. To activate read partitioning, set the <code>PARTITION_BY</code>, <code>RANGE</code>, and <code>INTERVAL</code> custom options when you create the PXF external table.</p>
+<p>PXF uses the <code>RANGE</code> and <code>INTERVAL</code> values and the <code>PARTITON_BY</code> column that you specify to assign specific data rows in the external table to PXF instances running on the SynxDB segment hosts. This column selection is specific to PXF processing, and has no relationship to a partition column that you may have specified for the table in the external SQL database.</p>
+<p>Example JDBC &lt;custom-option&gt; substrings that identify partitioning parameters:</p>
+<pre><code class="language-pre">&amp;PARTITION_BY=id:int&amp;RANGE=1:100&amp;INTERVAL=5
+&amp;PARTITION_BY=year:int&amp;RANGE=2011:2013&amp;INTERVAL=1
+&amp;PARTITION_BY=createdate:date&amp;RANGE=2013-01-01:2016-01-01&amp;INTERVAL=1:month
+&amp;PARTITION_BY=color:enum&amp;RANGE=red:yellow:blue
+</code></pre>
+<p>When you activate partitioning, the PXF JDBC connector splits a <code>SELECT</code> query into multiple subqueries that retrieve a subset of the data, each of which is called a fragment. The JDBC connector automatically adds extra query constraints (<code>WHERE</code> expressions) to each fragment to guarantee that every tuple of data is retrieved from the external database exactly once.</p>
+<p>For example, when a user queries a PXF external table created with a <code>LOCATION</code> clause that specifies <code>&amp;PARTITION_BY=id:int&amp;RANGE=1:5&amp;INTERVAL=2</code>, PXF generates 5 fragments: two according to the partition settings and up to three implicitly generated fragments. The constraints associated with each fragment are as follows:</p>
+<ul>
+<li>Fragment 1: WHERE (id &lt; 1) - implicitly-generated fragment for RANGE start-bounded interval</li>
+<li>Fragment 2: WHERE (id &gt;= 1) AND (id &lt; 3) - fragment specified by partition settings</li>
+<li>Fragment 3: WHERE (id &gt;= 3) AND (id &lt; 5) - fragment specified by partition settings</li>
+<li>Fragment 4: WHERE (id &gt;= 5) - implicitly-generated fragment for RANGE end-bounded interval</li>
+<li>Fragment 5: WHERE (id IS NULL) - implicitly-generated fragment</li>
+</ul>
+<p>PXF distributes the fragments among SynxDB segments. A PXF instance running on a segment host spawns a thread for each segment on that host that services a fragment. If the number of fragments is less than or equal to the number of SynxDB segments configured on a segment host, a single PXF instance may service all of the fragments. Each PXF instance sends its results back to SynxDB, where they are collected and returned to the user.</p>
+<p>When you specify the <code>PARTITION_BY</code> option, tune the <code>INTERVAL</code> value and unit based upon the optimal number of JDBC connections to the target database and the optimal distribution of external data across SynxDB segments. The <code>INTERVAL</code> low boundary is driven by the number of SynxDB segments while the high boundary is driven by the acceptable number of JDBC connections to the target database. The <code>INTERVAL</code> setting influences the number of fragments, and should ideally not be set too high nor too low. Testing with multiple values may help you select the optimal settings.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="examples"></a>Examples</a></h2>
+<p>Refer to the following topics for examples on how to use PXF to read data from and write data to specific SQL databases:</p>
+<ul>
+<li><a href="jdbc_pxf_postgresql.html">Reading From and Writing to a PostgreSQL Table</a></li>
+<li><a href="jdbc_pxf_mysql.html">Reading From and Writing to a MySQL Table</a></li>
+<li><a href="jdbc_pxf_oracle.html">Reading From and Writing to an Oracle Table</a></li>
+<li><a href="jdbc_pxf_trino.html">Reading From and Writing to a Trino Table</a></li>
+</ul>
+<h2 id="about-using-named-queries"><a class="header" href="#about-using-named-queries"><a id="about_nq"></a>About Using Named Queries</a></h2>
+<p>The PXF JDBC Connector allows you to specify a statically-defined query to run against the remote SQL database. Consider using a <em>named query</em> when:</p>
+<ul>
+<li>You need to join several tables that all reside in the same external database.</li>
+<li>You want to perform complex aggregation closer to the data source.</li>
+<li>You would use, but are not allowed to create, a <code>VIEW</code> in the external database.</li>
+<li>You would rather consume computational resources in the external system to minimize utilization of SynxDB resources.</li>
+<li>You want to run a HIVE query and control resource utilization via YARN.</li>
+</ul>
+<p>The SynxDB administrator defines a query and provides you with the query name to use when you create the external table. Instead of a table name, you specify <code>query:&lt;query_name&gt;</code> in the <code>CREATE EXTERNAL TABLE</code> <code>LOCATION</code> clause to instruct the PXF JDBC connector to run the static query named <code>&lt;query_name&gt;</code> in the remote SQL database.</p>
+<p>PXF supports named queries only with readable external tables. You must create a unique SynxDB readable external table for each query that you want to run.</p>
+<p>The names and types of the external table columns must exactly match the names, types, and order of the columns return by the query result. If the query returns the results of an aggregation or other function, be sure to use the <code>AS</code> qualifier to specify a specific column name.</p>
+<p>For example, suppose that you are working with PostgreSQL tables that have the following definitions:</p>
+<pre><code class="language-sql">CREATE TABLE customers(id int, name text, city text, state text);
+CREATE TABLE orders(customer_id int, amount int, month int, year int);
+</code></pre>
+<p>And this PostgreSQL query that the administrator named <code>order_rpt</code>:</p>
+<pre><code class="language-sql">SELECT c.name, sum(o.amount) AS total, o.month
+  FROM customers c JOIN orders o ON c.id = o.customer_id
+  WHERE c.state = 'CO'
+GROUP BY c.name, o.month
+</code></pre>
+<p>This query returns tuples of type <code>(name text, total int, month int)</code>. If the <code>order_rpt</code> query is defined for the PXF JDBC server named <code>pgserver</code>, you could create a SynxDB external table to read these query results as follows:</p>
+<pre><code class="language-sql">CREATE EXTERNAL TABLE orderrpt_frompg(name text, total int, month int)
+  LOCATION ('pxf://query:order_rpt?PROFILE=jdbc&amp;SERVER=pgserver&amp;PARTITION_BY=month:int&amp;RANGE=1:13&amp;INTERVAL=3')
+FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import');
+</code></pre>
+<p>This command references a query named <code>order_rpt</code> defined in the <code>pgserver</code> server configuration. It also specifies JDBC read partitioning options that provide PXF with the information that it uses to split/partition the query result data across its servers/segments.</p>
+<p>For a more detailed example see <a href="jdbc_pxf_named.html">Example: Using a Named Query with PostgreSQL</a>.</p>
+<p>The PXF JDBC connector automatically applies column projection and filter pushdown to external tables that reference named queries.</p>
+<h2 id="overriding-the-jdbc-server-configuration-with-ddl"><a class="header" href="#overriding-the-jdbc-server-configuration-with-ddl"><a id="jdbc_override"></a>Overriding the JDBC Server Configuration with DDL</a></h2>
+<p>You can override certain properties in a JDBC server configuration for a specific external database table by directly specifying the custom option in the <code>CREATE EXTERNAL TABLE</code> <code>LOCATION</code> clause:</p>
+<div class="table-wrapper"><table><thead><tr><th>Custom Option Name</th><th>jdbc-site.xml Property Name</th></tr></thead><tbody>
+<tr><td>JDBC_DRIVER</td><td>jdbc.driver</td></tr>
+<tr><td>DB_URL</td><td>jdbc.url</td></tr>
+<tr><td>USER</td><td>jdbc.user</td></tr>
+<tr><td>PASS</td><td>jdbc.password</td></tr>
+<tr><td>BATCH_SIZE</td><td>jdbc.statement.batchSize</td></tr>
+<tr><td>FETCH_SIZE</td><td>jdbc.statement.fetchSize</td></tr>
+<tr><td>QUERY_TIMEOUT</td><td>jdbc.statement.queryTimeout</td></tr>
+<tr><td>DATE_WIDE_RANGE</td><td>jdbc.date.wideRange</td></tr>
+</tbody></table>
+</div>
+<p>Example JDBC connection strings specified via custom options:</p>
+<pre><code class="language-pre">&amp;JDBC_DRIVER=org.postgresql.Driver&amp;DB_URL=jdbc:postgresql://pgserverhost:5432/pgtestdb&amp;USER=pguser1&amp;PASS=changeme
+&amp;JDBC_DRIVER=com.mysql.jdbc.Driver&amp;DB_URL=jdbc:mysql://mysqlhost:3306/testdb&amp;USER=user1&amp;PASS=changeme
+</code></pre>
+<p>For example:</p>
+<pre>CREATE EXTERNAL TABLE pxf_pgtbl(name text, orders int)
+  LOCATION ('pxf://public.forpxf_table1?PROFILE=jdbc<b>&JDBC_DRIVER=org.postgresql.Driver&DB_URL=jdbc:postgresql://pgserverhost:5432/pgtestdb&USER=pxfuser1&PASS=changeme</b>')
+FORMAT 'CUSTOM' (FORMATTER='pxfwritable_export');</pre>
+<div class="note warning"><b>Warning:</b> Credentials that you provide in this manner are visible as part of the external table definition. Do not use this method of passing credentials in a production environment.</div>
+<p>Refer to <a href="cfg_server.html#override">Configuration Property Precedence</a> for detailed information about the precedence rules that PXF uses to obtain configuration property settings for a SynxDB user.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pxf/read_s3_s3select.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pxf/jdbc_pxf_postgresql.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pxf/read_s3_s3select.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pxf/jdbc_pxf_postgresql.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Reading CSV and Parquet Data From S3 Using S3 Select - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="reading-csv-and-parquet-data-from-s3-using-s3-select"><a class="header" href="#reading-csv-and-parquet-data-from-s3-using-s3-select">Reading CSV and Parquet Data from S3 Using S3 Select</a></h1>
+<p>The PXF S3 connector supports reading certain CSV-format and Parquet-format data from S3 using the Amazon S3 Select service. S3 Select provides direct query-in-place features on data stored in Amazon S3.</p>
+<p>When you enable it, PXF uses S3 Select to filter the contents of S3 objects to retrieve the subset of data that you request. This typically reduces both the amount of data transferred to SynxDB and the query time.</p>
+<p>You can use the PXF S3 Connector with S3 Select to read:</p>
+<ul>
+<li><code>gzip</code>-compressed or <code>bzip2</code>-compressed <code>CSV</code> files</li>
+<li><code>Parquet</code> files with <code>gzip</code>-compressed or <code>snappy</code>-compressed columns</li>
+</ul>
+<p>The data must be <code>UTF-8</code>-encoded, and may be server-side encrypted.</p>
+<p>PXF supports column projection as well as predicate pushdown for <code>AND</code>, <code>OR</code>, and <code>NOT</code> operators when using S3 Select.</p>
+<div class="note"><b>Note:</b> Using the Amazon S3 Select service may increase the cost of data access and retrieval. Be sure to consider the associated costs before you enable PXF to use the S3 Select service.</div>
+<h2 id="enabling-pxf-to-use-s3-select"><a class="header" href="#enabling-pxf-to-use-s3-select"><a id="s3_select_enable"></a>Enabling PXF to Use S3 Select</a></h2>
+<p>The <code>S3_SELECT</code> external table custom option governs PXF’s use of S3 Select when accessing the S3 object store. You can provide the following values when you set the <code>S3_SELECT</code> option:</p>
+<div class="table-wrapper"><table><thead><tr><th>S3-SELECT Value</th><th>Description</th></tr></thead><tbody>
+<tr><td>OFF</td><td>PXF does not use S3 Select; the default.</td></tr>
+<tr><td>ON</td><td>PXF always uses S3 Select.</td></tr>
+<tr><td>AUTO</td><td>PXF uses S3 Select when it will benefit access or performance.</td></tr>
+</tbody></table>
+</div>
+<p>By default, PXF does not use S3 Select (<code>S3_SELECT=OFF</code>). You can enable PXF to always use S3 Select, or to use S3 Select only when PXF determines that it could be beneficial for performance. For example, when <code>S3_SELECT=AUTO</code>, PXF automatically uses S3 Select when a query on the external table utilizes column projection or predicate pushdown, or when the referenced CSV file has a header row.</p>
+<p><strong>Note</strong>: The <code>IGNORE_MISSING_PATH</code> custom option is not available when you use a PXF external table to read CSV text and Parquet data from S3 using S3 Select.</p>
+<h2 id="reading-parquet-data-with-s3-select"><a class="header" href="#reading-parquet-data-with-s3-select"><a id="s3_select_parquet"></a>Reading Parquet Data with S3 Select</a></h2>
+<p>PXF supports reading Parquet data from S3 as described in <a href="objstore_parquet.html">Reading and Writing Parquet Data in an Object Store</a>. If you want PXF to use S3 Select when reading the Parquet data, you add the <code>S3_SELECT</code> custom option and value to the <code>CREATE EXTERNAL TABLE</code> <code>LOCATION</code> URI.</p>
+<h3 id="specifying-the-parquet-column-compression-type"><a class="header" href="#specifying-the-parquet-column-compression-type"><a id="parquet_compress"></a>Specifying the Parquet Column Compression Type</a></h3>
+<p>If columns in the Parquet file are <code>gzip</code>-compressed or <code>snappy</code>-compressed, use the <code>COMPRESSION_CODEC</code> custom option in the <code>LOCATION</code> URI to identify the compression codec alias. For example:</p>
+<pre><code class="language-pre">&amp;COMPRESSION_CODEC=gzip
+</code></pre>
+<p>Or,</p>
+<pre><code class="language-pre">&amp;COMPRESSION_CODEC=snappy
+</code></pre>
+<h3 id="creating-the-external-table"><a class="header" href="#creating-the-external-table"><a id="parquet_cet"></a>Creating the External Table</a></h3>
+<p>Use the following syntax to create a SynxDB external table that references a Parquet file on S3 that you want PXF to access with the S3 Select service:</p>
+<pre><code class="language-sql">CREATE EXTERNAL TABLE &lt;table_name&gt;
+    ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table&gt; )
+  LOCATION ('pxf://&lt;path-to-file&gt;?PROFILE=s3:parquet&amp;SERVER=&lt;server_name&gt;&amp;S3_SELECT=ON|AUTO[&amp;&lt;other-custom-option&gt;=&lt;value&gt;[...]]')
+FORMAT 'CSV';
+</code></pre>
+<div class="note"><b>Note:</b> You <i>must</i> specify <code>FORMAT 'CSV'</code> when you enable PXF to use S3 Select on an external table that accesses a Parquet file on S3.</div>
+<p>For example, use the following command to have PXF use S3 Select to access a Parquet file on S3 when optimal:</p>
+<pre><code class="language-sql">CREATE EXTERNAL TABLE parquet_on_s3 ( LIKE table1 )
+  LOCATION ('pxf://bucket/file.parquet?PROFILE=s3:parquet&amp;SERVER=s3srvcfg&amp;S3_SELECT=AUTO')
+FORMAT 'CSV';
+</code></pre>
+<h2 id="reading-csv-files-with-s3-select"><a class="header" href="#reading-csv-files-with-s3-select"><a id="s3_select_csv"></a>Reading CSV files with S3 Select</a></h2>
+<p>PXF supports reading CSV data from S3 as described in <a href="objstore_text.html">Reading and Writing Text Data in an Object Store</a>. If you want PXF to use S3 Select when reading the CSV data, you add the <code>S3_SELECT</code> custom option and value to the <code>CREATE EXTERNAL TABLE</code> <code>LOCATION</code> URI. You may also specify the delimiter formatter option and the file header and compression custom options.</p>
+<h3 id="handling-the-csv-file-header"><a class="header" href="#handling-the-csv-file-header"><a id="csv_header"></a>Handling the CSV File Header</a></h3>
+<div class="note"><b>Note:</b> PXF can read a CSV file with a header row <i>only</i> when the S3 Connector uses the Amazon S3 Select service to access the file on S3. PXF does not support reading a CSV file that includes a header row from any other external data store.</div>
+<p>CSV files may include a header line. When you enable PXF to use S3 Select to access a CSV-format file, you use the <code>FILE_HEADER</code> custom option in the <code>LOCATION</code> URI to identify whether or not the CSV file has a header row and, if so, how you want PXF to handle the header. PXF never returns the header row.</p>
+<p><strong>Note</strong>: You <em>must</em> specify <code>S3_SELECT=ON</code> or <code>S3_SELECT=AUTO</code> when the CSV file has a header row. Do not specify <code>S3_SELECT=OFF</code> in this case.</p>
+<p>The <code>FILE_HEADER</code> option takes the following values:</p>
+<div class="table-wrapper"><table><thead><tr><th>FILE_HEADER Value</th><th>Description</th></tr></thead><tbody>
+<tr><td>NONE</td><td>The file has no header row; the default.</td></tr>
+<tr><td>IGNORE</td><td>The file has a header row; ignore the header. Use when the order of the columns in the external table and the CSV file are the same. (When the column order is the same, the column names and the CSV header names may be different.)</td></tr>
+<tr><td>USE</td><td>The file has a header row; read the header. Use when the external table column names and the CSV header names are the same, but are in a different order.</td></tr>
+</tbody></table>
+</div>
+<p>If both the order and the names of the external table columns and the CSV header are the same, you can specify either <code>FILE_HEADER=IGNORE</code> or <code>FILE_HEADER=USE</code>.</p>
+<div class="note"><b>Note:</b> PXF cannot match the CSV data with the external table definition when both the order and the names of the external table columns are different from the CSV header columns. Any query on an external table with these conditions fails with the error <code>Some headers in the query are missing from the file</code>. </div>
+<p>For example, if the order of the columns in the CSV file header and the external table are the same, add the following to the <code>CREATE EXTERNAL TABLE</code> <code>LOCATION</code> URI to have PXF ignore the CSV header:</p>
+<pre><code class="language-pre">&amp;FILE_HEADER=IGNORE
+</code></pre>
+<h3 id="specifying-the-csv-file-compression-type"><a class="header" href="#specifying-the-csv-file-compression-type"><a id="csv_compress"></a>Specifying the CSV File Compression Type</a></h3>
+<p>If the CSV file is <code>gzip</code>- or <code>bzip2</code>-compressed, use the <code>COMPRESSION_CODEC</code> custom option in the <code>LOCATION</code> URI to identify the compression codec alias. For example:</p>
+<pre><code class="language-pre">&amp;COMPRESSION_CODEC=gzip
+</code></pre>
+<p>Or,</p>
+<pre><code class="language-pre">&amp;COMPRESSION_CODEC=bzip2
+</code></pre>
+<h3 id="creating-the-external-table-1"><a class="header" href="#creating-the-external-table-1"><a id="csv_cet"></a>Creating the External Table</a></h3>
+<p>Use the following syntax to create a SynxDB external table that references a CSV file on S3 that you want PXF to access with the S3 Select service:</p>
+<pre><code class="language-sql">CREATE EXTERNAL TABLE &lt;table_name&gt;
+    ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table&gt; )
+LOCATION ('pxf://&lt;path-to-file&gt;
+    ?PROFILE=s3:text&amp;SERVER=&lt;server_name&gt;&amp;S3_SELECT=ON|AUTO[&amp;FILE_HEADER=IGNORE|USE][&amp;COMPRESSION_CODEC=gzip|bzip2][&amp;&lt;other-custom-option&gt;=&lt;value&gt;[...]]')
+FORMAT 'CSV' [(delimiter '&lt;delim_char&gt;')];
+</code></pre>
+<p><strong>Note</strong>: Do not use the <code>(HEADER)</code> formatter option in the <code>CREATE EXTERNAL TABLE</code> command.</p>
+<p><strong>Note</strong>: PXF does not support the <code>SKIP_HEADER_COUNT</code> custom option when you read a CSV file on S3 using the S3 Select service.</p>
+<p>For example, use the following command to have PXF always use S3 Select to access a <code>gzip</code>-compressed file on S3, where the field delimiter is a pipe (‘|’) character and the external table and CSV header columns are in the same order.</p>
+<pre><code class="language-sql">CREATE EXTERNAL TABLE gzippedcsv_on_s3 ( LIKE table2 )
+  LOCATION ('pxf://bucket/file.csv.gz?PROFILE=s3:text&amp;SERVER=s3srvcfg&amp;S3_SELECT=ON&amp;FILE_HEADER=USE')
+FORMAT 'CSV' (delimiter '|');
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pxf/objstore_fileasrow.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pxf/jdbc_pxf.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pxf/objstore_fileasrow.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pxf/jdbc_pxf.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

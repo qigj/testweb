@@ -1,0 +1,559 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Transforming External Data with gpfdist and gpload - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../../highlight.css">
+        <link rel="stylesheet" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="transforming-external-data-with-gpfdist-and-gpload"><a class="header" href="#transforming-external-data-with-gpfdist-and-gpload">Transforming External Data with gpfdist and gpload</a></h1>
+<p>The <code>gpfdist</code> parallel file server allows you to set up transformations that enable SynxDB external tables to read and write files in formats that are not supported with the <code>CREATE EXTERNAL TABLE</code> command’s <code>FORMAT</code> clause. An <em>input</em> transformation reads a file in the foreign data format and outputs rows to <code>gpfdist</code> in the CSV or other text format specified in the external table’s <code>FORMAT</code> clause. An <em>output</em> transformation receives rows from <code>gpfdist</code> in text format and converts them to the foreign data format.</p>
+<blockquote>
+<p><strong>Note</strong> <code>gpfdist</code> and <code>gpload</code> are compatible only with the SynxDB major version in which they are shipped. For example, a <code>gpfdist</code> utility that is installed with SynxDB 4.x cannot be used with SynxDB 1.x or 2.x.</p>
+</blockquote>
+<p>This topic describes the tasks to set up data transformations that work with <code>gpfdist</code> to read or write external data files with formats that SynxDB does not support.</p>
+<ul>
+<li><a href="#topic_mdl_thm_pbb">About gpfdist Transformations</a></li>
+<li><a href="#topic_el5_k12_pbb">Determine the Transformation Schema</a></li>
+<li><a href="#topic77">Write a Transformation</a></li>
+<li><a href="#topic78">Write the gpfdist Configuration File</a></li>
+<li><a href="#topic80">Transfer the Data</a></li>
+<li><a href="#topic83">Configuration File Format</a></li>
+<li><a href="#topic91">XML Transformation Examples</a></li>
+</ul>
+<h2 id="about-gpfdist-transformations"><a class="header" href="#about-gpfdist-transformations"><a id="topic_mdl_thm_pbb"></a>About gpfdist Transformations</a></h2>
+<p>To set up a transformation for a data format, you provide an executable command that <code>gpfdist</code> can call with the name of the file containing data. For example, you could write a shell script that runs an XSLT transformation on an XML file to output rows with columns delimited with a vertical bar (<code>|</code>) character and rows delimited with linefeeds.</p>
+<p>Transformations are configured in a YAML-formatted configuration file passed to <code>gpfdist</code> on the command line.</p>
+<p>If you want to load the external data into a table in the SynxDB database, you can use the <code>gpload</code> utility to automate the tasks to create an external table, run <code>gpfdist</code>, and load the transformed data into the database table.</p>
+<p>Accessing data in external XML files from within the database is a common example requiring transformation. The following diagram shows <em>gpfdist</em> performing a transformation on XML files on an ETL server.</p>
+<p><img src="../../graphics/ext-tables-xml.png" alt="External Tables using XML Transformations" title="External Tables using XML Transformations" /></p>
+<p>Following are the high-level steps to set up a <code>gpfdist</code> transformation for external data files. The process is illustrated with an XML example.</p>
+<ol>
+<li><a href="#topic_el5_k12_pbb">Determine the transformation schema</a>.</li>
+<li><a href="#topic77">Write a transformation</a>.</li>
+<li><a href="#topic78">Write the gpfdist configuration file</a>.</li>
+<li><a href="#topic80">Transfer the data</a>.</li>
+</ol>
+<h2 id="determine-the-transformation-schema"><a class="header" href="#determine-the-transformation-schema"><a id="topic_el5_k12_pbb"></a>Determine the Transformation Schema</a></h2>
+<p>To prepare for the transformation project:</p>
+<ol>
+<li>Determine the goal of the project, such as indexing data, analyzing data, combining data, and so on.</li>
+<li>Examine the source files and note the file structure and element names.</li>
+<li>Choose the elements to import and decide if any other limits are appropriate.</li>
+</ol>
+<p>For example, the following XML file, <em>prices.xml</em>, is a simple XML file that contains price records. Each price record contains two fields: an item number and a price.</p>
+<pre><code>&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+&lt;prices&gt;
+  &lt;pricerecord&gt;
+    &lt;itemnumber&gt;708421&lt;/itemnumber&gt;
+    &lt;price&gt;19.99&lt;/price&gt;
+  &lt;/pricerecord&gt;
+  &lt;pricerecord&gt;
+    &lt;itemnumber&gt;708466&lt;/itemnumber&gt;
+    &lt;price&gt;59.25&lt;/price&gt;
+  &lt;/pricerecord&gt;
+  &lt;pricerecord&gt;
+    &lt;itemnumber&gt;711121&lt;/itemnumber&gt;
+    &lt;price&gt;24.99&lt;/price&gt;
+  &lt;/pricerecord&gt;
+&lt;/prices&gt;
+
+</code></pre>
+<p>The goal of this transformation is to import all the data into a SynxDB readable external table with an integer <code>itemnumber</code> column and a decimal <code>price</code> column.</p>
+<h2 id="write-a-transformation"><a class="header" href="#write-a-transformation"><a id="topic77"></a>Write a Transformation</a></h2>
+<p>The transformation specifies what to extract from the data. You can use any authoring environment and language appropriate for your project. For XML transformations choose from technologies such as XSLT, Joost (STX), Java, Python, or Perl, based on the goals and scope of the project.</p>
+<p>In the price example, the next step is to transform the XML data into a two-column delimited text format.</p>
+<pre><code>708421|19.99
+708466|59.25
+711121|24.99
+
+</code></pre>
+<p>The following STX transform, called <em>input_transform.stx</em>, performs the data transformation.</p>
+<pre><code>&lt;?xml version="1.0"?&gt;
+&lt;stx:transform version="1.0"
+   xmlns:stx="http://stx.sourceforge.net/2002/ns"
+   pass-through="none"&gt;
+  &lt;!-- declare variables --&gt;
+  &lt;stx:variable name="itemnumber"/&gt;
+  &lt;stx:variable name="price"/&gt;
+  &lt;!-- match and output prices as columns delimited by | --&gt;
+  &lt;stx:template match="/prices/pricerecord"&gt;
+    &lt;stx:process-children/&gt;
+    &lt;stx:value-of select="$itemnumber"/&gt;    
+&lt;stx:text&gt;|&lt;/stx:text&gt;
+    &lt;stx:value-of select="$price"/&gt;      &lt;stx:text&gt;
+&lt;/stx:text&gt;
+  &lt;/stx:template&gt;
+  &lt;stx:template match="itemnumber"&gt;
+    &lt;stx:assign name="itemnumber" select="."/&gt;
+  &lt;/stx:template&gt;
+  &lt;stx:template match="price"&gt;
+    &lt;stx:assign name="price" select="."/&gt;
+  &lt;/stx:template&gt;
+&lt;/stx:transform&gt;
+
+</code></pre>
+<p>This STX transform declares two temporary variables, <code>itemnumber</code> and <code>price</code>, and the following rules.</p>
+<ol>
+<li>When an element that satisfies the XPath expression <code>/prices/pricerecord</code> is found, examine the child elements and generate output that contains the value of the <code>itemnumber</code> variable, a <code>|</code> character, the value of the price variable, and a newline.</li>
+<li>When an <code>&lt;itemnumber&gt;</code> element is found, store the content of that element in the variable <code>itemnumber</code>.</li>
+<li>When a &lt;price&gt; element is found, store the content of that element in the variable <code>price</code>.</li>
+</ol>
+<h2 id="write-the-gpfdist-configuration-file"><a class="header" href="#write-the-gpfdist-configuration-file"><a id="topic78"></a>Write the gpfdist Configuration File</a></h2>
+<p>The gpfdist configuration is specified as a YAML 1.1 document. It contains rules that gpfdist uses to select a transformation to apply when loading or extracting data.</p>
+<p>This example gpfdist configuration contains the following items that are required for the <em>prices.xml</em> transformation scenario:</p>
+<ul>
+<li>the <code>config.yaml</code> file defining <code>TRANSFORMATIONS</code></li>
+<li>the <code>input_transform.sh</code> wrapper script, referenced in the <code>config.yaml</code> file</li>
+<li>the <code>input_transform.stx</code> joost transformation, called from <code>input_transform.sh</code></li>
+</ul>
+<p>Aside from the ordinary YAML rules, such as starting the document with three dashes (<code>---</code>), a gpfdist configuration must conform to the following restrictions:</p>
+<ol>
+<li>A <code>VERSION</code> setting must be present with the value <code>1.0.0.1</code>.</li>
+<li>A <code>TRANSFORMATIONS</code> setting must be present and contain one or more mappings.</li>
+<li>Each mapping in the <code>TRANSFORMATION</code> must contain:
+<ul>
+<li>a <code>TYPE</code> with the value ‘input’ or ‘output’</li>
+<li>a <code>COMMAND</code> indicating how the transformation is run.</li>
+</ul>
+</li>
+<li>Each mapping in the <code>TRANSFORMATION</code> can contain optional <code>CONTENT</code>, <code>SAFE</code>, and <code>STDERR</code> settings.</li>
+</ol>
+<p>The following gpfdist configuration, called <code>config.yaml</code>, applies to the prices example. The initial indentation on each line is significant and reflects the hierarchical nature of the specification. The transformation name <code>prices_input</code> in the following example will be referenced later when creating the table in SQL.</p>
+<pre><code>---
+VERSION: 1.0.0.1
+TRANSFORMATIONS:
+  prices_input:
+    TYPE:     input
+    COMMAND:  /bin/bash input_transform.sh %filename%
+
+</code></pre>
+<p>The <code>COMMAND</code> setting uses a wrapper script called <code>input_transform.sh</code> with a <code>%filename%</code> placeholder. When gpfdist runs the <code>prices_input</code> transform, it invokes <code>input_transform.sh</code> with <code>/bin/bash</code> and replaces the <code>%filename%</code> placeholder with the path to the input file to transform. The wrapper script called <code>input_transform.sh</code> contains the logic to invoke the STX transformation and return the output.</p>
+<p>If Joost is used, the Joost STX engine must be installed.</p>
+<pre><code>#!/bin/bash
+# input_transform.sh - sample input transformation, 
+# demonstrating use of Java and Joost STX to convert XML into
+# text to load into SynxDB.
+# java arguments:
+#   -jar joost.jar         joost STX engine
+#   -nodecl                  don't generate a &lt;?xml?&gt; declaration
+#   $1                        filename to process
+#   input_transform.stx    the STX transformation
+#
+# the AWK step eliminates a blank line joost emits at the end
+java \
+    -jar joost.jar \
+    -nodecl \
+    $1 \
+    input_transform.stx \
+ | awk 'NF&gt;0'
+
+</code></pre>
+<p>The <code>input_transform.sh</code> file uses the Joost STX engine with the AWK interpreter. The following diagram shows the process flow as gpfdist runs the transformation.</p>
+<p><img src="../../graphics/02-pipeline.png" alt="gpfdist process flow" /></p>
+<h2 id="transfer-the-data"><a class="header" href="#transfer-the-data"><a id="topic80"></a>Transfer the Data</a></h2>
+<p>Create the target database tables with SQL statements based on the appropriate schema.</p>
+<p>There are no special requirements for SynxDB tables that hold loaded data. In the prices example, the following command creates the <code>prices</code> table, where the data is to be loaded.</p>
+<pre><code>CREATE TABLE prices (
+  itemnumber integer,       
+  price       decimal        
+) 
+DISTRIBUTED BY (itemnumber);
+
+</code></pre>
+<p>Next, use one of the following approaches to transform the data with gpfdist.</p>
+<ul>
+<li><code>gpload</code> supports only input transformations, but in many cases is easier to implement.</li>
+<li><code>gpfdist</code> with <code>INSERT INTO SELECT FROM</code> supports both input and output transformations, but exposes details that <code>gpload</code> automates for you.</li>
+</ul>
+<h3 id="transforming-with-gpload"><a class="header" href="#transforming-with-gpload"><a id="topic81"></a>Transforming with gpload</a></h3>
+<p>The SynxDB <code>gpload</code> utility orchestrates a data load operation using the <code>gpfdist</code> parallel file server and a YAML-formatted configuration file. <code>gpload</code> automates these tasks:</p>
+<ul>
+<li>Creates a readable external table in the database.</li>
+<li>Starts <code>gpfdist</code> instances with the configuration file that contains the transformation.</li>
+<li>Runs <code>INSERT INTO table\_name SELECT FROM external\_table</code> to load the data.</li>
+<li>Removes the external table definition.</li>
+</ul>
+<p>Transforming data with <code>gpload</code> requires that the settings <code>TRANSFORM</code> and <code>TRANSFORM_CONFIG</code> appear in the <code>INPUT</code> section of the <code>gpload</code> control file.</p>
+<p>For more information about the syntax and placement of these settings in the <code>gpload</code> control file, see the <em>SynxDB Reference Guide</em>.</p>
+<ul>
+<li><code>TRANSFORM_CONFIG</code> specifies the name of the gpfdist configuration file.</li>
+<li>The <code>TRANSFORM</code> setting indicates the name of the transformation that is described in the file named in <code>TRANSFORM_CONFIG</code>.</li>
+</ul>
+<pre><code>---
+VERSION: 1.0.0.1
+DATABASE: ops
+USER: gpadmin
+GPLOAD:
+  INPUT:
+    - TRANSFORM_CONFIG: config.yaml
+    - TRANSFORM: prices_input
+    - SOURCE:
+        FILE: prices.xml
+</code></pre>
+<p>The transformation name must appear in two places: in the <code>TRANSFORM</code> setting of the gpfdist configuration file and in the <code>TRANSFORMATIONS</code> section of the file named in the <code>TRANSFORM_CONFIG</code> section.</p>
+<p>In the <code>gpload</code> control file, the optional parameter <code>MAX_LINE_LENGTH</code> specifies the maximum length of a line in the XML transformation data that is passed to <code>gpload</code>.</p>
+<p>The following diagram shows the relationships between the <code>gpload</code> control file, the gpfdist configuration file, and the XML data file.</p>
+<p><img src="../../graphics/03-gpload-files.jpg" alt="Relationships between gpload files" /></p>
+<h3 id="transforming-with-gpfdist-and-insert-into-select-from"><a class="header" href="#transforming-with-gpfdist-and-insert-into-select-from"><a id="topic82"></a>Transforming with gpfdist and INSERT INTO SELECT FROM</a></h3>
+<p>With this load method, you perform each of the tasks that <code>gpload</code> automates. You start <code>gpfdist</code>, create an external table, load the data, and clean up by dropping the table and stopping <code>gpfdist</code>.</p>
+<p>Specify the transformation in the <code>CREATE EXTERNAL TABLE</code> definition’s <code>LOCATION</code> clause. For example, the transform is shown in bold in the following command. (Run gpfdist first, using the command <code>gpfdist -c config.yaml</code>).</p>
+<pre><code>CREATE READABLE EXTERNAL TABLE prices_readable (LIKE prices)
+   LOCATION ('gpfdist://hostname:8080/prices.xml#transform=prices_input')
+   FORMAT 'TEXT' (DELIMITER '|')
+   LOG ERRORS SEGMENT REJECT LIMIT 10;
+
+</code></pre>
+<p>In the command above, change <code>hostname</code> to your hostname. <code>prices_input</code> comes from the <code>gpfdist</code> configuration file.</p>
+<p>The following query then loads the data into the <code>prices</code> table.</p>
+<pre><code>INSERT INTO prices SELECT * FROM prices_readable;
+</code></pre>
+<h3 id="configuration-file-format"><a class="header" href="#configuration-file-format"><a id="topic83"></a>Configuration File Format</a></h3>
+<p>The gpfdist configuration file uses the YAML 1.1 document format and implements a schema for defining the transformation parameters. The configuration file must be a valid YAML document.</p>
+<p>The gpfdist program processes the document in order and uses indentation (spaces) to determine the document hierarchy and relationships of the sections to one another. The use of white space is significant. Do not use white space for formatting and do not use tabs.</p>
+<p>The following is the basic structure of a configuration file.</p>
+<pre><code>---
+VERSION:   1.0.0.1
+TRANSFORMATIONS: 
+  transformation_name1:
+    TYPE:      input | output
+    COMMAND:   command
+    CONTENT:   data | paths
+    SAFE:      posix-regex
+    STDERR:    server | console
+  transformation_name2:
+    TYPE:      input | output
+    COMMAND:   command 
+...
+</code></pre>
+<p>VERSION
+:   Required. The version of the gpfdist configuration file schema. The current version is 1.0.0.1.</p>
+<p>TRANSFORMATIONS
+:   Required. Begins the transformation specification section. A configuration file must have at least one transformation. When gpfdist receives a transformation request, it looks in this section for an entry with the matching transformation name.</p>
+<p>TYPE
+:   Required. Specifies the direction of transformation. Values are <code>input</code> or <code>output</code>.</p>
+<ul>
+<li><code>input</code>: gpfdist treats the standard output of the transformation process as a stream of records to load into SynxDB.</li>
+<li><code>output</code> : gpfdist treats the standard input of the transformation process as a stream of records from SynxDB to transform and write to the appropriate output.</li>
+</ul>
+<p>COMMAND
+:   Required. Specifies the command gpfdist will run to perform the transformation.</p>
+<p>For input transformations, gpfdist invokes the command specified in the <code>CONTENT</code> setting. The command is expected to open the underlying file(s) as appropriate and produce one line of <code>TEXT</code> for each row to load into SynxDB. The input transform determines whether the entire content should be converted to one row or to multiple rows.</p>
+<p>For output transformations, gpfdist invokes this command as specified in the <code>CONTENT</code> setting. The output command is expected to open and write to the underlying file(s) as appropriate. The output transformation determines the final placement of the converted output.</p>
+<p>CONTENT
+:   Optional. The values are <code>data</code> and <code>paths</code>. The default value is <code>data</code>.</p>
+<ul>
+<li>When <code>CONTENT</code> specifies <code>data</code>, the text <code>%filename%</code> in the <code>COMMAND</code> section is replaced by the path to the file to read or write.</li>
+<li>When <code>CONTENT</code> specifies <code>paths</code>, the text <code>%filename%</code> in the <code>COMMAND</code> section is replaced by the path to the temporary file that contains the list of files to read or write.</li>
+</ul>
+<p>The following is an example of a <code>COMMAND</code> section showing the text <code>%filename%</code> that is replaced.</p>
+<pre><code>COMMAND: /bin/bash input_transform.sh %filename%
+</code></pre>
+<p>SAFE
+:   Optional. A <code>POSIX</code> regular expression that the paths must match to be passed to the transformation. Specify <code>SAFE</code> when there is a concern about injection or improper interpretation of paths passed to the command. The default is no restriction on paths.</p>
+<p>STDERR
+:   Optional. The values are <code>server</code> and <code>console</code>.</p>
+<p>This setting specifies how to handle standard error output from the transformation. The default, <code>server</code>, specifies that gpfdist will capture the standard error output from the transformation in a temporary file and send the first 8k of that file to SynxDB as an error message. The error message will appear as an SQL error. <code>Console</code> specifies that gpfdist does not redirect or transmit the standard error output from the transformation.</p>
+<h2 id="xml-transformation-examples"><a class="header" href="#xml-transformation-examples"><a id="topic91"></a>XML Transformation Examples</a></h2>
+<p>The following examples demonstrate the complete process for different types of XML data and STX transformations. Files and detailed instructions associated with these examples are in the GitHub repo <code>https://github.com/apache/cloudberry</code> in the <a href="https://github.com/apache/cloudberry/tree/main/gpMgmt/demo/gpfdist_transform">gpMgmt/demo/gpfdist_transform</a> directory. Read the README file in the <em>Before You Begin</em> section before you run the examples. The README file explains how to download the example data file used in the examples.</p>
+<h3 id="command-based-external-web-tables"><a class="header" href="#command-based-external-web-tables"><a id="topic32"></a>Command-based External Web Tables</a></h3>
+<p>The output of a shell command or script defines command-based web table data. Specify the command in the <code>EXECUTE</code> clause of <code>CREATE EXTERNAL WEB TABLE</code>. The data is current as of the time the command runs. The <code>EXECUTE</code> clause runs the shell command or script on the specified master, and/or segment host or hosts. The command or script must reside on the hosts corresponding to the host(s) defined in the <code>EXECUTE</code> clause.</p>
+<p>By default, the command is run on segment hosts when active segments have output rows to process. For example, if each segment host runs four primary segment instances that have output rows to process, the command runs four times per segment host. You can optionally limit the number of segment instances that run the web table command. All segments included in the web table definition in the <code>ON</code> clause run the command in parallel.</p>
+<p>The command that you specify in the external table definition runs from the database and cannot access environment variables from <code>.bashrc</code> or <code>.profile</code>. Set environment variables in the <code>EXECUTE</code> clause. For example:</p>
+<pre><code>=# CREATE EXTERNAL WEB TABLE output (output text)
+    EXECUTE 'PATH=/home/gpadmin/programs; export PATH; myprogram.sh' 
+    FORMAT 'TEXT';
+
+</code></pre>
+<p>Scripts must be executable by the <code>gpadmin</code> user and reside in the same location on the master or segment hosts.</p>
+<p>The following command defines a web table that runs a script. The script runs on each segment host where a segment has output rows to process.</p>
+<pre><code>=# CREATE EXTERNAL WEB TABLE log_output 
+    (linenum int, message text) 
+    EXECUTE '/var/load_scripts/get_log_data.sh' ON HOST 
+    FORMAT 'TEXT' (DELIMITER '|');
+
+</code></pre>
+<h3 id="irs-mef-xml-files-in-demo-directory"><a class="header" href="#irs-mef-xml-files-in-demo-directory"><a id="topic93"></a>IRS MeF XML Files (In demo Directory)</a></h3>
+<p>This example demonstrates loading a sample IRS Modernized eFile tax return using a Joost STX transformation. The data is in the form of a complex XML file.</p>
+<p>The U.S. Internal Revenue Service (IRS) made a significant commitment to XML and specifies its use in its Modernized e-File (MeF) system. In MeF, each tax return is an XML document with a deep hierarchical structure that closely reflects the particular form of the underlying tax code.</p>
+<p>XML, XML Schema and stylesheets play a role in their data representation and business workflow. The actual XML data is extracted from a ZIP file attached to a MIME “transmission file” message. For more information about MeF, see <a href="https://www.irs.gov/uac/modernized-e-file-overview">Modernized e-File (Overview)</a> on the IRS web site.</p>
+<p>The sample XML document, <em>RET990EZ_2006.xml</em>, is about 350KB in size with two elements:</p>
+<ul>
+<li>ReturnHeader</li>
+<li>ReturnData</li>
+</ul>
+<p>The &lt;ReturnHeader&gt; element contains general details about the tax return such as the taxpayer’s name, the tax year of the return, and the preparer. The &lt;ReturnData&gt; element contains multiple sections with specific details about the tax return and associated schedules.</p>
+<p>The following is an abridged sample of the XML file.</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt; 
+&lt;Return returnVersion="2006v2.0"
+   xmlns="https://www.irs.gov/efile" 
+   xmlns:efile="https://www.irs.gov/efile"
+   xsi:schemaLocation="https://www.irs.gov/efile"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt; 
+   &lt;ReturnHeader binaryAttachmentCount="1"&gt;
+     &lt;ReturnId&gt;AAAAAAAAAAAAAAAAAAAA&lt;/ReturnId&gt;
+     &lt;Timestamp&gt;1999-05-30T12:01:01+05:01&lt;/Timestamp&gt;
+     &lt;ReturnType&gt;990EZ&lt;/ReturnType&gt;
+     &lt;TaxPeriodBeginDate&gt;2005-01-01&lt;/TaxPeriodBeginDate&gt;
+     &lt;TaxPeriodEndDate&gt;2005-12-31&lt;/TaxPeriodEndDate&gt;
+     &lt;Filer&gt;
+       &lt;EIN&gt;011248772&lt;/EIN&gt;
+       ... more data ...
+     &lt;/Filer&gt;
+     &lt;Preparer&gt;
+       &lt;Name&gt;Percy Polar&lt;/Name&gt;
+       ... more data ...
+     &lt;/Preparer&gt;
+     &lt;TaxYear&gt;2005&lt;/TaxYear&gt;
+   &lt;/ReturnHeader&gt;
+   ... more data ..
+
+</code></pre>
+<p>The goal is to import all the data into a SynxDB database. First, convert the XML document into text with newlines “escaped”, with two columns: <code>ReturnId</code> and a single column on the end for the entire MeF tax return. For example:</p>
+<pre><code>AAAAAAAAAAAAAAAAAAAA|&lt;Return returnVersion="2006v2.0"... 
+
+</code></pre>
+<p>Load the data into SynxDB.</p>
+<h3 id="witsml-files-in-demo-directory"><a class="header" href="#witsml-files-in-demo-directory"><a id="topic94"></a>WITSML™ Files (In demo Directory)</a></h3>
+<p>This example demonstrates loading sample data describing an oil rig using a Joost STX transformation. The data is in the form of a complex XML file downloaded from energistics.org.</p>
+<p>The Wellsite Information Transfer Standard Markup Language (WITSML™) is an oil industry initiative to provide open, non-proprietary, standard interfaces for technology and software to share information among oil companies, service companies, drilling contractors, application vendors, and regulatory agencies. For more information about WITSML™, see <a href="https://www.energistics.org/">https://www.energistics.org/</a>.</p>
+<p>The oil rig information consists of a top level <code>&lt;rigs&gt;</code> element with multiple child elements such as <code>&lt;documentInfo&gt;, &lt;rig&gt;</code>, and so on. The following excerpt from the file shows the type of information in the <code>&lt;rig&gt;</code> tag.</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;?xml-stylesheet href="../stylesheets/rig.xsl" type="text/xsl" media="screen"?&gt;
+&lt;rigs 
+ xmlns="https://www.energistics.org/schemas/131" 
+ xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="https://www.energistics.org/schemas/131 ../obj_rig.xsd" 
+ version="1.3.1.1"&gt;
+ &lt;documentInfo&gt;
+ ... misc data ...
+ &lt;/documentInfo&gt;
+ &lt;rig uidWell="W-12" uidWellbore="B-01" uid="xr31"&gt;
+     &lt;nameWell&gt;6507/7-A-42&lt;/nameWell&gt;
+     &lt;nameWellbore&gt;A-42&lt;/nameWellbore&gt;
+     &lt;name&gt;Deep Drill #5&lt;/name&gt;
+     &lt;owner&gt;Deep Drilling Co.&lt;/owner&gt;
+     &lt;typeRig&gt;floater&lt;/typeRig&gt;
+     &lt;manufacturer&gt;Fitsui Engineering&lt;/manufacturer&gt;
+     &lt;yearEntService&gt;1980&lt;/yearEntService&gt;
+     &lt;classRig&gt;ABS Class A1 M CSDU AMS ACCU&lt;/classRig&gt;
+     &lt;approvals&gt;DNV&lt;/approvals&gt;
+ ... more data ...
+</code></pre>
+<p>The goal is to import the information for this rig into SynxDB.</p>
+<p>The sample document, <em>rig.xml</em>, is about 11KB in size. The input does not contain tabs so the relevant information can be converted into records delimited with a pipe (|).</p>
+<p><code>W-12|6507/7-A-42|xr31|Deep Drill #5|Deep Drilling Co.|John Doe|John.Doe@example.com|</code></p>
+<p>With the columns:</p>
+<ul>
+<li><code>well_uid text</code>, – e.g. W-12</li>
+<li><code>well_name text</code>, – e.g. 6507/7-A-42</li>
+<li><code>rig_uid text</code>, – e.g. xr31</li>
+<li><code>rig_name text</code>, – e.g. Deep Drill #5</li>
+<li><code>rig_owner text</code>, – e.g. Deep Drilling Co.</li>
+<li><code>rig_contact text</code>, – e.g. John Doe</li>
+<li><code>rig_email text</code>, – e.g. John.Doe@example.com</li>
+<li><code>doc xml</code></li>
+</ul>
+<p>Then, load the data into SynxDB.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../admin_guide/external/pxf-overview.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../admin_guide/load/topics/g-loading-data-with-copy.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../admin_guide/external/pxf-overview.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../admin_guide/load/topics/g-loading-data-with-copy.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

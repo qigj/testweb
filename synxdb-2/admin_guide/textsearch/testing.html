@@ -1,0 +1,384 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Testing and Debugging Text Search - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="testing-and-debugging-text-search"><a class="header" href="#testing-and-debugging-text-search">Testing and Debugging Text Search</a></h1>
+<p>This topic introduces the SynxDB functions you can use to test and debug a search configuration or the individual parser and dictionaries specified in a configuration.</p>
+<p>The behavior of a custom text search configuration can easily become confusing. The functions described in this section are useful for testing text search objects. You can test a complete configuration, or test parsers and dictionaries separately.</p>
+<p>This section contains the following subtopics:</p>
+<ul>
+<li><a href="#configuration">Configuration Testing</a></li>
+<li><a href="#parser">Parser Testing</a></li>
+<li><a href="#dictionary">Dictionary Testing</a></li>
+</ul>
+<h2 id="configuration-testing"><a class="header" href="#configuration-testing"><a id="configuration"></a>Configuration Testing</a></h2>
+<p>The function <code>ts_debug</code> allows easy testing of a text search configuration.</p>
+<pre><code>ts_debug([&lt;config&gt; regconfig, ] &lt;document&gt; text,
+         OUT &lt;alias&gt; text,
+         OUT &lt;description&gt; text,
+         OUT &lt;token&gt; text,
+         OUT &lt;dictionaries&gt; regdictionary[],
+         OUT &lt;dictionary&gt; regdictionary,
+         OUT &lt;lexemes&gt; text[])
+         returns setof record
+</code></pre>
+<p><code>ts_debug</code> displays information about every token of <code>*document*</code> as produced by the parser and processed by the configured dictionaries. It uses the configuration specified by <code>*config*</code>, or <code>default_text_search_config</code> if that argument is omitted.</p>
+<p><code>ts_debug</code> returns one row for each token identified in the text by the parser. The columns returned are</p>
+<ul>
+<li><code>*alias* text</code> — short name of the token type</li>
+<li><code>*description* text</code> — description of the token type</li>
+<li><code>*token* text</code>— text of the token</li>
+<li><code>*dictionaries* regdictionary[]</code> — the dictionaries selected by the configuration for this token type</li>
+<li><code>*dictionary* regdictionary</code> — the dictionary that recognized the token, or <code>NULL</code> if none did</li>
+<li><code>*lexemes* text[]</code> — the lexeme(s) produced by the dictionary that recognized the token, or <code>NULL</code> if none did; an empty array (<code>{}</code>) means it was recognized as a stop word</li>
+</ul>
+<p>Here is a simple example:</p>
+<pre><code>SELECT * FROM ts_debug('english','a fat  cat sat on a mat - it ate a fat rats');
+   alias   |   description   | token |  dictionaries  |  dictionary  | lexemes 
+-----------+-----------------+-------+----------------+--------------+---------
+ asciiword | Word, all ASCII | a     | {english_stem} | english_stem | {}
+ blank     | Space symbols   |       | {}             |              | 
+ asciiword | Word, all ASCII | fat   | {english_stem} | english_stem | {fat}
+ blank     | Space symbols   |       | {}             |              | 
+ asciiword | Word, all ASCII | cat   | {english_stem} | english_stem | {cat}
+ blank     | Space symbols   |       | {}             |              | 
+ asciiword | Word, all ASCII | sat   | {english_stem} | english_stem | {sat}
+ blank     | Space symbols   |       | {}             |              | 
+ asciiword | Word, all ASCII | on    | {english_stem} | english_stem | {}
+ blank     | Space symbols   |       | {}             |              | 
+ asciiword | Word, all ASCII | a     | {english_stem} | english_stem | {}
+ blank     | Space symbols   |       | {}             |              | 
+ asciiword | Word, all ASCII | mat   | {english_stem} | english_stem | {mat}
+ blank     | Space symbols   |       | {}             |              | 
+ blank     | Space symbols   | -     | {}             |              | 
+ asciiword | Word, all ASCII | it    | {english_stem} | english_stem | {}
+ blank     | Space symbols   |       | {}             |              | 
+ asciiword | Word, all ASCII | ate   | {english_stem} | english_stem | {ate}
+ blank     | Space symbols   |       | {}             |              | 
+ asciiword | Word, all ASCII | a     | {english_stem} | english_stem | {}
+ blank     | Space symbols   |       | {}             |              | 
+ asciiword | Word, all ASCII | fat   | {english_stem} | english_stem | {fat}
+ blank     | Space symbols   |       | {}             |              | 
+ asciiword | Word, all ASCII | rats  | {english_stem} | english_stem | {rat}
+</code></pre>
+<p>For a more extensive demonstration, we first create a <code>public.english</code> configuration and Ispell dictionary for the English language:</p>
+<pre><code>CREATE TEXT SEARCH CONFIGURATION public.english ( COPY = pg_catalog.english );
+
+CREATE TEXT SEARCH DICTIONARY english_ispell (
+    TEMPLATE = ispell,
+    DictFile = english,
+    AffFile = english,
+    StopWords = english
+);
+
+ALTER TEXT SEARCH CONFIGURATION public.english
+   ALTER MAPPING FOR asciiword WITH english_ispell, english_stem;
+</code></pre>
+<pre><code>SELECT * FROM ts_debug('public.english','The Brightest supernovaes');
+   alias   |   description   |    token    |         dictionaries          |   dictionary   |   lexemes   
+-----------+-----------------+-------------+-------------------------------+----------------+-------------
+ asciiword | Word, all ASCII | The         | {english_ispell,english_stem} | english_ispell | {}
+ blank     | Space symbols   |             | {}                            |                | 
+ asciiword | Word, all ASCII | Brightest   | {english_ispell,english_stem} | english_ispell | {bright}
+ blank     | Space symbols   |             | {}                            |                | 
+ asciiword | Word, all ASCII | supernovaes | {english_ispell,english_stem} | english_stem   | {supernova}
+</code></pre>
+<p>In this example, the word <code>Brightest</code> was recognized by the parser as an <code>ASCII</code> word (alias <code>asciiword</code>). For this token type the dictionary list is <code>english_ispell</code> and <code>english_stem</code>. The word was recognized by <code>english_ispell</code>, which reduced it to the noun <code>bright</code>. The word <code>supernovaes</code> is unknown to the <code>english_ispell</code> dictionary so it was passed to the next dictionary, and, fortunately, was recognized (in fact, <code>english_stem</code> is a Snowball dictionary which recognizes everything; that is why it was placed at the end of the dictionary list).</p>
+<p>The word <code>The</code> was recognized by the <code>english_ispell</code> dictionary as a stop word (<a href="dictionaries.html#stop-words">Stop Words</a>) and will not be indexed. The spaces are discarded too, since the configuration provides no dictionaries at all for them.</p>
+<p>You can reduce the width of the output by explicitly specifying which columns you want to see:</p>
+<pre><code>SELECT alias, token, dictionary, lexemes FROM ts_debug('public.english','The Brightest supernovaes'); 
+  alias    |    token    |   dictionary   |    lexemes 
+-----------+-------------+----------------+------------- 
+ asciiword | The         | english_ispell | {} 
+ blank     |             |                | 
+ asciiword | Brightest   | english_ispell | {bright} 
+ blank     |             |                | 
+ asciiword | supernovaes | english_stem   | {supernova}
+</code></pre>
+<h2 id="parser-testing"><a class="header" href="#parser-testing"><a id="parser"></a>Parser Testing</a></h2>
+<p>The following functions allow direct testing of a text search parser.</p>
+<pre><code>ts_parse(&lt;parser_name&gt; text, &lt;document&gt; text,
+         OUT &lt;tokid&gt; integer, OUT &lt;token&gt; text) returns setof record
+ts_parse(&lt;parser_oid&gt; oid, &lt;document&gt; text,
+         OUT &lt;tokid&gt; integer, OUT &lt;token&gt; text) returns setof record
+</code></pre>
+<p><code>ts_parse</code> parses the given document and returns a series of records, one for each token produced by parsing. Each record includes a <code>tokid</code> showing the assigned token type and a <code>token</code>, which is the text of the token. For example:</p>
+<pre><code>SELECT * FROM ts_parse('default', '123 - a number');
+ tokid | token
+-------+--------
+    22 | 123
+    12 |
+    12 | -
+     1 | a
+    12 |
+     1 | number
+</code></pre>
+<pre><code>ts_token_type(&lt;parser_name&gt; text, OUT &lt;tokid&gt; integer,
+              OUT &lt;alias&gt; text, OUT &lt;description&gt; text) returns setof record
+ts_token_type(&lt;parser_oid&gt; oid, OUT &lt;tokid&gt; integer,
+              OUT &lt;alias&gt; text, OUT &lt;description&gt; text) returns setof record
+</code></pre>
+<p><code>ts_token_type</code> returns a table which describes each type of token the specified parser can recognize. For each token type, the table gives the integer <code>tokid</code> that the parser uses to label a token of that type, the <code>alias</code> that names the token type in configuration commands, and a short <code>description</code>. For example:</p>
+<pre><code>SELECT * FROM ts_token_type('default');
+ tokid |      alias      |               description                
+-------+-----------------+------------------------------------------
+     1 | asciiword       | Word, all ASCII
+     2 | word            | Word, all letters
+     3 | numword         | Word, letters and digits
+     4 | email           | Email address
+     5 | url             | URL
+     6 | host            | Host
+     7 | sfloat          | Scientific notation
+     8 | version         | Version number
+     9 | hword_numpart   | Hyphenated word part, letters and digits
+    10 | hword_part      | Hyphenated word part, all letters
+    11 | hword_asciipart | Hyphenated word part, all ASCII
+    12 | blank           | Space symbols
+    13 | tag             | XML tag
+    14 | protocol        | Protocol head
+    15 | numhword        | Hyphenated word, letters and digits
+    16 | asciihword      | Hyphenated word, all ASCII
+    17 | hword           | Hyphenated word, all letters
+    18 | url_path        | URL path
+    19 | file            | File or path name
+    20 | float           | Decimal notation
+    21 | int             | Signed integer
+    22 | uint            | Unsigned integer
+    23 | entity          | XML entity
+</code></pre>
+<h2 id="dictionary-testing"><a class="header" href="#dictionary-testing"><a id="dictionary"></a>Dictionary Testing</a></h2>
+<p>The <code>ts_lexize</code> function facilitates dictionary testing.</p>
+<pre><code>ts_lexize(*dictreg* dictionary, *token* text) returns text[]
+</code></pre>
+<p><code>ts_lexize</code> returns an array of lexemes if the input <code>*token*</code> is known to the dictionary, or an empty array if the token is known to the dictionary but it is a stop word, or <code>NULL</code> if it is an unknown word.</p>
+<p>Examples:</p>
+<pre><code>SELECT ts_lexize('english_stem', 'stars');
+ ts_lexize
+-----------
+ {star}
+
+SELECT ts_lexize('english_stem', 'a');
+ ts_lexize
+-----------
+ {}
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> The <code>ts_lexize</code> function expects a single token, not text. Here is a case where this can be confusing:</p>
+</blockquote>
+<pre><code>SELECT ts_lexize('thesaurus_astro','supernovae stars') is null;
+ ?column?
+----------
+ t
+</code></pre>
+<p>The thesaurus dictionary <code>thesaurus_astro</code> does know the phrase <code>supernovae stars</code>, but <code>ts_lexize</code> fails since it does not parse the input text but treats it as a single token. Use <code>plainto_tsquery</code> or <code>to_tsvector</code> to test thesaurus dictionaries, for example:</p>
+<pre><code>SELECT plainto_tsquery('supernovae stars');
+ plainto_tsquery
+-----------------
+ 'sn'
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/textsearch/configuration.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/textsearch/gist-gin.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/textsearch/configuration.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/textsearch/gist-gin.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

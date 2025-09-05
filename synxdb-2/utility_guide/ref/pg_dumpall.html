@@ -1,0 +1,325 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>pg_dumpall - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="pg_dumpall"><a class="header" href="#pg_dumpall">pg_dumpall</a></h1>
+<p>Extracts all databases in a SynxDB system to a single script file or other archive file.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code class="language-{#client_util_synopsis}">pg_dumpall [&lt;connection-option&gt; ...] [&lt;dump_option&gt; ...]
+
+pg_dumpall -? | --help
+
+pg_dumpall -V | --version
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p><code>pg_dumpall</code> is a standard PostgreSQL utility for backing up all databases in a SynxDB (or PostgreSQL) instance, and is also supported in SynxDB. It creates a single (non-parallel) dump file. For routine backups of SynxDB it is better to use the SynxDB backup utility, <a href="gpbackup.html">gpbackup</a>, for the best performance.</p>
+<p><code>pg_dumpall</code> creates a single script file that contains SQL commands that can be used as input to <a href="psql.html">psql</a> to restore the databases. It does this by calling <a href="pg_dump.html">pg_dump</a> for each database. <code>pg_dumpall</code> also dumps global objects that are common to all databases. (<code>pg_dump</code> does not save these objects.) This currently includes information about database users and groups, and access permissions that apply to databases as a whole.</p>
+<p>Since <code>pg_dumpall</code> reads tables from all databases you will most likely have to connect as a database superuser in order to produce a complete dump. Also you will need superuser privileges to run the saved script in order to be allowed to add users and groups, and to create databases.</p>
+<p>The SQL script will be written to the standard output. Use the <code>[-f | --file]</code> option or shell operators to redirect it into a file.</p>
+<p><code>pg_dumpall</code> needs to connect several times to the SynxDB master server (once per database). If you use password authentication it is likely to ask for a password each time. It is convenient to have a <code>~/.pgpass</code> file in such cases.</p>
+<h2 id="options"><a class="header" href="#options"><a id="section4"></a>Options</a></h2>
+<p><strong>Dump Options</strong></p>
+<h3 id="-a--data-only"><a class="header" href="#-a--data-only">-a | –data-only</a></h3>
+<p>Dump only the data, not the schema (data definitions). This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call <a href="pg_restore.html">pg_restore</a>.</p>
+<h3 id="-c--clean"><a class="header" href="#-c--clean">-c | –clean</a></h3>
+<p>Output commands to clean (drop) database objects prior to (the commands for) creating them. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call <a href="pg_restore.html">pg_restore</a>.</p>
+<h3 id="-f-filename--filefilename"><a class="header" href="#-f-filename--filefilename">-f filename | –file=filename</a></h3>
+<p>Send output to the specified file.</p>
+<h3 id="-g--globals-only"><a class="header" href="#-g--globals-only">-g | –globals-only</a></h3>
+<p>Dump only global objects (roles and tablespaces), no databases.</p>
+<h3 id="-o--oids"><a class="header" href="#-o--oids">-o | –oids</a></h3>
+<p>Dump object identifiers (OIDs) as part of the data for every table. Use of this option is not recommended for files that are intended to be restored into SynxDB.</p>
+<h3 id="-o--no-owner"><a class="header" href="#-o--no-owner">-O | –no-owner</a></h3>
+<p>Do not output commands to set ownership of objects to match the original database. By default, <a href="pg_dump.html">pg_dump</a> issues <code>ALTER OWNER</code> or <code>SET SESSION AUTHORIZATION</code> statements to set ownership of created database objects. These statements will fail when the script is run unless it is started by a superuser (or the same user that owns all of the objects in the script). To make a script that can be restored by any user, but will give that user ownership of all the objects, specify <code>-O</code>. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call <a href="pg_restore.html">pg_restore</a>.</p>
+<h3 id="-r--roles-only"><a class="header" href="#-r--roles-only">-r | –roles-only</a></h3>
+<p>Dump only roles, not databases or tablespaces.</p>
+<h3 id="-s--schema-only"><a class="header" href="#-s--schema-only">-s | –schema-only</a></h3>
+<p>Dump only the object definitions (schema), not data.</p>
+<h3 id="-s-username--superuserusername"><a class="header" href="#-s-username--superuserusername">-S username | –superuser=username</a></h3>
+<p>Specify the superuser user name to use when deactivating triggers. This is relevant only if <code>--disable-triggers</code> is used. It is better to leave this out, and instead start the resulting script as a superuser.</p>
+<blockquote>
+<p><strong>Note</strong> SynxDB does not support user-defined triggers.</p>
+</blockquote>
+<h3 id="-t--tablespaces-only"><a class="header" href="#-t--tablespaces-only">-t | –tablespaces-only</a></h3>
+<p>Dump only tablespaces, not databases or roles.</p>
+<h3 id="-v--verbose"><a class="header" href="#-v--verbose">-v | –verbose</a></h3>
+<p>Specifies verbose mode. This will cause <code>[pg\_dump](pg_dump.html)</code> to output detailed object comments and start/stop times to the dump file, and progress messages to standard error.</p>
+<h3 id="-v--version"><a class="header" href="#-v--version">-V | –version</a></h3>
+<p>Print the <code>pg_dumpall</code> version and exit.</p>
+<h3 id="-x--no-privileges--no-acl"><a class="header" href="#-x--no-privileges--no-acl">-x | –no-privileges | –no-acl</a></h3>
+<p>Prevent dumping of access privileges (<code>GRANT/REVOKE</code> commands).</p>
+<h3 id="binary-upgrade"><a class="header" href="#binary-upgrade">–binary-upgrade</a></h3>
+<p>This option is for use by in-place upgrade utilities. Its use for other purposes is not recommended or supported. The behavior of the option may change in future releases without notice.</p>
+<h3 id="column-inserts--attribute-inserts"><a class="header" href="#column-inserts--attribute-inserts">–column-inserts | –attribute-inserts</a></h3>
+<p>Dump data as <code>INSERT</code> commands with explicit column names (<code>INSERT INTO &lt;table&gt; (&lt;column&gt;, ...) VALUES ...</code>). This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents.</p>
+<h3 id="disable-dollar-quoting"><a class="header" href="#disable-dollar-quoting">–disable-dollar-quoting</a></h3>
+<p>This option deactivates the use of dollar quoting for function bodies, and forces them to be quoted using SQL standard string syntax.</p>
+<h3 id="disable-triggers"><a class="header" href="#disable-triggers">–disable-triggers</a></h3>
+<p>This option is relevant only when creating a data-only dump. It instructs <code>pg_dumpall</code> to include commands to temporarily deactivate triggers on the target tables while the data is reloaded. Use this if you have triggers on the tables that you do not want to invoke during data reload. The commands emitted for <code>--disable-triggers</code> must be done as superuser. So, you should also specify a superuser name with <code>-S</code>, or preferably be careful to start the resulting script as a superuser.</p>
+<blockquote>
+<p><strong>Note</strong> SynxDB does not support user-defined triggers.</p>
+</blockquote>
+<h3 id="inserts"><a class="header" href="#inserts">–inserts</a></h3>
+<p>Dump data as <code>INSERT</code> commands (rather than <code>COPY</code>). This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents. Note that the restore may fail altogether if you have rearranged column order. The <code>--column-inserts</code> option is safe against column order changes, though even slower.</p>
+<h3 id="lock-wait-timeouttimeout"><a class="header" href="#lock-wait-timeouttimeout">–lock-wait-timeout=timeout</a></h3>
+<p>Do not wait forever to acquire shared table locks at the beginning of the dump. Instead, fail if unable to lock a table within the specified timeout. The timeout may be specified in any of the formats accepted by <code>SET statement_timeout</code>. Allowed values vary depending on the server version you are dumping from, but an integer number of milliseconds is accepted by all SynxDB versions.</p>
+<h3 id="no-security-labels"><a class="header" href="#no-security-labels">–no-security-labels</a></h3>
+<p>Do not dump security labels.</p>
+<h3 id="no-tablespaces"><a class="header" href="#no-tablespaces">–no-tablespaces</a></h3>
+<p>Do not output commands to select tablespaces. With this option, all objects will be created in whichever tablespace is the default during restore.</p>
+<h3 id="no-unlogged-table-data"><a class="header" href="#no-unlogged-table-data">–no-unlogged-table-data</a></h3>
+<p>Do not dump the contents of unlogged tables. This option has no effect on whether or not the table definitions (schema) are dumped; it only suppresses dumping the table data.</p>
+<h3 id="quote-all-identifiers"><a class="header" href="#quote-all-identifiers">–quote-all-identifiers</a></h3>
+<p>Force quoting of all identifiers. This option is recommended when dumping a database from a server whose SynxDB major version is different from <code>pg_dumpall</code>’s, or when the output is intended to be loaded into a server of a different major version. By default, <code>pg_dumpall</code> quotes only identifiers that are reserved words in its own major version. This sometimes results in compatibility issues when dealing with servers of other versions that may have slightly different sets of reserved words. Using <code>--quote-all-identifiers</code> prevents such issues, at the price of a harder-to-read dump script.</p>
+<h3 id="resource-queues"><a class="header" href="#resource-queues">–resource-queues</a></h3>
+<p>Dump resource queue definitions.</p>
+<h3 id="resource-groups"><a class="header" href="#resource-groups">–resource-groups</a></h3>
+<p>Dump resource group definitions.</p>
+<h3 id="use-set-session-authorization"><a class="header" href="#use-set-session-authorization">–use-set-session-authorization</a></h3>
+<p>Output SQL-standard <code>SET SESSION AUTHORIZATION</code> commands instead of <code>ALTER OWNER</code> commands to determine object ownership. This makes the dump more standards compatible, but depending on the history of the objects in the dump, may not restore properly. A dump using <code>SET SESSION AUTHORIZATION</code> will require superuser privileges to restore correctly, whereas <code>ALTER OWNER</code> requires lesser privileges.</p>
+<h3 id="gp-syntax"><a class="header" href="#gp-syntax">–gp-syntax</a></h3>
+<p>Output SynxDB syntax in the <code>CREATE TABLE</code> statements. This allows the distribution policy (<code>DISTRIBUTED BY</code> or <code>DISTRIBUTED RANDOMLY</code> clauses) of a SynxDB table to be dumped, which is useful for restoring into other SynxDB systems.</p>
+<h3 id="no-gp-syntax"><a class="header" href="#no-gp-syntax">–no-gp-syntax</a></h3>
+<p>Do not output the table distribution clauses in the <code>CREATE TABLE</code> statements.</p>
+<h3 id="---help"><a class="header" href="#---help">-? | –help</a></h3>
+<p>Show help about <code>pg_dumpall</code> command line arguments, and exit.</p>
+<p><strong>Connection Options</strong></p>
+<h3 id="-d-connstr--dbnameconnstr"><a class="header" href="#-d-connstr--dbnameconnstr">-d connstr | –dbname=connstr</a></h3>
+<p>Specifies parameters used to connect to the server, as a connection string. See <a href="https://www.postgresql.org/docs/9.4/libpq-connect.html#LIBPQ-CONNSTRING">Connection Strings</a> in the PostgreSQL documentation for more information.</p>
+<p>The option is called <code>--dbname</code> for consistency with other client applications, but because <code>pg_dumpall</code> needs to connect to many databases, the database name in the connection string will be ignored. Use the <code>-l</code> option to specify the name of the database used to dump global objects and to discover what other databases should be dumped.</p>
+<h3 id="-h-host--hosthost"><a class="header" href="#-h-host--hosthost">-h host | –host=host</a></h3>
+<p>The host name of the machine on which the SynxDB master database server is running. If not specified, reads from the environment variable <code>PGHOST</code> or defaults to <code>localhost</code>.</p>
+<h3 id="-l-dbname--databasedbname"><a class="header" href="#-l-dbname--databasedbname">-l dbname | –database=dbname</a></h3>
+<p>Specifies the name of the database in which to connect to dump global objects. If not specified, the <code>postgres</code> database is used. If the <code>postgres</code> database does not exist, the <code>template1</code> database is used.</p>
+<h3 id="-p-port--portport"><a class="header" href="#-p-port--portport">-p port | –port=port</a></h3>
+<p>The TCP port on which the SynxDB master database server is listening for connections. If not specified, reads from the environment variable <code>PGPORT</code> or defaults to 5432.</p>
+<h3 id="-u-username--username-username"><a class="header" href="#-u-username--username-username">-U username | –username= username</a></h3>
+<p>The database role name to connect as. If not specified, reads from the environment variable <code>PGUSER</code> or defaults to the current system role name.</p>
+<h3 id="-w--no-password"><a class="header" href="#-w--no-password">-w | –no-password</a></h3>
+<p>Never issue a password prompt. If the server requires password authentication and a password is not available by other means such as a <code>.pgpass</code> file the connection attempt will fail. This option can be useful in batch jobs and scripts where no user is present to enter a password.</p>
+<h3 id="-w--password"><a class="header" href="#-w--password">-W | –password</a></h3>
+<p>Force a password prompt.</p>
+<h3 id="rolerolename"><a class="header" href="#rolerolename">–role=rolename</a></h3>
+<p>Specifies a role name to be used to create the dump. This option causes <code>pg_dumpall</code> to issue a <code>SET ROLE &lt;rolename&gt;</code> command after connecting to the database. It is useful when the authenticated user (specified by <code>-U</code>) lacks privileges needed by <code>pg_dumpall</code>, but can switch to a role with the required rights. Some installations have a policy against logging in directly as a superuser, and use of this option allows dumps to be made without violating the policy.</p>
+<h2 id="notes"><a class="header" href="#notes"><a id="section7"></a>Notes</a></h2>
+<p>Since <code>pg_dumpall</code> calls <a href="pg_dump.html">pg_dump</a> internally, some diagnostic messages will refer to <code>pg_dump</code>.</p>
+<p>Once restored, it is wise to run <code>ANALYZE</code> on each database so the query planner has useful statistics. You can also run <code>vacuumdb -a -z</code> to vacuum and analyze all databases.</p>
+<p><code>pg_dumpall</code> requires all needed tablespace directories to exist before the restore; otherwise, database creation will fail for databases in non-default locations.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section8"></a>Examples</a></h2>
+<p>To dump all databases:</p>
+<pre><code>pg_dumpall &gt; db.out
+</code></pre>
+<p>To reload database(s) from this file, you can use:</p>
+<pre><code>psql template1 -f db.out
+</code></pre>
+<p>To dump only global objects (including resource queues):</p>
+<pre><code>pg_dumpall -g --resource-queues
+</code></pre>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section9"></a>See Also</a></h2>
+<p><a href="pg_dump.html">pg_dump</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../utility_guide/ref/pg_dump.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../utility_guide/ref/pg_restore.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../utility_guide/ref/pg_dump.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../utility_guide/ref/pg_restore.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

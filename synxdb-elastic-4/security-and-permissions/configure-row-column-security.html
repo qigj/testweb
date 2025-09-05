@@ -1,0 +1,443 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configure Row-Level and Column-Level Permissions &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Developer Guides" href="../develop-guides/develop-with-db-index.html" />
+    <link rel="prev" title="Data Anonymization Using Anon" href="use-anon.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="set-security-and-permission-index.html">Configure Security and Permissions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="set-password-profile.html">Set Password Profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-pgcrypto.html">Use pgcrypto for Data Encryption</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-pgaudit.html">Log Auditing pgAudit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manage-users.html">Manage Roles and Privileges</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-tde-to-encrypt-data.html">Transparent Data Encryption</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-anon.html">Data Anonymization Using Anon</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Configure Row-Level and Column-Level Permissions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#row-level-security">Row-level security</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#characteristics-of-row-level-security-policies">Characteristics of row-level security policies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#enable-and-create-a-security-policy">Enable and create a security policy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-create-a-row-level-security-policy">Example: create a row-level security policy</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#column-level-security">Column-level security</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#column-level-permissions-and-default-privileges">Column-level permissions and default privileges</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-set-column-level-permissions">Example: set column-level permissions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+      <li class="breadcrumb-item active">Configure Row-Level and Column-Level Permissions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="configure-row-level-and-column-level-permissions">
+<h1>Configure Row-Level and Column-Level Permissions<a class="headerlink" href="#configure-row-level-and-column-level-permissions" title="Link to this heading"></a></h1>
+<p>This document explains how to configure row-level security (RLS) and column-level security to achieve more fine-grained table access control, thereby restricting user access to specific data.</p>
+<p>In a database security architecture, access control is implemented in layers. At a high level, SynxDB Elastic provides various security mechanisms to prevent unauthorized users from accessing the database cluster, such as host-based authentication, various authentication methods like LDAP or PAM, and limiting listening addresses.</p>
+<p>Once an authorized user gains database access, security controls are applied at the database object level. By using the <code class="docutils literal notranslate"><span class="pre">GRANT</span></code> and <code class="docutils literal notranslate"><span class="pre">REVOKE</span></code> commands, combined with role-based access control, you can manage user permissions for specific database objects like tables and views.</p>
+<p>This document focuses on more granular in-table security controls: how to configure permissions when a user has access to a table but business requirements dictate they cannot see specific rows or columns. In SynxDB Elastic, this is primarily achieved through two methods:</p>
+<ul class="simple">
+<li><p>Row-level security</p></li>
+<li><p>Column-level security</p></li>
+</ul>
+<section id="row-level-security">
+<h2>Row-level security<a class="headerlink" href="#row-level-security" title="Link to this heading"></a></h2>
+<p>Row-Level Security (RLS) is a critical security feature in SynxDB Elastic. It allows the table owner to define security policies on a table to precisely control which rows different users can view and manipulate. You can think of an RLS policy as an automatically applied filter: when a user performs any operation on the table, the system first applies this policy, filtering the data rows visible to the user based on its defined rules.</p>
+<p>RLS policies are powerful and flexible, allowing for access control based on specific commands (like <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> or DML commands <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>/<code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>/<code class="docutils literal notranslate"><span class="pre">DELETE</span></code>), specific users or groups, or rows that meet certain conditions.</p>
+<section id="characteristics-of-row-level-security-policies">
+<h3>Characteristics of row-level security policies<a class="headerlink" href="#characteristics-of-row-level-security-policies" title="Link to this heading"></a></h3>
+<ul>
+<li><p><strong>Disabled by default</strong>: By default, no RLS policies are defined on a table. As long as a user has SQL permissions, they can access all rows in the table.</p></li>
+<li><p><strong>Default-deny once enabled</strong>: When the table owner enables RLS for a table using the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">...</span> <span class="pre">ENABLE</span> <span class="pre">ROW</span> <span class="pre">LEVEL</span> <span class="pre">SECURITY</span></code> command, the access policy defaults to “deny all”. At this point, no user other than the table owner can access any rows in the table until an appropriate “allow” policy is created for them.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Operations that apply to the entire table (such as <code class="docutils literal notranslate"><span class="pre">TRUNCATE</span></code> and <code class="docutils literal notranslate"><span class="pre">REFERENCES</span></code>) are not restricted by row-level security.</p>
+</div>
+</li>
+<li><p><strong>Policy flexibility</strong>: Security policies can be set for specific commands, specific roles, or a combination of both. A policy can apply to all commands (<code class="docutils literal notranslate"><span class="pre">ALL</span></code>) or only to <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, or <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>. Policies can be granted to multiple roles and follow standard role membership and inheritance rules.</p></li>
+<li><p><strong>Privileges for superusers and owners</strong>: Superusers and roles with the <code class="docutils literal notranslate"><span class="pre">BYPASSRLS</span></code> attribute are not subject to RLS policies. By default, the table owner is also not constrained, but policies can be forcibly applied to the owner using the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">...</span> <span class="pre">FORCE</span> <span class="pre">ROW</span> <span class="pre">LEVEL</span> <span class="pre">SECURITY</span></code> command.</p></li>
+<li><p><strong>Owner permissions</strong>: Only the table owner can enable or disable RLS and add policies to the table.</p></li>
+</ul>
+</section>
+<section id="enable-and-create-a-security-policy">
+<h3>Enable and create a security policy<a class="headerlink" href="#enable-and-create-a-security-policy" title="Link to this heading"></a></h3>
+<p>Configuring RLS for a table involves two steps, both of which must be performed by the table owner: first, enable the RLS feature for the table, and second, create specific security policies.</p>
+<ol class="arabic">
+<li><p>Enable row-level security. Use the following command to enable RLS for the target table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ENABLE</span><span class="w"> </span><span class="k">ROW</span><span class="w"> </span><span class="k">LEVEL</span><span class="w"> </span><span class="k">SECURITY</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a security policy. After enabling RLS, use the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">POLICY</span></code> command to create specific policies. The core of a policy lies in the boolean expression defined in the <code class="docutils literal notranslate"><span class="pre">USING</span></code> or <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">CHECK</span></code> clause. This expression is evaluated for each row before any conditions or functions from the user’s query are executed. Only rows for which the expression returns <code class="docutils literal notranslate"><span class="pre">true</span></code> are visible or available for modification.</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">USING</span></code> expression controls which rows are visible to the user (for <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>) or available for modification (for <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">CHECK</span></code> expression controls which new rows can be added by <code class="docutils literal notranslate"><span class="pre">INSERT</span></code> or <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>.</p></li>
+</ul>
+<p>Policy expressions run as part of the query and with the permissions of the user running the query. If you need to access data that the user does not have permission to, you can use <code class="docutils literal notranslate"><span class="pre">SECURITY</span> <span class="pre">DEFINER</span></code> functions.</p>
+<p>The syntax for <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">POLICY</span></code> is as follows:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">POLICY</span><span class="w"> </span><span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="p">[</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="n">PERMISSIVE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">RESTRICTIVE</span><span class="w"> </span><span class="err">}</span><span class="w"> </span><span class="p">]</span>
+<span class="w">    </span><span class="p">[</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="err">}</span><span class="w"> </span><span class="p">]</span>
+<span class="w">    </span><span class="p">[</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="o">&lt;</span><span class="n">role_name</span><span class="o">&gt;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">PUBLIC</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">CURRENT_USER</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">SESSION_USER</span><span class="w"> </span><span class="err">}</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">]</span>
+<span class="w">    </span><span class="p">[</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="n">using_expression</span><span class="o">&gt;</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">]</span>
+<span class="w">    </span><span class="p">[</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="n">check_expression</span><span class="o">&gt;</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Parameter descriptions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the policy.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">table_name</span></code>: The name of the table to which the policy applies.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PERMISSIVE</span></code>: Specifies the policy as permissive. All permissive policies applicable to a given query are combined using the boolean <code class="docutils literal notranslate"><span class="pre">OR</span></code> operator. Administrators can add to the set of accessible records by creating permissive policies. This is the default.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RESTRICTIVE</span></code>: Specifies the policy as restrictive. All restrictive policies applicable to a given query are combined using the boolean <code class="docutils literal notranslate"><span class="pre">AND</span></code> operator. Administrators can reduce the set of accessible records by creating restrictive policies, as each record must pass all restrictive policies.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FOR</span></code> clause: Specifies the command(s) to which the policy applies, such as <code class="docutils literal notranslate"><span class="pre">ALL</span></code>, <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TO</span></code> clause: Specifies the role(s) to which the policy applies. The default is <code class="docutils literal notranslate"><span class="pre">PUBLIC</span></code>, which applies the policy to all roles.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">using_expression</span></code>: Any SQL conditional expression that returns a boolean value. The expression cannot contain any aggregate or window functions. For <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, or <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> operations, only rows for which this expression returns <code class="docutils literal notranslate"><span class="pre">true</span></code> will be visible or modifiable.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">check_expression</span></code>: Any SQL conditional expression that returns a boolean value, which also cannot contain aggregate or window functions. For <code class="docutils literal notranslate"><span class="pre">INSERT</span></code> or <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> operations, only new or updated rows for which this expression evaluates to <code class="docutils literal notranslate"><span class="pre">true</span></code> will be allowed. If the expression evaluates to <code class="docutils literal notranslate"><span class="pre">false</span></code> or <code class="docutils literal notranslate"><span class="pre">null</span></code> for any of the records, an error will be thrown.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="example-create-a-row-level-security-policy">
+<h3>Example: create a row-level security policy<a class="headerlink" href="#example-create-a-row-level-security-policy" title="Link to this heading"></a></h3>
+<p>The following example demonstrates how to set up a row-level security policy for a table, allowing users to access only data related to their department.</p>
+<ol class="arabic">
+<li><p>Connect to the database as an administrator: <code class="docutils literal notranslate"><span class="pre">psql</span> <span class="pre">-h</span> <span class="pre">&lt;host_ip&gt;</span> <span class="pre">-p</span> <span class="pre">&lt;port&gt;</span> <span class="pre">-U</span> <span class="pre">&lt;user_name&gt;</span> <span class="pre">-d</span> <span class="pre">&lt;db_name&gt;</span></code>.</p></li>
+<li><p>Create a sample table and insert data:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">projects</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">project_id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">project_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">project_manager</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">department</span><span class="w"> </span><span class="nb">TEXT</span>
+<span class="p">);</span>
+
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">projects</span><span class="w"> </span><span class="p">(</span><span class="n">project_name</span><span class="p">,</span><span class="w"> </span><span class="n">project_manager</span><span class="p">,</span><span class="w"> </span><span class="n">department</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+<span class="p">(</span><span class="s1">&#39;Project Alpha&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;john&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Engineering&#39;</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">&#39;Project Beta&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;kate&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;HR&#39;</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">&#39;Project Gamma&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;bob&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Sales&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Enable row-level security for the <code class="docutils literal notranslate"><span class="pre">projects</span></code> table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">projects</span><span class="w"> </span><span class="n">ENABLE</span><span class="w"> </span><span class="k">ROW</span><span class="w"> </span><span class="k">LEVEL</span><span class="w"> </span><span class="k">SECURITY</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a row-level security policy. This policy checks a session variable <code class="docutils literal notranslate"><span class="pre">myapp.current_department</span></code> to determine the user’s department.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">POLICY</span><span class="w"> </span><span class="n">department_policy</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">projects</span>
+<span class="k">FOR</span><span class="w"> </span><span class="k">SELECT</span>
+<span class="k">USING</span><span class="w"> </span><span class="p">(</span><span class="n">department</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">&#39;myapp.current_department&#39;</span><span class="p">));</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create test users:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">john</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">kate</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">bob</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Grant the <code class="docutils literal notranslate"><span class="pre">john</span></code> user permission to query the <code class="docutils literal notranslate"><span class="pre">projects</span></code> table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">projects</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">john</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Switch to the <code class="docutils literal notranslate"><span class="pre">john</span></code> user and set the department for the current session:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">john</span><span class="p">;</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">myapp</span><span class="p">.</span><span class="n">current_department</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Engineering&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Query the <code class="docutils literal notranslate"><span class="pre">projects</span></code> table as the <code class="docutils literal notranslate"><span class="pre">john</span></code> user. Because the department is set to ‘Engineering’, the query will only return projects from that department:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">projects</span><span class="p">;</span>
+
+<span class="c1">-- Expected result:</span>
+<span class="c1">-- project_id | project_name  | project_manager | department</span>
+<span class="c1">--------------+---------------+-----------------+-------------</span>
+<span class="c1">--          1 | Project Alpha | john        | Engineering</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="column-level-security">
+<h2>Column-level security<a class="headerlink" href="#column-level-security" title="Link to this heading"></a></h2>
+<p>Column-level security allows you to precisely control which columns in a table a user can access. By using the <code class="docutils literal notranslate"><span class="pre">GRANT</span></code> command, you can grant a user permission to view only specific columns, thereby protecting all other columns from access.</p>
+<section id="column-level-permissions-and-default-privileges">
+<h3>Column-level permissions and default privileges<a class="headerlink" href="#column-level-permissions-and-default-privileges" title="Link to this heading"></a></h3>
+<p>In SynxDB Elastic, when certain types of objects are created, some permissions are granted to the <code class="docutils literal notranslate"><span class="pre">PUBLIC</span></code> role by default. However, for security, no privileges are granted to <code class="docutils literal notranslate"><span class="pre">PUBLIC</span></code> by default on tables, columns, sequences, foreign-data wrappers, foreign servers, large objects, schemas, or tablespaces.</p>
+<p>For other object types, the default privileges granted to <code class="docutils literal notranslate"><span class="pre">PUBLIC</span></code> are as follows:</p>
+<ul class="simple">
+<li><p><strong>Databases</strong>: <code class="docutils literal notranslate"><span class="pre">CONNECT</span></code> and <code class="docutils literal notranslate"><span class="pre">TEMPORARY</span></code> (create temporary tables) privileges.</p></li>
+<li><p><strong>Functions and procedures</strong>: <code class="docutils literal notranslate"><span class="pre">EXECUTE</span></code> privilege.</p></li>
+<li><p><strong>Languages and data types</strong>: <code class="docutils literal notranslate"><span class="pre">USAGE</span></code> privilege.</p></li>
+</ul>
+<p>The object owner can <code class="docutils literal notranslate"><span class="pre">REVOKE</span></code> these default privileges. For maximum security, it is recommended to issue the <code class="docutils literal notranslate"><span class="pre">REVOKE</span></code> in the same transaction that creates the object; this leaves no window in which another user can use the object. You can also override these default privilege settings using the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">DEFAULT</span> <span class="pre">PRIVILEGES</span></code> command.</p>
+<p>The following table shows the abbreviations used for these privilege types in Access Control Lists (ACLs). You will see these letters in the output of psql commands or when viewing ACL columns in the system catalogs.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Privilege</p></th>
+<th class="head"><p>Abbreviation</p></th>
+<th class="head"><p>Applicable Object Types</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SELECT</span></code></p></td>
+<td><p>r (“read”)</p></td>
+<td><p>Large objects, sequences, tables (and table-like objects), columns</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">INSERT</span></code></p></td>
+<td><p>a (“append”)</p></td>
+<td><p>Tables, columns</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">UPDATE</span></code></p></td>
+<td><p>w (“write”)</p></td>
+<td><p>Large objects, sequences, tables, columns</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DELETE</span></code></p></td>
+<td><p>d</p></td>
+<td><p>Tables</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TRUNCATE</span></code></p></td>
+<td><p>D</p></td>
+<td><p>Tables</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">REFERENCES</span></code></p></td>
+<td><p>x</p></td>
+<td><p>Tables, columns</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TRIGGER</span></code></p></td>
+<td><p>t</p></td>
+<td><p>Tables</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CREATE</span></code></p></td>
+<td><p>C</p></td>
+<td><p>Databases, schemas, tablespaces</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CONNECT</span></code></p></td>
+<td><p>c</p></td>
+<td><p>Databases</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TEMPORARY</span></code></p></td>
+<td><p>T</p></td>
+<td><p>Databases</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">EXECUTE</span></code></p></td>
+<td><p>X</p></td>
+<td><p>Functions, procedures</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">USAGE</span></code></p></td>
+<td><p>U</p></td>
+<td><p>Domains, foreign-data wrappers, foreign servers, languages, schemas, sequences, types</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="example-set-column-level-permissions">
+<h3>Example: set column-level permissions<a class="headerlink" href="#example-set-column-level-permissions" title="Link to this heading"></a></h3>
+<p>This example demonstrates how to grant a user access to a specific column, so they can only view the authorized column.</p>
+<ol class="arabic">
+<li><p>Create a test table and insert data:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">t_user</span><span class="w"> </span><span class="p">(</span><span class="n">n_id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">c_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">)</span><span class="w"> </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="n">oss_test</span><span class="p">;</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">synxdb</span><span class="p">.</span><span class="n">warehouse</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">wh0</span><span class="p">;</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">t_user</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;john&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create the user <code class="docutils literal notranslate"><span class="pre">john</span></code> and grant connect and usage permissions:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Creates a login role.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">john</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;123456&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Creates a user mapping for john (if external tablespace access is needed).</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">john</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">test_server</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">accesskey</span><span class="w"> </span><span class="s1">&#39;..&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">secretkey</span><span class="w"> </span><span class="s1">&#39;..&#39;</span><span class="p">);</span>
+
+<span class="c1">-- Grants privileges on the tablespace to john.</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="n">oss_test</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">john</span><span class="p">;</span>
+
+<span class="c1">-- Grants connect and usage permissions to john.</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">CONNECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">postgres</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">john</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">USAGE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">john</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Grant the <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> privilege on the <code class="docutils literal notranslate"><span class="pre">n_id</span></code> column of the <code class="docutils literal notranslate"><span class="pre">t_user</span></code> table to <code class="docutils literal notranslate"><span class="pre">john</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="n">n_id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">t_user</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">john</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Query data as the <code class="docutils literal notranslate"><span class="pre">john</span></code> user:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Switches to the john user.</span>
+<span class="err">\</span><span class="k">c</span><span class="w"> </span><span class="n">postgres</span><span class="w"> </span><span class="n">john</span>
+<span class="n">You</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="n">connected</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">database</span><span class="w"> </span><span class="ss">&quot;postgres&quot;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="ss">&quot;john&quot;</span><span class="p">.</span>
+
+<span class="c1">-- Sets the warehouse for the session.</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">synxdb</span><span class="p">.</span><span class="n">warehouse</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">wh0</span><span class="p">;</span>
+
+<span class="c1">-- Querying the n_id column succeeds.</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">n_id</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t_user</span><span class="p">;</span>
+<span class="c1">-- n_id</span>
+<span class="c1">--------</span>
+<span class="c1">--    1</span>
+<span class="c1">-- (1 row)</span>
+
+<span class="c1">-- Querying the c_name column or all columns (*) will fail due to lack of permission.</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">c_name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t_user</span><span class="p">;</span>
+<span class="c1">-- ERROR:  permission denied for table t_user</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t_user</span><span class="p">;</span>
+<span class="c1">-- ERROR:  permission denied for table t_user</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="../develop-guides/develop-with-db-index.html" class="btn btn-neutral float-right" title="Developer Guides" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="use-anon.html" class="btn btn-neutral float-left" title="Data Anonymization Using Anon" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

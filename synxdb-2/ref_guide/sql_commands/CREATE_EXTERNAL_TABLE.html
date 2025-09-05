@@ -1,0 +1,541 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>CREATE EXTERNAL TABLE - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="create-external-table"><a class="header" href="#create-external-table">CREATE EXTERNAL TABLE</a></h1>
+<p>Defines a new external table.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code class="language-{#sql_command_synopsis}">CREATE [READABLE] EXTERNAL [TEMPORARY | TEMP] TABLE &lt;table_name&gt;     
+    ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table &gt;)
+     LOCATION ('file://&lt;seghost&gt;[:&lt;port&gt;]/&lt;path&gt;/&lt;file&gt;' [, ...])
+       | ('gpfdist://&lt;filehost&gt;[:&lt;port&gt;]/&lt;file_pattern&gt;[#transform=&lt;trans_name&gt;]'
+           [, ...]
+       | ('gpfdists://&lt;filehost&gt;[:&lt;port&gt;]/&lt;file_pattern&gt;[#transform=&lt;trans_name&gt;]'
+           [, ...])
+       | ('pxf://&lt;path-to-data&gt;?PROFILE=&lt;profile_name&gt;[&amp;SERVER=&lt;server_name&gt;][&amp;&lt;custom-option&gt;=&lt;value&gt;[...]]'))
+       | ('s3://&lt;S3_endpoint&gt;[:&lt;port&gt;]/&lt;bucket_name&gt;/[&lt;S3_prefix&gt;] [region=&lt;S3-region&gt;] [config=&lt;config_file&gt; | config_server=&lt;url&gt;]')
+     [ON MASTER]
+     FORMAT 'TEXT' 
+           [( [HEADER]
+              [DELIMITER [AS] '&lt;delimiter&gt;' | 'OFF']
+              [NULL [AS] '&lt;null string&gt;']
+              [ESCAPE [AS] '&lt;escape&gt;' | 'OFF']
+              [NEWLINE [ AS ] 'LF' | 'CR' | 'CRLF']
+              [FILL MISSING FIELDS] )]
+          | 'CSV'
+           [( [HEADER]
+              [QUOTE [AS] '&lt;quote&gt;'] 
+              [DELIMITER [AS] '&lt;delimiter&gt;']
+              [NULL [AS] '&lt;null string&gt;']
+              [FORCE NOT NULL &lt;column&gt; [, ...]]
+              [ESCAPE [AS] '&lt;escape&gt;']
+              [NEWLINE [ AS ] 'LF' | 'CR' | 'CRLF']
+              [FILL MISSING FIELDS] )]
+          | 'CUSTOM' (Formatter=&lt;&lt;formatter_specifications&gt;&gt;)
+    [ ENCODING '&lt;encoding&gt;' ]
+      [ [LOG ERRORS [PERSISTENTLY]] SEGMENT REJECT LIMIT &lt;count&gt;
+      [ROWS | PERCENT] ]
+
+CREATE [READABLE] EXTERNAL WEB [TEMPORARY | TEMP] TABLE &lt;table_name&gt;     
+   ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table &gt;)
+      LOCATION ('http://&lt;webhost&gt;[:&lt;port&gt;]/&lt;path&gt;/&lt;file&gt;' [, ...])
+    | EXECUTE '&lt;command&gt;' [ON ALL 
+                          | MASTER
+                          | &lt;number_of_segments&gt;
+                          | HOST ['&lt;segment_hostname&gt;'] 
+                          | SEGMENT &lt;segment_id&gt; ]
+      FORMAT 'TEXT' 
+            [( [HEADER]
+               [DELIMITER [AS] '&lt;delimiter&gt;' | 'OFF']
+               [NULL [AS] '&lt;null string&gt;']
+               [ESCAPE [AS] '&lt;escape&gt;' | 'OFF']
+               [NEWLINE [ AS ] 'LF' | 'CR' | 'CRLF']
+               [FILL MISSING FIELDS] )]
+           | 'CSV'
+            [( [HEADER]
+               [QUOTE [AS] '&lt;quote&gt;'] 
+               [DELIMITER [AS] '&lt;delimiter&gt;']
+               [NULL [AS] '&lt;null string&gt;']
+               [FORCE NOT NULL &lt;column&gt; [, ...]]
+               [ESCAPE [AS] '&lt;escape&gt;']
+               [NEWLINE [ AS ] 'LF' | 'CR' | 'CRLF']
+               [FILL MISSING FIELDS] )]
+           | 'CUSTOM' (Formatter=&lt;&lt;formatter specifications&gt;&gt;)
+     [ ENCODING '&lt;encoding&gt;' ]
+     [ [LOG ERRORS [PERSISTENTLY]] SEGMENT REJECT LIMIT &lt;count&gt;
+       [ROWS | PERCENT] ]
+
+CREATE WRITABLE EXTERNAL [TEMPORARY | TEMP] TABLE &lt;table_name&gt;
+    ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table &gt;)
+     LOCATION('gpfdist://&lt;outputhost&gt;[:&lt;port&gt;]/&lt;filename&gt;[#transform=&lt;trans_name&gt;]'
+          [, ...])
+      | ('gpfdists://&lt;outputhost&gt;[:&lt;port&gt;]/&lt;file_pattern&gt;[#transform=&lt;trans_name&gt;]'
+          [, ...])
+      FORMAT 'TEXT' 
+               [( [DELIMITER [AS] '&lt;delimiter&gt;']
+               [NULL [AS] '&lt;null string&gt;']
+               [ESCAPE [AS] '&lt;escape&gt;' | 'OFF'] )]
+          | 'CSV'
+               [([QUOTE [AS] '&lt;quote&gt;'] 
+               [DELIMITER [AS] '&lt;delimiter&gt;']
+               [NULL [AS] '&lt;null string&gt;']
+               [FORCE QUOTE &lt;column&gt; [, ...]] | * ]
+               [ESCAPE [AS] '&lt;escape&gt;'] )]
+
+           | 'CUSTOM' (Formatter=&lt;&lt;formatter specifications&gt;&gt;)
+    [ ENCODING '&lt;write_encoding&gt;' ]
+    [ DISTRIBUTED BY ({&lt;column&gt; [&lt;opclass&gt;]}, [ ... ] ) | DISTRIBUTED RANDOMLY ]
+
+CREATE WRITABLE EXTERNAL [TEMPORARY | TEMP] TABLE &lt;table_name&gt;
+    ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table &gt;)
+     LOCATION('s3://&lt;S3_endpoint&gt;[:&lt;port&gt;]/&lt;bucket_name&gt;/[&lt;S3_prefix&gt;] [region=&lt;S3-region&gt;] [config=&lt;config_file&gt; | config_server=&lt;url&gt;]')
+      [ON MASTER]
+      FORMAT 'TEXT' 
+               [( [DELIMITER [AS] '&lt;delimiter&gt;']
+               [NULL [AS] '&lt;null string&gt;']
+               [ESCAPE [AS] '&lt;escape&gt;' | 'OFF'] )]
+          | 'CSV'
+               [([QUOTE [AS] '&lt;quote&gt;'] 
+               [DELIMITER [AS] '&lt;delimiter&gt;']
+               [NULL [AS] '&lt;null string&gt;']
+               [FORCE QUOTE &lt;column&gt; [, ...]] | * ]
+               [ESCAPE [AS] '&lt;escape&gt;'] )]
+
+CREATE WRITABLE EXTERNAL WEB [TEMPORARY | TEMP] TABLE &lt;table_name&gt;
+    ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table&gt; )
+    EXECUTE '&lt;command&gt;' [ON ALL]
+    FORMAT 'TEXT' 
+               [( [DELIMITER [AS] '&lt;delimiter&gt;']
+               [NULL [AS] '&lt;null string&gt;']
+               [ESCAPE [AS] '&lt;escape&gt;' | 'OFF'] )]
+          | 'CSV'
+               [([QUOTE [AS] '&lt;quote&gt;'] 
+               [DELIMITER [AS] '&lt;delimiter&gt;']
+               [NULL [AS] '&lt;null string&gt;']
+               [FORCE QUOTE &lt;column&gt; [, ...]] | * ]
+               [ESCAPE [AS] '&lt;escape&gt;'] )]
+           | 'CUSTOM' (Formatter=&lt;&lt;formatter specifications&gt;&gt;)
+    [ ENCODING '&lt;write_encoding&gt;' ]
+    [ DISTRIBUTED BY ({&lt;column&gt; [&lt;opclass&gt;]}, [ ... ] ) | DISTRIBUTED RANDOMLY ]
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p><code>CREATE EXTERNAL TABLE</code> or <code>CREATE EXTERNAL WEB TABLE</code> creates a new readable external table definition in SynxDB. Readable external tables are typically used for fast, parallel data loading. Once an external table is defined, you can query its data directly (and in parallel) using SQL commands. For example, you can select, join, or sort external table data. You can also create views for external tables. DML operations (<code>UPDATE</code>, <code>INSERT</code>, <code>DELETE</code>, or <code>TRUNCATE</code>) are not allowed on readable external tables, and you cannot create indexes on readable external tables.</p>
+<p><code>CREATE WRITABLE EXTERNAL TABLE</code> or <code>CREATE WRITABLE EXTERNAL WEB TABLE</code> creates a new writable external table definition in SynxDB. Writable external tables are typically used for unloading data from the database into a set of files or named pipes. Writable external web tables can also be used to output data to an executable program. Writable external tables can also be used as output targets for SynxDB parallel MapReduce calculations. Once a writable external table is defined, data can be selected from database tables and inserted into the writable external table. Writable external tables only allow <code>INSERT</code> operations – <code>SELECT</code>, <code>UPDATE</code>, <code>DELETE</code> or <code>TRUNCATE</code> are not allowed.</p>
+<p>The main difference between regular external tables and external web tables is their data sources. Regular readable external tables access static flat files, whereas external web tables access dynamic data sources – either on a web server or by running OS commands or scripts.</p>
+<p>See <a href="../../admin_guide/external/g-working-with-file-based-ext-tables.html">Working with External Data</a> for detailed information about working with external tables.</p>
+<h2 id="parameters"><a class="header" href="#parameters"><a id="section4"></a>Parameters</a></h2>
+<h3 id="readable--writable"><a class="header" href="#readable--writable">READABLE | WRITABLE</a></h3>
+<p>Specifies the type of external table, readable being the default. Readable external tables are used for loading data into SynxDB. Writable external tables are used for unloading data.</p>
+<h3 id="web"><a class="header" href="#web">WEB</a></h3>
+<p>Creates a readable or writable external web table definition in SynxDB. There are two forms of readable external web tables – those that access files via the <code>http://</code> protocol or those that access data by running OS commands. Writable external web tables output data to an executable program that can accept an input stream of data. External web tables are not rescannable during query execution.</p>
+<h3 id=""><a class="header" href="#"></a></h3>
+<p>The <code>s3</code> protocol does not support external web tables. You can, however, create an external web table that runs a third-party tool to read data from or write data to S3 directly.</p>
+<h3 id="temporary--temp"><a class="header" href="#temporary--temp">TEMPORARY | TEMP</a></h3>
+<p>If specified, creates a temporary readable or writable external table definition in SynxDB. Temporary external tables exist in a special schema; you cannot specify a schema name when you create the table. Temporary external tables are automatically dropped at the end of a session.</p>
+<p>An existing permanent table with the same name is not visible to the current session while the temporary table exists, unless you reference the permanent table with its schema-qualified name.</p>
+<h3 id="table_name"><a class="header" href="#table_name">table_name</a></h3>
+<p>The name of the new external table.</p>
+<h3 id="column_name"><a class="header" href="#column_name">column_name</a></h3>
+<p>The name of a column to create in the external table definition. Unlike regular tables, external tables do not have column constraints or default values, so do not specify those.</p>
+<h3 id="like-other_table"><a class="header" href="#like-other_table">LIKE other_table</a></h3>
+<p>The <code>LIKE</code> clause specifies a table from which the new external table automatically copies all column names, data types and SynxDB distribution policy. If the original table specifies any column constraints or default column values, those will not be copied over to the new external table definition.</p>
+<h3 id="data_type"><a class="header" href="#data_type">data_type</a></h3>
+<p>The data type of the column.</p>
+<h3 id="location-protocolhostportpathfile--"><a class="header" href="#location-protocolhostportpathfile--">LOCATION (‘protocol://[host[:port]]/path/file’ [, …])</a></h3>
+<p>If you use the <code>pxf</code> protocol to access an external data source, refer to <a href="../../admin_guide/external/g-pxf-protocol.html">pxf:// Protocol</a> for information about the <code>pxf</code> protocol.</p>
+<p>If you use the <code>s3</code> protocol to read or write to S3, refer to <a href="../../admin_guide/external/g-s3-protocol.html">s3:// Protocol</a> for additional information about the <code>s3</code> protocol <code>LOCATION</code> clause syntax.</p>
+<p>For readable external tables, specifies the URI of the external data source(s) to be used to populate the external table or web table. Regular readable external tables allow the <code>gpfdist</code> or <code>file</code> protocols. External web tables allow the <code>http</code> protocol. If <code>port</code> is omitted, port <code>8080</code> is assumed for <code>http</code> and <code>gpfdist</code> protocols. If using the <code>gpfdist</code> protocol, the <code>path</code> is relative to the directory from which <code>gpfdist</code> is serving files (the directory specified when you started the <code>gpfdist</code> program). Also, <code>gpfdist</code> can use wildcards or other C-style pattern matching (for example, a whitespace character is <code>[[:space:]]</code>) to denote multiple files in a directory. For example:</p>
+<pre><code>```
+'gpfdist://filehost:8081/*'
+'gpfdist://masterhost/my_load_file'
+'file://seghost1/dbfast1/external/myfile.txt'
+'http://intranet.example.com/finance/expenses.csv'
+```
+
+ For writable external tables, specifies the URI location of the `gpfdist` process or S3 protocol that will collect data output from the SynxDB segments and write it to one or more named files. For `gpfdist` the `path` is relative to the directory from which `gpfdist` is serving files \(the directory specified when you started the `gpfdist` program\). If multiple `gpfdist` locations are listed, the segments sending data will be evenly divided across the available output locations. For example:
+
+```
+'gpfdist://outputhost:8081/data1.out',
+'gpfdist://outputhost:8081/data2.out'
+```
+
+With two `gpfdist` locations listed as in the above example, half of the segments would send their output data to the `data1.out` file and the other half to the `data2.out` file.
+
+With the option `#transform=trans\_name`, you can specify a transform to apply when loading or extracting data. The trans\_name is the name of the transform in the YAML configuration file you specify with the you run the `gpfdist` utility. For information about specifying a transform, see [`gpfdist`](../../utility_guide/ref/gpfdist.html) in the *SynxDB Utility Guide*.
+</code></pre>
+<h3 id="on-master"><a class="header" href="#on-master">ON MASTER</a></h3>
+<p>Restricts all table-related operations to the SynxDB master segment. Permitted only on readable and writable external tables created with the <code>s3</code> or custom protocols. The <code>gpfdist</code>, <code>gpfdists</code>, <code>pxf</code>, and <code>file</code> protocols do not support <code>ON MASTER</code>.</p>
+<pre><code>&gt; **Note** Be aware of potential resource impacts when reading from or writing to external tables you create with the `ON MASTER` clause. You may encounter performance issues when you restrict table operations solely to the SynxDB master segment.
+</code></pre>
+<h3 id="execute-command-on-"><a class="header" href="#execute-command-on-">EXECUTE ‘command’ [ON …]</a></h3>
+<p>Allowed for readable external web tables or writable external tables only. For readable external web tables, specifies the OS command to be run by the segment instances. The command can be a single OS command or a script. The <code>ON</code> clause is used to specify which segment instances will run the given command.</p>
+<pre><code>-   ON ALL is the default. The command will be run by every active \(primary\) segment instance on all segment hosts in the SynxDB system. If the command runs a script, that script must reside in the same location on all of the segment hosts and be executable by the SynxDB superuser \(`gpadmin`\).
+-   ON MASTER runs the command on the master host only.
+
+    &gt; **Note** Logging is not supported for external web tables when the `ON MASTER` clause is specified.
+
+-   ON number means the command will be run by the specified number of segments. The particular segments are chosen randomly at runtime by the SynxDB system. If the command runs a script, that script must reside in the same location on all of the segment hosts and be executable by the SynxDB superuser \(`gpadmin`\).
+-   HOST means the command will be run by one segment on each segment host \(once per segment host\), regardless of the number of active segment instances per host.
+-   HOST segment\_hostname means the command will be run by all active \(primary\) segment instances on the specified segment host.
+-   SEGMENT segment\_id means the command will be run only once by the specified segment. You can determine a segment instance's ID by looking at the content number in the system catalog table [gp\_segment\_configuration](../system_catalogs/gp_segment_configuration.html). The content ID of the SynxDB master is always `-1`.
+
+For writable external tables, the command specified in the `EXECUTE` clause must be prepared to have data piped into it. Since all segments that have data to send will write their output to the specified command or program, the only available option for the `ON` clause is `ON ALL`.
+</code></pre>
+<h3 id="format-text--csv-options"><a class="header" href="#format-text--csv-options">FORMAT ‘TEXT | CSV’ (options)</a></h3>
+<p>When the <code>FORMAT</code> clause identfies delimited text (<code>TEXT</code>) or comma separated values (<code>CSV</code>) format, formatting options are similar to those available with the PostgreSQL <a href="COPY.html">COPY</a> command. If the data in the file does not use the default column delimiter, escape character, null string and so on, you must specify the additional formatting options so that the data in the external file is read correctly by SynxDB. For information about using a custom format, see “Loading and Unloading Data” in the <em>SynxDB Administrator Guide</em>.</p>
+<p>If you use the <code>pxf</code> protocol to access an external data source, refer to <a href="../../admin_guide/external/pxf-overview.html">Accessing External Data with PXF</a> for information about using PXF.</p>
+<h3 id="format-custom-formatterformatter_specification"><a class="header" href="#format-custom-formatterformatter_specification">FORMAT ‘CUSTOM’ (formatter=formatter_specification)</a></h3>
+<p>Specifies a custom data format. The formatter_specification specifies the function to use to format the data, followed by comma-separated parameters to the formatter function. The length of the formatter specification, the string including <code>Formatter=</code>, can be up to approximately 50K bytes.</p>
+<p>If you use the <code>pxf</code> protocol to access an external data source, refer to <a href="../../admin_guide/external/pxf-overview.html">Accessing External Data with PXF</a> for information about using PXF.</p>
+<p>For general information about using a custom format, see “Loading and Unloading Data” in the <em>SynxDB Administrator Guide</em>.</p>
+<h3 id="delimiter"><a class="header" href="#delimiter">DELIMITER</a></h3>
+<p>Specifies a single ASCII character that separates columns within each row (line) of data. The default is a tab character in <code>TEXT</code> mode, a comma in <code>CSV</code> mode. In <code>TEXT</code> mode for readable external tables, the delimiter can be set to <code>OFF</code> for special use cases in which unstructured data is loaded into a single-column table.</p>
+<p>For the <code>s3</code> protocol, the delimiter cannot be a newline character (<code>\n</code>) or a carriage return character (<code>\r</code>).</p>
+<h3 id="null"><a class="header" href="#null">NULL</a></h3>
+<p>Specifies the string that represents a <code>NULL</code> value. The default is <code>\N</code> (backslash-N) in <code>TEXT</code> mode, and an empty value with no quotations in <code>CSV</code> mode. You might prefer an empty string even in <code>TEXT</code> mode for cases where you do not want to distinguish <code>NULL</code> values from empty strings. When using external and web tables, any data item that matches this string will be considered a <code>NULL</code> value.</p>
+<p>As an example for the <code>text</code> format, this <code>FORMAT</code> clause can be used to specify that the string of two single quotes (<code>''</code>) is a <code>NULL</code> value.</p>
+<pre><code>FORMAT 'text' (delimiter ',' null '\'\'\'\'' )
+</code></pre>
+<h3 id="escape"><a class="header" href="#escape">ESCAPE</a></h3>
+<p>Specifies the single character that is used for C escape sequences (such as <code>\n</code>,<code>\t</code>,<code>\100</code>, and so on) and for escaping data characters that might otherwise be taken as row or column delimiters. Make sure to choose an escape character that is not used anywhere in your actual column data. The default escape character is a \ (backslash) for text-formatted files and a <code>"</code> (double quote) for csv-formatted files, however it is possible to specify another character to represent an escape. It is also possible to deactivate escaping in text-formatted files by specifying the value <code>'OFF'</code> as the escape value. This is very useful for data such as text-formatted web log data that has many embedded backslashes that are not intended to be escapes.</p>
+<h3 id="newline"><a class="header" href="#newline">NEWLINE</a></h3>
+<p>Specifies the newline used in your data files – <code>LF</code> (Line feed, 0x0A), <code>CR</code> (Carriage return, 0x0D), or <code>CRLF</code> (Carriage return plus line feed, 0x0D 0x0A). If not specified, a SynxDB segment will detect the newline type by looking at the first row of data it receives and using the first newline type encountered.</p>
+<h3 id="header"><a class="header" href="#header">HEADER</a></h3>
+<p>For readable external tables, specifies that the first line in the data file(s) is a header row (contains the names of the table columns) and should not be included as data for the table. If using multiple data source files, all files must have a header row.</p>
+<p>For the <code>s3</code> protocol, the column names in the header row cannot contain a newline character (<code>\n</code>) or a carriage return (<code>\r</code>).</p>
+<p>The <code>pxf</code> protocol does not support the <code>HEADER</code> formatting option.</p>
+<h3 id="quote"><a class="header" href="#quote">QUOTE</a></h3>
+<p>Specifies the quotation character for <code>CSV</code> mode. The default is double-quote (<code>"</code>).</p>
+<h3 id="force-not-null"><a class="header" href="#force-not-null">FORCE NOT NULL</a></h3>
+<p>In <code>CSV</code> mode, processes each specified column as though it were quoted and hence not a <code>NULL</code> value. For the default null string in <code>CSV</code> mode (nothing between two delimiters), this causes missing values to be evaluated as zero-length strings.</p>
+<h3 id="force-quote"><a class="header" href="#force-quote">FORCE QUOTE</a></h3>
+<p>In <code>CSV</code> mode for writable external tables, forces quoting to be used for all non-<code>NULL</code> values in each specified column. If <code>*</code> is specified then non-<code>NULL</code> values will be quoted in all columns. <code>NULL</code> output is never quoted.</p>
+<h3 id="fill-missing-fields"><a class="header" href="#fill-missing-fields">FILL MISSING FIELDS</a></h3>
+<p>In both <code>TEXT</code> and <code>CSV</code> mode for readable external tables, specifying <code>FILL MISSING FIELDS</code> will set missing trailing field values to <code>NULL</code> (instead of reporting an error) when a row of data has missing data fields at the end of a line or row. Blank rows, fields with a <code>NOT NULL</code> constraint, and trailing delimiters on a line will still report an error.</p>
+<h3 id="encoding-encoding"><a class="header" href="#encoding-encoding">ENCODING ‘encoding’</a></h3>
+<p>Character set encoding to use for the external table. Specify a string constant (such as <code>'SQL_ASCII'</code>), an integer encoding number, or <code>DEFAULT</code> to use the default server encoding. See <a href="../character_sets.html">Character Set Support</a>.</p>
+<h3 id="log-errors-persistently"><a class="header" href="#log-errors-persistently">LOG ERRORS [PERSISTENTLY]</a></h3>
+<p>This is an optional clause that can precede a <code>SEGMENT REJECT LIMIT</code> clause to log information about rows with formatting errors. The error log data is stored internally. If error log data exists for a specified external table, new data is appended to existing error log data. The error log data is not replicated to mirror segments.</p>
+<p>The data is deleted when the external table is dropped unless you specify the keyword <code>PERSISTENTLY</code>. If the keyword is specified, the log data persists after the external table is dropped.</p>
+<p>The error log data is accessed with the SynxDB built-in SQL function <code>gp_read_error_log()</code>, or with the SQL function <code>gp_read_persistent_error_log()</code> if the <code>PERSISTENTLY</code> keyword is specified.</p>
+<p>If you use the <code>PERSISTENTLY</code> keyword, you must install the functions that manage the persistent error log information.</p>
+<p>See <a href="#section8">Notes</a> for information about the error log information and built-in functions for viewing and managing error log information.</p>
+<h3 id="segment-reject-limit-count-rows--percent"><a class="header" href="#segment-reject-limit-count-rows--percent">SEGMENT REJECT LIMIT count [ROWS | PERCENT]</a></h3>
+<p>Runs a <code>COPY FROM</code> operation in single row error isolation mode. If the input rows have format errors they will be discarded provided that the reject limit count is not reached on any SynxDB segment instance during the load operation. The reject limit count can be specified as number of rows (the default) or percentage of total rows (1-100). If <code>PERCENT</code> is used, each segment starts calculating the bad row percentage only after the number of rows specified by the parameter <code>gp_reject_percent_threshold</code> has been processed. The default for <code>gp_reject_percent_threshold</code> is 300 rows. Constraint errors such as violation of a <code>NOT NULL</code>, <code>CHECK</code>, or <code>UNIQUE</code> constraint will still be handled in “all-or-nothing” input mode. If the limit is not reached, all good rows will be loaded and any error rows discarded.</p>
+<blockquote>
+<p><strong>Note</strong> When reading an external table, SynxDB limits the initial number of rows that can contain formatting errors if the <code>SEGMENT REJECT LIMIT</code> is not triggered first or is not specified. If the first 1000 rows are rejected, the <code>COPY</code> operation is stopped and rolled back.</p>
+</blockquote>
+<p>The limit for the number of initial rejected rows can be changed with the SynxDB server configuration parameter <code>gp_initial_bad_row_limit</code>. See <a href="../config_params/guc_config.html">Server Configuration Parameters</a> for information about the parameter.</p>
+<h3 id="distributed-by-column-opclass----distributed-randomly"><a class="header" href="#distributed-by-column-opclass----distributed-randomly">DISTRIBUTED BY ({column [opclass]}, [ … ] )<br/>DISTRIBUTED RANDOMLY</a></h3>
+<p>Used to declare the SynxDB distribution policy for a writable external table. By default, writable external tables are distributed randomly. If the source table you are exporting data from has a hash distribution policy, defining the same distribution key column(s) and operator class(es), <code>oplcass</code>, for the writable external table will improve unload performance by eliminating the need to move rows over the interconnect. When you issue an unload command such as <code>INSERT INTO wex\_table SELECT * FROM source\_table</code>, the rows that are unloaded can be sent directly from the segments to the output location if the two tables have the same hash distribution policy.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section5"></a>Examples</a></h2>
+<p>Start the <code>gpfdist</code> file server program in the background on port <code>8081</code> serving files from directory <code>/var/data/staging</code>:</p>
+<pre><code>gpfdist -p 8081 -d /var/data/staging -l /home/&lt;gpadmin&gt;/log &amp;
+</code></pre>
+<p>Create a readable external table named <code>ext_customer</code> using the <code>gpfdist</code> protocol and any text formatted files (<code>*.txt</code>) found in the <code>gpfdist</code> directory. The files are formatted with a pipe (<code>|</code>) as the column delimiter and an empty space as <code>NULL</code>. Also access the external table in single row error isolation mode:</p>
+<pre><code>CREATE EXTERNAL TABLE ext_customer
+   (id int, name text, sponsor text) 
+   LOCATION ( 'gpfdist://filehost:8081/*.txt' ) 
+   FORMAT 'TEXT' ( DELIMITER '|' NULL ' ')
+   LOG ERRORS SEGMENT REJECT LIMIT 5;
+</code></pre>
+<p>Create the same readable external table definition as above, but with CSV formatted files:</p>
+<pre><code>CREATE EXTERNAL TABLE ext_customer 
+   (id int, name text, sponsor text) 
+   LOCATION ( 'gpfdist://filehost:8081/*.csv' ) 
+   FORMAT 'CSV' ( DELIMITER ',' );
+</code></pre>
+<p>Create a readable external table named <code>ext_expenses</code> using the <code>file</code> protocol and several CSV formatted files that have a header row:</p>
+<pre><code>CREATE EXTERNAL TABLE ext_expenses (name text, date date, 
+amount float4, category text, description text) 
+LOCATION ( 
+'file://seghost1/dbfast/external/expenses1.csv',
+'file://seghost1/dbfast/external/expenses2.csv',
+'file://seghost2/dbfast/external/expenses3.csv',
+'file://seghost2/dbfast/external/expenses4.csv',
+'file://seghost3/dbfast/external/expenses5.csv',
+'file://seghost3/dbfast/external/expenses6.csv' 
+)
+FORMAT 'CSV' ( HEADER );
+</code></pre>
+<p>Create a readable external web table that runs a script once per segment host:</p>
+<pre><code>CREATE EXTERNAL WEB TABLE log_output (linenum int, message 
+text)  EXECUTE '/var/load_scripts/get_log_data.sh' ON HOST 
+ FORMAT 'TEXT' (DELIMITER '|');
+</code></pre>
+<p>Create a writable external table named <code>sales_out</code> that uses <code>gpfdist</code> to write output data to a file named <code>sales.out</code>. The files are formatted with a pipe (<code>|</code>) as the column delimiter and an empty space as <code>NULL</code>.</p>
+<pre><code>CREATE WRITABLE EXTERNAL TABLE sales_out (LIKE sales) 
+   LOCATION ('gpfdist://etl1:8081/sales.out')
+   FORMAT 'TEXT' ( DELIMITER '|' NULL ' ')
+   DISTRIBUTED BY (txn_id);
+</code></pre>
+<p>Create a writable external web table that pipes output data received by the segments to an executable script named <code>to_adreport_etl.sh</code>:</p>
+<pre><code>CREATE WRITABLE EXTERNAL WEB TABLE campaign_out 
+(LIKE campaign) 
+ EXECUTE '/var/unload_scripts/to_adreport_etl.sh'
+ FORMAT 'TEXT' (DELIMITER '|');
+</code></pre>
+<p>Use the writable external table defined above to unload selected data:</p>
+<pre><code>INSERT INTO campaign_out SELECT * FROM campaign WHERE 
+customer_id=123;
+</code></pre>
+<h2 id="notes"><a class="header" href="#notes"><a id="section8"></a>Notes</a></h2>
+<p>When you specify the <code>LOG ERRORS</code> clause, SynxDB captures errors that occur while reading the external table data. For information about the error log format, see <a href="../../admin_guide/load/topics/g-viewing-bad-rows-in-the-error-table-or-error-log.html">Viewing Bad Rows in the Error Log</a>.</p>
+<p>You can view and manage the captured error log data. The functions to manage log data depend on whether the data is persistent (the <code>PERSISTENTLY</code> keyword is used with the <code>LOG ERRORS</code> clause).</p>
+<ul>
+<li>
+<p>Functions that manage non-persistent error log data from external tables that were defined without the <code>PERSISTENTLY</code> keyword.</p>
+<ul>
+<li>
+<p>The built-in SQL function <code>gp_read_error_log('table\_name')</code> displays error log information for an external table. This example displays the error log data from the external table <code>ext_expenses</code>.</p>
+<pre><code>SELECT * from gp_read_error_log('ext_expenses');
+</code></pre>
+<p>The function returns no data if you created the external table with the <code>LOG ERRORS PERSISTENTLY</code> clause, or if the external table does not exist.</p>
+</li>
+<li>
+<p>The built-in SQL function <code>gp_truncate_error_log('table\_name')</code> deletes the error log data for table_name. This example deletes the error log data captured from the external table <code>ext_expenses</code>:</p>
+<pre><code>SELECT gp_truncate_error_log('ext_expenses'); 
+</code></pre>
+<p>Dropping the table also deletes the table’s log data. The function does not truncate log data if the external table is defined with the <code>LOG ERRORS PERSISTENTLY</code> clause.</p>
+<p>The function returns <code>FALSE</code> if the table does not exist.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Functions that manage persistent error log data from external tables that were defined with the <code>PERSISTENTLY</code> keyword.</p>
+<blockquote>
+<p><strong>Note</strong> The functions that manage persistent error log data from external tables are defined in the file <code>$GPHOME/share/postgresql/contrib/gpexterrorhandle.sql</code>. The functions must be installed in the databases that use persistent error log data from an external table. This <code>psql</code> command installs the functions into the database <code>testdb</code>.</p>
+</blockquote>
+<pre><code>psql -d test -U gpadmin -f $GPHOME/share/postgresql/contrib/gpexterrorhandle.sql
+</code></pre>
+<ul>
+<li>
+<p>The SQL function <code>gp_read_persistent_error_log('table\_name')</code> displays persistent log data for an external table.</p>
+<p>The function returns no data if you created the external table without the <code>PERSISTENTLY</code> keyword. The function returns persistent log data for an external table even after the table has been dropped.</p>
+</li>
+<li>
+<p>The SQL function <code>gp_truncate_persistent_error_log('table\_name')</code> truncates persistent log data for a table.</p>
+<p>For persistent log data, you must manually delete the data. Dropping the external table does not delete persistent log data.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>These items apply to both non-persistent and persistent error log data and the related functions.</p>
+<ul>
+<li>The <code>gp_read_*</code> functions require <code>SELECT</code> privilege on the table.</li>
+<li>The <code>gp_truncate_*</code> functions require owner privilege on the table.</li>
+<li>You can use the <code>*</code> wildcard character to delete error log information for existing tables in the current database. Specify the string <code>*.*</code> to delete all database error log information, including error log information that was not deleted due to previous database issues. If <code>*</code> is specified, database owner privilege is required. If <code>*.*</code> is specified, operating system super-user privilege is required. Non-persistent and persistent error log data must be deleted with their respective <code>gp_truncate_*</code> functions.</li>
+</ul>
+</li>
+</ul>
+<p>When multiple SynxDB external tables are defined with the <code>gpfdist</code>, <code>gpfdists</code>, or <code>file</code> protocol and access the same named pipe a Linux system, SynxDB restricts access to the named pipe to a single reader. An error is returned if a second reader attempts to access the named pipe.</p>
+<h2 id="compatibility"><a class="header" href="#compatibility"><a id="section6"></a>Compatibility</a></h2>
+<p><code>CREATE EXTERNAL TABLE</code> is a SynxDB extension. The SQL standard makes no provisions for external tables.</p>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section7"></a>See Also</a></h2>
+<p><a href="CREATE_TABLE_AS.html">CREATE TABLE AS</a>, <a href="CREATE_TABLE.html">CREATE TABLE</a>, <a href="COPY.html">COPY</a>, <a href="SELECT_INTO.html">SELECT INTO</a>, <a href="INSERT.html">INSERT</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/sql_commands/CREATE_EXTENSION.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/sql_commands/CREATE_FOREIGN_DATA_WRAPPER.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/sql_commands/CREATE_EXTENSION.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/sql_commands/CREATE_FOREIGN_DATA_WRAPPER.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,672 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>PL/Python Language - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="plpython-language"><a class="header" href="#plpython-language">PL/Python Language</a></h1>
+<p>This section contains an overview of the SynxDB PL/Python Language.</p>
+<ul>
+<li><a href="#topic2">About SynxDB PL/Python</a></li>
+<li><a href="#topic4">Enabling and Removing PL/Python support</a></li>
+<li><a href="#topic7">Developing Functions with PL/Python</a></li>
+<li><a href="#topic10">Installing Python Modules</a></li>
+<li><a href="#topic11">Examples</a></li>
+<li><a href="#topic12">References</a></li>
+</ul>
+<h2 id="about-synxdb-plpython"><a class="header" href="#about-synxdb-plpython"><a id="topic2"></a>About SynxDB PL/Python</a></h2>
+<p>PL/Python is a loadable procedural language. With the SynxDB PL/Python extensions, you can write SynxDB user-defined functions in Python that take advantage of Python features and modules to quickly build robust database applications.</p>
+<p>You can run PL/Python code blocks as anonymous code blocks. See the <a href="../ref_guide/sql_commands/DO.html">DO</a> command in the <em>SynxDB Reference Guide</em>.</p>
+<p>The SynxDB PL/Python extensions are installed by default with SynxDB. Two extensions are provided:</p>
+<ul>
+<li><code>plpythonu</code> supports developing functions using Python 2.7. SynxDB installs a version of Python 2.7 for <code>plpythonu</code> at <code>$GPHOME/ext/python</code>.</li>
+<li><code>plpython3u</code>supports developing functions using Python 3.9. SynxDB installs a compatible Python at <code>$GPHOME/ext/python3.9</code>.</li>
+</ul>
+<h3 id="synxdb-plpython-limitations"><a class="header" href="#synxdb-plpython-limitations"><a id="topic3"></a>SynxDB PL/Python Limitations</a></h3>
+<ul>
+<li>SynxDB does not support PL/Python triggers.</li>
+<li>PL/Python is available only as a SynxDB untrusted language.</li>
+<li>Updatable cursors (<code>UPDATE...WHERE CURRENT OF</code> and <code>DELETE...WHERE CURRENT OF</code>) are not supported.</li>
+<li>Within a single SynxDB session, all PL/Python functions must be called using either <code>plpythonu</code> or <code>plpython3u</code>. You must start a new session before you can call a function created with different PL/Python version (for example, in order to call a <code>plpythonu</code> function after calling a <code>plpython3u</code> function, or vice versa).</li>
+</ul>
+<h2 id="enabling-and-removing-plpython-support"><a class="header" href="#enabling-and-removing-plpython-support"><a id="topic4"></a>Enabling and Removing PL/Python support</a></h2>
+<p>The PL/Python language is installed with SynxDB. To create and run a PL/Python user-defined function (UDF) in a database, you must register the PL/Python language with the database.</p>
+<h3 id="enabling-plpython-support"><a class="header" href="#enabling-plpython-support"><a id="topic5"></a>Enabling PL/Python Support</a></h3>
+<p>SynxDB installs compatible versions of Python 2.7 and 3.9 in <code>$GPHOME/ext</code>.</p>
+<p>For each database that requires its use, register the PL/Python language with the SQL command <code>CREATE EXTENSION</code>. Separate extensions are provided for Python 2.7 and Python 3.9 support, and you can install either or both extensions to a database.</p>
+<p>Because PL/Python is an untrusted language, only superusers can register PL/Python with a database.</p>
+<p>For example, run this command as the <code>gpadmin</code> user to register PL/Python with Python 2.7 support in the database named <code>testdb</code>:</p>
+<pre><code>$ psql -d testdb -c 'CREATE EXTENSION plpythonu;'
+</code></pre>
+<p>Run this command as the <code>gpadmin</code> user to register PL/Python with Python 3.9 support:</p>
+<pre><code>$ psql -d testdb -c 'CREATE EXTENSION plpython3u;'
+</code></pre>
+<p>PL/Python is registered as an untrusted language.</p>
+<h3 id="removing-plpython-support"><a class="header" href="#removing-plpython-support"><a id="topic6"></a>Removing PL/Python Support</a></h3>
+<p>For a database that no longer requires the PL/Python language, remove support for PL/Python with the SQL command <code>DROP EXTENSION</code>. Because PL/Python is an untrusted language, only superusers can remove support for the PL/Python language from a database. For example, running this command as the <code>gpadmin</code> user removes support for PL/Python for Python 2.7 from the database named <code>testdb</code>:</p>
+<pre><code>$ psql -d testdb -c 'DROP EXTENSION plpythonu;'
+</code></pre>
+<p>Run this command as the <code>gpadmin</code> user to remove support for PL/Python for Python 3.9:</p>
+<pre><code>$ psql -d testdb -c 'DROP EXTENSION plpython3u;'
+</code></pre>
+<p>The default command fails if any existing objects (such as functions) depend on the language. Specify the <code>CASCADE</code> option to also drop all dependent objects, including functions that you created with PL/Python.</p>
+<h2 id="developing-functions-with-plpython"><a class="header" href="#developing-functions-with-plpython"><a id="topic7"></a>Developing Functions with PL/Python</a></h2>
+<p>The body of a PL/Python user-defined function is a Python script. When the function is called, its arguments are passed as elements of the array <code>args[]</code>. Named arguments are also passed as ordinary variables to the Python script. The result is returned from the PL/Python function with <code>return</code> statement, or <code>yield</code> statement in case of a result-set statement.</p>
+<p>PL/Python translates Python’s <code>None</code> into the SQL <code>null</code> value.</p>
+<h3 id="data-type-mapping"><a class="header" href="#data-type-mapping"><a id="topic_datatypemap"></a>Data Type Mapping</a></h3>
+<p>The SynxDB to Python data type mapping follows.</p>
+<div class="table-wrapper"><table><thead><tr><th>SynxDB Primitive Type</th><th>Python Data Type</th></tr></thead><tbody>
+<tr><td>boolean<sup>1</sup></td><td>bool</td></tr>
+<tr><td>bytea</td><td>bytes</td></tr>
+<tr><td>smallint, bigint, oid</td><td>int</td></tr>
+<tr><td>real, double</td><td>float</td></tr>
+<tr><td>numeric</td><td>decimal</td></tr>
+<tr><td><em>other primitive types</em></td><td>string</td></tr>
+<tr><td>SQL null value</td><td>None</td></tr>
+</tbody></table>
+</div>
+<p><sup>1</sup> When the UDF return type is <code>boolean</code>, the SynxDB evaluates the return value for truth according to Python rules. That is, <code>0</code> and empty string are <code>false</code>, but notably <code>'f'</code> is <code>true</code>.</p>
+<p>Example:</p>
+<pre><code>CREATE OR REPLACE FUNCTION pybool_func(a int) RETURNS boolean AS $$
+# container: plc_python3_shared
+    if (a &gt; 0):
+        return True
+    else:
+        return False
+$$ LANGUAGE plpythonu;
+
+SELECT pybool_func(-1);
+
+ pybool_func
+-------------
+ f
+(1 row)
+
+</code></pre>
+<h3 id="arrays-and-lists"><a class="header" href="#arrays-and-lists"><a id="topic1113"></a>Arrays and Lists</a></h3>
+<p>You pass SQL array values into PL/Python functions with a Python list. Similarly, PL/Python functions return SQL array values as a Python list. In the typical PL/Python usage pattern, you will specify an array with <code>[]</code>.</p>
+<p>The following example creates a PL/Python function that returns an array of integers:</p>
+<pre><code>CREATE FUNCTION return_py_int_array()
+  RETURNS int[]
+AS $$
+  return [1, 11, 21, 31]
+$$ LANGUAGE plpythonu;
+
+SELECT return_py_int_array();
+ return_py_int_array 
+---------------------
+ {1,11,21,31}
+(1 row) 
+</code></pre>
+<p>PL/Python treats multi-dimensional arrays as lists of lists. You pass a multi-dimensional array to a PL/Python function using nested Python lists. When a PL/Python function returns a multi-dimensional array, the inner lists at each level must all be of the same size.</p>
+<p>The following example creates a PL/Python function that takes a multi-dimensional array of integers as input. The function displays the type of the provided argument, and returns the multi-dimensional array:</p>
+<pre><code>CREATE FUNCTION return_multidim_py_array(x int4[]) 
+  RETURNS int4[]
+AS $$
+  plpy.info(x, type(x))
+  return x
+$$ LANGUAGE plpythonu;
+
+SELECT * FROM return_multidim_py_array(ARRAY[[1,2,3], [4,5,6]]);
+INFO:  ([[1, 2, 3], [4, 5, 6]], &lt;type 'list'&gt;)
+CONTEXT:  PL/Python function "return_multidim_py_type"
+ return_multidim_py_array 
+--------------------------
+ {{1,2,3},{4,5,6}}
+(1 row) 
+</code></pre>
+<p>PL/Python also accepts other Python sequences, such as tuples, as function arguments for backwards compatibility with SynxDB versions where multi-dimensional arrays were not supported. In such cases, the Python sequences are always treated as one-dimensional arrays because they are ambiguous with composite types.</p>
+<h3 id="composite-types"><a class="header" href="#composite-types"><a id="topic1117"></a>Composite Types</a></h3>
+<p>You pass composite-type arguments to a PL/Python function using Python mappings. The element names of the mapping are the attribute names of the composite types. If an attribute has the null value, its mapping value is <code>None</code>.</p>
+<p>You can return a composite type result as a sequence type (tuple or list). You must specify a composite type as a tuple, rather than a list, when it is used in a multi-dimensional array. You cannot return an array of composite types as a list because it would be ambiguous to determine whether the list represents a composite type or another array dimension. In the typical usage pattern, you will specify composite type tuples with <code>()</code>.</p>
+<p>In the following example, you create a composite type and a PL/Python function that returns an array of the composite type:</p>
+<pre><code>CREATE TYPE type_record AS (
+  first text,
+  second int4
+);
+
+CREATE FUNCTION composite_type_as_list()
+  RETURNS type_record[]
+AS $$              
+  return [[('first', 1), ('second', 1)], [('first', 2), ('second', 2)], [('first', 3), ('second', 3)]];
+$$ LANGUAGE plpythonu;
+
+SELECT * FROM composite_type_as_list();
+                               composite_type_as_list                           
+------------------------------------------------------------------------------------
+ {{"(first,1)","(second,1)"},{"(first,2)","(second,2)"},{"(first,3)","(second,3)"}}
+(1 row) 
+</code></pre>
+<p>Refer to the PostgreSQL <a href="https://www.postgresql.org/docs/9.4/plpython-data.html#PLPYTHON-ARRAYS">Arrays, Lists</a> documentation for additional information on PL/Python handling of arrays and composite types.</p>
+<h3 id="set-returning-functions"><a class="header" href="#set-returning-functions"><a id="topic_setresult"></a>Set-Returning Functions</a></h3>
+<p>A Python function can return a set of scalar or composite types from any sequence type (for example: tuple, list, set).</p>
+<p>In the following example, you create a composite type and a Python function that returns a <code>SETOF</code> of the composite type:</p>
+<pre><code>CREATE TYPE greeting AS (
+  how text,
+  who text
+);
+
+CREATE FUNCTION greet (how text)
+  RETURNS SETOF greeting
+AS $$
+  # return tuple containing lists as composite types
+  # all other combinations work also
+  return ( {"how": how, "who": "World"}, {"how": how, "who": "SynxDB"} )
+$$ LANGUAGE plpythonu;
+
+select greet('hello');
+       greet
+-------------------
+ (hello,World)
+ (hello,SynxDB)
+(2 rows)
+</code></pre>
+<h3 id="running-and-preparing-sql-queries"><a class="header" href="#running-and-preparing-sql-queries"><a id="topic8"></a>Running and Preparing SQL Queries</a></h3>
+<p>The PL/Python <code>plpy</code> module provides two Python functions to run an SQL query and prepare an execution plan for a query, <code>plpy.execute</code> and <code>plpy.prepare</code>. Preparing the execution plan for a query is useful if you run the query from multiple Python functions.</p>
+<p>PL/Python also supports the <code>plpy.subtransaction()</code> function to help manage <code>plpy.execute</code> calls in an explicit subtransaction. See <a href="https://www.postgresql.org/docs/9.4/plpython-subtransaction.html">Explicit Subtransactions</a> in the PostgreSQL documentation for additional information about <code>plpy.subtransaction()</code>.</p>
+<h4 id="plpyexecute"><a class="header" href="#plpyexecute"><a id="topic_jnf_45f_zt"></a>plpy.execute</a></h4>
+<p>Calling <code>plpy.execute</code> with a query string and an optional limit argument causes the query to be run and the result to be returned in a Python result object. The result object emulates a list or dictionary object. The rows returned in the result object can be accessed by row number and column name. The result set row numbering starts with 0 (zero). The result object can be modified. The result object has these additional methods:</p>
+<ul>
+<li><code>nrows</code> that returns the number of rows returned by the query.</li>
+<li><code>status</code> which is the <code>SPI_execute()</code> return value.</li>
+</ul>
+<p>For example, this Python statement in a PL/Python user-defined function runs a query.</p>
+<pre><code>rv = plpy.execute("SELECT * FROM my_table", 5)
+</code></pre>
+<p>The <code>plpy.execute</code> function returns up to 5 rows from <code>my_table</code>. The result set is stored in the <code>rv</code> object. If <code>my_table</code> has a column <code>my_column</code>, it would be accessed as:</p>
+<pre><code>my_col_data = rv[i]["my_column"]
+</code></pre>
+<p>Since the function returns a maximum of 5 rows, the index i can be an integer between 0 and 4.</p>
+<h4 id="plpyprepare"><a class="header" href="#plpyprepare"><a id="topic_jwf_p5f_zt"></a>plpy.prepare</a></h4>
+<p>The function <code>plpy.prepare</code> prepares the execution plan for a query. It is called with a query string and a list of parameter types, if you have parameter references in the query. For example, this statement can be in a PL/Python user-defined function:</p>
+<pre><code>plan = plpy.prepare("SELECT last_name FROM my_users WHERE 
+  first_name = $1", [ "text" ])
+</code></pre>
+<p>The string <code>text</code> is the data type of the variable that is passed for the variable $1. After preparing a statement, you use the function <code>plpy.execute</code> to run it:</p>
+<pre><code>rv = plpy.execute(plan, [ "Fred" ], 5)
+</code></pre>
+<p>The third argument is the limit for the number of rows returned and is optional.</p>
+<p>When you prepare an execution plan using the PL/Python module the plan is automatically saved. See the Postgres Server Programming Interface (SPI) documentation for information about the execution plans <a href="https://www.postgresql.org/docs/9.4/spi.html">https://www.postgresql.org/docs/9.4/spi.html</a>.</p>
+<p>To make effective use of saved plans across function calls you use one of the Python persistent storage dictionaries SD or GD.</p>
+<p>The global dictionary SD is available to store data between function calls. This variable is private static data. The global dictionary GD is public data, available to all Python functions within a session. Use GD with care.</p>
+<p>Each function gets its own execution environment in the Python interpreter, so that global data and function arguments from <code>myfunc</code> are not available to <code>myfunc2</code>. The exception is the data in the GD dictionary, as mentioned previously.</p>
+<p>This example uses the SD dictionary:</p>
+<pre><code>CREATE FUNCTION usesavedplan() RETURNS trigger AS $$
+  if SD.has_key("plan"):
+    plan = SD["plan"]
+  else:
+    plan = plpy.prepare("SELECT 1")
+    SD["plan"] = plan
+
+  # rest of function
+
+$$ LANGUAGE plpythonu;
+</code></pre>
+<h3 id="handling-python-errors-and-messages"><a class="header" href="#handling-python-errors-and-messages"><a id="topic_s3d_vc4_xt"></a>Handling Python Errors and Messages</a></h3>
+<p>The Python module <code>plpy</code> implements these functions to manage errors and messages:</p>
+<ul>
+<li><code>plpy.debug</code></li>
+<li><code>plpy.log</code></li>
+<li><code>plpy.info</code></li>
+<li><code>plpy.notice</code></li>
+<li><code>plpy.warning</code></li>
+<li><code>plpy.error</code></li>
+<li><code>plpy.fatal</code></li>
+<li><code>plpy.debug</code></li>
+</ul>
+<p>The message functions <code>plpy.error</code> and <code>plpy.fatal</code> raise a Python exception which, if uncaught, propagates out to the calling query, causing the current transaction or subtransaction to be cancelled. The functions <code>raise plpy.ERROR(msg)</code> and <code>raise plpy.FATAL(msg)</code> are equivalent to calling <code>plpy.error</code> and <code>plpy.fatal</code>, respectively. The other message functions only generate messages of different priority levels.</p>
+<p>Whether messages of a particular priority are reported to the client, written to the server log, or both is controlled by the SynxDB server configuration parameters <code>log_min_messages</code> and <code>client_min_messages</code>. For information about the parameters see the <em>SynxDB Reference Guide</em>.</p>
+<h3 id="using-the-dictionary-gd-to-improve-plpython-performance"><a class="header" href="#using-the-dictionary-gd-to-improve-plpython-performance"><a id="topic_hfj_dgg_mjb"></a>Using the dictionary GD To Improve PL/Python Performance</a></h3>
+<p>In terms of performance, importing a Python module is an expensive operation and can affect performance. If you are importing the same module frequently, you can use Python global variables to load the module on the first invocation and not require importing the module on subsequent calls. The following PL/Python function uses the GD persistent storage dictionary to avoid importing a module if it has already been imported and is in the GD.</p>
+<pre><code>psql=#
+   CREATE FUNCTION pytest() returns text as $$ 
+      if 'mymodule' not in GD:
+        import mymodule
+        GD['mymodule'] = mymodule
+    return GD['mymodule'].sumd([1,2,3])
+$$;
+</code></pre>
+<h2 id="installing-python-modules"><a class="header" href="#installing-python-modules"><a id="topic10"></a>Installing Python Modules</a></h2>
+<p>When you install a Python module for development with PL/Python, the SynxDB Python environment must have the module added to it across all segment hosts and mirror hosts in the cluster. When expanding SynxDB, you must add the Python modules to the new segment hosts.</p>
+<p>SynxDB provides a collection of data science-related Python modules that you can use to easily develop PL/Python functions in SynxDB. The modules are provided as two <code>.gppkg</code> format files that can be installed into a SynxDB cluster using the <code>gppkg</code> utility, with one package supporting development with Python 2.7 and the other supporting development with Python 3.9. See <a href="/../install_guide/install_python_dsmod.html">Python Data Science Module Packages</a> for installation instructions and descriptions of the provided modules.</p>
+<p>To develop with modules that are not part of th Python Data Science Module packages, you can use SynxDB utilities such as <code>gpssh</code> and <code>gpscp</code> to run commands or copy files to all hosts in the SynxDB cluster. These sections describe how to use those utilities to install and use additional Python modules:</p>
+<ul>
+<li><a href="#about_python_env">Verifying the Python Environment</a></li>
+<li><a href="#topic_yx3_yjq_rt">Installing Python pip</a></li>
+<li><a href="#topic_g4j_hmt_ycb">Installing Python Packages for Python 2.7</a></li>
+<li><a href="#pip39">Installing Python Packages for Python 3.9</a></li>
+<li><a href="#topic_j53_5jq_rt">Building and Installing Python Modules Locally</a></li>
+<li><a href="#topic_e4p_gcw_vt">Testing Installed Python Modules</a></li>
+</ul>
+<h3 id="verifying-the-python-environment"><a class="header" href="#verifying-the-python-environment"><a id="about_python_env"></a>Verifying the Python Environment</a></h3>
+<p>As part of the SynxDB installation, the <code>gpadmin</code> user environment is configured to use Python that is installed with SynxDB. To check the Python environment, you can use the <code>which</code> command:</p>
+<pre><code>which python
+</code></pre>
+<p>The command returns the location of the Python installation. All SynxDB installations include Python 2.7 installed as <code>$GPHOME/ext/python</code> and Python 3.9 installed as <code>$GPHOME/ext/python3.9</code>:</p>
+<pre><code>which python3.9
+</code></pre>
+<p>When running shell commands on remote hosts with <code>gpssh</code>, specify the <code>-s</code> option to source the <code>synxdb_path.sh</code> file before running commands on the remote hosts. For example, this command should display the Python installed with SynxDB on each host specified in the <code>gpdb_hosts</code> file.</p>
+<pre><code>gpssh -s -f gpdb_hosts which python
+</code></pre>
+<p>To display the list of currently installed Python 2.7 modules, run this command.</p>
+<pre><code>python -c "help('modules')"
+</code></pre>
+<p>You can optionally run <code>gpssh</code> in interactive mode to display Python modules on remote hosts. This example starts <code>gpssh</code> in interactive mode and lists the Python modules on the SynxDB host <code>sdw1</code>.</p>
+<pre><code>$ gpssh -s -h sdw1
+=&gt; python -c "help('modules')"
+. . . 
+=&gt; exit
+$
+</code></pre>
+<h3 id="installing-python-pip"><a class="header" href="#installing-python-pip"><a id="topic_yx3_yjq_rt"></a>Installing Python pip</a></h3>
+<p>The Python utility <code>pip</code> installs Python packages that contain Python modules and other resource files from versioned archive files.</p>
+<p>Run this command to install <code>pip</code> for Python 2.7:</p>
+<pre><code>python -m ensurepip --default-pip
+</code></pre>
+<p>For Python 3.9, use:</p>
+<pre><code>python3.9 -m ensurepip --default-pip
+</code></pre>
+<p>The command runs the <code>ensurepip</code> module to bootstrap (install and configure) the <code>pip</code> utility from the local Python installation.</p>
+<p>You can run this command to ensure the <code>pip</code>, <code>setuptools</code> and <code>wheel</code> projects are current. Current Python projects ensure that you can install Python packages from source distributions or pre-built distributions (wheels).</p>
+<pre><code>python -m pip install --upgrade pip setuptools wheel
+</code></pre>
+<p>You can use <code>gpssh</code> to run the commands on the SynxDB hosts. This example runs <code>gpssh</code> in interactive mode to install <code>pip</code> on the hosts listed in the file <code>gpdb_hosts</code>.</p>
+<pre><code>$ gpssh -s -f gpdb_hosts
+=&gt; python -m ensurepip --default-pip
+[centos6-mdw1] Ignoring indexes: https://pypi.python.org/simple
+[centos6-mdw1] Collecting setuptools
+[centos6-mdw1] Collecting pip
+[centos6-mdw1] Installing collected packages: setuptools, pip
+[centos6-mdw1] Successfully installed pip-8.1.1 setuptools-20.10.1
+[centos6-sdw1] Ignoring indexes: https://pypi.python.org/simple
+[centos6-sdw1] Collecting setuptools
+[centos6-sdw1] Collecting pip
+[centos6-sdw1] Installing collected packages: setuptools, pip
+[centos6-sdw1] Successfully installed pip-8.1.1 setuptools-20.10.1
+=&gt; exit
+$
+</code></pre>
+<p>The <code>=&gt;</code> is the inactive prompt for <code>gpssh</code>. The utility displays the output from each host. The <code>exit</code> command exits from <code>gpssh</code> interactive mode.</p>
+<p>This <code>gpssh</code> command runs a single command on all hosts listed in the file <code>gpdb_hosts</code>.</p>
+<pre><code>gpssh -s -f gpdb_hosts python -m pip install --upgrade pip setuptools wheel
+</code></pre>
+<p>The utility displays the output from each host.</p>
+<p>For more information about installing Python packages, see <a href="https://packaging.python.org/tutorials/installing-packages/">https://packaging.python.org/tutorials/installing-packages/</a>.</p>
+<h3 id="installing-python-packages-for-python-27"><a class="header" href="#installing-python-packages-for-python-27"><a id="topic_g4j_hmt_ycb"></a>Installing Python Packages for Python 2.7</a></h3>
+<p>After installing <code>pip</code>, you can install Python packages. This command installs the <code>numpy</code> and <code>scipy</code> packages for Python 2.7:</p>
+<pre><code>python -m pip install --user numpy scipy
+</code></pre>
+<p>For Python 3.9, use the <code>python3.9</code> command instead:</p>
+<pre><code>python3.9 -m pip install --user numpy scipy
+</code></pre>
+<p>The <code>--user</code> option attempts to avoid conflicts when installing Python packages.</p>
+<p>You can use <code>gpssh</code> to run the command on the SynxDB hosts.</p>
+<p>For information about these and other Python packages, see <a href="#topic12">References</a>.</p>
+<h3 id="installing-python-packages-for-python-39"><a class="header" href="#installing-python-packages-for-python-39"><a id="pip39"></a>Installing Python Packages for Python 3.9</a></h3>
+<p>By default, <code>synxdb_path.sh</code> changes the <code>PYTHONPATH</code> and <code>PYTHONHOME</code> environment variables for use with the installed Python 2.7 environment. In order to install modules using <code>pip</code> with Python 3.9, you must first <code>unset</code> those parameters. For example to install <code>numpy</code> and <code>scipy</code> for Python 3.9:</p>
+<pre><code>gpssh -s -f gpdb_hosts
+=&gt; unset PYTHONHOME
+=&gt; unset PYTHONPATH
+=&gt; $GPHOME/ext/python3.9 -m pip install numpy scipy
+</code></pre>
+<p>You can optionally install Python 3.9 modules to a non-standard location by using the <code>--prefix</code> option with <code>pip</code>. For example:</p>
+<pre><code>gpssh -s -f gpdb_hosts
+=&gt; unset PYTHONHOME
+=&gt; unset PYTHONPATH
+=&gt; $GPHOME/ext/python3.9 -m pip install --prefix=/home/gpadmin/my_python numpy scipy
+</code></pre>
+<p>If you use this option, keep in mind that the <code>PYTHONPATH</code> environment variable setting is cleared before initializing or executing functions using <code>plpython3u</code>. If you want to use modules installed to a custom location, you must configure the paths to those modules using the SynxDB configuration parameter <code>plpython3.python_path</code> instead of  <code>PYTHONPATH</code>. For example:</p>
+<pre><code>$ psql -d testdb
+testdb=# load 'plpython3';
+testdb=# SET plpython3.python_path='/home/gpadmin/my_python';
+</code></pre>
+<p>SynxDB uses the value of <code>plpython3.python_path</code> to set <code>PLPYTHONPATH</code> in the environment used to create or call <code>plpython3u</code> functions.</p>
+<blockquote>
+<p><strong>Note</strong> <code>plpython3.python_path</code> is provided as part of the <code>plpython3u</code> extension, so you <em>must</em> load the extension (with <code>load 'plpython3';</code>) before you can set this configuration parameter in a session.</p>
+</blockquote>
+<p>Ensure that you configure <code>plpython3.python_path</code> <em>before</em> you create or call <code>plpython3</code> functions in a session. If you set or change the parameter after <code>plpython3u</code> is initialized you receive the error:</p>
+<pre><code>ERROR: SET PYTHONPATH failed, the GUC value can only be changed before initializing the python interpreter.
+</code></pre>
+<p>To set a default value for the configuration parameter, use <code>gpconfig</code> instead:</p>
+<pre><code>gpconfig -c plpython3.python_path \
+    -v "'/home/gpadmin/my_python'" \
+    --skipvalidation
+gpstop -u
+</code></pre>
+<h3 id="building-and-installing-python-modules-locally"><a class="header" href="#building-and-installing-python-modules-locally"><a id="topic_j53_5jq_rt"></a>Building and Installing Python Modules Locally</a></h3>
+<p>If you are building a Python module, you must ensure that the build creates the correct executable. For example on a Linux system, the build should create a 64-bit executable.</p>
+<p>Before building a Python module to be installed, ensure that the appropriate software to build the module is installed and properly configured. The build environment is required only on the host where you build the module.</p>
+<p>You can use the SynxDB utilities <code>gpssh</code> and <code>gpscp</code> to run commands on SynxDB hosts and to copy files to the hosts.</p>
+<h3 id="testing-installed-python-modules"><a class="header" href="#testing-installed-python-modules"><a id="topic_e4p_gcw_vt"></a>Testing Installed Python Modules</a></h3>
+<p>You can create a simple PL/Python user-defined function (UDF) to validate that Python a module is available in the SynxDB. This example tests the NumPy module.</p>
+<p>This PL/Python UDF imports the NumPy module. The function returns <code>SUCCESS</code> if the module is imported, and <code>FAILURE</code> if an import error occurs.</p>
+<pre><code>CREATE OR REPLACE FUNCTION plpy_test(x int)
+returns text
+as $$
+  try:
+      from numpy import *
+      return 'SUCCESS'
+  except ImportError, e:
+      return 'FAILURE'
+$$ language plpythonu;
+</code></pre>
+<p>(If you are using Python 3.9, replace <code>plpythonu</code> with <code>plpython3u</code> in the above command.)</p>
+<p>Create a table that contains data on each SynxDB segment instance. Depending on the size of your SynxDB installation, you might need to generate more data to ensure data is distributed to all segment instances.</p>
+<pre><code>CREATE TABLE DIST AS (SELECT x FROM generate_series(1,50) x ) DISTRIBUTED RANDOMLY ;
+</code></pre>
+<p>This <code>SELECT</code> command runs the UDF on the segment hosts where data is stored in the primary segment instances.</p>
+<pre><code>SELECT gp_segment_id, plpy_test(x) AS status
+  FROM dist
+  GROUP BY gp_segment_id, status
+  ORDER BY gp_segment_id, status;
+</code></pre>
+<p>The <code>SELECT</code> command returns <code>SUCCESS</code> if the UDF imported the Python module on the SynxDB segment instance. If the <code>SELECT</code> command returns <code>FAILURE</code>, you can find the segment host of the segment instance host. The SynxDB system table <code>gp_segment_configuration</code> contains information about mirroring and segment configuration. This command returns the host name for a segment ID.</p>
+<pre><code>SELECT hostname, content AS seg_ID FROM gp_segment_configuration
+  WHERE content = &lt;seg_id&gt; ;
+</code></pre>
+<p>If <code>FAILURE</code> is returned, these are some possible causes:</p>
+<ul>
+<li>
+<p>A problem accessing required libraries. For the NumPy example, a SynxDB might have a problem accessing the OpenBLAS libraries or the Python libraries on a segment host.</p>
+<p>Make sure you get no errors when running command on the segment host as the <code>gpadmin</code> user. This <code>gpssh</code> command tests importing the numpy module on the segment host <code>mdw1</code>.</p>
+<pre><code>gpssh -s -h mdw1 python -c "import numpy"
+</code></pre>
+</li>
+<li>
+<p>If the Python <code>import</code> command does not return an error, environment variables might not be configured in the SynxDB environment. For example, the SynxDB might not have been restarted after installing the Python Package on the host system.</p>
+</li>
+</ul>
+<h2 id="examples"><a class="header" href="#examples"><a id="topic11"></a>Examples</a></h2>
+<p>This PL/Python function example uses Python 3.9 and returns the value of pi using the <code>numpy</code> module:</p>
+<pre><code>CREATE OR REPLACE FUNCTION testpi()
+  RETURNS float
+AS $$
+  import numpy
+  return numpy.pi
+$$ LANGUAGE plpython3u;
+</code></pre>
+<p>Use <code>SELECT</code> to call the function:</p>
+<pre><code>SELECT testpi();
+       testpi
+------------------
+ 3.14159265358979
+(1 row)
+</code></pre>
+<p>This PL/Python UDF returns the maximum of two integers:</p>
+<pre><code>CREATE FUNCTION pymax (a integer, b integer)
+  RETURNS integer
+AS $$
+  if (a is None) or (b is None):
+      return None
+  if a &gt; b:
+     return a
+  return b
+$$ LANGUAGE plpythonu;
+</code></pre>
+<p>You can use the <code>STRICT</code> property to perform the null handling instead of using the two conditional statements.</p>
+<pre><code>CREATE FUNCTION pymax (a integer, b integer) 
+  RETURNS integer AS $$ 
+return max(a,b) 
+$$ LANGUAGE plpythonu STRICT ;
+</code></pre>
+<p>You can run the user-defined function <code>pymax</code> with <code>SELECT</code> command. This example runs the UDF and shows the output.</p>
+<pre><code>SELECT ( pymax(123, 43));
+column1
+---------
+     123
+(1 row)
+</code></pre>
+<p>This example that returns data from an SQL query that is run against a table. These two commands create a simple table and add data to the table.</p>
+<pre><code>CREATE TABLE sales (id int, year int, qtr int, day int, region text)
+  DISTRIBUTED BY (id) ;
+
+INSERT INTO sales VALUES
+ (1, 2014, 1,1, 'usa'),
+ (2, 2002, 2,2, 'europe'),
+ (3, 2014, 3,3, 'asia'),
+ (4, 2014, 4,4, 'usa'),
+ (5, 2014, 1,5, 'europe'),
+ (6, 2014, 2,6, 'asia'),
+ (7, 2002, 3,7, 'usa') ;
+</code></pre>
+<p>This PL/Python UDF runs a <code>SELECT</code> command that returns 5 rows from the table. The Python function returns the <code>REGION</code> value from the row specified by the input value. In the Python function, the row numbering starts from 0. Valid input for the function is an integer between 0 and 4.</p>
+<pre><code>CREATE OR REPLACE FUNCTION mypytest(a integer) 
+  RETURNS setof text 
+AS $$ 
+  rv = plpy.execute("SELECT * FROM sales ORDER BY id", 5)
+  region =[]
+  region.append(rv[a]["region"])
+  return region
+$$ language plpythonu EXECUTE ON MASTER;
+</code></pre>
+<p>Running this <code>SELECT</code> statement returns the <code>REGION</code> column value from the third row of the result set.</p>
+<pre><code>SELECT mypytest(2) ;
+</code></pre>
+<p>This command deletes the UDF from the database.</p>
+<pre><code>DROP FUNCTION mypytest(integer) ;
+</code></pre>
+<p>This example runs the PL/Python function in the previous example as an anonymous block with the <code>DO</code> command. In the example, the anonymous block retrieves the input value from a temporary table.</p>
+<pre><code>CREATE TEMP TABLE mytemp AS VALUES (2) DISTRIBUTED RANDOMLY;
+
+DO $$ 
+  temprow = plpy.execute("SELECT * FROM mytemp", 1)
+  myval = temprow[0]["column1"]
+  rv = plpy.execute("SELECT * FROM sales ORDER BY id", 5)
+  region = rv[myval]["region"]
+  plpy.notice("region is %s" % region)
+$$ language plpythonu;
+</code></pre>
+<h2 id="references"><a class="header" href="#references"><a id="topic12"></a>References</a></h2>
+<h3 id="technical-references"><a class="header" href="#technical-references"><a id="topic13"></a>Technical References</a></h3>
+<p>For information about the Python language, see <a href="https://www.python.org/">https://www.python.org/</a>.</p>
+<p>For information about PL/Python see the PostgreSQL documentation at <a href="https://www.postgresql.org/docs/9.4/plpython.html">https://www.postgresql.org/docs/9.4/plpython.html</a>.</p>
+<p>For information about Python Package Index (PyPI), see <a href="https://pypi.python.org/pypi">https://pypi.python.org/pypi</a>.</p>
+<p>These are some Python modules that can be installed:</p>
+<ul>
+<li>SciPy library provides user-friendly and efficient numerical routines such as routines for numerical integration and optimization. The SciPy site includes other similar Python libraries <a href="http://www.scipy.org/index.html">http://www.scipy.org/index.html</a>.</li>
+<li>Natural Language Toolkit (nltk) is a platform for building Python programs to work with human language data. <a href="http://www.nltk.org/">http://www.nltk.org/</a>. For information about installing the toolkit see <a href="http://www.nltk.org/install.html">http://www.nltk.org/install.html</a>.</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../analytics/pl_sql.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../analytics/pl_r.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../analytics/pl_sql.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../analytics/pl_r.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

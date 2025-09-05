@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Load Data Using gpfdist &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Operate with Data" href="../operate-with-data/operate-with-data-index.html" />
+    <link rel="prev" title="Load Data from Hive Data Warehouse" href="load-data-from-hive.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="load-data-index.html">Load Data</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="load-data-using-copy.html">Load Data Using COPY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-external-data-source-using-foreign-table.html">Load External Data Using Foreign Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-data-using-kafka-fdw.html">Load Data from Kafka Using Kafka FDW</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-data-from-oss-and-hdfs.html">Load Data from Object Storage and HDFS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-data-from-hive.html">Load Data from Hive Data Warehouse</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Load Data Using <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#about-gpfdist">About gpfdist</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#about-gpfdist-and-external-tables">About gpfdist and external tables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#about-gpfdist-setup-and-performance">About gpfdist setup and performance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#control-segment-parallelism">Control segment parallelism</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-install-gpfdist">Step 1. Install gpfdist</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-start-and-stop-gpfdist">Step 2. Start and stop gpfdist</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-use-gpfdist-with-external-tables-to-load-data">Step 3. Use gpfdist with external tables to load data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#example-1-run-single-gpfdist-instance-on-a-single-nic-machine">Example 1 - Run single gpfdist instance on a single-NIC machine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-2-run-multiple-gpfdist-instances">Example 2 — Run multiple gpfdist instances</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-3-single-gpfdist-instance-with-error-logging">Example 3 — Single gpfdist instance with error logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-4-create-a-writable-external-table-with-gpfdist">Example 4 - Create a writable external table with gpfdist</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="load-data-index.html">Load Data</a></li>
+      <li class="breadcrumb-item active">Load Data Using <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="load-data-using-gpfdist">
+<h1>Load Data Using <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code><a class="headerlink" href="#load-data-using-gpfdist" title="Link to this heading"></a></h1>
+<p>To load data from local host files or files accessible via internal network, you can use the <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code> protocol in the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">TABLE</span></code> statement. gpfdist is a file server utility that runs on a host other than the SynxDB Elastic coordinator or standby coordinator. <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code> serves files from a directory on the host to SynxDB Elastic segments.</p>
+<p>When external data is served by gpfdist, all segments in the SynxDB Elastic system can read or write external table data in parallel.</p>
+<p>The supported data formats are:</p>
+<ul class="simple">
+<li><p>CSV and TXT</p></li>
+<li><p>Any delimited text format supported by the <code class="docutils literal notranslate"><span class="pre">FORMAT</span></code> clause</p></li>
+</ul>
+<p>The general procedure for loading data using <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code> is as follows:</p>
+<ol class="arabic simple">
+<li><p>Install gpfdist on a host other than the SynxDB Elastic coordinator or standby coordinator. See <a class="reference internal" href="#step-1-install-gpfdist">Install gpfdist</a>.</p></li>
+<li><p>Start gpfdist on the host. See <a class="reference internal" href="#step-2-start-and-stop-gpfdist">Start and stop gpfdist</a>.</p></li>
+<li><p>Create an external table using the <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code> protocol. See <a class="reference internal" href="#step-3-use-gpfdist-with-external-tables-to-load-data">Examples for using gpfdist with external tables</a>.</p></li>
+</ol>
+<section id="about-gpfdist">
+<h2>About gpfdist<a class="headerlink" href="#about-gpfdist" title="Link to this heading"></a></h2>
+<p>Before using gpfdist, you might need to know how it works. This section provides an overview of gpfdist and how to use it with external tables.</p>
+<section id="about-gpfdist-and-external-tables">
+<h3>About gpfdist and external tables<a class="headerlink" href="#about-gpfdist-and-external-tables" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code> file server utility is located in the <code class="docutils literal notranslate"><span class="pre">$GPHOME/bin</span></code> directory on your SynxDB Elastic coordinator host and on each segment host. When you start a <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code> instance you specify a listen port and the path to a directory containing files to read or where files are to be written. For example, this command runs <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code> in the background, listening on port <code class="docutils literal notranslate"><span class="pre">8801</span></code>, and serving files in the <code class="docutils literal notranslate"><span class="pre">/home/gpadmin/external_files</span></code> directory:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gpfdist<span class="w"> </span>-p<span class="w"> </span><span class="m">8801</span><span class="w"> </span>-d<span class="w"> </span>/home/gpadmin/external_files<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">TABLE</span></code> command <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code> clause connects an external table definition to one or more <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code> instances. If the external table is readable, the <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code> server reads data records from files from in specified directory, packs them into a block, and sends the block in a response to a SynxDB Elastic segment’s request. The segments unpack rows that they receive and distribute the rows according to the external table’s distribution policy. If the external table is a writable table, segments send blocks of rows in a request to gpfdist and gpfdist writes them to the external file.</p>
+<p>External data files can contain rows in CSV format or any delimited text format supported by the <code class="docutils literal notranslate"><span class="pre">FORMAT</span></code> clause of the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">TABLE</span></code> command.</p>
+<!-- In addition, `gpfdist` can be configured with a YAML-formatted file to transform external data files between a supported text format and another format, for example XML or JSON. See <ref\> for an example that shows how to use `gpfdist` to read external XML files into a {{ product_name }} readable external table. -->
+<p>For readable external tables, <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code> uncompresses <code class="docutils literal notranslate"><span class="pre">gzip</span></code> (<code class="docutils literal notranslate"><span class="pre">.gz</span></code>) and <code class="docutils literal notranslate"><span class="pre">bzip2</span></code> (.<code class="docutils literal notranslate"><span class="pre">bz2</span></code>) files automatically. You can use the wildcard character (<code class="docutils literal notranslate"><span class="pre">*</span></code>) or other C-style pattern matching to denote multiple files to read. External files are assumed to be relative to the directory specified when you started the <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code> instance.</p>
+</section>
+<section id="about-gpfdist-setup-and-performance">
+<h3>About gpfdist setup and performance<a class="headerlink" href="#about-gpfdist-setup-and-performance" title="Link to this heading"></a></h3>
+<p>You can run <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code> instances on multiple hosts and you can run multiple <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code> instances on each host. This allows you to deploy <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code> servers strategically so that you can attain fast data load and unload rates by utilizing all of the available network bandwidth and SynxDB Elastic’s parallelism.</p>
+<ul class="simple">
+<li><p>Allow network traffic to use all ETL host network interfaces simultaneously. Run one instance of gpfdist for each interface on the ETL host, then declare the host name of each NIC in the <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code> clause of your external table definition (see <a class="reference internal" href="#example-1-run-single-gpfdist-instance-on-a-single-nic-machine">Examples for Creating External Tables</a>).</p></li>
+<li><p>Divide external table data equally among multiple gpfdist instances on the ETL host. For example, on an ETL system with two NICs, run two gpfdist instances (one on each NIC) to optimize data load performance and divide the external table data files evenly between the two gpfdist servers.</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Use pipes (<code class="docutils literal notranslate"><span class="pre">|</span></code>) to separate formatted text when you submit files to gpfdist. SynxDB Elastic encloses comma-separated text strings in single or double quotes. gpfdist has to remove the quotes to parse the strings. Using pipes to separate formatted text avoids the extra step and improves performance.</p>
+</div>
+</section>
+<section id="control-segment-parallelism">
+<h3>Control segment parallelism<a class="headerlink" href="#control-segment-parallelism" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">gp_external_max_segs</span></code> server configuration parameter controls the number of segment instances that can access a single gpfdist instance simultaneously. 64 is the default. You can set the number of segments such that some segments process external data files and some perform other database processing. Set this parameter in the <code class="docutils literal notranslate"><span class="pre">postgresql.conf</span></code> file of your coordinator instance.</p>
+</section>
+</section>
+<section id="step-1-install-gpfdist">
+<h2>Step 1. Install gpfdist<a class="headerlink" href="#step-1-install-gpfdist" title="Link to this heading"></a></h2>
+<p>gpfdist is installed in <code class="docutils literal notranslate"><span class="pre">$GPHOME/bin</span></code> of your SynxDB Elastic coordinator host installation. Run gpfdist on a machine other than the SynxDB Elastic coordinator or standby coordinator, such as on a machine devoted to ETL processing. Running gpfdist on the coordinator or standby coordinator can have a performance impact on query execution.</p>
+</section>
+<section id="step-2-start-and-stop-gpfdist">
+<h2>Step 2. Start and stop gpfdist<a class="headerlink" href="#step-2-start-and-stop-gpfdist" title="Link to this heading"></a></h2>
+<p>You can start gpfdist in your current directory location or in any directory that you specify. The default port is <code class="docutils literal notranslate"><span class="pre">8080</span></code>.</p>
+<p>From your current directory, type:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>gpfdist<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<p>From a different directory, specify the directory from which to serve files, and optionally, the HTTP port to run on.</p>
+<p>To start gpfdist in the background and log output messages and errors to a log file:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gpfdist<span class="w"> </span>-d<span class="w"> </span>/var/load_files<span class="w"> </span>-p<span class="w"> </span><span class="m">8081</span><span class="w"> </span>-l<span class="w"> </span>/home/<span class="sb">`</span>gpadmin<span class="sb">`</span>/log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<p>For multiple gpfdist instances on the same ETL host, use a different base directory and port for each instance. For example:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gpfdist<span class="w"> </span>-d<span class="w"> </span>/var/load_files1<span class="w"> </span>-p<span class="w"> </span><span class="m">8081</span><span class="w"> </span>-l<span class="w"> </span>/home/<span class="sb">`</span>gpadmin<span class="sb">`</span>/log1<span class="w"> </span><span class="p">&amp;</span>
+$<span class="w"> </span>gpfdist<span class="w"> </span>-d<span class="w"> </span>/var/load_files2<span class="w"> </span>-p<span class="w"> </span><span class="m">8082</span><span class="w"> </span>-l<span class="w"> </span>/home/<span class="sb">`</span>gpadmin<span class="sb">`</span>/log2<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<p>The logs are saved in <code class="docutils literal notranslate"><span class="pre">/home/gpadmin/log</span></code>.</p>
+</section>
+<section id="step-3-use-gpfdist-with-external-tables-to-load-data">
+<h2>Step 3. Use gpfdist with external tables to load data<a class="headerlink" href="#step-3-use-gpfdist-with-external-tables-to-load-data" title="Link to this heading"></a></h2>
+<p>The following examples show how to use gpfdist when creating an external table to load data into SynxDB Elastic.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>When using IPv6, always enclose the numeric IP addresses in square brackets.</p>
+</div>
+<section id="example-1-run-single-gpfdist-instance-on-a-single-nic-machine">
+<h3>Example 1 - Run single gpfdist instance on a single-NIC machine<a class="headerlink" href="#example-1-run-single-gpfdist-instance-on-a-single-nic-machine" title="Link to this heading"></a></h3>
+<p>Creates a readable external table, ext_expenses, using the gpfdist protocol. The files are formatted with a pipe (<code class="docutils literal notranslate"><span class="pre">|</span></code>) as the column delimiter.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="o">=#</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">ext_expenses</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+<span class="w">    </span><span class="nb">date</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="n">float4</span><span class="p">,</span><span class="w"> </span><span class="n">category</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="n">desc1</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="k">LOCATION</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;gpfdist://etlhost-1:8081/*&#39;</span><span class="p">)</span>
+<span class="n">FORMAT</span><span class="w"> </span><span class="s1">&#39;TEXT&#39;</span><span class="w"> </span><span class="p">(</span><span class="k">DELIMITER</span><span class="w"> </span><span class="s1">&#39;|&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="example-2-run-multiple-gpfdist-instances">
+<h3>Example 2 — Run multiple gpfdist instances<a class="headerlink" href="#example-2-run-multiple-gpfdist-instances" title="Link to this heading"></a></h3>
+<p>Creates a readable external table, <code class="docutils literal notranslate"><span class="pre">ext_expenses</span></code>, using the gpfdist protocol from all files with the txt extension. The column delimiter is a pipe (<code class="docutils literal notranslate"><span class="pre">|</span></code>) and NULL (’ ‘) is a space.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="o">=#</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">ext_expenses</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span><span class="w"> </span>
+<span class="w">   </span><span class="nb">date</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span><span class="w">  </span><span class="n">amount</span><span class="w"> </span><span class="n">float4</span><span class="p">,</span><span class="w"> </span><span class="n">category</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="n">desc1</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>
+<span class="w">   </span><span class="k">LOCATION</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;gpfdist://etlhost-1:8081/*.txt&#39;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">             </span><span class="s1">&#39;gpfdist://etlhost-2:8081/*.txt&#39;</span><span class="p">)</span>
+<span class="w">   </span><span class="n">FORMAT</span><span class="w"> </span><span class="s1">&#39;TEXT&#39;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="k">DELIMITER</span><span class="w"> </span><span class="s1">&#39;|&#39;</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="w"> </span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="example-3-single-gpfdist-instance-with-error-logging">
+<h3>Example 3 — Single gpfdist instance with error logging<a class="headerlink" href="#example-3-single-gpfdist-instance-with-error-logging" title="Link to this heading"></a></h3>
+<p>Uses the gpfdist protocol to create a readable external table, <code class="docutils literal notranslate"><span class="pre">ext_expenses</span></code>, from all files with the txt extension. The column delimiter is a pipe (<code class="docutils literal notranslate"><span class="pre">|</span></code>) and NULL (’ ‘) is a space.</p>
+<p>Access to the external table is single row error isolation mode. Input data formatting errors are captured internally in SynxDB Elastic with a description of the error. <!-- See Viewing Bad Rows in the Error Log for information about investigating error rows.--> You can view the errors, fix the issues, and then reload the rejected data. If the error count on a segment is greater than <code class="docutils literal notranslate"><span class="pre">5</span></code> (the <code class="docutils literal notranslate"><span class="pre">SEGMENT</span> <span class="pre">REJECT</span> <span class="pre">LIMIT</span></code> value), the entire external table operation fails and no rows are processed.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="o">=#</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">ext_expenses</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span><span class="w"> </span>
+<span class="w">   </span><span class="nb">date</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="n">float4</span><span class="p">,</span><span class="w"> </span><span class="n">category</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="n">desc1</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>
+<span class="w">   </span><span class="k">LOCATION</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;gpfdist://etlhost-1:8081/*.txt&#39;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">             </span><span class="s1">&#39;gpfdist://etlhost-2:8082/*.txt&#39;</span><span class="p">)</span>
+<span class="w">   </span><span class="n">FORMAT</span><span class="w"> </span><span class="s1">&#39;TEXT&#39;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="k">DELIMITER</span><span class="w"> </span><span class="s1">&#39;|&#39;</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="w">   </span><span class="n">LOG</span><span class="w"> </span><span class="n">ERRORS</span><span class="w"> </span><span class="n">SEGMENT</span><span class="w"> </span><span class="n">REJECT</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>To create the readable <code class="docutils literal notranslate"><span class="pre">ext_expenses</span></code> table from CSV-formatted text files:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="o">=#</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">ext_expenses</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span><span class="w"> </span>
+<span class="w">   </span><span class="nb">date</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span><span class="w">  </span><span class="n">amount</span><span class="w"> </span><span class="n">float4</span><span class="p">,</span><span class="w"> </span><span class="n">category</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="n">desc1</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>
+<span class="w">   </span><span class="k">LOCATION</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;gpfdist://etlhost-1:8081/*.txt&#39;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">             </span><span class="s1">&#39;gpfdist://etlhost-2:8082/*.txt&#39;</span><span class="p">)</span>
+<span class="w">   </span><span class="n">FORMAT</span><span class="w"> </span><span class="s1">&#39;CSV&#39;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="k">DELIMITER</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="p">)</span>
+<span class="w">   </span><span class="n">LOG</span><span class="w"> </span><span class="n">ERRORS</span><span class="w"> </span><span class="n">SEGMENT</span><span class="w"> </span><span class="n">REJECT</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="example-4-create-a-writable-external-table-with-gpfdist">
+<h3>Example 4 - Create a writable external table with gpfdist<a class="headerlink" href="#example-4-create-a-writable-external-table-with-gpfdist" title="Link to this heading"></a></h3>
+<p>Creates a writable external table,·<code class="docutils literal notranslate"><span class="pre">sales_out</span></code>, that uses gpfdist to write output data to the file <code class="docutils literal notranslate"><span class="pre">sales.out</span></code>. The column delimiter is a pipe (<code class="docutils literal notranslate"><span class="pre">|</span></code>) and NULL (<code class="docutils literal notranslate"><span class="pre">'</span> <span class="pre">'</span></code>) is a space. The file will be created in the directory specified when you started the gpfdist file server.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="o">=#</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="n">WRITABLE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">sales_out</span><span class="w"> </span><span class="p">(</span><span class="k">LIKE</span><span class="w"> </span><span class="n">sales</span><span class="p">)</span><span class="w"> </span>
+<span class="w">   </span><span class="k">LOCATION</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;gpfdist://etl1:8081/sales.out&#39;</span><span class="p">)</span>
+<span class="w">   </span><span class="n">FORMAT</span><span class="w"> </span><span class="s1">&#39;TEXT&#39;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="k">DELIMITER</span><span class="w"> </span><span class="s1">&#39;|&#39;</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="../operate-with-data/operate-with-data-index.html" class="btn btn-neutral float-right" title="Operate with Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="load-data-from-hive.html" class="btn btn-neutral float-left" title="Load Data from Hive Data Warehouse" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

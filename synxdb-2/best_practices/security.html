@@ -1,0 +1,330 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Security - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="security"><a class="header" href="#security">Security</a></h1>
+<p>Best practices to ensure the highest level of system security. </p>
+<h2 id="basic-security-best-practices"><a class="header" href="#basic-security-best-practices"><a id="secbp"></a>Basic Security Best Practices</a></h2>
+<ul>
+<li>Secure the <code>gpadmin</code> system user. SynxDB requires a UNIX user id to install and initialize the SynxDB system. This system user is referred to as <code>gpadmin</code> in the SynxDB documentation. The <code>gpadmin</code> user is the default database superuser in SynxDB, as well as the file system owner of the SynxDB installation and its underlying data files. The default administrator account is fundamental to the design of SynxDB. The system cannot run without it, and there is no way to limit the access of the <code>gpadmin</code> user id. This <code>gpadmin</code> user can bypass all security features of SynxDB. Anyone who logs on to a SynxDB host with this user id can read, alter, or delete any data, including system catalog data and database access rights. Therefore, it is very important to secure the <code>gpadmin</code> user id and only allow essential system administrators access to it. Administrators should only log in to SynxDB as <code>gpadmin</code> when performing certain system maintenance tasks (such as upgrade or expansion). Database users should never log on as <code>gpadmin</code>, and ETL or production workloads should never run as <code>gpadmin</code>.</li>
+<li>Assign a distinct role to each user who logs in. For logging and auditing purposes, each user who is allowed to log in to SynxDB should be given their own database role. For applications or web services, consider creating a distinct role for each application or service. See “Creating New Roles (Users)” in the <em>SynxDB Administrator Guide</em>.</li>
+<li>Use groups to manage access privileges. See “Creating Groups (Role Membership)” in the <em>SynxDB Administrator Guide</em>.</li>
+<li>Limit users who have the <code>SUPERUSER</code> role attribute. Roles that are superusers bypass all access privilege checks in SynxDB, as well as resource queuing. Only system administrators should be given superuser rights. See “Altering Role Attributes” in the <em>SynxDB Administrator Guide</em>.</li>
+</ul>
+<h2 id="password-strength-guidelines"><a class="header" href="#password-strength-guidelines"><a id="password-strength-recommendations"></a>Password Strength Guidelines</a></h2>
+<p>To protect the network from intrusion, system administrators should verify the passwords used within an organization are strong ones. The following recommendations can strengthen a password:</p>
+<ul>
+<li>Minimum password length recommendation: At least 9 characters. MD5 passwords should be 15 characters or longer.</li>
+<li>Mix upper and lower case letters.</li>
+<li>Mix letters and numbers.</li>
+<li>Include non-alphanumeric characters.</li>
+<li>Pick a password you can remember.</li>
+</ul>
+<p>The following are recommendations for password cracker software that you can use to determine the strength of a password.</p>
+<ul>
+<li>John The Ripper. A fast and flexible password cracking program. It allows the use of multiple word lists and is capable of brute-force password cracking. It is available online at <a href="http://www.commoncriteriaportal.org/products/index.cfm">http://www.openwall.com/john/</a>.</li>
+<li>Crack. Perhaps the most well-known password cracking software, Crack is also very fast, though not as easy to use as John The Ripper. It can be found online at <a href="http://www.commoncriteriaportal.org/products/index.cfm">http://www.crypticide.com/alecm/security/crack/c50-faq.html</a>.   </li>
+</ul>
+<p>The security of the entire system depends on the strength of the root password. This password should be at least 12 characters long and include a mix of capitalized letters, lowercase letters, special characters, and numbers. It should not be based on any dictionary word.</p>
+<p>Password expiration parameters should be configured. The following commands must be run as <code>root</code> or using <code>sudo</code>.</p>
+<p>Ensure the following line exists within the file <code>/etc/libuser.conf</code> under the <code>[import]</code> section.</p>
+<pre><code>login_defs = /etc/login.defs
+
+</code></pre>
+<p>Ensure no lines in the <code>[userdefaults]</code> section begin with the following text, as these words override settings from <code>/etc/login.defs</code>:</p>
+<ul>
+<li><code>LU_SHADOWMAX</code></li>
+<li><code>LU_SHADOWMIN</code></li>
+<li><code>LU_SHADOWWARNING</code></li>
+</ul>
+<p>Ensure the following command produces no output. Any accounts listed by running this command should be locked.</p>
+<pre><code>
+grep "^+:" /etc/passwd /etc/shadow /etc/group
+
+</code></pre>
+<blockquote>
+<p><strong>Caution</strong> Change your passwords after initial setup.</p>
+</blockquote>
+<pre><code>
+cd /etc
+chown root:root passwd shadow group gshadow
+chmod 644 passwd group
+chmod 400 shadow gshadow
+
+</code></pre>
+<p>Find all the files that are world-writable and that do not have their sticky bits set.</p>
+<pre><code>
+find / -xdev -type d \( -perm -0002 -a ! -perm -1000 \) -print
+
+</code></pre>
+<p>Set the sticky bit (<code># chmod +t {dir}</code>) for all the directories that result from running the previous command.</p>
+<p>Find all the files that are world-writable and fix each file listed.</p>
+<pre><code>
+find / -xdev -type f -perm -0002 -print
+
+</code></pre>
+<p>Set the right permissions (<code># chmod o-w {file}</code>) for all the files generated by running the aforementioned command.</p>
+<p>Find all the files that do not belong to a valid user or group and either assign an owner or remove the file, as appropriate.</p>
+<pre><code>
+find / -xdev \( -nouser -o -nogroup \) -print
+
+</code></pre>
+<p>Find all the directories that are world-writable and ensure they are owned by either root or a system account (assuming only system accounts have a User ID lower than 500). If the command generates any output, verify the assignment is correct or reassign it to root.</p>
+<pre><code>
+find / -xdev -type d -perm -0002 -uid +500 -print
+
+</code></pre>
+<p>Authentication settings such as password quality, password expiration policy, password reuse, password retry attempts, and more can be configured using the Pluggable Authentication Modules (PAM) framework. PAM looks in the directory <code>/etc/pam.d</code> for application-specific configuration information. Running <code>authconfig</code> or <code>system-config-authentication</code> will re-write the PAM configuration files, destroying any manually made changes and replacing them with system defaults.</p>
+<p>The default <code>pam_cracklib</code> PAM module provides strength checking for passwords. To configure <code>pam_cracklib</code> to require at least one uppercase character, lowercase character, digit, and special character, as recommended by the U.S. Department of Defense guidelines, edit the file <code>/etc/pam.d/system-auth</code> to include the following parameters in the line corresponding to password requisite <code>pam_cracklib.so try_first_pass</code>.</p>
+<pre><code>retry=3:
+dcredit=-1. Require at least one digit
+ucredit=-1. Require at least one upper case character
+ocredit=-1. Require at least one special character
+lcredit=-1. Require at least one lower case character
+minlen-14. Require a minimum password length of 14.
+</code></pre>
+<p>For example:</p>
+<pre><code>
+password required pam_cracklib.so try_first_pass retry=3\minlen=14 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1
+
+</code></pre>
+<p>These parameters can be set to reflect your security policy requirements. Note that the password restrictions are not applicable to the root password.</p>
+<p>The <code>pam_tally2</code> PAM module provides the capability to lock out user accounts after a specified number of failed login attempts. To enforce password lockout, edit the file <code>/etc/pam.d/system-auth</code> to include the following lines:</p>
+<ul>
+<li>
+<p>The first of the auth lines should include:</p>
+<pre><code>auth required pam_tally2.so deny=5 onerr=fail unlock_time=900
+</code></pre>
+</li>
+<li>
+<p>The first of the account lines should include:</p>
+<pre><code>account required pam_tally2.so
+</code></pre>
+</li>
+</ul>
+<p>Here, the deny parameter is set to limit the number of retries to 5 and the <code>unlock_time</code> has been set to 900 seconds to keep the account locked for 900 seconds before it is unlocked. These parameters may be configured appropriately to reflect your security policy requirements. A locked account can be manually unlocked using the <code>pam_tally2</code> utility:</p>
+<pre><code>
+/sbin/pam_tally2 --user {username} --reset
+
+</code></pre>
+<p>You can use PAM to limit the reuse of recent passwords. The remember option for the <code>pam_unix</code> module can be set to remember the recent passwords and prevent their reuse. To accomplish this, edit the appropriate line in <code>/etc/pam.d/system-auth</code> to include the remember option.</p>
+<p>For example:</p>
+<pre><code>
+password sufficient pam_unix.so [ … existing_options …] 
+remember=5
+
+</code></pre>
+<p>You can set the number of previous passwords to remember to appropriately reflect your security policy requirements.</p>
+<pre><code>
+cd /etc
+chown root:root passwd shadow group gshadow
+chmod 644 passwd group
+chmod 400 shadow gshadow
+
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../best_practices/heap_tables.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../best_practices/encryption.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../best_practices/heap_tables.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../best_practices/encryption.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

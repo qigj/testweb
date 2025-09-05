@@ -1,0 +1,35 @@
+Key Concepts
+=================================
+
+|product_name| employs state-of-the-art cloud-native architecture. The following sections outline the key concepts in |product_name| to help you understand its components and functionalities.
+
+
+Organizations
+-------------   
+
+An organization is the highest-level administrative unit in |product_name|, responsible for managing resources and billing. Organization users are administrators with permission to manage the organization's resources.
+
+
+Accounts, User, and Warehouses
+------------------------------
+
+Organizations in |product_name| are divided into logical subdivisions called accounts. Each account serves as an isolated environment that contains its own data and compute resources, including users and warehouses. 
+
+Accounts
+^^^^^^^^^^
+Each account is a distinct logical resource unit within an organization, managing its own database data and compute resources without access to those of other accounts. This structure ensures clear boundaries between accounts while enabling flexible resource management within each account. Organization users can create or delete accounts as needed. Each account is assigned a unique host address (domain name) for access, including connections via psql.
+
+User
+^^^^^
+Users are defined at the account level, connecting to one or more databases and functioning similarly to PostgreSQL or Apache Cloudberry users. Each user represents an individual or system that interacts with databases within an account to perform operations such as querying, updating, or managing data. Users can be created, managed, and deleted via the console or the psql client, assigned roles and privileges to access data and warehouses in the account. Each user belongs exclusively to one account and is managed at the account level, ensuring clear access control and security. 
+
+Warehouses
+^^^^^^^^^^
+Warehouses are compute engines within an account to process queries. Each warehouse is composed of multiple segments, which can be scaled horizontally as needed. All warehouses within a single account have access to a shared pool of data and perform computing tasks independently. Key features of warehouses include:
+
+- Resource Management: Allows pausing, resuming, and resizing on demand.
+- Scaling: Support changing segment counts for online horizontal scaling.
+
+Object Storage
+---------------
+Object storage is a scalable and durable cloud storage solution. In |product_name|, it acts as the persistent storage layer for large datasets, enabling data loading, backups, and external table storage. Its flexible design ensures secure, cost-effective storage for both structured and semi-structured data.

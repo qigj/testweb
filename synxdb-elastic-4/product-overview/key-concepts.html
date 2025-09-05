@@ -1,0 +1,209 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Key Concepts &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Architecture and Services" href="architecture.html" />
+    <link rel="prev" title="Product Overview" href="product-overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="product-index.html">Product Overview</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="product-overview.html">Product Overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Key Concepts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#organizations">Organizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#accounts-user-and-warehouses">Accounts, User, and Warehouses</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#accounts">Accounts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#user">User</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#warehouses">Warehouses</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#object-storage">Object Storage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Architecture and Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture-principles.html">Architectural Principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="highlighted-features.html">Highlighted Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="product-scenarios.html">User Scenarios</a></li>
+<li class="toctree-l2"><a class="reference internal" href="product-comparison-cbdb.html">Comparison with Apache Cloudberry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="product-comparison-gp.html">Comparison with Greenplum</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="product-index.html">Product Overview</a></li>
+      <li class="breadcrumb-item active">Key Concepts</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="key-concepts">
+<h1>Key Concepts<a class="headerlink" href="#key-concepts" title="Link to this heading"></a></h1>
+<p>SynxDB Elastic employs state-of-the-art cloud-native architecture. The following sections outline the key concepts in SynxDB Elastic to help you understand its components and functionalities.</p>
+<section id="organizations">
+<h2>Organizations<a class="headerlink" href="#organizations" title="Link to this heading"></a></h2>
+<p>An organization is the highest-level administrative unit in SynxDB Elastic, responsible for managing resources and billing. Organization users are administrators with permission to manage the organization’s resources.</p>
+</section>
+<section id="accounts-user-and-warehouses">
+<h2>Accounts, User, and Warehouses<a class="headerlink" href="#accounts-user-and-warehouses" title="Link to this heading"></a></h2>
+<p>Organizations in SynxDB Elastic are divided into logical subdivisions called accounts. Each account serves as an isolated environment that contains its own data and compute resources, including users and warehouses.</p>
+<section id="accounts">
+<h3>Accounts<a class="headerlink" href="#accounts" title="Link to this heading"></a></h3>
+<p>Each account is a distinct logical resource unit within an organization, managing its own database data and compute resources without access to those of other accounts. This structure ensures clear boundaries between accounts while enabling flexible resource management within each account. Organization users can create or delete accounts as needed. Each account is assigned a unique host address (domain name) for access, including connections via psql.</p>
+</section>
+<section id="user">
+<h3>User<a class="headerlink" href="#user" title="Link to this heading"></a></h3>
+<p>Users are defined at the account level, connecting to one or more databases and functioning similarly to PostgreSQL or Apache Cloudberry users. Each user represents an individual or system that interacts with databases within an account to perform operations such as querying, updating, or managing data. Users can be created, managed, and deleted via the console or the psql client, assigned roles and privileges to access data and warehouses in the account. Each user belongs exclusively to one account and is managed at the account level, ensuring clear access control and security.</p>
+</section>
+<section id="warehouses">
+<h3>Warehouses<a class="headerlink" href="#warehouses" title="Link to this heading"></a></h3>
+<p>Warehouses are compute engines within an account to process queries. Each warehouse is composed of multiple segments, which can be scaled horizontally as needed. All warehouses within a single account have access to a shared pool of data and perform computing tasks independently. Key features of warehouses include:</p>
+<ul class="simple">
+<li><p>Resource Management: Allows pausing, resuming, and resizing on demand.</p></li>
+<li><p>Scaling: Support changing segment counts for online horizontal scaling.</p></li>
+</ul>
+</section>
+</section>
+<section id="object-storage">
+<h2>Object Storage<a class="headerlink" href="#object-storage" title="Link to this heading"></a></h2>
+<p>Object storage is a scalable and durable cloud storage solution. In SynxDB Elastic, it acts as the persistent storage layer for large datasets, enabling data loading, backups, and external table storage. Its flexible design ensures secure, cost-effective storage for both structured and semi-structured data.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="architecture.html" class="btn btn-neutral float-right" title="Architecture and Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="product-overview.html" class="btn btn-neutral float-left" title="Product Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

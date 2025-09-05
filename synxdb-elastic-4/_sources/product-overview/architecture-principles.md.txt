@@ -1,0 +1,27 @@
+# Architectural Principles
+
+A key architectural distinction of {{ product_name }} from MPP (Massively Parallel Processing) deployments is its mirror-less design. In traditional systems, mirroring is a primary mechanism for fault tolerance, where each primary segment has a corresponding mirror segment on a different host to ensure data redundancy.
+
+{{ product_name }} adopts a cloud-native architecture that leverages the inherent resilience and scalability of modern cloud infrastructure, making segment-level mirroring unnecessary. Here's why this design is advantageous:
+
+## Rationale for Not Using Mirrors
+
+- **Cloud-native Resilience:** {{ product_name }} is designed to run on resilient cloud infrastructure where data is typically stored in highly durable object storage services (like Amazon S3, Google Cloud Storage, or Azure Blob Storage). These services provide built-in data redundancy and fault tolerance across multiple availability zones, making segment-level mirroring redundant.
+- **Simplified Architecture:** Eliminating mirrors simplifies the cluster architecture, reducing the number of segment instances to manage and lowering operational complexity. This leads to easier deployment, scaling, and maintenance.
+- **Cost-Effectiveness:** A mirror-less design greatly reduces infrastructure costs. Because each primary segment does not require a dedicated mirror, the total number of virtual machines or physical hosts is halved. In addition, leveraging S3-compatible object storage is considerably less expensive than traditional cloud provider attached storage options (like AWS EBS or Azure Managed Disks). This strategic design choice leads to savings in compute and storage resources.
+
+## High Availability and Data Protection
+
+In the absence of mirrors, {{ product_name }} ensures high availability and data protection through a combination of mechanisms:
+
+- **Durable Object Storage**: All data is stored in cloud object storage, which is inherently designed for high durability and availability. This means that even if a compute node fails, the data remains safe and accessible.
+- **Stateless Compute Nodes**: The compute nodes (segments) in {{ product_name }} are stateless. If a node fails, the system can quickly provision a new one, which then attaches to the shared object storage and resumes processing. This results in faster recovery times compared to traditional mirror failover processes.
+- **Coordinator High Availability**: The coordinator, which is the brain of the cluster, can be configured for high availability using a standby coordinator, ensuring that there is no single point of failure at the control plane level.
+
+## Performance and Cost Implications
+
+The mirror-less design has several positive implications for performance and cost:
+
+- **Improved Write Performance**: Without the need to synchronously write data to a mirror segment, the write throughput of the system is improved. This is particularly beneficial for write-intensive workloads.
+- **Reduced Network Traffic**: The absence of mirroring reduces the network traffic between primary and mirror segments, freeing up bandwidth for query processing and other operations.
+- **Lower Total Cost of Ownership (TCO)**: As mentioned earlier, the reduction in infrastructure requirements leads to a lower TCO. This allows organizations to allocate their budget to other critical areas.

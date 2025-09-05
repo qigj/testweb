@@ -1,0 +1,767 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Using Resource Groups - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="using-resource-groups"><a class="header" href="#using-resource-groups">Using Resource Groups</a></h1>
+<p>You use resource groups to set and enforce CPU, memory, and concurrent transaction limits in SynxDB. After you define a resource group, you can then assign the group to one or more SynxDB roles, or to an external component such as PL/Container, in order to control the resources used by those roles or components.</p>
+<p>When you assign a resource group to a role (a role-based resource group), the resource limits that you define for the group apply to all of the roles to which you assign the group. For example, the memory limit for a resource group identifies the maximum memory usage for all running transactions submitted by SynxDB users in all roles to which you assign the group.</p>
+<p>Similarly, when you assign a resource group to an external component, the group limits apply to all running instances of the component. For example, if you create a resource group for a PL/Container external component, the memory limit that you define for the group specifies the maximum memory usage for all running instances of each PL/Container runtime to which you assign the group.</p>
+<h2 id="understanding-role-and-component-resource-groups"><a class="header" href="#understanding-role-and-component-resource-groups"><a id="topic8339intro"></a>Understanding Role and Component Resource Groups</a></h2>
+<p>SynxDB supports two types of resource groups: groups that manage resources for roles, and groups that manage resources for external components such as PL/Container.</p>
+<p>The most common application for resource groups is to manage the number of active queries that different roles may run concurrently in your SynxDB cluster. You can also manage the amount of CPU and memory resources that SynxDB allocates to each query.</p>
+<p>Resource groups for roles use Linux control groups (cgroups) for CPU resource management. SynxDB tracks virtual memory internally for these resource groups using a memory auditor referred to as <code>vmtracker</code>.</p>
+<p>When the user runs a query, SynxDB evaluates the query against a set of limits defined for the resource group. SynxDB runs the query immediately if the group’s resource limits have not yet been reached and the query does not cause the group to exceed the concurrent transaction limit. If these conditions are not met, SynxDB queues the query. For example, if the maximum number of concurrent transactions for the resource group has already been reached, a subsequent query is queued and must wait until other queries complete before it runs. SynxDB may also run a pending query when the resource group’s concurrency and memory limits are altered to large enough values.</p>
+<p>Within a resource group for roles, transactions are evaluated on a first in, first out basis. SynxDB periodically assesses the active workload of the system, reallocating resources and starting/queuing jobs as necessary.</p>
+<p>You can also use resource groups to manage the CPU and memory resources of external components such as PL/Container. Resource groups for external components use Linux cgroups to manage both the total CPU and total memory resources for the component.</p>
+<blockquote>
+<p><strong>Note</strong> Containerized deployments of SynxDB might create a hierarchical set of nested cgroups to manage host system resources. The nesting of cgroups affects the SynxDB resource group limits for CPU percentage, CPU cores, and memory (except for SynxDB external components). The SynxDB resource group system resource limit is based on the quota for the parent group.</p>
+</blockquote>
+<p>For example, SynxDB is running in a cgroup demo, and the SynxDB cgroup is nested in the cgroup demo. If the cgroup demo is configured with a CPU limit of 60% of system CPU resources and the SynxDB resource group CPU limit is set 90%, the SynxDB limit of host system CPU resources is 54% (0.6 x 0.9).</p>
+<p>Nested cgroups do not affect memory limits for SynxDB external components such as PL/Container. Memory limits for external components can only be managed if the cgroup that is used to manage SynxDB resources is not nested, the cgroup is configured as a top-level cgroup.</p>
+<p>For information about configuring cgroups for use by resource groups, see <a href="#topic71717999">Configuring and Using Resource Groups</a>.</p>
+<h2 id="resource-group-attributes-and-limits"><a class="header" href="#resource-group-attributes-and-limits"><a id="topic8339introattrlim"></a>Resource Group Attributes and Limits</a></h2>
+<p>When you create a resource group, you:</p>
+<ul>
+<li>Specify the type of resource group by identifying how memory for the group is audited.</li>
+<li>Provide a set of limits that determine the amount of CPU and memory resources available to the group.</li>
+</ul>
+<p>Resource group attributes and limits:</p>
+<div class="table-wrapper"><table><thead><tr><th>Limit Type</th><th>Description</th></tr></thead><tbody>
+<tr><td>MEMORY_AUDITOR</td><td>The memory auditor in use for the resource group. <code>vmtracker</code> (the default) is required if you want to assign the resource group to roles. Specify <code>cgroup</code> to assign the resource group to an external component.</td></tr>
+<tr><td>CONCURRENCY</td><td>The maximum number of concurrent transactions, including active and idle transactions, that are permitted in the resource group.</td></tr>
+<tr><td>CPU_RATE_LIMIT</td><td>The percentage of CPU resources available to this resource group.</td></tr>
+<tr><td>CPUSET</td><td>The CPU cores to reserve for this resource group on the master and segment hosts.</td></tr>
+<tr><td>MEMORY_LIMIT</td><td>The percentage of reserved memory resources available to this resource group.</td></tr>
+<tr><td>MEMORY_SHARED_QUOTA</td><td>The percentage of reserved memory to share across transactions submitted in this resource group.</td></tr>
+<tr><td>MEMORY_SPILL_RATIO</td><td>The memory usage threshold for memory-intensive transactions. When a transaction reaches this threshold, it spills to disk.</td></tr>
+</tbody></table>
+</div>
+<blockquote>
+<p><strong>Note</strong> Resource limits are not enforced on <code>SET</code>, <code>RESET</code>, and <code>SHOW</code> commands.</p>
+</blockquote>
+<h2 id="memory-auditor"><a class="header" href="#memory-auditor"><a id="topic8339777"></a>Memory Auditor</a></h2>
+<p>The <code>MEMORY_AUDITOR</code> attribute specifies the type of resource group by identifying the memory auditor for the group. A resource group that specifies the <code>vmtracker</code> <code>MEMORY_AUDITOR</code> identifies a resource group for roles. A resource group specifying the <code>cgroup</code> <code>MEMORY_AUDITOR</code> identifies a resource group for external components.</p>
+<p>The default <code>MEMORY_AUDITOR</code> is <code>vmtracker</code>.</p>
+<p>The <code>MEMORY_AUDITOR</code> that you specify for a resource group determines if and how SynxDB uses the limit attributes to manage CPU and memory resources:</p>
+<div class="table-wrapper"><table><thead><tr><th>Limit Type</th><th>Resource Group for Roles</th><th>Resource Group for External Components</th></tr></thead><tbody>
+<tr><td>CONCURRENCY</td><td>Yes</td><td>No; must be zero (0)</td></tr>
+<tr><td>CPU_RATE_LIMIT</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>CPUSET</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>MEMORY_LIMIT</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>MEMORY_SHARED_QUOTA</td><td>Yes</td><td>Component-specific</td></tr>
+<tr><td>MEMORY_SPILL_RATIO</td><td>Yes</td><td>Component-specific</td></tr>
+</tbody></table>
+</div>
+<blockquote>
+<p><strong>Note</strong> For queries managed by resource groups that are configured to use the <code>vmtracker</code> memory auditor, SynxDB supports the automatic termination of queries based on the amount of memory the queries are using. See the server configuration parameter <a href="../ref_guide/config_params/guc-list.html">runaway_detector_activation_percent</a>.</p>
+</blockquote>
+<h2 id="transaction-concurrency-limit"><a class="header" href="#transaction-concurrency-limit"><a id="topic8339717179"></a>Transaction Concurrency Limit</a></h2>
+<p>The <code>CONCURRENCY</code> limit controls the maximum number of concurrent transactions permitted for a resource group for roles.</p>
+<blockquote>
+<p><strong>Note</strong> The <code>CONCURRENCY</code> limit is not applicable to resource groups for external components and must be set to zero (0) for such groups.</p>
+</blockquote>
+<p>Each resource group for roles is logically divided into a fixed number of slots equal to the <code>CONCURRENCY</code> limit. SynxDB allocates these slots an equal, fixed percentage of memory resources.</p>
+<p>The default <code>CONCURRENCY</code> limit value for a resource group for roles is 20.</p>
+<p>SynxDB queues any transactions submitted after the resource group reaches its <code>CONCURRENCY</code> limit. When a running transaction completes, SynxDB un-queues and runs the earliest queued transaction if sufficient memory resources exist.</p>
+<p>You can set the server configuration parameter <a href="../ref_guide/config_params/guc-list.html">gp_resource_group_bypass</a> to bypass a resource group concurrency limit.</p>
+<p>You can set the server configuration parameter <a href="../ref_guide/config_params/guc-list.html">gp_resource_group_queuing_timeout</a> to specify the amount of time a transaction remains in the queue before SynxDB cancels the transaction. The default timeout is zero, SynxDB queues transactions indefinitely.</p>
+<h2 id="cpu-limits"><a class="header" href="#cpu-limits"><a id="topic833971717"></a>CPU Limits</a></h2>
+<p>You configure the share of CPU resources to reserve for a resource group on the master and segment hosts by assigning specific CPU core(s) to the group, or by identifying the percentage of segment CPU resources to allocate to the group. SynxDB uses the <code>CPUSET</code> and <code>CPU_RATE_LIMIT</code> resource group limits to identify the CPU resource allocation mode. You must specify only one of these limits when you configure a resource group.</p>
+<p>You may employ both modes of CPU resource allocation simultaneously in your SynxDB cluster. You may also change the CPU resource allocation mode for a resource group at runtime.</p>
+<p>The <a href="../ref_guide/config_params/guc-list.html">gp_resource_group_cpu_limit</a> server configuration parameter identifies the maximum percentage of system CPU resources to allocate to resource groups on each SynxDB host. This limit governs the maximum CPU usage of all resource groups on the master or on a segment host regardless of the CPU allocation mode configured for the group. The remaining unreserved CPU resources are used for the OS kernel and the SynxDB auxiliary daemon processes. The default <code>gp_resource_group_cpu_limit</code> value is .9 (90%).</p>
+<blockquote>
+<p><strong>Note</strong> The default <code>gp_resource_group_cpu_limit</code> value may not leave sufficient CPU resources if you are running other workloads on your SynxDB cluster nodes, so be sure to adjust this server configuration parameter accordingly.</p>
+</blockquote>
+<blockquote>
+<p><strong>Caution</strong> Avoid setting <code>gp_resource_group_cpu_limit</code> to a value higher than .9. Doing so may result in high workload queries taking near all CPU resources, potentially starving SynxDB auxiliary processes.</p>
+</blockquote>
+<h3 id="assigning-cpu-resources-by-core"><a class="header" href="#assigning-cpu-resources-by-core"><a id="cpuset"></a>Assigning CPU Resources by Core</a></h3>
+<p>You identify the CPU cores that you want to reserve for a resource group with the <code>CPUSET</code> property. The CPU cores that you specify must be available in the system and cannot overlap with any CPU cores that you reserved for other resource groups. (Although SynxDB uses the cores that you assign to a resource group exclusively for that group, note that those CPU cores may also be used by non-SynxDB processes in the system.)</p>
+<p>Specify CPU cores separately for the master host and segment hosts, separated by a semicolon. Use a comma-separated list of single core numbers or number intervals when you configure cores for <code>CPUSET</code>. You must enclose the core numbers/intervals in single quotes, for example, ‘1;1,3-4’ uses core 1 on the master host, and cores 1, 3, and 4 on segment hosts.</p>
+<p>When you assign CPU cores to <code>CPUSET</code> groups, consider the following:</p>
+<ul>
+<li>A resource group that you create with <code>CPUSET</code> uses the specified cores exclusively. If there are no running queries in the group, the reserved cores are idle and cannot be used by queries in other resource groups. Consider minimizing the number of <code>CPUSET</code> groups to avoid wasting system CPU resources.</li>
+<li>Consider keeping CPU core 0 unassigned. CPU core 0 is used as a fallback mechanism in the following cases:
+<ul>
+<li><code>admin_group</code> and <code>default_group</code> require at least one CPU core. When all CPU cores are reserved, SynxDB assigns CPU core 0 to these default groups. In this situation, the resource group to which you assigned CPU core 0 shares the core with <code>admin_group</code> and <code>default_group</code>.</li>
+<li>If you restart your SynxDB cluster with one node replacement and the node does not have enough cores to service all <code>CPUSET</code> resource groups, the groups are automatically assigned CPU core 0 to avoid system start failure.</li>
+</ul>
+</li>
+<li>Use the lowest possible core numbers when you assign cores to resource groups. If you replace a SynxDB node and the new node has fewer CPU cores than the original, or if you back up the database and want to restore it on a cluster with nodes with fewer CPU cores, the operation may fail. For example, if your SynxDB cluster has 16 cores, assigning cores 1-7 is optimal. If you create a resource group and assign CPU core 9 to this group, database restore to an 8 core node will fail.</li>
+</ul>
+<p>Resource groups that you configure with <code>CPUSET</code> have a higher priority on CPU resources. The maximum CPU resource usage percentage for all resource groups configured with <code>CPUSET</code> on a segment host is the number of CPU cores reserved divided by the number of all CPU cores, multiplied by 100.</p>
+<p>When you configure <code>CPUSET</code> for a resource group, SynxDB deactivates <code>CPU_RATE_LIMIT</code> for the group and sets the value to -1.</p>
+<blockquote>
+<p><strong>Note</strong> You must configure <code>CPUSET</code> for a resource group <em>after</em> you have enabled resource group-based resource management for your SynxDB cluster.</p>
+</blockquote>
+<h3 id="assigning-cpu-resources-by-percentage"><a class="header" href="#assigning-cpu-resources-by-percentage"><a id="cpu_rate_limit"></a>Assigning CPU Resources by Percentage</a></h3>
+<p>The SynxDB node CPU percentage is divided equally among each segment on the SynxDB node. Each resource group that you configure with a <code>CPU_RATE_LIMIT</code> reserves the specified percentage of the segment CPU for resource management.</p>
+<p>The minimum <code>CPU_RATE_LIMIT</code> percentage you can specify for a resource group is 1, the maximum is 100.</p>
+<p>The sum of <code>CPU_RATE_LIMIT</code>s specified for all resource groups that you define in your SynxDB cluster must not exceed 100.</p>
+<p>The maximum CPU resource usage for all resource groups configured with a <code>CPU_RATE_LIMIT</code> on a segment host is the minimum of:</p>
+<ul>
+<li>The number of non-reserved CPU cores divided by the number of all CPU cores, multiplied by 100, and</li>
+<li>The <code>gp_resource_group_cpu_limit</code> value.</li>
+</ul>
+<p>When you configure <code>CPU_RATE_LIMIT</code> for a resource group, SynxDB deactivates <code>CPUSET</code> for the group and sets the value to -1.</p>
+<p>There are two different ways of assigning CPU resources by percentage, determined by the value of the configuration parameter <code>gp_resource_group_cpu_ceiling_enforcement</code>:</p>
+<h4 id="elastic-mode"><a class="header" href="#elastic-mode"><a id="elasmod"></a>Elastic mode</a></h4>
+<p>This mode is active when <code>gp_resource_group_cpu_ceiling_enforcement</code> is set to <code>false</code> (default). It is elastic in that SynxDB may allocate the CPU resources of an idle resource group to a busier one(s). In such situations, CPU resources are re-allocated to the previously idle resource group when that resource group next becomes active. If multiple resource groups are busy, they are allocated the CPU resources of any idle resource groups based on the ratio of their <code>CPU_RATE_LIMIT</code>s. For example, a resource group created with a <code>CPU_RATE_LIMIT</code> of 40 will be allocated twice as much extra CPU resource as a resource group that you create with a <code>CPU_RATE_LIMIT</code> of 20.</p>
+<h4 id="ceiling-enforcement-mode"><a class="header" href="#ceiling-enforcement-mode"><a id="enfmod"></a>Ceiling Enforcement mode</a></h4>
+<p>This mode is active when <code>gp_resource_group_cpu_ceiling_enforcement</code> is set to <code>true</code>. The resource group is enforced to not use more CPU resources than the defined value <code>CPU_RATE_LIMIT</code>, avoiding the use of the CPU burst feature.</p>
+<h2 id="memory-limits"><a class="header" href="#memory-limits"><a id="topic8339717"></a>Memory Limits</a></h2>
+<blockquote>
+<p><strong>Caution</strong> The Resource Groups implementation was changed to calculate segment memory using <code>gp_segment_configuration.hostname</code> instead of <code>gp_segment_configuration.address</code>. This implementation can result in a lower memory limit value compared to the earlier code, for deployments where each host uses multiple IP addresses.  In some cases, this change in behavior could lead to Out Of Memory errors when upgrading from an earlier version. Version 1 introduces a configuration parameter, <code>gp_count_host_segments_using_address</code>, that can be enabled to calculate of segment memory using <code>gp_segment_configuration.address</code> if Out Of Memory errors are encountered after an upgrade. This parameter is disabled by default. This parameter will not be provided in SynxDB Version 7 because resource group memory calculation will no longer be dependent on the segments per host value.</p>
+</blockquote>
+<p>When resource groups are enabled, memory usage is managed at the SynxDB node, segment, and resource group levels. You can also manage memory at the transaction level with a resource group for roles.</p>
+<p>The <a href="../ref_guide/config_params/guc-list.html">gp_resource_group_memory_limit</a> server configuration parameter identifies the maximum percentage of system memory resources to allocate to resource groups on each SynxDB segment host. The default <code>gp_resource_group_memory_limit</code> value is .7 (70%).</p>
+<p>The memory resource available on a SynxDB node is further divided equally among each segment on the node. When resource group-based resource management is active, the amount of memory allocated to each segment on a segment host is the memory available to SynxDB multiplied by the <code>gp_resource_group_memory_limit</code> server configuration parameter and divided by the number of active primary segments on the host:</p>
+<pre><code>
+rg_perseg_mem = ((RAM * (vm.overcommit_ratio / 100) + SWAP) * gp_resource_group_memory_limit) / num_active_primary_segments
+</code></pre>
+<p>Each resource group may reserve a percentage of the segment memory for resource management. You identify this percentage via the <code>MEMORY_LIMIT</code> value that you specify when you create the resource group. The minimum <code>MEMORY_LIMIT</code> percentage you can specify for a resource group is 0, the maximum is 100. When <code>MEMORY_LIMIT</code> is 0, SynxDB reserves no memory for the resource group, but uses resource group global shared memory to fulfill all memory requests in the group. Refer to <a href="#topic833glob">Global Shared Memory</a> for more information about resource group global shared memory.</p>
+<p>The sum of <code>MEMORY_LIMIT</code>s specified for all resource groups that you define in your SynxDB cluster must not exceed 100.</p>
+<h3 id="additional-memory-limits-for-role-based-resource-groups"><a class="header" href="#additional-memory-limits-for-role-based-resource-groups"><a id="mem_roles"></a>Additional Memory Limits for Role-based Resource Groups</a></h3>
+<p>If resource group memory is reserved for roles (non-zero <code>MEMORY_LIMIT</code>), the memory is further divided into fixed and shared components. The <code>MEMORY_SHARED_QUOTA</code> value that you specify when you create the resource group identifies the percentage of reserved resource group memory that may be shared among the currently running transactions. This memory is allotted on a first-come, first-served basis. A running transaction may use none, some, or all of the <code>MEMORY_SHARED_QUOTA</code>.</p>
+<p>The minimum <code>MEMORY_SHARED_QUOTA</code> that you can specify is 0, the maximum is 100. The default <code>MEMORY_SHARED_QUOTA</code> is 80.</p>
+<p>As mentioned previously, <code>CONCURRENCY</code> identifies the maximum number of concurrently running transactions permitted in a resource group for roles. If fixed memory is reserved by a resource group (non-zero <code>MEMORY_LIMIT</code>), it is divided into <code>CONCURRENCY</code> number of transaction slots. Each slot is allocated a fixed, equal amount of the resource group memory. SynxDB guarantees this fixed memory to each transaction.</p>
+<p><img src="graphics/resgroupmem.png" alt="Resource Group Memory Allotments" title="Resource Group Memory Allotments" /></p>
+<p>When a query’s memory usage exceeds the fixed per-transaction memory usage amount, SynxDB allocates available resource group shared memory to the query. The maximum amount of resource group memory available to a specific transaction slot is the sum of the transaction’s fixed memory and the full resource group shared memory allotment.</p>
+<h4 id="global-shared-memory"><a class="header" href="#global-shared-memory"><a id="topic833glob"></a>Global Shared Memory</a></h4>
+<p>The sum of the <code>MEMORY_LIMIT</code>s configured for all resource groups (including the default <code>admin_group</code> and <code>default_group</code> groups) identifies the percentage of reserved resource group memory. If this sum is less than 100, SynxDB allocates any unreserved memory to a resource group global shared memory pool.</p>
+<p>Resource group global shared memory is available only to resource groups that you configure with the <code>vmtracker</code> memory auditor.</p>
+<p>When available, SynxDB allocates global shared memory to a transaction after first allocating slot and resource group shared memory (if applicable). SynxDB allocates resource group global shared memory to transactions on a first-come first-served basis.</p>
+<blockquote>
+<p><strong>Note</strong> SynxDB tracks, but does not actively monitor, transaction memory usage in resource groups. If the memory usage for a resource group exceeds its fixed memory allotment, a transaction in the resource group fails when <em>all</em> of these conditions are met:</p>
+</blockquote>
+<ul>
+<li>No available resource group shared memory exists.</li>
+<li>No available global shared memory exists.</li>
+<li>The transaction requests additional memory.</li>
+</ul>
+<p>SynxDB uses resource group memory more efficiently when you leave some memory (for example, 10-20%) unallocated for the global shared memory pool. The availability of global shared memory also helps to mitigate the failure of memory-consuming or unpredicted queries.</p>
+<h4 id="query-operator-memory"><a class="header" href="#query-operator-memory"><a id="topic833sp"></a>Query Operator Memory</a></h4>
+<p>Most query operators are non-memory-intensive; that is, during processing, SynxDB can hold their data in allocated memory. When memory-intensive query operators such as join and sort process more data than can be held in memory, data is spilled to disk.</p>
+<p>The <a href="../ref_guide/config_params/guc-list.html">gp_resgroup_memory_policy</a> server configuration parameter governs the memory allocation and distribution algorithm for all query operators. SynxDB supports <code>eager-free</code> (the default) and <code>auto</code> memory policies for resource groups. When you specify the <code>auto</code> policy, SynxDB uses resource group memory limits to distribute memory across query operators, allocating a fixed size of memory to non-memory-intensive operators and the rest to memory-intensive operators. When the <code>eager_free</code> policy is in place, SynxDB distributes memory among operators more optimally by re-allocating memory released by operators that have completed their processing to operators in a later query stage.</p>
+<p><code>MEMORY_SPILL_RATIO</code> identifies the memory usage threshold for memory-intensive operators in a transaction. When this threshold is reached, a transaction spills to disk. SynxDB uses the <code>MEMORY_SPILL_RATIO</code> to determine the initial memory to allocate to a transaction.</p>
+<p>You can specify an integer percentage value from 0 to 100 inclusive for <code>MEMORY_SPILL_RATIO</code>. The default <code>MEMORY_SPILL_RATIO</code> is 0.</p>
+<p>When <code>MEMORY_SPILL_RATIO</code> is 0, SynxDB uses the <a href="../ref_guide/config_params/guc-list.html"><code>statement_mem</code></a> server configuration parameter value to control initial query operator memory.</p>
+<blockquote>
+<p><strong>Note</strong> When you set <code>MEMORY_LIMIT</code> to 0, <code>MEMORY_SPILL_RATIO</code> must also be set to 0.</p>
+</blockquote>
+<p>You can selectively set the <code>MEMORY_SPILL_RATIO</code> on a per-query basis at the session level with the <a href="../ref_guide/config_params/guc-list.html">memory_spill_ratio</a> server configuration parameter.</p>
+<h5 id="about-how-synxdb-allocates-transaction-memory"><a class="header" href="#about-how-synxdb-allocates-transaction-memory"><a id="topic833maxalloc"></a>About How SynxDB Allocates Transaction Memory</a></h5>
+<p>The query planner pre-computes the maximum amount of memory that each node in the plan tree can use. When resource group-based resource management is active and the <code>MEMORY_SPILL_RATIO</code> for the resource group is non-zero, the following formula roughly specifies the maximum amount of memory that SynxDB allocates to a transaction:</p>
+<pre><code class="language-pre">query_mem = (rg_perseg_mem * memory_limit) * memory_spill_ratio / concurrency
+</code></pre>
+<p>Where <code>memory_limit</code>, <code>memory_spill_ratio</code>, and <code>concurrency</code> are specified by the resource group under which the transaction runs.</p>
+<p>By default, SynxDB calculates the maximum amount of segment host memory allocated to a transaction based on the <code>rg_perseg_mem</code> and the number of primary segments configured on the <em>master host</em>.</p>
+<blockquote>
+<p><strong>Note</strong> If the memory configuration on your SynxDB master and segment hosts differ, you may encounter out-of-memory conditions or underutilization of resources with the default configuration.</p>
+</blockquote>
+<p>If the hardware configuration of your master and segment hosts differ, set the <a href="../ref_guide/config_params/guc-list.html#gp_resource_group_enable_recalculate_query_mem">gp_resource_group_enable_recalculate_query_mem</a> server configuration parameter to <code>true</code>; this prompts SynxDB to recalculate the maximum per-query memory allotment on each segment host based on the <code>rg_perseg_mem</code> and the number of primary segments configured on <em>that segment host</em>.</p>
+<h5 id="memory_spill_ratio-and-low-memory-queries"><a class="header" href="#memory_spill_ratio-and-low-memory-queries"><a id="topic833low"></a>memory_spill_ratio and Low Memory Queries</a></h5>
+<p>A low <code>statement_mem</code> setting (for example, in the 10MB range) has been shown to increase the performance of queries with low memory requirements. Use the <code>memory_spill_ratio</code> and <code>statement_mem</code> server configuration parameters to override the setting on a per-query basis. For example:</p>
+<pre><code>SET memory_spill_ratio=0;
+SET statement_mem='10 MB';
+</code></pre>
+<h3 id="about-using-reserved-resource-group-memory-vs-using-resource-group-global-shared-memory"><a class="header" href="#about-using-reserved-resource-group-memory-vs-using-resource-group-global-shared-memory"><a id="topic833fvs"></a>About Using Reserved Resource Group Memory vs. Using Resource Group Global Shared Memory</a></h3>
+<p>When you do not reserve memory for a resource group (<code>MEMORY_LIMIT</code> and <code>MEMORY_SPILL_RATIO</code> are set to 0):</p>
+<ul>
+<li>It increases the size of the resource group global shared memory pool.</li>
+<li>The resource group functions similarly to a resource queue, using the <a href="../ref_guide/config_params/guc-list.html"><code>statement_mem</code></a> server configuration parameter value to control initial query operator memory.</li>
+<li>Any query submitted in the resource group competes for resource group global shared memory on a first-come, first-served basis with queries running in other groups.</li>
+<li>There is no guarantee that SynxDB will be able to allocate memory for a query running in the resource group. The risk of a query in the group encountering an out of memory (OOM) condition increases when there are many concurrent queries consuming memory from the resource group global shared memory pool at the same time.</li>
+</ul>
+<p>To reduce the risk of OOM for a query running in an important resource group, consider reserving some fixed memory for the group. While reserving fixed memory for a group reduces the size of the resource group global shared memory pool, this may be a fair tradeoff to reduce the risk of encountering an OOM condition in a query running in a critical resource group.</p>
+<h3 id="other-memory-considerations"><a class="header" href="#other-memory-considerations"><a id="topic833cons"></a>Other Memory Considerations</a></h3>
+<p>Resource groups for roles track all SynxDB memory allocated via the <code>palloc()</code> function. Memory that you allocate using the Linux <code>malloc()</code> function is not managed by these resource groups. To ensure that resource groups for roles are accurately tracking memory usage, avoid using <code>malloc()</code> to allocate large amounts of memory in custom SynxDB user-defined functions.</p>
+<h2 id="configuring-and-using-resource-groups"><a class="header" href="#configuring-and-using-resource-groups"><a id="topic71717999"></a>Configuring and Using Resource Groups</a></h2>
+<blockquote>
+<p><strong>Important</strong> Significant SynxDB performance degradation has been observed when enabling resource group-based workload management on RedHat 6.x and CentOS 6.x systems. This issue is caused by a Linux cgroup kernel bug. This kernel bug has been fixed in CentOS 7.x and Red Hat 7.x/8.x systems.</p>
+</blockquote>
+<p>If you use RedHat 6 and the performance with resource groups is acceptable for your use case, upgrade your kernel to version 2.6.32-696 or higher to benefit from other fixes to the cgroups implementation.</p>
+<h3 id="prerequisites"><a class="header" href="#prerequisites"><a id="topic833"></a>Prerequisites</a></h3>
+<p>SynxDB resource groups use Linux Control Groups (cgroups) to manage CPU resources. SynxDB also uses cgroups to manage memory for resource groups for external components. With cgroups, SynxDB isolates the CPU and external component memory usage of your SynxDB processes from other processes on the node. This allows SynxDB to support CPU and external component memory usage restrictions on a per-resource-group basis.</p>
+<blockquote>
+<p><strong>Note</strong> Redhat 8.x/9.x supports two versions of cgroups: cgroup v1 and cgroup v2. SynxDB only supports cgroup v1. Follow the steps below to make sure that your system is mounting the <code>cgroups-v1</code> filesystem at startup.</p>
+</blockquote>
+<p>For detailed information about cgroups, refer to the Control Groups documentation for your Linux distribution.</p>
+<p>Complete the following tasks on each node in your SynxDB cluster to set up cgroups for use with resource groups:</p>
+<ol>
+<li>
+<p>If you are using Redhat 8.x/9.x, make sure that you configured the system to mount the <code>cgroups-v1</code> filesystem by default during system boot by running the following command:</p>
+<pre><code>stat -fc %T /sys/fs/cgroup/
+</code></pre>
+<p>For cgroup v1, the output is <code>tmpfs</code>.<br />
+If your output is <code>cgroup2fs</code>, configure the system to mount <code>cgroups-v1</code> by default during system boot by the <code>systemd</code> system and service manager:</p>
+<pre><code>grubby --update-kernel=/boot/vmlinuz-$(uname -r) --args="systemd.unified_cgroup_hierarchy=0 systemd.legacy_systemd_cgroup_controller"
+</code></pre>
+<p>To add the same parameters to all kernel boot entries:</p>
+<pre><code>grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0 systemd.legacy_systemd_cgroup_controller"
+</code></pre>
+<p>Reboot the system for the changes to take effect.</p>
+</li>
+<li>
+<p>Create the required cgroup hierarchies on each SynxDB node. Since the hierarchies are cleaned when the operating system rebooted, a service is applied to recreate them automatically on boot. Follow the below steps based on your operating system version.</p>
+</li>
+</ol>
+<h4 id="redhatcentos-6x7x8x"><a class="header" href="#redhatcentos-6x7x8x">Redhat/CentOS 6.x/7.x/8.x</a></h4>
+<p>These operating systems include the <code>libcgroup-tools</code> package (for Redhat/CentOS 7.x/8.x) or <code>libcgroup</code> (for Redhat/CentOS 6.x)</p>
+<ol>
+<li>
+<p>Locate the cgroups configuration file <code>/etc/cgconfig.conf</code>. You must be the superuser or have <code>sudo</code> access to edit this file:</p>
+<pre><code>vi /etc/cgconfig.conf
+</code></pre>
+</li>
+<li>
+<p>Add the following configuration information to the file:</p>
+<pre><code>group gpdb {
+     perm {
+         task {
+             uid = gpadmin;
+             gid = gpadmin;
+         }
+         admin {
+             uid = gpadmin;
+             gid = gpadmin;
+         }
+     }
+     cpu {
+     }
+     cpuacct {
+     }
+     cpuset {
+     }
+     memory {
+     }
+} 
+</code></pre>
+<p>This content configures CPU, CPU accounting, CPU core set, and memory control groups managed by the <code>gpadmin</code> user. SynxDB uses the memory control group only for those resource groups created with the <code>cgroup</code> <code>MEMORY_AUDITOR</code>.</p>
+</li>
+<li>
+<p>Start the cgroups service on each SynxDB node. You must be the superuser or have <code>sudo</code> access to run the command:</p>
+<ul>
+<li>
+<p>Redhat/CentOS 7.x/8.x systems:</p>
+<pre><code>cgconfigparser -l /etc/cgconfig.conf 
+</code></pre>
+</li>
+<li>
+<p>Redhat/CentOS 6.x systems:</p>
+<pre><code>service cgconfig start 
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>To automatically recreate SynxDB required cgroup hierarchies and parameters when your system is restarted, configure your system to enable the Linux cgroup service daemon <code>cgconfig.service</code> (Redhat/CentOS 7.x/8.x) or <code>cgconfig</code> (Redhat/CentOS 6.x) at node start-up. To ensure the configuration is persistent after reboot, run the following commands as user root:</p>
+<ul>
+<li>
+<p>Redhat/CentOS 7.x/8.x systems:</p>
+<pre><code>systemctl enable cgconfig.service
+</code></pre>
+<p>To start the service immediately (without having to reboot) enter:</p>
+<pre><code>systemctl start cgconfig.service
+</code></pre>
+</li>
+<li>
+<p>Redhat/CentOS 6.x systems:</p>
+<pre><code>chkconfig cgconfig on
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>Identify the <code>cgroup</code> directory mount point for the node:</p>
+<pre><code>grep cgroup /proc/mounts
+</code></pre>
+<p>The first line of output identifies the <code>cgroup</code> mount point.</p>
+</li>
+<li>
+<p>Verify that you set up the SynxDB cgroups configuration correctly by running the following commands. Replace &lt;cgroup_mount_point&gt; with the mount point that you identified in the previous step:</p>
+<pre><code>ls -l &lt;cgroup_mount_point&gt;/cpu/gpdb
+ls -l &lt;cgroup_mount_point&gt;/cpuacct/gpdb
+ls -l &lt;cgroup_mount_point&gt;/cpuset/gpdb
+ls -l &lt;cgroup_mount_point&gt;/memory/gpdb
+</code></pre>
+<p>If these directories exist and are owned by <code>gpadmin:gpadmin</code>, you have successfully configured cgroups for SynxDB CPU resource management.</p>
+</li>
+</ol>
+<h4 id="redhat-9x"><a class="header" href="#redhat-9x">Redhat 9.x</a></h4>
+<p>If you are using Redhat 9.x, the <code>libcgroup</code> and <code>libcgroup-tools</code> packages are not available with the operating system. In this scenario, you must manually create a service that automatically recreates the cgroup hierarchies after a system boot. Add the following bash script for systemd so it runs automatically during system startup. Perform the following steps as user root:</p>
+<ol>
+<li>
+<p>Create <code>greenplum-cgroup-v1-config.service</code></p>
+<pre><code>vim /etc/systemd/system/greenplum-cgroup-v1-config.service
+</code></pre>
+</li>
+<li>
+<p>Write the following content into <code>greenplum-cgroup-v1-config.service</code>. If the user is not <code>gpadmin</code>, replace it with the appropriate user.</p>
+<pre><code>[Unit]
+Description=SynxDB Cgroup v1 Configuration
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/sys/fs/cgroup
+# set up hierarchies only if cgroup v1 mounted
+ExecCondition=bash -c '[ xcgroupfs = x$(stat -fc "%%T" /sys/fs/cgroup/memory) ] || exit 1'
+ExecStart=bash -ec '\
+    for controller in cpu cpuacct cpuset memory;do \
+        [ -e $controller/gpdb ] || mkdir $controller/gpdb; \
+        chown -R gpadmin:gpadmin $controller/gpdb; \
+    done'
+
+[Install]
+WantedBy=basic.target
+</code></pre>
+</li>
+<li>
+<p>Reload systemd daemon and enable the service:</p>
+<pre><code>systemctl daemon-reload
+systemctl enable greenplum-cgroup-v1-config.service
+</code></pre>
+</li>
+</ol>
+<h3 id="procedure"><a class="header" href="#procedure"><a id="topic8339191"></a>Procedure</a></h3>
+<p>To use resource groups in your SynxDB cluster, you:</p>
+<ol>
+<li><a href="#topic8">Enable resource groups for your SynxDB cluster</a>.</li>
+<li><a href="#topic10">Create resource groups</a>.</li>
+<li><a href="#topic17">Assign the resource groups to one or more roles</a>.</li>
+<li><a href="#topic22">Use resource management system views to monitor and manage the resource groups</a>.</li>
+</ol>
+<h2 id="enabling-resource-groups"><a class="header" href="#enabling-resource-groups"><a id="topic8"></a>Enabling Resource Groups</a></h2>
+<p>When you install SynxDB, resource queues are enabled by default. To use resource groups instead of resource queues, you must set the <a href="../ref_guide/config_params/guc-list.html">gp_resource_manager</a> server configuration parameter.</p>
+<ol>
+<li>
+<p>Set the <code>gp_resource_manager</code> server configuration parameter to the value <code>"group"</code>:</p>
+<pre><code>gpconfig -s gp_resource_manager
+gpconfig -c gp_resource_manager -v "group"
+
+</code></pre>
+</li>
+<li>
+<p>Restart SynxDB:</p>
+<pre><code>gpstop
+gpstart
+
+</code></pre>
+</li>
+</ol>
+<p>Once enabled, any transaction submitted by a role is directed to the resource group assigned to the role, and is governed by that resource group’s concurrency, memory, and CPU limits. Similarly, CPU and memory usage by an external component is governed by the CPU and memory limits configured for the resource group assigned to the component.</p>
+<p>SynxDB creates two default resource groups for roles named <code>admin_group</code> and <code>default_group</code>. When you enable resources groups, any role that was not explicitly assigned a resource group is assigned the default group for the role’s capability. <code>SUPERUSER</code> roles are assigned the <code>admin_group</code>, non-admin roles are assigned the group named <code>default_group</code>.</p>
+<p>The default resource groups <code>admin_group</code> and <code>default_group</code> are created with the following resource limits:</p>
+<div class="table-wrapper"><table><thead><tr><th>Limit Type</th><th>admin_group</th><th>default_group</th></tr></thead><tbody>
+<tr><td>CONCURRENCY</td><td>10</td><td>20</td></tr>
+<tr><td>CPU_RATE_LIMIT</td><td>10</td><td>30</td></tr>
+<tr><td>CPUSET</td><td>-1</td><td>-1</td></tr>
+<tr><td>MEMORY_LIMIT</td><td>10</td><td>0</td></tr>
+<tr><td>MEMORY_SHARED_QUOTA</td><td>80</td><td>80</td></tr>
+<tr><td>MEMORY_SPILL_RATIO</td><td>0</td><td>0</td></tr>
+<tr><td>MEMORY_AUDITOR</td><td>vmtracker</td><td>vmtracker</td></tr>
+</tbody></table>
+</div>
+<p>Keep in mind that the <code>CPU_RATE_LIMIT</code> and <code>MEMORY_LIMIT</code> values for the default resource groups <code>admin_group</code> and <code>default_group</code> contribute to the total percentages on a segment host. You may find that you need to adjust these limits for <code>admin_group</code> and/or <code>default_group</code> as you create and add new resource groups to your SynxDB deployment.</p>
+<h2 id="creating-resource-groups"><a class="header" href="#creating-resource-groups"><a id="topic10"></a>Creating Resource Groups</a></h2>
+<p><em>When you create a resource group for a role</em>, you provide a name and a CPU resource allocation mode. You can optionally provide a concurrent transaction limit and memory limit, shared quota, and spill ratio values. Use the <a href="../ref_guide/sql_commands/CREATE_RESOURCE_GROUP.html">CREATE RESOURCE GROUP</a> command to create a new resource group.</p>
+<p>When you create a resource group for a role, you must provide a <code>CPU_RATE_LIMIT</code> or <code>CPUSET</code> limit value. These limits identify the percentage of SynxDB CPU resources to allocate to this resource group. You may specify a <code>MEMORY_LIMIT</code> to reserve a fixed amount of memory for the resource group. If you specify a <code>MEMORY_LIMIT</code> of 0, SynxDB uses global shared memory to fulfill all memory requirements for the resource group.</p>
+<p>For example, to create a resource group named <em>rgroup1</em> with a CPU limit of 20, a memory limit of 25, and a memory spill ratio of 20:</p>
+<pre><code>=# CREATE RESOURCE GROUP rgroup1 WITH (CPU_RATE_LIMIT=20, MEMORY_LIMIT=25, MEMORY_SPILL_RATIO=20);
+
+</code></pre>
+<p>The CPU limit of 20 is shared by every role to which <code>rgroup1</code> is assigned. Similarly, the memory limit of 25 is shared by every role to which <code>rgroup1</code> is assigned. <code>rgroup1</code> utilizes the default <code>MEMORY_AUDITOR</code> <code>vmtracker</code> and the default <code>CONCURRENCY</code> setting of 20.</p>
+<p><em>When you create a resource group for an external component</em>, you must provide <code>CPU_RATE_LIMIT</code> or <code>CPUSET</code> and <code>MEMORY_LIMIT</code> limit values. You must also provide the <code>MEMORY_AUDITOR</code> and explicitly set <code>CONCURRENCY</code> to zero (0). For example, to create a resource group named <em>rgroup_extcomp</em> for which you reserve CPU core 1 on master and segment hosts, and assign a memory limit of 15:</p>
+<pre><code>=# CREATE RESOURCE GROUP rgroup_extcomp WITH (MEMORY_AUDITOR=cgroup, CONCURRENCY=0,
+     CPUSET='1;1', MEMORY_LIMIT=15);
+
+</code></pre>
+<p>The <a href="../ref_guide/sql_commands/ALTER_RESOURCE_GROUP.html">ALTER RESOURCE GROUP</a> command updates the limits of a resource group. To change the limits of a resource group, specify the new values that you want for the group. For example:</p>
+<pre><code>=# ALTER RESOURCE GROUP rg_role_light SET CONCURRENCY 7;
+=# ALTER RESOURCE GROUP exec SET MEMORY_SPILL_RATIO 25;
+=# ALTER RESOURCE GROUP rgroup1 SET CPUSET '1;2,4';
+
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> You cannot set or alter the <code>CONCURRENCY</code> value for the <code>admin_group</code> to zero (0).</p>
+</blockquote>
+<p>The <a href="../ref_guide/sql_commands/DROP_RESOURCE_GROUP.html">DROP RESOURCE GROUP</a> command drops a resource group. To drop a resource group for a role, the group cannot be assigned to any role, nor can there be any transactions active or waiting in the resource group. Dropping a resource group for an external component in which there are running instances terminates the running instances.</p>
+<p>To drop a resource group:</p>
+<pre><code>=# DROP RESOURCE GROUP exec; 
+</code></pre>
+<h2 id="configuring-automatic-query-termination-based-on-memory-usage"><a class="header" href="#configuring-automatic-query-termination-based-on-memory-usage"><a id="topic_jlz_hzg_pkb"></a>Configuring Automatic Query Termination Based on Memory Usage</a></h2>
+<p>When resource groups have a global shared memory pool, the server configuration parameter <a href="../ref_guide/config_params/guc-list.html">runaway_detector_activation_percent</a> sets the percent of utilized global shared memory that triggers the termination of queries that are managed by resource groups that are configured to use the <code>vmtracker</code> memory auditor, such as <code>admin_group</code> and <code>default_group</code>.</p>
+<p>Resource groups have a global shared memory pool when the sum of the <code>MEMORY_LIMIT</code> attribute values configured for all resource groups is less than 100. For example, if you have 3 resource groups configured with <code>MEMORY_LIMIT</code> values of 10 , 20, and 30, then global shared memory is 40% = 100% - (10% + 20% + 30%).</p>
+<p>For information about global shared memory, see <a href="#topic833glob">Global Shared Memory</a>.</p>
+<h2 id="assigning-a-resource-group-to-a-role"><a class="header" href="#assigning-a-resource-group-to-a-role"><a id="topic17"></a>Assigning a Resource Group to a Role</a></h2>
+<p>When you create a resource group with the default <code>MEMORY_AUDITOR</code> <code>vmtracker</code>, the group is available for assignment to one or more roles (users). You assign a resource group to a database role using the <code>RESOURCE GROUP</code> clause of the <a href="../ref_guide/sql_commands/CREATE_ROLE.html">CREATE ROLE</a> or <a href="../ref_guide/sql_commands/ALTER_ROLE.html">ALTER ROLE</a> commands. If you do not specify a resource group for a role, the role is assigned the default group for the role’s capability. <code>SUPERUSER</code> roles are assigned the <code>admin_group</code>, non-admin roles are assigned the group named <code>default_group</code>.</p>
+<p>Use the <code>ALTER ROLE</code> or <code>CREATE ROLE</code> commands to assign a resource group to a role. For example:</p>
+<pre><code>=# ALTER ROLE bill RESOURCE GROUP rg_light;
+=# CREATE ROLE mary RESOURCE GROUP exec;
+
+</code></pre>
+<p>You can assign a resource group to one or more roles. If you have defined a role hierarchy, assigning a resource group to a parent role does not propagate down to the members of that role group.</p>
+<blockquote>
+<p><strong>Note</strong> You cannot assign a resource group that you create for an external component to a role.</p>
+</blockquote>
+<p>If you wish to remove a resource group assignment from a role and assign the role the default group, change the role’s group name assignment to <code>NONE</code>. For example:</p>
+<pre><code>=# ALTER ROLE mary RESOURCE GROUP NONE;
+
+</code></pre>
+<h2 id="monitoring-resource-group-status"><a class="header" href="#monitoring-resource-group-status"><a id="topic22"></a>Monitoring Resource Group Status</a></h2>
+<p>Monitoring the status of your resource groups and queries may involve the following tasks:</p>
+<ul>
+<li><a href="#topic221">Viewing Resource Group Limits</a></li>
+<li><a href="#topic23">Viewing Resource Group Query Status and CPU/Memory Usage</a></li>
+<li><a href="#topic25">Viewing the Resource Group Assigned to a Role</a></li>
+<li><a href="#topic252525">Viewing a Resource Group’s Running and Pending Queries</a></li>
+<li><a href="#topic27">Cancelling a Running or Queued Transaction in a Resource Group</a></li>
+</ul>
+<h3 id="viewing-resource-group-limits"><a class="header" href="#viewing-resource-group-limits"><a id="topic221"></a>Viewing Resource Group Limits</a></h3>
+<p>The <a href="../ref_guide/system_catalogs/gp_resgroup_config.html">gp_resgroup_config</a> <code>gp_toolkit</code> system view displays the current limits for a resource group. To view the limits of all resource groups:</p>
+<pre><code>=# SELECT * FROM gp_toolkit.gp_resgroup_config;
+
+</code></pre>
+<h3 id="viewing-resource-group-query-status-and-cpumemory-usage"><a class="header" href="#viewing-resource-group-query-status-and-cpumemory-usage"><a id="topic23"></a>Viewing Resource Group Query Status and CPU/Memory Usage</a></h3>
+<p>The <a href="../ref_guide/gp_toolkit.html">gp_resgroup_status</a> <code>gp_toolkit</code> system view enables you to view the status and activity of a resource group. The view displays the number of running and queued transactions. It also displays the real-time CPU and memory usage of the resource group. To view this information:</p>
+<pre><code>=# SELECT * FROM gp_toolkit.gp_resgroup_status;
+
+</code></pre>
+<h4 id="viewing-resource-group-cpumemory-usage-per-host"><a class="header" href="#viewing-resource-group-cpumemory-usage-per-host"><a id="topic23a"></a>Viewing Resource Group CPU/Memory Usage Per Host</a></h4>
+<p>The <a href="../ref_guide/gp_toolkit.html">gp_resgroup_status_per_host</a> <code>gp_toolkit</code> system view enables you to view the real-time CPU and memory usage of a resource group on a per-host basis. To view this information:</p>
+<pre><code>=# SELECT * FROM gp_toolkit.gp_resgroup_status_per_host;
+
+</code></pre>
+<h4 id="viewing-resource-group-cpumemory-usage-per-segment"><a class="header" href="#viewing-resource-group-cpumemory-usage-per-segment"><a id="topic23b"></a>Viewing Resource Group CPU/Memory Usage Per Segment</a></h4>
+<p>The <a href="../ref_guide/gp_toolkit.html">gp_resgroup_status_per_segment</a> <code>gp_toolkit</code> system view enables you to view the real-time CPU and memory usage of a resource group on a per-segment, per-host basis. To view this information:</p>
+<pre><code>=# SELECT * FROM gp_toolkit.gp_resgroup_status_per_segment;
+
+</code></pre>
+<h3 id="viewing-the-resource-group-assigned-to-a-role"><a class="header" href="#viewing-the-resource-group-assigned-to-a-role"><a id="topic25"></a>Viewing the Resource Group Assigned to a Role</a></h3>
+<p>To view the resource group-to-role assignments, perform the following query on the <a href="../ref_guide/system_catalogs/pg_roles.html">pg_roles</a> and <a href="../ref_guide/system_catalogs/pg_resgroup.html">pg_resgroup</a> system catalog tables:</p>
+<pre><code>=# SELECT rolname, rsgname FROM pg_roles, pg_resgroup
+     WHERE pg_roles.rolresgroup=pg_resgroup.oid;
+
+</code></pre>
+<h3 id="viewing-a-resource-groups-running-and-pending-queries"><a class="header" href="#viewing-a-resource-groups-running-and-pending-queries"><a id="topic252525"></a>Viewing a Resource Group’s Running and Pending Queries</a></h3>
+<p>To view a resource group’s running queries, pending queries, and how long the pending queries have been queued, examine the <a href="../ref_guide/system_catalogs/pg_stat_activity.html">pg_stat_activity</a> system catalog table:</p>
+<pre><code>=# SELECT query, waiting, rsgname, rsgqueueduration 
+     FROM pg_stat_activity;
+
+</code></pre>
+<p><code>pg_stat_activity</code> displays information about the user/role that initiated a query. A query that uses an external component such as PL/Container is composed of two parts: the query operator that runs in SynxDB and the UDF that runs in a PL/Container instance. SynxDB processes the query operators under the resource group assigned to the role that initiated the query. A UDF running in a PL/Container instance runs under the resource group assigned to the PL/Container runtime. The latter is not represented in the <code>pg_stat_activity</code> view; SynxDB does not have any insight into how external components such as PL/Container manage memory in running instances.</p>
+<h3 id="cancelling-a-running-or-queued-transaction-in-a-resource-group"><a class="header" href="#cancelling-a-running-or-queued-transaction-in-a-resource-group"><a id="topic27"></a>Cancelling a Running or Queued Transaction in a Resource Group</a></h3>
+<p>There may be cases when you want to cancel a running or queued transaction in a resource group. For example, you may want to remove a query that is waiting in the resource group queue but has not yet been run. Or, you may want to stop a running query that is taking too long to run, or one that is sitting idle in a transaction and taking up resource group transaction slots that are needed by other users.</p>
+<p>By default, transactions can remain queued in a resource group indefinitely. If you want SynxDB to cancel a queued transaction after a specific amount of time, set the server configuration parameter <a href="../ref_guide/config_params/guc-list.html">gp_resource_group_queuing_timeout</a>. When this parameter is set to a value (milliseconds) greater than 0, SynxDB cancels any queued transaction when it has waited longer than the configured timeout.</p>
+<p>To manually cancel a running or queued transaction, you must first determine the process id (pid) associated with the transaction. Once you have obtained the process id, you can invoke <code>pg_cancel_backend()</code> to end that process, as shown below.</p>
+<p>For example, to view the process information associated with all statements currently active or waiting in all resource groups, run the following query. If the query returns no results, then there are no running or queued transactions in any resource group.</p>
+<pre><code>=# SELECT rolname, g.rsgname, pid, waiting, state, query, datname 
+     FROM pg_roles, gp_toolkit.gp_resgroup_status g, pg_stat_activity 
+     WHERE pg_roles.rolresgroup=g.groupid
+        AND pg_stat_activity.usename=pg_roles.rolname;
+
+</code></pre>
+<p>Sample partial query output:</p>
+<pre><code> rolname | rsgname  | pid     | waiting | state  |          query           | datname 
+---------+----------+---------+---------+--------+------------------------ -+---------
+  sammy  | rg_light |  31861  |    f    | idle   | SELECT * FROM mytesttbl; | testdb
+  billy  | rg_light |  31905  |    t    | active | SELECT * FROM topten;    | testdb
+</code></pre>
+<p>Use this output to identify the process id (<code>pid</code>) of the transaction you want to cancel, and then cancel the process. For example, to cancel the pending query identified in the sample output above:</p>
+<pre><code>=# SELECT pg_cancel_backend(31905);
+</code></pre>
+<p>You can provide an optional message in a second argument to <code>pg_cancel_backend()</code> to indicate to the user why the process was cancelled.</p>
+<blockquote>
+<p><strong>Note</strong> Do not use an operating system <code>KILL</code> command to cancel any SynxDB process.</p>
+</blockquote>
+<h2 id="moving-a-query-to-a-different-resource-group"><a class="header" href="#moving-a-query-to-a-different-resource-group"><a id="moverg"></a>Moving a Query to a Different Resource Group</a></h2>
+<p>A user with SynxDB superuser privileges can run the <code>gp_toolkit.pg_resgroup_move_query()</code> function to move a running query from one resource group to another, without stopping the query. Use this function to expedite a long-running query by moving it to a resource group with a higher resource allotment or availability.</p>
+<blockquote>
+<p><strong>Note</strong> You can move only an active or running query to a new resource group. You cannot move a queued or pending query that is in an idle state due to concurrency or memory limits.</p>
+</blockquote>
+<p><code>pg_resgroup_move_query()</code> requires the process id (pid) of the running query, as well as the name of the resource group to which you want to move the query. The signature of the function follows:</p>
+<pre><code>pg_resgroup_move_query( pid int4, group_name text );
+</code></pre>
+<p>You can obtain the pid of a running query from the <code>pg_stat_activity</code> system view as described in <a href="#topic27">Cancelling a Running or Queued Transaction in a Resource Group</a>. Use the <code>gp_toolkit.gp_resgroup_status</code> view to list the name, id, and status of each resource group.</p>
+<p>When you invoke <code>pg_resgroup_move_query()</code>, the query is subject to the limits configured for the destination resource group:</p>
+<ul>
+<li>If the group has already reached its concurrent task limit, SynxDB queues the query until a slot opens or for <code>gp_resource_group_queuing_timeout</code> milliseconds if set.</li>
+<li>If the group has a free slot, <code>pg_resgroup_move_query()</code> tries to give slot control away to the target process for up to <code>gp_resource_group_move_timeout</code> milliseconds. If target process can’t handle movement request until <code>gp_resource_group_queuing_timeout</code> exceeds, SynxDB returns the error: <code>target process failed to move to a new group</code>.</li>
+<li>If <code>pg_resgroup_move_query()</code> was cancelled, but target process already got all slot control, then segment’s processes will not be moved to new group. Such inconsistent state will be fixed by the end of transaction or by the any next command dispatched by target process inside same transaction.</li>
+<li>If the destination resource group does not have enough memory available to service the query’s current memory requirements, SynxDB returns the error: <code>group &lt;group_name&gt; doesn't have enough memory ...</code>. In this situation, you may choose to increase the group shared memory allotted to the destination resource group, or perhaps wait a period of time for running queries to complete and then invoke the function again.</li>
+</ul>
+<p>After SynxDB moves the query, there is no way to guarantee that a query currently running in the destination resource group does not exceed the group memory quota. In this situation, one or more running queries in the destination group may fail, including the moved query. Reserve enough resource group global shared memory to minimize the potential for this scenario to occur.</p>
+<p><code>pg_resgroup_move_query()</code> moves only the specified query to the destination resource group. SynxDB assigns subsequent queries that you submit in the session to the original resource group.</p>
+<p>Successful return of <code>pg_resgroup_move_query()</code> doesn’t mean target process was successfully moved. Process movement is asynchronous. The current resource group can be checked via <code>pg_stat_activity</code> system view.</p>
+<ul>
+<li>
+<p>If you upgraded from a previous SynxDB 2 installation, you must manually register the supporting functions for this feature, and grant access to the functions as follows:</p>
+<pre><code>CREATE FUNCTION gp_toolkit.pg_resgroup_check_move_query(IN session_id int, IN groupid oid, OUT session_mem int, OUT available_mem int)
+RETURNS SETOF record
+AS 'gp_resource_group', 'pg_resgroup_check_move_query'
+VOLATILE LANGUAGE C;
+GRANT EXECUTE ON FUNCTION gp_toolkit.pg_resgroup_check_move_query(int, oid, OUT int, OUT int) TO public;
+
+CREATE FUNCTION gp_toolkit.pg_resgroup_move_query(session_id int4, groupid text)
+RETURNS bool
+AS 'gp_resource_group', 'pg_resgroup_move_query'
+VOLATILE LANGUAGE C;
+GRANT EXECUTE ON FUNCTION gp_toolkit.pg_resgroup_move_query(int4, text) TO public;
+</code></pre>
+</li>
+</ul>
+<h2 id="resource-group-frequently-asked-questions"><a class="header" href="#resource-group-frequently-asked-questions"><a id="topic777999"></a>Resource Group Frequently Asked Questions</a></h2>
+<h3 id="cpu"><a class="header" href="#cpu"><a id="topic791"></a>CPU</a></h3>
+<ul>
+<li>
+<p><strong>Why is CPU usage lower than the <code>CPU_RATE_LIMIT</code> configured for the resource group?</strong></p>
+<p>You may run into this situation when a low number of queries and slices are running in the resource group, and these processes are not utilizing all of the cores on the system.</p>
+</li>
+<li>
+<p><strong>Why is CPU usage for the resource group higher than the configured <code>CPU_RATE_LIMIT</code>?</strong></p>
+<p>This situation can occur in the following circumstances:</p>
+<ul>
+<li>A resource group may utilize more CPU than its <code>CPU_RATE_LIMIT</code> when other resource groups are idle. In this situation, SynxDB allocates the CPU resource of an idle resource group to a busier one. This resource group feature is called CPU burst.</li>
+<li>The operating system CPU scheduler may cause CPU usage to spike, then drop down. If you believe this might be occurring, calculate the average CPU usage within a given period of time (for example, 5 seconds) and use that average to determine if CPU usage is higher than the configured limit.</li>
+</ul>
+</li>
+</ul>
+<h3 id="memory"><a class="header" href="#memory"><a id="topic795"></a>Memory</a></h3>
+<ul>
+<li>
+<p><strong>Why did my query return an “out of memory” error?</strong></p>
+<p>A transaction submitted in a resource group fails and exits when memory usage exceeds its fixed memory allotment, no available resource group shared memory exists, and the transaction requests more memory.</p>
+</li>
+<li>
+<p><strong>Why did my query return a “memory limit reached” error?</strong></p>
+<p>SynxDB automatically adjusts transaction and group memory to the new settings when you use <code>ALTER RESOURCE GROUP</code> to change a resource group’s memory and/or concurrency limits. An “out of memory” error may occur if you recently altered resource group attributes and there is no longer a sufficient amount of memory available for a currently running query.</p>
+</li>
+<li>
+<p><strong>Why does the actual memory usage of my resource group exceed the amount configured for the group?</strong></p>
+<p>The actual memory usage of a resource group may exceed the configured amount when one or more queries running in the group is allocated memory from the global shared memory pool. (If no global shared memory is available, queries fail and do not impact the memory resources of other resource groups.)</p>
+<p>When global shared memory is available, memory usage may also exceed the configured amount when a transaction spills to disk. SynxDB statements continue to request memory when they start to spill to disk because:</p>
+<ul>
+<li>Spilling to disk requires extra memory to work.</li>
+<li>Other operators may continue to request memory.
+<br/>Memory usage grows in spill situations; when global shared memory is available, the resource group may eventually use up to 200-300% of its configured group memory limit.</li>
+</ul>
+</li>
+</ul>
+<h3 id="concurrency"><a class="header" href="#concurrency"><a id="topic797"></a>Concurrency</a></h3>
+<ul>
+<li>
+<p><strong>Why is the number of running transactions lower than the <code>CONCURRENCY</code> limit configured for the resource group?</strong></p>
+<p>SynxDB considers memory availability before running a transaction, and will queue the transaction if there is not enough memory available to serve it. If you use <code>ALTER RESOURCE GROUP</code> to increase the <code>CONCURRENCY</code> limit for a resource group but do not also adjust memory limits, currently running transactions may be consuming all allotted memory resources for the group. When in this state, SynxDB queues subsequent transactions in the resource group.</p>
+</li>
+<li>
+<p><strong>Why is the number of running transactions in the resource group higher than the configured <code>CONCURRENCY</code> limit?</strong></p>
+<p>The resource group may be running <code>SET</code> and <code>SHOW</code> commands, which bypass resource group transaction checks.</p>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../admin_guide/wlmgmt.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../admin_guide/workload_mgmt.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../admin_guide/wlmgmt.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../admin_guide/workload_mgmt.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,96 @@
+.. raw:: latex
+
+   \newpage
+
+Custom Multi-Character Delimiters for Reading and Writing External Tables
+=========================================================================
+
+When reading and writing external table data, |product_name| supports custom delimiters by extending ``gp_exttable_delimiter``, allowing for more flexible data formats.
+
+Compilation and installation
+----------------------------
+
+On the server where |product_name| is installed, download the extension and install it for usage.
+
+.. code:: bash
+
+   cd gp_exttable_delimiter
+
+   make install
+
+Usage example
+-------------
+
+Read external tables
+~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Prepare a sample file ``1.txt`` and start ``gpfdist`` to provide network distribution capabilities.
+
+   .. code:: bash
+
+      touch 1.txt
+      echo 'aa|@|bb' > 1.txt
+      gpfdist -p 8088 -d .
+
+2. Load the ``gp_exttable_delimiter`` extension.
+
+   .. code:: sql
+
+      CREATE EXTENSION if not exists gp_exttable_delimiter;
+      CREATE TABLE t1 (c1 text, c2 text);
+
+3. Create an external table.
+
+   .. code:: sql
+
+      CREATE EXTERNAL TABLE t1_ext (LIKE t1)LOCATION ('gpfdist://localhost:8088/1.txt')FORMAT 'CUSTOM' (formatter=delimiter_in, entry_delim='|@|',line_delim=E'\n');
+
+   In the external table creation statement above:
+
+   -  ``FORMAT 'CUSTOM'`` specifies the use of a custom delimiter.
+   -  ``formatter=delimiter_in`` is a string parsing function provided by ``gp_exttable_delimiter``, indicating that the file will be read.
+   -  ``entry_delim='|@|'`` specifies that columns are separated by the ``|@|`` string.
+   -  ``line_delim`` specifies that each row is separated by the newline character ``\n``.
+
+4. Query the external table to read the related content.
+
+   .. code:: sql
+
+      SELECT * FROM t1_ext;
+
+Write to external tables
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Prepare a sample file ``2.txt`` for writing.
+
+   .. code:: bash
+
+      touch 2.txt
+
+2. Load the ``gp_exttable_delimiter`` extension.
+
+   .. code:: sql
+
+      CREATE EXTENSION if not exists gp_exttable_delimiter;
+      CREATE TABLE t2 (a int,b int);
+
+3. Create an external table and write data into ``2.txt``.
+
+   .. code:: sql
+
+      CREATE WRITABLE EXTERNAL TABLE t2_ext(LIKE t2) LOCATION ('gpfdist://localhost:8088/2.txt')FORMAT 'CUSTOM' (FORMATTER=delimiter_ou_any,entry_delim='|@|',line_delim=E'\n',null='');
+
+      INSERT INTO t2_ext values(1,2);
+
+   In the external table creation statement above:
+
+   -  ``FORMAT 'CUSTOM'`` specifies the use of a custom delimiter.
+   -  ``FORMATTER=delimiter_ou_any`` is a string parsing function provided by ``gp_exttable_delimiter``, indicating that data will be written to the file.
+   -  ``entry_delim='|@|'`` specifies that columns are separated by the ``|@|`` string.
+   -  ``line_delim=E'\n'`` specifies that each row is separated by the newline character ``\n``.
+
+4. You can see the written data in the file.
+
+   .. code:: bash
+
+      cat 2.txt

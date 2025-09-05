@@ -1,0 +1,253 @@
+Quick-Start Guide
+=========================================
+
+This guide is designed to help you quickly get started with |product_name|. By following this guide, you will learn how to access the |product_name| console, create necessary resources (such as accounts, users, and warehouses), run SQL queries via the client or console, load external data, and scale clusters.
+
+|product_name| is a cloud-native, distributed analytical database that offers enterprises efficient, flexible, and scalable solutions for data management and analysis. It supports high-performance SQL queries, making it ideal for large-scale data analysis tasks. This guide aims to provide you with clear, step-by-step instructions, ensuring that even first-time users can easily complete the basic operations and lay a foundation for more advanced learning.
+
+Access the console and log in
+------------------------------
+
+Before creating resources and running queries in |product_name|, you need to access and log into the console. Follow these steps to get started:
+
+1. Open your browser and access the console login page.
+2. Fill in the organization name, user name, and password.
+3. Click **Login**.
+
+After login, you are now ready to start creating resources.
+
+Create resources
+----------------
+
+Before you start querying sample data, you need to create a few basic resources, including:
+
+-  Account: The basic organizational unit in |product_name|, and all subsequent operations will depend on it.
+-  User: Required to connect to and manage databases.
+-  Warehouse: The core resource for running SQL queries. Each warehouse can contain multiple segment nodes.
+
+Create an account
+~~~~~~~~~~~~~~~~~
+
+1. Click the avatar in the top-right corner, and then click **Accounts** in the menu to enter the account page.
+2. Click **Create Account** in the top-right corner to open the **Create Account** dialog.
+3. Enter an account name, choose the cloud provider and region. Then click **OK**.
+4. Return to the **Accounts** page. Click **Switch account** in the top-right corner and select the newly created account from the dropdown list.
+
+Once the account is created, you can go on creating other resources.
+
+Create a user
+~~~~~~~~~~~~~
+
+1. Click the SynxDB logo in the top-left corner of the console to access the **Dashboard** page.
+2. Click **Users** in the left navigation bar to access the user page.
+3. Click **+ Create User** in the top-right corner to open the user creation dialog.
+4. Enter a user name and password, select a database role (the **login** role is mandatory), and click **OK**.
+
+Once completed, the newly created user and its role information will appear in the user list.
+
+Create a warehouse
+~~~~~~~~~~~~~~~~~~
+
+1. In the left navigation bar, click **Warehouses** to access the warehouse page.
+2. Click **+ Create Warehouse** in the top-right corner to open the warehouse creation dialog.
+3. Enter a warehouse name (for example ``warehouse1``), set the number of segments (2 is recommended), select the previously created user, and click OK.
+4. Return to the **Warehouses** page and wait for a moment. Refresh the page until the warehouse status shows **Running**.
+
+Once the warehouse is created, you are ready to connect to the database.
+
+Connect to the database
+-----------------------
+
+After creating the necessary resources, you can connect to the |product_name| database using the psql client. Open a terminal and run the following command (replace the placeholders with your values), then enter the password you have set when creating the user:
+
+.. code-block:: bash
+
+   psql -h <host_address> -U <user> -d postgres
+
+.. tip:: 
+
+   -  To get ``<host_address>``, click the avatar in the top-right corner of the console and select **Accounts**. On the **Accounts** page, find the host address associated with your account.
+   -  To get ``<user>``, click **Users** in the left navigation bar of the console. Find the target user name on the user list page.
+   -  ``postgres``: A built-in database created with the data warehouse.
+
+Once connected successfully, you can start executing SQL queries.
+
+Query sample data
+-----------------
+
+After connecting to the database, you can explore |product_name| by querying, creating tables, and inserting data. This section introduces two methods: querying data using a client or using the SQL editor in the console.
+
+Method 1: Use a client
+~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Open the terminal. Connect to the |product_name| database via the ``psql`` client.
+2. Check the current tables in the database:
+
+   .. code-block:: sql
+
+      \dt
+
+3. Before executing SQL operations, bind the task to a warehouse ``warehouse1``:
+
+   .. code-block:: sql
+
+      SET warehouse TO warehouse1;
+
+4. Create a sample table employees to store sample data:
+
+   .. code-block:: sql
+
+      CREATE TABLE employees (
+         id SERIAL,
+         name VARCHAR(50),
+         position VARCHAR(50),
+         salary NUMERIC(10, 2)
+      );
+
+5. Insert sample data into the employees table:
+
+   .. code-block:: sql
+
+      INSERT INTO employees (name, position, salary) VALUES ('Alice', 'Engineer', 120000.00);
+
+6. Query the table data:
+
+   .. code-block:: sql
+
+      SELECT * FROM employees;
+
+Method 2: Use the worksheet in the console
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you prefer operations on a graphical interface, you can use the built-in SQL editor in the |product_name| console to execute SQL operations. The built-in SQL editor allows you to operate the database quickly and view results intuitively.
+
+1. In the left navigation bar of the console, click **Worksheets**.
+2. In the worksheet list, click worksheet to open the built-in SQL editor.
+3. Click the **Select a warehouse** dropdown menu and select ``warehouse1`` you have created.
+4. In the editor, enter and execute the following SQL statement to create the employees table:
+
+   .. code-block:: sql
+
+      CREATE TABLE employees (
+         id SERIAL,
+         name VARCHAR(50),
+         position VARCHAR(50),
+         salary NUMERIC(10, 2)
+      );
+
+5. Insert sample data into the ``employees`` table:
+
+   .. code-block:: sql
+
+      INSERT INTO employees (name, position, salary) VALUES ('Alice', 'Engineer', 120000.00);
+
+6. Query the table data:
+
+   .. code-block:: sql
+
+      SELECT * FROM employees;
+
+Load and query external data
+----------------------------
+
+You can load sample data from cloud object storage into |product_name| by following these steps.
+
+1. Create a file named ``employees.csv`` on your local machine, and add the following sample data to the file:
+
+   .. code-block:: text
+
+      employee_id,first_name,last_name,department_id,hire_date
+      101,John,Doe,10,2020-01-15
+      102,Jane,Smith,20,2019-03-22
+      103,Emily,Davis,10,2021-07-01
+      104,Michael,Brown,30,2018-11-05
+      105,Sarah,Johnson,20,2022-02-14
+
+2. Upload the ``employees.csv`` file to the Amazon S3 service in the ``us-west-1`` region. Set the bucket policies correctly, granting appropriate permissions to ensure accessibility. Refer to the `Amazon S3 user documentation <https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html>`_ for detailed instructions.
+
+3. Open the |product_name| console and navigate to the SQL editor, or connect to |product_name| using the ``psql`` client.
+
+4. Execute the following statement to create a foreign data wrapper:
+
+   .. code-block:: sql
+
+      CREATE FOREIGN DATA WRAPPER datalake_fdw
+      HANDLER datalake_fdw_handler
+      VALIDATOR datalake_fdw_validator
+      OPTIONS ( mpp_execute 'all segments' );
+
+5. Create a foreign server. When executing the following statement, replace ``<hostname>`` with the object storage host information (for example, ``https://<bucket>.<region>.s3.amazonaws.com``) and ``<protocol>`` with the protocol for the cloud platform s3.
+
+   .. code-block:: sql
+
+      CREATE SERVER foreign_server
+      FOREIGN DATA WRAPPER datalake_fdw
+      OPTIONS (host '<hostname>', protocol '<protocol>', isvirtual 'false',ishttps 'true');
+
+6. Create a user mapping. When executing the following statement, replace ``<access_key>`` and ``<secret_key>`` with the actual credentials. Refer to `Amazon S3 Documentation - Identity and Access Management for Amazon S3 <https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-iam.html>`_ for obtaining these credentials.
+
+   .. code-block:: sql
+
+      CREATE USER MAPPING FOR gpadmin SERVER foreign_server
+      OPTIONS (user 'gpadmin', accesskey '<access_key>', secretkey '<secret_key>');
+
+7. Create the external table. When executing the following statement, replace ``<file_path>`` with the actual path to the ``employees.csv`` file in object storage (for example, ``/example-cloud-doc/``).
+
+   .. code-block:: sql
+
+      CREATE FOREIGN TABLE example(
+         employee_id INT,
+         first_name VARCHAR(50),
+         last_name VARCHAR(50),
+         department_id INT,
+         hire_date DATE)
+      SERVER foreign_server
+      OPTIONS (filePath '<file_path>', compression 'none', enableCache 'false', format 'csv');
+
+8. Now you can query the data in the external table:
+
+   .. code-block:: sql
+
+      SELECT * FROM example;
+
+Explore the unique advantages of the data warehouse
+---------------------------------------------------------
+
+Multiple warehouses accessing shared storage
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+|product_name| supports shared data storage across multiple warehouses. For instance, tables created in warehouse1 can be accessed by warehouse2. Follow these steps to explore this feature:
+
+1. Create a new warehouse named ``warehouse2`` by following the steps for creating a warehouse.
+2. Open the built-in SQL editor by following the steps for querying data using the console.
+3. Click the ``Select a warehouse`` dropdown menu and select ``warehouse2``.
+4. Query the ``employees`` table created on ``warehouse1`` from ``warehouse2``:
+
+   .. code-block:: sql
+
+      SELECT * FROM employees;
+
+   You can query the table data created on ``warehouse1`` directly from the ``warehouse2`` cluster.
+
+Warehouse elastic scaling-in and scaling-out
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can elastically scale warehouses to meet dynamic business workloads. Here is an example of scaling ``warehouse1``:
+
+1. Open the |product_name| console and click **Warehouses** in the left navigation bar to access the warehouse page.
+2. Locate ``warehouse1`` and click **Edit Warehouse** in its row.
+3. Adjust segment count in the **Edit Warehouse** dialog. Increase the value for scaling out or decrease it for scaling in based on your requirements.
+4. Click **OK** and wait for the changes to take effect.
+
+Summary
+-------
+
+Congratulations! In this quick-start guide, you have completed the following tasks:
+
+-  Registered and accessed the |product_name| console.
+-  Created essential resources (accounts, users, and warehouses).
+-  Run SQL queries using a client or the console.
+-  Loaded and queried external data.
+-  Explored the unique advantages of |product_name|, such as shared storage and elastic scaling.
+
+These steps have introduced you to the core features of |product_name| and laid a foundation for further exploration and usage.

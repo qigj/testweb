@@ -1,0 +1,373 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Configuring User Impersonation and Proxying - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="configuring-the-hadoop-user-user-impersonation-and-proxying"><a class="header" href="#configuring-the-hadoop-user-user-impersonation-and-proxying">Configuring the Hadoop User, User Impersonation, and Proxying</a></h1>
+<p>PXF accesses Hadoop services on behalf of SynxDB end users. Impersonation is a way to present a SynxDB end user identity to a remote system. You can achieve this with PXF by configuring a Hadoop proxy user. When the Hadoop service is secured with Kerberos, you also have the option of impersonation using Kerberos constrained delegation.</p>
+<p>When user impersonation is activated (the default), PXF accesses non-secured Hadoop services using the identity of the SynxDB user account that logs in to SynxDB and performs an operation that uses a PXF connector. Keep in mind that PXF uses only the <em>login</em> identity of the user when accessing Hadoop services. For example, if a user logs in to SynxDB as the user <code>jane</code> and then runs <code>SET ROLE</code> or <code>SET SESSION AUTHORIZATION</code> to assume a different user identity, all PXF requests still use the identity <code>jane</code> to access Hadoop services. When user impersonation is activated, you must explicitly configure each Hadoop data source (HDFS, Hive, HBase) to allow PXF to act as a proxy for impersonating specific Hadoop users or groups.</p>
+<p>When user impersonation is deactivated, PXF runs all Hadoop service requests as the PXF process owner (usually <code>gpadmin</code>) or the Hadoop user identity that you specify. This behavior provides no means to control access to Hadoop services for different SynxDB users. It requires that this user have access to all files and directories in HDFS, and all tables in Hive and HBase that are referenced in PXF external table definitions.</p>
+<p>You configure the Hadoop user and PXF user impersonation setting for a server via the <code>pxf-site.xml</code> server configuration file. Refer to <a href="cfg_server.html#pxf-site">About the pxf-site.xml Configuration File</a> for more information about the configuration properties in this file.</p>
+<h2 id="use-cases-and-configuration-scenarios"><a class="header" href="#use-cases-and-configuration-scenarios"><a id="pxf_cfg_scenarios"></a>Use Cases and Configuration Scenarios</a></h2>
+<p>User, user impersonation, and proxy configuration for Hadoop depends on how you use PXF to access Hadoop, and whether or not the Hadoop cluster is secured with Kerberos.</p>
+<p>The following scenarios describe the use cases and configuration required when
+you use PXF to access <em>non-secured Hadoop</em>.
+If you are using PXF to access a <em>Kerberos-secured Hadoop cluster</em>, refer to the <a href="pxf_kerbhdfs.html#scenarios">Use Cases and Configuration Scenarios</a> section in the <em>Configuring PXF for Secure HDFS</em> topic.</p>
+<p><strong>Note</strong>: These scenarios assume that <code>gpadmin</code> is the PXF process owner.</p>
+<h3 id="accessing-hadoop-as-the-synxdb-user-proxied-by-gpadmin"><a class="header" href="#accessing-hadoop-as-the-synxdb-user-proxied-by-gpadmin"><a id="default_case"></a>Accessing Hadoop as the SynxDB User Proxied by gpadmin</a></h3>
+<p>This is the default configuration for PXF. The <code>gpadmin</code> user proxies SynxDB
+queries on behalf of SynxDB users. The effective user in Hadoop is the
+SynxDB user that runs the query.</p>
+<p><img src="graphics/impersonation_cases/impersonation-case-1.png" alt="Accessing Hadoop as the SynxDB User Proxied by gpadmin" title="Accessing Hadoop as the SynxDB User Proxied by gpadmin" /></p>
+<p>The following table identifies the <code>pxf.service.user.impersonation</code> and <code>pxf.service.user.name</code> settings, and the PXF and Hadoop configuration required for this use case:</p>
+<div class="table-wrapper"><table><thead><tr><th>Impersonation</th><th>Service User</th><th>PXF Configuration</th><th>Hadoop Configuration       </th></tr></thead><tbody>
+<tr><td>true</td><td><code>gpadmin</code></td><td>None; this is the default configuration.</td><td>Set the <code>gpadmin</code> user as the Hadoop proxy user as described in <a href="#hadoop">Configure Hadoop Proxying</a>.</td></tr>
+</tbody></table>
+</div>
+<h3 id="accessing-hadoop-as-the-synxdb-user-proxied-by-a-custom-user"><a class="header" href="#accessing-hadoop-as-the-synxdb-user-proxied-by-a-custom-user"><a id="custom_proxy"></a>Accessing Hadoop as the SynxDB User Proxied by a &lt;custom&gt; User</a></h3>
+<p>In this configuration, PXF accesses Hadoop as the SynxDB user proxied
+by &lt;custom&gt; user. A query initiated by a SynxDB user appears on the Hadoop side
+as originating from the (&lt;custom&gt; user.</p>
+<p>This configuration might be desirable when Hadoop is already configured with a
+proxy user, or when you want a user different than <code>gpadmin</code> to proxy SynxDB queries.</p>
+<p><img src="graphics/impersonation_cases/impersonation-case-2.png" alt="Accessing Hadoop as the SynxDB User Proxied by a custom User" title="Accessing Hadoop as the SynxDB User Proxied by a custom User" /></p>
+<p>The following table identifies the <code>pxf.service.user.impersonation</code> and <code>pxf.service.user.name</code> settings, and the PXF and Hadoop configuration required for this use case:</p>
+<div class="table-wrapper"><table><thead><tr><th>Impersonation</th><th>Service User</th><th>PXF Configuration</th><th>Hadoop Configuration       </th></tr></thead><tbody>
+<tr><td>true</td><td>&lt;custom&gt;</td><td><a href="#pxf_cfg_user">Configure the Hadoop User</a> to the &lt;custom&gt; user name.</td><td>Set the &lt;custom&gt;  user as the Hadoop proxy user as described in <a href="#hadoop">Configure Hadoop Proxying</a>.</td></tr>
+</tbody></table>
+</div>
+<h3 id="accessing-hadoop-as-the-gpadmin-user"><a class="header" href="#accessing-hadoop-as-the-gpadmin-user"><a id="gpadmin_hadoop"></a>Accessing Hadoop as the gpadmin User</a></h3>
+<p>In this configuration, PXF accesses Hadoop as the <code>gpadmin</code> user. A query initiated by
+any SynxDB user appears on the Hadoop side as originating from the <code>gpadmin</code> user.</p>
+<p><img src="graphics/impersonation_cases/impersonation-case-3.png" alt="Accessing Hadoop as the gpadmin User" title="Accessing Hadoop as the gpadmin User" /></p>
+<p>The following table identifies the <code>pxf.service.user.impersonation</code> and <code>pxf.service.user.name</code> settings, and the PXF and Hadoop configuration required for this use case:</p>
+<div class="table-wrapper"><table><thead><tr><th>Impersonation</th><th>Service User</th><th>PXF Configuration</th><th>Hadoop Configuration       </th></tr></thead><tbody>
+<tr><td>false</td><td><code>gpadmin</code></td><td>Turn off user impersonation as described in <a href="#pxf_cfg_impers">Configure PXF User Impersonation</a>.</td><td>None required.</td></tr>
+</tbody></table>
+</div>
+<h3 id="accessing-hadoop-as-a-custom-user"><a class="header" href="#accessing-hadoop-as-a-custom-user"><a id="custom_hadoop"></a>Accessing Hadoop as a &lt;custom&gt; User</a></h3>
+<p>In this configuration, PXF accesses Hadoop as a &lt;custom&gt; user. A query initiated by
+any SynxDB user appears on the Hadoop side as originating from the &lt;custom&gt; user.</p>
+<p><img src="graphics/impersonation_cases/impersonation-case-4.png" alt="Accessing Hadoop as a custom User" title="Accessing Hadoop as a custom User" /></p>
+<p>The following table identifies the <code>pxf.service.user.impersonation</code> and <code>pxf.service.user.name</code> settings, and the PXF and Hadoop configuration required for this use case:</p>
+<div class="table-wrapper"><table><thead><tr><th>Impersonation</th><th>Service User</th><th>PXF Configuration</th><th>Hadoop Configuration       </th></tr></thead><tbody>
+<tr><td>false</td><td>&lt;custom&gt;</td><td>Turn off user impersonation as described in <a href="#pxf_cfg_impers">Configure PXF User Impersonation</a> and <a href="#pxf_cfg_user">Configure the Hadoop User</a> to the &lt;custom&gt; user name.</td><td>None required.</td></tr>
+</tbody></table>
+</div>
+<h2 id="configure-the-hadoop-user"><a class="header" href="#configure-the-hadoop-user"><a id="pxf_cfg_user"></a>Configure the Hadoop User</a></h2>
+<p>By default, PXF accesses Hadoop using the identity of the SynxDB user. You can configure PXF to access Hadoop as a different user on a per-server basis.</p>
+<p>Perform the following procedure to configure the Hadoop user:</p>
+<ol>
+<li>
+<p>Log in to your SynxDB coordinator host as the administrative user:</p>
+<pre><code class="language-shell">$ ssh gpadmin@&lt;coordinator&gt;
+</code></pre>
+</li>
+<li>
+<p>Identify the name of the Hadoop PXF server configuration that you want to update.</p>
+</li>
+<li>
+<p>Navigate to the server configuration directory. For example, if the server is named <code>hdp3</code>:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cd $PXF_BASE/servers/hdp3
+</code></pre>
+</li>
+<li>
+<p>If the server configuration does not yet include a <code>pxf-site.xml</code> file, copy the template file to the directory. For example:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cp &lt;PXF_INSTALL_DIR&gt;/templates/pxf-site.xml .
+</code></pre>
+</li>
+<li>
+<p>Open the <code>pxf-site.xml</code> file in the editor of your choice, and configure the Hadoop user name. When impersonation is deactivated, this name identifies the Hadoop user identity that PXF will use to access the Hadoop system. When user impersonation is activated for a non-secure Hadoop cluster, this name identifies the PXF proxy Hadoop user. For example, if you want to access Hadoop as the user <code>hdfsuser1</code>, uncomment the property and set it as follows:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;pxf.service.user.name&lt;/name&gt;
+    &lt;value&gt;hdfsuser1&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<p>The Hadoop user <code>hdfsuser1</code> must exist in the Hadoop cluster.</p>
+</li>
+<li>
+<p>Save the <code>pxf-site.xml</code> file and exit the editor.</p>
+</li>
+<li>
+<p>Use the <code>pxf cluster sync</code> command to synchronize the PXF Hadoop server configuration to your SynxDB cluster:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ pxf cluster sync
+</code></pre>
+</li>
+</ol>
+<h2 id="configure-pxf-user-impersonation"><a class="header" href="#configure-pxf-user-impersonation"><a id="pxf_cfg_impers"></a>Configure PXF User Impersonation</a></h2>
+<p>PXF user impersonation is activated by default for Hadoop servers. You can configure PXF user impersonation on a per-server basis. Perform the following procedure to turn PXF user impersonation on or off for the Hadoop server configuration:</p>
+<ol>
+<li>
+<p>Navigate to the server configuration directory. For example, if the server is named <code>hdp3</code>:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cd $PXF_BASE/servers/hdp3
+</code></pre>
+</li>
+<li>
+<p>If the server configuration does not yet include a <code>pxf-site.xml</code> file, copy the template file to the directory. For example:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cp &lt;PXF_INSTALL_DIR&gt;/templates/pxf-site.xml .
+</code></pre>
+</li>
+<li>
+<p>Open the <code>pxf-site.xml</code> file in the editor of your choice, and update the user impersonation property setting. For example, if you do not require user impersonation for this server configuration, set the <code>pxf.service.user.impersonation</code> property to <code>false</code>:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;pxf.service.user.impersonation&lt;/name&gt;
+    &lt;value&gt;false&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<p>If you require user impersonation, turn it on:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;pxf.service.user.impersonation&lt;/name&gt;
+    &lt;value&gt;true&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+</li>
+<li>
+<p>If you activated user impersonation and Kerberos constrained delegation is deactivated (the default), you must configure Hadoop proxying as described in <a href="#hadoop">Configure Hadoop Proxying</a>. You must also configure <a href="#hive">Hive User Impersonation</a> and <a href="#hbase">HBase User Impersonation</a> if you plan to use those services.</p>
+</li>
+<li>
+<p>Save the <code>pxf-site.xml</code> file and exit the editor.</p>
+</li>
+<li>
+<p>Use the <code>pxf cluster sync</code> command to synchronize the PXF Hadoop server configuration to your SynxDB cluster:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ pxf cluster sync
+</code></pre>
+</li>
+</ol>
+<h2 id="configure-hadoop-proxying"><a class="header" href="#configure-hadoop-proxying"><a id="hadoop"></a>Configure Hadoop Proxying</a></h2>
+<p>When PXF user impersonation is activated for a Hadoop server configuration and Kerberos constrained delegation is deactivated (the default), you must configure Hadoop to permit PXF to proxy SynxDB users. This configuration involves setting certain <code>hadoop.proxyuser.*</code> properties. Follow these steps to set up PXF Hadoop proxy users:</p>
+<ol>
+<li>
+<p>Log in to your Hadoop cluster and open the <code>core-site.xml</code> configuration file using a text editor, or use Ambari or another Hadoop cluster manager to add or edit the Hadoop property values described in this procedure.</p>
+</li>
+<li>
+<p>Set the property <code>hadoop.proxyuser.&lt;name&gt;.hosts</code> to specify the list of PXF host names from which proxy requests are permitted. Substitute the PXF proxy Hadoop user for <code>&lt;name&gt;</code>. The PXF proxy Hadoop user is the <code>pxf.service.user.name</code> that you configured in the procedure above, or, if you are using Kerberos authentication to Hadoop, the proxy user identity is the <em>primary</em> component of the Kerberos principal. If you have not explicitly configured <code>pxf.service.user.name</code>, the proxy user is the operating system user that started PXF. Provide multiple PXF host names in a comma-separated list. For example, if the PXF proxy user is named <code>hdfsuser2</code>:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;hadoop.proxyuser.hdfsuser2.hosts&lt;/name&gt;
+    &lt;value&gt;pxfhost1,pxfhost2,pxfhost3&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+</li>
+<li>
+<p>Set the property <code>hadoop.proxyuser.&lt;name&gt;.groups</code> to specify the list of HDFS groups that PXF as Hadoop user <code>&lt;name&gt;</code> can impersonate. You should limit this list to only those groups that require access to HDFS data from PXF.  For example:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;hadoop.proxyuser.hdfsuser2.groups&lt;/name&gt;
+    &lt;value&gt;group1,group2&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+</li>
+<li>
+<p>You must restart Hadoop for your <code>core-site.xml</code> changes to take effect.</p>
+</li>
+<li>
+<p>Copy the updated <code>core-site.xml</code> file to the PXF Hadoop server configuration directory <code>$PXF_BASE/servers/&lt;server_name&gt;</code> on the SynxDB coordinator host and synchronize the configuration to the standby coordinator host and each SynxDB segment host.</p>
+</li>
+</ol>
+<h2 id="hive-user-impersonation"><a class="header" href="#hive-user-impersonation"><a id="hive"></a>Hive User Impersonation</a></h2>
+<p>The PXF Hive connector uses the Hive MetaStore to determine the HDFS locations of Hive tables, and then accesses the underlying HDFS files directly. No specific impersonation configuration is required for Hive, because the Hadoop proxy configuration in <code>core-site.xml</code> also applies to Hive tables accessed in this manner.</p>
+<h2 id="hbase-user-impersonation"><a class="header" href="#hbase-user-impersonation"><a id="hbase"></a>HBase User Impersonation</a></h2>
+<p>In order for user impersonation to work with HBase, you must activate the <code>AccessController</code> coprocessor in the HBase configuration and restart the cluster. See <a href="http://hbase.apache.org/book.html#hbase.secure.configuration">61.3 Server-side Configuration for Simple User Access Operation</a> in the Apache HBase Reference Guide for the required <code>hbase-site.xml</code> configuration settings.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pxf/client_instcfg.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pxf/pxf_kerbhdfs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pxf/client_instcfg.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pxf/pxf_kerbhdfs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

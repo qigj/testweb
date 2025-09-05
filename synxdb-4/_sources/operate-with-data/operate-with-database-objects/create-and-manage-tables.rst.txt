@@ -1,0 +1,120 @@
+.. raw:: latex
+
+   \newpage
+
+Create and Manage Tables
+========================
+
+Tables in |product_name| are similar to tables in other relational databases, except that table row data is distributed across different segments. When creating a table, you need to specify the table's distribution strategy.
+
+Create tables
+-------------
+
+Use the ``CREATE TABLE`` command to create tables and define table structure. When creating a table, you define:
+
+-  Table columns and their associated data types. See :ref:`Choose column data types <operate-with-data/operate-with-database-objects/create-and-manage-tables:choose column data types>`.
+-  Constraints that limit columns or tables. See :ref:`Set table and column constraints <operate-with-data/operate-with-database-objects/create-and-manage-tables:set table and column constraints>`.
+-  The table's distribution strategy, which defines the basis for dividing data among segments.
+-  How the table is stored on disk.
+-  Table partitioning strategy for large tables.
+
+Choose column data types
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+A column's data type determines what type of data that column can contain. Prioritize choosing the best data type that takes up less space and can constrain data. For example, use character types for strings, date or timestamp types for dates, and numeric types for numbers.
+
+For columns containing text data, it is recommended to specify ``VARCHAR`` or ``TEXT`` types, not ``CHAR`` types. In |product_name|, when using ``VARCHAR`` or ``TEXT`` types, padding added to data (that is, space characters added after the last non-space character) is treated as significant characters, while in ``CHAR`` types it is not considered significant.
+
+When choosing numeric types, ensure that the type can accommodate the numeric data in the column and also support future expansion. After meeting these two conditions, choose the smallest data type. For example, if ``INT`` or ``SMALLINT`` types are sufficient to accommodate numeric data, then using ``BIGINT`` type would waste storage space. Note that if numbers are expected to expand over time, changing from a smaller data type to a larger data type after loading large amounts of data will be costly. For example, if current data values fit in ``SMALLINT``, but data is expected to expand, then ``INT`` is a better long-term choice.
+
+For columns in cross-table joins, use the same data types. Cross-table joins typically involve a primary key in one table and a foreign key in another table. When data types are different, the database needs to convert data types to make them the same in order to correctly compare data values, but this adds unnecessary overhead.
+
+Set table and column constraints
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Setting constraints on tables and columns can limit the data in tables. |product_name| supports constraints the same as PostgreSQL, but with some limitations, including:
+
+-  ``CHECK`` constraints can only reference the table in which they are defined.
+-  ``UNIQUE`` and ``PRIMARY KEY`` constraints must be compatible with the table's distribution key and partition key (if any).
+
+   .. note::
+
+      ``UNIQUE`` and ``PRIMARY KEY`` constraints are not allowed on Append-Optimized tables because Append-Optimized tables do not support the ``UNIQUE`` indexes created by these constraints.
+
+-  ``FOREIGN KEY`` constraints are allowed but not enforced.
+-  Constraints defined on partitioned tables apply to the entire partitioned table. Constraints cannot be defined on individual parts of the table.
+
+Check constraints
+^^^^^^^^^^^^^^^^^
+
+Check constraints specify that values in a column must satisfy a boolean (truth-value) expression. For example, in the following table, the ``price`` column can only contain positive values:
+
+.. code:: sql
+
+   = CREATE TABLE products 
+               ( product_no integer, 
+                 name text, 
+                 price numeric CHECK (price > 0) );
+
+Not-null constraints
+^^^^^^^^^^^^^^^^^^^^
+
+Not-null constraints specify that a column cannot take null values. Not-null constraints are always written as column constraints. For example:
+
+.. code:: sql
+
+   = CREATE TABLE products 
+          ( product_no integer NOT NULL,
+            name text NOT NULL,
+            price numeric );
+
+Unique constraints
+^^^^^^^^^^^^^^^^^^
+
+Unique constraints ensure that the data contained in a column or group of columns is unique relative to all rows in the table. The table must be hash-distributed or replicated (not randomly distributed). If the table is hash-distributed, the constraint columns must be the same as or a subset of the table's distribution key columns. For example:
+
+.. code:: sql
+
+   = CREATE TABLE products 
+          ( product_no integer UNIQUE, 
+            name text, 
+            price numeric)
+         DISTRIBUTED BY (product_no);
+
+Primary keys
+^^^^^^^^^^^^
+
+A primary key constraint is a combination of a ``UNIQUE`` constraint and a ``NOT NULL`` constraint. The table must be hash-distributed (not randomly distributed), and the primary key columns must be the same as or a superset of the table's distribution key columns. If a table has a primary key, that column (or group of columns) defaults to the table's distribution key. For example:
+
+.. code:: sql
+
+   = CREATE TABLE products 
+          ( product_no integer PRIMARY KEY, 
+            name text, 
+            price numeric)
+         DISTRIBUTED BY (product_no);
+
+Foreign keys
+^^^^^^^^^^^^
+
+|product_name| does not support foreign keys. Although foreign keys can be declared in the database, referential integrity is not enforced.
+
+Foreign key constraints specify that the values in a column or group of columns must match the values in a row of another table to maintain referential integrity between two related tables. In |product_name|'s distributed table segments, referential integrity checks cannot be enforced.
+
+Exclusion constraints
+^^^^^^^^^^^^^^^^^^^^^
+
+Exclusion constraints ensure that if any two rows are compared using the specified operators on the specified columns or expressions, at least one of the operator comparisons will return false or null. The syntax is:
+
+.. code:: sql
+
+   CREATE TABLE circles (
+       c circle,
+       EXCLUDE USING gist (c WITH &&)
+   ) DISTRIBUTED REPLICATED;
+
+Similar to unique constraints, exclusion constraints only apply to replicated tables or when distribution key columns are part of the constraint, using the ``=`` operator similar to the hash operator of the distribution key.
+
+Partitioned tables do not support exclusion constraints.
+
+Adding an exclusion constraint automatically creates an index of the type specified in the constraint declaration.

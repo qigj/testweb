@@ -1,0 +1,1084 @@
+.. raw:: latex
+
+   \newpage
+
+Load Data from Object Storage and HDFS
+============================================
+
+You can use the ``datalake_fdw`` extension to load data from an object storage (such as Amazon S3 and other major cloud providers), HDFS, and ORC tables in Hive into |product_name| for data query and access.
+
+To install the ``datalake_fdw`` extension to the database, execute the SQL statement ``CREATE EXTENSION data_fdw;``.
+
+.. code:: sql
+
+   CREATE EXTENSION datalake_fdw;
+
+Currently, supported data formats are CSV, TEXT, ORC, and PARQUET.
+
+.. note::
+
+   ``datalake_fdw`` does not support loading data in parallel.
+
+
+For information on how to load tables from Hive into |product_name|, see :ref:`load-data/load-data-from-hive:load data from hive data warehouse`.
+
+Load data from object storage
+--------------------------------
+
+You can load data from major cloud providers like Amazon S3, Google Cloud Storage, and Microsoft Azure Blob Storage into |product_name|. Follow these steps:
+
+1. Create a foreign table wrapper ``FOREIGN DATA WRAPPER``. Note that there are no options in the SQL statement below, and you need to execute it exactly as provided.
+
+   .. code:: sql
+
+      CREATE FOREIGN DATA WRAPPER datalake_fdw
+      HANDLER datalake_fdw_handler
+      VALIDATOR datalake_fdw_validator 
+      OPTIONS ( mpp_execute 'all segments' );
+
+2. Create an external server ``foreign_server``.
+
+   .. code:: sql
+
+      CREATE SERVER foreign_server
+      FOREIGN DATA WRAPPER datalake_fdw
+      OPTIONS (host 'xxx', protocol 's3', isvirtual 'false', ishttps 'false');
+
+   The options in the above SQL statement are explained as follows:
+
+   .. raw:: latex
+      
+       \begin{mytable-small}
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 6 11 16
+      :class: longtable
+
+      * - Option name
+        - Description
+        - Details
+      * - ``host``
+        - Sets the host information for accessing the object storage.
+        - Required: Must be set
+
+          Example:
+
+          - Host for private cloud: ``192.168.1.1:9000``
+      * - ``protocol``
+        - Specifies the cloud platform for the object storage.
+        - Required: Must be set
+
+          Options:
+
+          - ``s3``: Amazon S3 and S3-compatible storage (uses v4 signature)
+      * - ``isvirtual``
+        - Use **virtual-host-style** or **path-host-style** to parse the host of the object storage.
+        - Required: Optional
+
+          Options:
+
+          - ``true``: Uses **virtual-host-style**.
+          - ``false``: Uses **path-host-style**.
+
+          Default value: ``false``
+      * - ``ishttps``
+        - Whether to use HTTPS to access the object storage.
+        - Required: Optional
+
+          Options:
+
+          - ``true``: Uses HTTPS.
+          - ``false``: Does not use HTTPS.
+
+          Default value: ``false``
+
+   .. raw:: latex
+      
+       \end{mytable-small}
+
+3. Create a user mapping.
+
+   .. code:: sql
+
+      CREATE USER MAPPING FOR gpadmin SERVER foreign_server 
+      OPTIONS (user 'gpadmin', accesskey 'xxx', secretkey 'xxx');
+
+   The options in the above SQL statement are explained as follows:
+
+   .. raw:: latex
+
+       \begin{mytable-small}
+
+   .. list-table:: 
+      :header-rows: 1
+      :align: left
+      :widths: auto
+      :class: longtable
+
+      * - Option name
+        - Description
+        - Required
+      * - ``user``
+        - Creates the specific user specified by ``foreign_server``.
+        - Yes
+      * - ``accesskey``
+        - The key needed to access the object storage.
+        - Yes
+      * - ``secretkey``
+        - The secret key needed to access the object storage.
+        - Yes
+
+   .. raw:: latex
+
+       \end{mytable-small}
+
+4. Create a foreign table ``example``. After creating it, the data on the object storage is loaded into |product_name|, and you can query this table.
+
+   .. code:: sql
+
+      CREATE FOREIGN TABLE example(
+      a text,
+      b text
+      )
+      SERVER foreign_server 
+      OPTIONS (filePath '/test/parquet/', compression 'none', enableCache 'false', format 'parquet');
+
+   The options in the SQL statement above are explained as follows:
+
+   .. raw:: latex
+
+       \begin{mytable-small}
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 6 11 16
+      :class: longtable
+
+      * - Option name
+        - Description
+        - Details
+      * - ``filePath``
+        - Sets the specific path for the target foreign table.
+        - 
+          - Required: Must be set
+          - Path format should be ``/bucket/prefix``.
+
+          - Example:
+  
+            - If the bucket name is ``test-bucket`` and the path is ``bucket/test/orc_file_folder/``, and there are files like ``0000_0``, ``0001_1``, ``0002_2``, then to access file ``0000_0``, set ``filePath`` to ``filePath '/test-bucket/test/orc_file_folder/0000_0'``.
+            - To access all files in ``test/orc_file_folder/``, set ``filePath`` to ``filePath '/test-bucket/test/orc_file_folder/'``.
+
+          - Note: ``filePath`` is parsed in the format ``/bucket/prefix/``. Incorrect formats might lead to errors, such as:
+
+            - ``filePath 'test-bucket/test/orc_file_folder/'``
+            - ``filePath '/test-bucket/test/orc_file_folder/0000_0'``
+
+      * - ``compression``
+        - Sets the write compression format. Currently supports snappy, gzip, zstd, lz4.
+        - 
+          - Required: Optional
+
+          - Options:
+
+            - ``none``: Supports CSV, ORC, TEXT, PARQUET.
+            - ``gzip``: Supports CSV, TEXT, PARQUET.
+            - ``snappy``: Supports PARQUET.
+            - ``zstd``: Supports PARQUET.
+            - ``lz4``: Supports PARQUET.
+            
+          - Default value: ``none``, which means no compression. Not setting this value means no compression.
+
+      * - ``enableCache``
+        - Specifies whether to use Gopher caching.
+        - 
+          - Required: Optional
+          - Options:
+
+            - ``true``: Enables Gopher caching.
+            - ``false``: Disables Gopher caching.
+
+          - Default value: ``false``
+          - Deleting the foreign table does not automatically clear its cache. To clear the cache, you need to manually run a specific SQL function, such as: ``select gp_toolkit._gopher_cache_free_relation_name(text);``
+      * - ``format``
+        - The file format supported by FDW.
+        - 
+          - Required: Must be set
+
+          - Options:
+  
+            - ``csv``: Read, Write
+            - ``text``: Read, Write
+            - ``orc``: Read, Write
+            - ``parquet``: Read, Write
+
+   .. raw:: latex
+
+       \end{mytable-small}
+
+5. Use ``insert`` and ``select`` statements to add data to and query the data from the foreign table ``example`` like a normal table.
+
+   .. code:: sql
+
+      insert into example values ('1', '2');
+
+      select * from example;
+
+Load Iceberg table data from S3 (without an external metadata service)
+----------------------------------------------------------------------
+
+This section describes how to configure |product_name| to directly load Apache Iceberg tables stored on Amazon S3 or other compatible object storage without depending on an external metadata catalog (such as Hive Metastore or a REST Catalog).
+
+This feature is primarily intended for quick, read-only querying and analysis of existing Iceberg data.
+
+Prerequisites: Configure the S3 connection file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To enable this feature, you need to create a configuration file named ``s3.conf`` on all coordinator nodes of the |product_name| cluster. This file provides the underlying ``datalake_agent`` with the necessary connection and authentication information to access S3.
+
+
+1. Get the Namespace. First, you need to determine the Kubernetes namespace where the |product_name| cluster is located.
+
+
+   .. code-block:: bash
+
+      kubectl get ns
+
+2. Edit the ``connector-config`` ConfigMap. Use the ``kubectl edit`` command to edit ``connector-config``. Replace ``<namespace>`` in the command with the actual namespace obtained in the previous step.
+
+   .. code-block:: bash
+
+      kubectl edit cm connector-config -n <namespace>
+
+3. Add the content of ``s3.conf`` to the ``ConfigMap``. After running the command, a text editor (like ``vi``) will open. In the ``data:`` section, following the format of ``gphdfs.conf``, add a new key named ``s3.conf`` and paste the entire content of ``s3.conf`` as its value. For example:
+
+   .. code-block:: yaml
+
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+      name: connector-config
+      namespace: <namespace>
+      data:
+      gphdfs.conf: |
+         hdfs-cluster-1:
+            hdfs_namenode_host: <namenode_ip>
+            ...
+      # --- Add the key and value for s3.conf here ---
+      s3.conf: |
+         s3_cluster:    
+            fs.s3a.endpoint: http://127.0.0.1:8000
+            fs.s3a.access.key: admin
+            fs.s3a.secret.key: password
+            fs.s3a.path.style.access: true
+            fs.defaultFS: s3a:// 
+            fs.s3a.impl: org.apache.hadoop.fs.s3a.S3AFileSystem
+
+4. Save and exit. Save the file and close the editor. Kubernetes will automatically update the ``ConfigMap`` and mount the new ``s3.conf`` file into the corresponding Pods.
+
+Procedures
+~~~~~~~~~~~~~~~
+
+1. Create a foreign data wrapper. You can skip this step if it already exists.
+
+   .. code-block:: sql
+
+      CREATE FOREIGN DATA WRAPPER datalake_fdw
+      HANDLER datalake_fdw_handler
+      VALIDATOR datalake_fdw_validator
+      OPTIONS (mpp_execute 'all segments');
+
+2. Create a foreign server pointing to the S3 service. This is a standard S3 server definition.
+
+   .. code-block:: sql
+
+      CREATE SERVER s3_server
+      FOREIGN DATA WRAPPER datalake_fdw
+      OPTIONS (host 'your_s3_host', protocol 's3');
+
+   -  ``host``: Specifies the host information for accessing the object storage.
+   -  ``protocol``: For S3 or compatible storage, set this to ``s3``.
+
+3. Create a foreign table to map to the Iceberg data on S3.
+
+   .. code-block:: sql
+
+      CREATE FOREIGN TABLE iceberg_s3_table (
+         -- Define the table columns here, which must match the Iceberg table's schema.
+         id int,
+         name text,
+         create_date date  -- If it is a partitioned table, the partition key must also be defined as a column.
+      )
+      SERVER s3_server
+      OPTIONS (
+         format 'iceberg',
+         catalog_type 's3',
+         server_name 's3_cluster',
+         filePath '/your_bucket/path/to/warehouse/',
+         table_identifier 'your_db.your_table'
+      );
+
+   -  ``format``: Specifies the file format. For this scenario, it is fixed to ``'iceberg'``.
+   -  ``catalog_type``: Specifies the catalog type. For S3 scenarios without a catalog, it is fixed to ``'s3'``.
+   -  ``server_name``: Specifies the name of the cluster configuration defined in the ``s3.conf`` file. In this example, it is ``'s3_cluster'``.
+   -  ``filePath``: Points to the root path of the Iceberg "warehouse" or the parent directory of the database. The format is ``/bucket_name/prefix/``.
+   -  ``table_identifier``: Specifies the identifier of the table to be accessed, in the format ``<database_name>.<table_name>``. |product_name| concatenates this identifier with ``filePath`` to locate the final table data path.
+
+Examples
+~~~~~~~~~~~
+
+Example 1: Query a non-partitioned table. Assume the path to the Iceberg table on S3 is ``s3a://ossext-ci-test/warehouse/iceberg/warehouse/default/simple_table``.
+
+1. Create the foreign table ``iceberg_simple``:
+
+   .. code-block:: sql
+
+      CREATE FOREIGN TABLE iceberg_simple (
+         id int,
+         name text
+      )
+      SERVER s3_server
+      OPTIONS (
+         filePath '/ossext-ci-test/warehouse/iceberg/warehouse/', 
+         catalog_type 's3',
+         server_name 's3_cluster', 
+         table_identifier 'default.simple_table', 
+         format 'iceberg'
+      );
+
+2. Query the data:
+
+   .. code-block:: sql
+
+      SELECT * FROM iceberg_simple WHERE id = 1;
+
+Example 2: Query a partitioned table. Assume the Iceberg table ``partitioned_table`` on S3 is partitioned by the ``create_date`` field, and its path is ``s3a://ossext-ci-test/warehouse/iceberg/warehouse/testdb/partitioned_table``.
+
+1. Create the foreign table ``iceberg_partitioned``. Note that the partition key ``create_date`` must be included in the column definitions.
+
+   .. code-block:: sql
+
+      CREATE FOREIGN TABLE iceberg_partitioned (
+         id int,
+         name text,
+         age int,
+         department text,
+         create_date date
+      )
+      SERVER s3_server
+      OPTIONS (
+         filePath '/ossext-ci-test/warehouse/iceberg/warehouse/', 
+         catalog_type 's3', 
+         server_name 's3_cluster', 
+         table_identifier 'testdb.partitioned_table', 
+         format 'iceberg'
+      );
+
+2. Query the data:
+
+   .. code-block:: sql
+
+      SELECT name, department FROM iceberg_partitioned WHERE create_date = '2025-05-20';
+
+Limitations and notes
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-  Read-only operations: Iceberg foreign tables created using this method only support ``SELECT`` queries. Write operations such as ``INSERT``, ``UPDATE``, and ``DELETE`` are not supported.
+-  Authentication method: This feature only uses the ``s3.conf`` configuration file for authentication. The ``CREATE USER MAPPING`` method described in the documentation is not applicable to this scenario.
+-  Path concatenation: Ensure that ``filePath`` and ``table_identifier`` are set correctly. The system locates the table data using the logic ``filePath + table_identifier``. ``filePath`` should typically point to the warehouse root directory that contains multiple database directories.
+
+Read Iceberg tables on S3 via Polaris Catalog
+-------------------------------------------------
+
+This section explains how to query Apache Iceberg tables stored on Amazon S3 or other compatible object storage in |product_name| by connecting to a Polaris Catalog service.
+
+This feature allows you to use an external, centralized metadata service to manage Iceberg tables while using the powerful query capabilities of |product_name| for data analysis. Iceberg foreign tables created with this method currently only support ``SELECT`` queries; write operations like ``INSERT``, ``UPDATE``, and ``DELETE`` are not supported.
+
+Core concepts
+~~~~~~~~~~~~~~~~~~
+
+Unlike accessing the filesystem directly, accessing Iceberg tables via a catalog service requires |product_name| to communicate with two separate external systems:
+
+-  Polaris Catalog Service: A service for storing and managing Iceberg table metadata (such as schema, partition information, and snapshots).
+-  S3 Object Storage Service: An external service for storing the actual data files (for example, parquet files).
+
+Therefore, you need to create two independent sets of ``SERVER`` and ``USER MAPPING`` objects to configure and authenticate the connections for these two services respectively.
+
+Prerequisites
+~~~~~~~~~~~~~~~
+
+-  Network connectivity:
+   
+   -  Ensure that the |product_name| cluster has network access to the ``host`` address of the external S3 service. This may require configuring appropriate firewall outbound rules or network policies. The requirements for accessing S3 are the same as for standard S3 foreign tables.
+   -  Ensure that the Polaris Catalog service can access the |product_name| cluster.
+
+-  Credentials:
+
+   -  Prepare the authentication credentials (``accesskey`` and ``secretkey``) required to access the S3 service.
+   -  Prepare the OAuth2 authentication credentials (``client_id`` and ``client_secret``) required to access the Polaris Catalog service.
+
+Procedure to read Iceberg tables on S3
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Create the FOREIGN DATA WRAPPER ``datalake_fdw``. You can skip this step if it already exists.
+
+   .. code-block:: sql
+
+      CREATE EXTENSION IF NOT EXISTS datalake_fdw;
+
+      CREATE FOREIGN DATA WRAPPER datalake_fdw
+      HANDLER datalake_fdw_handler
+      VALIDATOR datalake_fdw_validator
+      OPTIONS (mpp_execute 'all segments');
+
+2. Configure the connection and authentication for the S3 service. Create a ``SERVER`` object and a corresponding ``USER MAPPING`` for the external S3 service.
+
+   .. code-block:: sql
+
+      -- 1. Create a server object for the S3 service.
+      CREATE SERVER s3_data_server
+      FOREIGN DATA WRAPPER datalake_fdw
+      OPTIONS (host 'your_s3_host:port', protocol 's3', ishttps 'false');
+
+      -- 2. Create a user mapping for the S3 server to provide authentication credentials.
+      CREATE USER MAPPING FOR gpadmin
+      SERVER s3_data_server
+      OPTIONS (user 'gpadmin', accesskey 'YOUR_S3_ACCESS_KEY', secretkey 'YOUR_S3_SECRET_KEY');
+
+3. Configure the connection and authentication for the Polaris Catalog service. Similarly, create a dedicated ``SERVER`` object and ``USER MAPPING`` for the internal Polaris Catalog service.
+
+   .. code-block:: sql
+
+      -- 1. Create a server object for the Polaris Catalog service.
+      CREATE SERVER polaris_catalog_server
+      FOREIGN DATA WRAPPER datalake_fdw
+      OPTIONS (polaris_server_url 'http://polaris-service-url:8181/api/catalog');
+
+      -- 2. Create a user mapping for the Polaris server to provide OAuth2 authentication credentials.
+      CREATE USER MAPPING FOR gpadmin
+      SERVER polaris_catalog_server
+      OPTIONS (client_id 'your_client_id', client_secret 'your_client_secret', scope 'PRINCIPAL_ROLE:ALL');
+
+4. Create a foreign table to map to the Iceberg table managed by the Polaris Catalog.
+
+   .. code-block:: sql
+
+      CREATE FOREIGN TABLE my_iceberg_table (
+         name text,
+         score decimal(16, 2)
+      )
+      SERVER s3_data_server -- Note: The SERVER here points to the S3 data server.
+      OPTIONS (
+         format 'iceberg',
+         catalog_type 'polaris',
+         table_identifier 'polaris.testdb.mytable',
+         server_name 'polaris_catalog_server', -- [Key] Specifies which server to get metadata from.
+         filePath '/your-bucket/warehouse/polaris' -- [Key] Still need to specify the data root path on S3.
+      );
+
+   ``OPTIONS`` parameter details:
+
+   -  ``format``: Specifies the file format. For this scenario, it is fixed to ``'iceberg'``.
+   -  ``catalog_type``: Specifies the catalog type, fixed to ``'polaris'``.
+   -  ``table_identifier``: The full identifier of the table in the Polaris Catalog, in the format ``<catalog_name>.<db_name>.<table_name>``.
+   -  ``server_name``: [Key] Specifies the name of the Polaris Catalog server used for fetching metadata, which is ``polaris_catalog_server`` created in Step 3.
+   -  ``filePath``: [Key] The root or warehouse path on S3 where the Iceberg data files are stored. This parameter is still required.
+
+Complete example
+~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: sql
+
+   -- Step 1: Create FDW.
+   CREATE EXTENSION IF NOT EXISTS datalake_fdw;
+   CREATE FOREIGN DATA WRAPPER datalake_fdw HANDLER datalake_fdw_handler VALIDATOR datalake_fdw_validator OPTIONS ( mpp_execute 'all segments' );
+
+   -- Step 2: Configure S3 access.
+   CREATE SERVER s3_server FOREIGN DATA WRAPPER datalake_fdw OPTIONS (host '192.168.50.102:8002', protocol 's3', ishttps 'false');
+   CREATE USER MAPPING FOR gpadmin SERVER s3_server OPTIONS (user 'gpadmin', accesskey '0QpV601CpxpfUaVmQm1Y', secretkey 'daRYWISTvibNnnxCqS8MEgOGZWpFHtL2EkDD5YRv');
+
+   -- Step 3: Configure Polaris Catalog access.
+   CREATE SERVER polaris_server FOREIGN DATA WRAPPER datalake_fdw OPTIONS (polaris_server_url 'http://192.168.50.102:8181/api/catalog');
+   CREATE USER MAPPING FOR gpadmin SERVER polaris_server OPTIONS (client_id 'root', client_secret 'secret', scope 'PRINCIPAL_ROLE:ALL');
+
+   -- Step 4: Create foreign table and query.
+   CREATE FOREIGN TABLE iceberg_rest_table (
+      name text, 
+      score decimal(16,2)
+   ) 
+   SERVER s3_server 
+   OPTIONS (
+      filePath '/your-actual-bucket/warehouse/polaris', 
+      catalog_type 'polaris', 
+      table_identifier 'polaris.testdb1.table27', 
+      server_name 'polaris_server',  
+      format 'iceberg'
+   );
+
+   -- Query data
+   SELECT * FROM iceberg_rest_table LIMIT 10;
+
+Load data from HDFS without authentication
+---------------------------------------------
+
+You can load data from HDFS into |product_name|. The following sections explain how to load data from an HDFS cluster without authentication. |product_name| also supports loading data from an HDFS HA (High Availability) cluster, which is also explained below.
+
+Load data from HDFS in the simple mode, which is the basic HDFS mode without using complex security authentication. For details, see the Hadoop documentation: `Hadoop in Secure Mode <https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SecureMode.html>`__. The steps are as follows:
+
+1. Create an external table wrapper ``FOREIGN DATA WRAPPER``. Note that there are no options in the SQL statement below, and you need to execute the statement exactly as provided.
+
+   .. code:: sql
+
+      CREATE FOREIGN DATA WRAPPER datalake_fdw
+      HANDLER datalake_fdw_handler
+      VALIDATOR datalake_fdw_validator 
+      OPTIONS ( mpp_execute 'all segments' );
+
+2. Create an external server. In this step, you can create an external server for a single-node HDFS or for HA (High Availability) HDFS.
+
+   -  Create an external server ``foreign_server`` for a single-node HDFS:
+
+      .. code:: sql
+
+         CREATE SERVER foreign_server FOREIGN DATA WRAPPER datalake_fdw
+         OPTIONS (
+             protocol 'hdfs',
+             hdfs_namenodes 'xx.xx.xx.xx',
+             hdfs_port '9000',
+             hdfs_auth_method 'simple', 
+             hadoop_rpc_protection 'authentication');
+
+      The options in the above SQL statement are explained as follows:
+
+      .. raw:: latex
+
+          \begin{mytable-small}
+
+      .. list-table::
+         :header-rows: 1
+         :widths: 14 10 30
+         :class: longtable
+
+         * - Option name
+           - Description
+           - Details
+         * - ``protocol``
+           - Specifies the Hadoop platform.
+           - 
+             - Required: Must be set
+             - Setting: Fixed as ``hdfs``, which means Hadoop platform, cannot be changed.
+             - Default value: ``hdfs``
+         * - ``hdfs_namenodes``
+           - Specifies the namenode host for accessing HDFS.
+           - 
+             - Required: Must be set
+             - Example: For example, ``hdfs_namenodes '192.168.178.95:9000'``
+         * - ``hdfs_auth_method``
+           - Specifies the authentication mode for accessing HDFS.
+           - 
+             - Required: Must be set
+             - Options:
+
+               - ``simple``: Uses Simple authentication to access HDFS.
+             - Note: To access in Simple mode, set the value to ``simple``, for example, ``hdfs_auth_method 'simple'``.
+         * - ``hadoop_rpc_protection``
+           - Configures the authentication mechanism for setting up a SASL connection.
+           - 
+             - Required: Must be set
+             - Options: Three values are available: ``authentication``, ``integrity``, and ``privacy``.
+             - Note: This option must match the ``hadoop.rpc.protection`` setting in the HDFS configuration file ``core-site.xml``. For more details, see the Hadoop documentation `Explanation of core-site.xml <https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/core-site.xml>`__.
+
+      .. raw:: latex
+
+          \end{mytable-small}
+
+   -  Create an external server for a multi-node HA cluster. The HA cluster supports node failover. For more information about HDFS high availability, see the Hadoop documentation `HDFS High Availability Using the Quorum Journal Manager <https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSHighAvailabilityWithQJM.html>`__.
+
+      To load an HDFS HA cluster, you can create an external server using the following template:
+
+      .. code:: sql
+
+         CREATE SERVER foreign_server
+                 FOREIGN DATA WRAPPER datalake_fdw
+                 OPTIONS (
+                 protocol 'hdfs',
+                 hdfs_namenodes 'mycluster',
+                 hdfs_auth_method 'simple',
+                 hadoop_rpc_protection 'authentication',
+                 is_ha_supported 'true',
+                 dfs_nameservices 'mycluster',
+                 dfs_ha_namenodes 'nn1,nn2,nn3',
+                 dfs_namenode_rpc_address '192.168.178.95:9000,192.168.178.160:9000,192.168.178.186:9000',
+                 dfs_client_failover_proxy_provider 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider');
+
+      In the above SQL statement, ``protocol``, ``hdfs_namenodes``, ``hdfs_auth_method``, and ``hadoop_rpc_protection`` are the same as in the single-node example. The HA-specific options are explained as follows:
+
+      .. raw:: latex
+
+          \begin{mytable-small}
+
+      .. list-table::
+         :header-rows: 1
+         :widths: 18 15 30
+         :class: longtable
+
+         * - Option name
+           - Description
+           - Details
+         * - ``is_ha_supported``
+           - Specifies whether to access the HDFS HA service (high availability).
+           - 
+             - Required: Must be set
+             - Setting: Set to ``true``.
+             - Default value: /
+         * - ``dfs_nameservices``
+           - When ``is_ha_supported`` is ``true``, specify the name of the HDFS HA service to access.
+           - 
+             - Required: If using an HDFS HA cluster, must be set.
+             - Matches the ``dfs.ha.namenodes.mycluster`` item in the HDFS config file ``hdfs-site.xml``.
+             - Note: For example, if ``dfs.ha.namenodes.mycluster`` is ``cluster``, set this option as ``dfs_nameservices 'mycluster'``.
+         * - ``dfs_ha_namenodes``
+           - When ``is_ha_supported`` is ``true``, specify the accessible nodes for HDFS HA.
+           - 
+             - Required: If using an HDFS HA cluster, must be set.
+             - Setting: Matches the value of the ``dfs.ha.namenodes.mycluster`` item in the HDFS config file ``hdfs-site.xml``.
+             - Note: For example, ``dfs_ha_namenodes 'nn1,nn2,nn3'``.
+         * - ``dfs_namenode_rpc_address``
+           - When ``is_ha_supported`` is ``true``, specifies the IP addresses of the high availability nodes in HDFS HA.
+           - 
+             - Required: If using an HDFS HA cluster, must be set.
+             - Setting: Refer to the ``dfs.ha_namenodes`` configuration in the HDFS ``hdfs-site.xml`` file. The node address matches the ``namenode`` address in the configuration.
+             - Note: For example, if ``dfs.ha.namenodes.mycluster`` has three namenodes named ``nn1``, ``nn2``, ``nn3``, find their addresses from the HDFS configuration file and enter them into this field.
+
+               .. code:: 
+
+                  dfs_namenode_rpc_address '192.168.178.95:9000,192.168.178.160:9000,192.168.178.186:9000'
+         * - ``dfs_client_failover_proxy``
+           - Specifies whether HDFS HA has failover enabled.
+           - 
+             - Required: If using an HDFS HA cluster, must be set.
+             - Setting: Set to the default value: ``dfs_client_failover_proxy_provider 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'``.
+             - Default value: /
+
+      .. raw:: latex
+
+          \end{mytable-small}
+
+3. Create a user mapping.
+
+   .. code:: sql
+
+      CREATE USER MAPPING FOR gpadmin SERVER foreign_server 
+      OPTIONS (user 'gpadmin');
+
+   In the above statement, the ``user`` option specifies the specific user for ``foreign_server`` and must be set.
+
+4. Create the foreign table ``example``. After creating it, the data from object storage is already loaded into |product_name|, and you can query this table.
+
+   .. code:: sql
+
+      CREATE FOREIGN TABLE example(
+      a text,
+      b text
+      )
+      SERVER foreign_server 
+      OPTIONS (filePath '/test/parquet/', compression 'none', enableCache 'false', format 'parquet');
+
+   The options in the above SQL statement are explained as follows:
+
+   .. raw:: latex
+
+       \begin{mytable-small}
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 8 9 35
+      :class: longtable
+
+      * - Option name
+        - Description
+        - Details
+      * - ``filePath``
+        - Sets the specific path of the target foreign table.
+        - 
+          - Required: Must be set
+          - Setting: The path format should be ``/bucket/prefix``.
+
+            Example: If the bucket name is ``test-bucket`` and the path is ``bucket/test/orc_file_folder/``, and there are multiple files like ``0000_0``, ``0001_1``, ``0002_2`` in that path, you can access the ``0000_0`` file by setting ``filePath '/test-bucket/test/orc_file_folder/0000_0'``. To access all files in ``test/orc_file_folder/``, set ``filePath '/test-bucket/test/orc_file_folder/'``.
+
+          - Note: ``filePath`` should follow the ``/bucket/prefix/`` format. Incorrect formats might lead to errors, such as:
+
+            - ``filePath 'test-bucket/test/orc_file_folder/'``
+            - ``filePath '/test-bucket/test/orc_file_folder/0000_0'``
+      * - ``compression``
+        - Sets the compression format for writing. Currently supports snappy, gzip, zstd, lz4 formats.
+        - 
+          - Required: Optional
+          - Setting:
+  
+            - ``none``: Supports CSV, ORC, TEXT, PARQUET formats.
+            - ``gzip``: Supports CSV, TEXT, PARQUET formats.
+            - ``snappy``: Supports PARQUET formats.
+            - ``zstd``: Supports PARQUET format.
+            - ``lz4``: Supports PARQUET format.
+          - Default value: ``none``, which means no compression. Not setting this value also means no compression.
+      * - ``enableCache``
+        - Specifies whether to use the Gopher cache.
+        - 
+          - Required: Optional
+          - Setting:
+
+            - ``true``: Enables Gopher cache.
+            - ``false``: Disables Gopher cache.
+          - Default: ``false``
+          - Note: Deleting a foreign table does not automatically clear the cache. To clear the cache for this table, you need to manually run a specific SQL function, for example:
+
+            .. code::
+
+               select gp_toolkit._gopher_cache_free_relation_name(text);
+      * - ``format``
+        - The file format supported by FDW.
+        - 
+          - Required: Must be set
+          - Setting:
+
+            - ``csv``: Readable, writable
+            - ``text``: Readable, writable
+            - ``orc``: Readable, writable
+            - ``parquet``: Readable, writable
+
+   .. raw:: latex
+
+       \end{mytable-small}
+
+
+Load data from HDFS using Kerberos authentication
+-----------------------------------------------------
+
+This section provides instructions for establishing secure data integration between |product_name| and HDFS using Kerberos authentication. The document covers the following integration scenarios:
+
+1. Reading CSV files from HDFS with Kerberos authentication
+2. Writing data to CSV files in HDFS with Kerberos authentication
+3. Reading Apache Iceberg format files from HDFS with Kerberos authentication
+
+Prerequisites
+~~~~~~~~~~~~~~~~
+
+The following configurations must be completed in your |product_name| cluster:
+
+- Configure ``hdfs.keytab``
+- Configure ``krb5.conf``
+- Configure ``coredns``
+- Configure ``gphdfs.conf`` (required only for Iceberg format configuration)
+- Complete Kerberos Authentication
+
+Step 1: Prepare required files from Hadoop cluster
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On the Hadoop cluster, locate and copy the following files:
+
+.. code-block:: bash
+
+   # Locates the files
+   ls /opt/hadoop-3.1.4/etc/hadoop/hdfs.keytab
+   ls /etc/krb5.conf
+
+   # Copies the files to the SynxDB cluster
+   scp /opt/hadoop-3.1.4/etc/hadoop/hdfs.keytab root@<synxdb_ip>:~/
+   scp /etc/krb5.conf root@<synxdb_ip>:~/
+
+Step 2: Configure |product_name| cluster
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Perform the following configurations on your |product_name| cluster:
+
+1. Configure hdfs.keytab
+"""""""""""""""""""""""""
+
+.. code-block:: bash
+
+   # On SynxDB cluster, retrieve the namespace information
+   kubectl get ns
+   
+   # Updates the kerberos-keytab secret with the hdfs.keytab file
+   kubectl -n <namespace> get secret kerberos-keytab -o json | \
+   jq --arg new_value "$(base64 -i hdfs.keytab)" '.data["hdfs.keytab"] = $new_value' | \
+   kubectl -n <namespace> apply -f -
+
+2. Configure krb5.conf
+""""""""""""""""""""""
+
+.. code-block:: bash
+
+   # On SynxDB cluster, access the kerberos configuration
+   kubectl edit cm kerberos-config -n <namespace>
+
+   # Implements the following configuration
+   [logging]
+    default = FILE:/var/log/krb5libs.log
+    kdc = FILE:/var/log/krb5kdc.log
+    admin_server = FILE:/var/log/kadmind.log
+
+   [libdefaults]
+    dns_lookup_realm = false
+    ticket_lifetime = 24h
+    renew_lifetime = 7d
+    forwardable = true
+    rdns = false
+    pkinit_anchors = FILE:/etc/pki/tls/certs/ca-bundle.crt
+    default_realm = EXAMPLE.COM
+
+   [realms]
+    EXAMPLE.COM = {
+     kdc = <kdc_ip>
+     admin_server = <admin_server_ip>
+    }
+
+   [domain_realm]
+    .example.com = EXAMPLE.COM
+    example.com = EXAMPLE.COM
+
+3. Configure CoreDNS
+""""""""""""""""""""
+
+.. code-block:: bash
+
+   # On SynxDB cluster, access the CoreDNS configuration
+   kubectl -n kube-system edit cm coredns
+
+   # Implements the Hadoop cluster IP address and domain name mapping
+   data:
+     Corefile: |
+       .:53 {
+           errors
+           health {
+              lameduck 5s
+           }
+           ready
+           hosts {
+               <hadoop_ip> <hadoop_hostname>
+               fallthrough
+           }
+           kubernetes cluster.local in-addr.arpa ip6.arpa {
+               pods insecure
+               fallthrough in-addr.arpa ip6.arpa
+           }
+       }
+
+   # Restart the CoreDNS service
+   kubectl -n kube-system scale deploy coredns --replicas=0
+   kubectl -n kube-system scale deploy coredns --replicas=2
+
+4. Configure gphdfs.conf
+"""""""""""""""""""""""""""""
+
+.. code-block:: bash
+
+   # On SynxDB cluster, access the connector configuration
+   kubectl edit cm connector-config -n <namespace>
+
+   # Implement the following configuration
+   hdfs-cluster-1:                                           
+       hdfs_namenode_host: <namenode_ip>                       
+       hdfs_namenode_port: 9000                              
+       hdfs_auth_method: kerberos                            
+       krb_principal: hdfs/<namenode_ip>@EXAMPLE.COM           
+       krb_principal_keytab: /etc/kerberos/keytab/hdfs.keytab
+       krb_service_principal: hdfs/<namenode_ip>@EXAMPLE.COM   
+       hadoop_rpc_protection: authentication                 
+       data_transfer_protection: privacy                     
+       data_transfer_protocol: true
+
+.. attention::
+
+   The default port for the ``data_lake`` agent has been changed from ``5888`` to ``3888`` to avoid conflict with PXF.
+
+5. Complete Kerberos authentication
+"""""""""""""""""""""""""""""""""""""""
+
+.. code-block:: bash
+
+   # On SynxDB cluster, access the namespace
+   kubectl exec -it cloudberry-proxy-0 -n <namespace> -- bash
+
+   # Installs the required Kerberos client tools
+   sudo su
+   yum -y install krb5-libs krb5-workstation
+   exit
+
+   # Initializes the Kerberos ticket
+   kinit -k -t /etc/kerberos/keytab/hdfs.keytab hdfs/<namenode_ip>@EXAMPLE.COM
+
+   # Verifies the Kerberos ticket
+   klist
+
+Read and Write CSV Files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Step 1: Prepare data in HDFS
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On the Hadoop cluster, create and verify the CSV data:
+
+.. code-block:: bash
+
+   # Creates sample CSV data
+   hdfs dfs -cat /tmp/hdfs_hd_csv/*
+   1,lightning
+   2,cloudberry
+   3,synxml
+
+Step 2: Configure |product_name| for CSV access
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On the |product_name| cluster, configure the external table:
+
+.. code-block:: sql
+
+   -- Initializes the foreign data wrapper extension
+   CREATE EXTENSION datalake_fdw;
+
+   -- Configures the HDFS foreign data wrapper
+   CREATE FOREIGN DATA WRAPPER hdfs_fdw
+       HANDLER datalake_fdw_handler
+       VALIDATOR datalake_fdw_validator
+       OPTIONS (mpp_execute 'all segments');
+
+   -- Establishes the HDFS server connection
+   CREATE SERVER hdfs_server FOREIGN DATA WRAPPER hdfs_fdw
+       OPTIONS (
+           Protocol 'hdfs',
+           hdfs_namenodes '<namenode_ip>',
+           hdfs_port '9000',
+           hdfs_auth_method 'kerberos',
+           krb_principal 'hdfs/<namenode_ip>@EXAMPLE.COM',
+           krb_principal_keytab '/etc/kerberos/keytab/hdfs.keytab',
+           hadoop_rpc_protection 'authentication',
+           data_transfer_protocol 'true'
+       );
+
+   -- Configures user mapping
+   CREATE USER MAPPING FOR gpadmin SERVER hdfs_server
+       OPTIONS (user 'gpadmin');
+
+   -- Creates the external table definition
+   CREATE FOREIGN TABLE ext_t_hdfs(
+       a int,
+       b text
+   )
+   SERVER hdfs_server
+   OPTIONS (
+       filePath '/tmp/hdfs_hd_csv',
+       compression 'none',
+       enableCache 'false',
+       format 'csv',
+       delimiter ',',
+       NULL E'\\N'
+   );
+
+Step 3: Read and write data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On the |product_name| cluster, perform data operations:
+
+.. code-block:: sql
+
+   -- Execute a data retrieval query
+   SELECT * FROM ext_t_hdfs;
+    a |     b      
+   ---+------------
+    1 | lightning
+    2 | cloudberry
+    3 | synxml
+   (3 rows)
+
+   -- Perform data insertion
+   INSERT INTO ext_t_hdfs VALUES
+   (4, 'enterprise'),
+   (5, 'public cloud');
+
+   -- Verify the data operation
+   SELECT * FROM ext_t_hdfs;
+    a |      b       
+   ---+--------------
+    1 | lightning
+    2 | cloudberry
+    3 | synxml
+    5 | public cloud
+    4 | enterprise
+   (5 rows)
+
+Step 4: Verify data in HDFS
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On the Hadoop cluster, verify the written data:
+
+.. code-block:: bash
+
+   # Verify the data
+   hdfs dfs -ls /tmp/hdfs_hd_csv/
+   hdfs dfs -cat /tmp/hdfs_hd_csv/*
+
+Read Iceberg files
+~~~~~~~~~~~~~~~~~~~~~
+
+Step 1: Create Iceberg table in HDFS
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On the Hadoop cluster, create and populate the Iceberg table:
+
+.. code-block:: sql
+
+   -- Initialize the Iceberg table in Spark SQL
+   CREATE TABLE default.tab_iceberg(col1 int) USING iceberg;
+   INSERT INTO default.tab_iceberg VALUES (1), (2), (3);
+
+Step 2: Configure |product_name| for Iceberg access
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On the |product_name| cluster, configure the external table:
+
+.. code-block:: sql
+
+   -- Initializes the required extensions
+   CREATE EXTENSION IF NOT EXISTS datalake_fdw;
+   CREATE EXTENSION IF NOT EXISTS hive_connector; 
+
+   -- Configures the Iceberg foreign data wrapper
+   CREATE FOREIGN DATA WRAPPER hdfs_fdw_iceberg
+       HANDLER datalake_fdw_handler
+       VALIDATOR datalake_fdw_validator
+       OPTIONS (mpp_execute 'all segments');
+
+   -- Creates the foreign server
+   SELECT public.create_foreign_server('iceberg_server_t', 'gpadmin', 'hdfs_fdw_iceberg', 'hdfs-cluster-1');
+
+   -- Defines the external table
+   CREATE FOREIGN TABLE ext_t_hdfs_iceberg(
+       col1 int
+   )
+   server iceberg_server_t
+   OPTIONS (
+       filePath '/user/hive/warehouse',
+       catalog_type 'hadoop',
+       server_name 'hdfs-cluster-1',
+       hdfs_cluster_name 'hdfs-cluster-1',
+       table_identifier 'default.tab_iceberg',
+       format 'iceberg'
+   );
+
+Step 3: Read data
+^^^^^^^^^^^^^^^^^^^^^^
+
+On the |product_name| cluster, query the Iceberg data:
+
+.. code-block:: sql
+
+   -- Executes a data retrieval query
+   SELECT * FROM ext_t_hdfs_iceberg;
+    col1 
+   ------
+       1
+       2
+       3
+   (3 rows)

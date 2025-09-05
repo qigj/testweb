@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cluster Failover &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Configure Security and Permissions" href="../../security-and-permissions/set-security-and-permission-index.html" />
+    <link rel="prev" title="Time Travel and Flashback Recovery" href="time-travel.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../manage-system-index.html">Manage System</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../configure-database-system.html">Configure Database System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../routine-maintenance.html">Routine Maintenance Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../backup-and-restore/br-index.html">Backup and Restore</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ha-index.html">High Availability</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="time-travel.html">Time Travel and Flashback Recovery</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Cluster Failover</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#failover-mechanism">Failover mechanism</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#failover-scenarios">Failover scenarios</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../manage-system-index.html">Manage System</a></li>
+          <li class="breadcrumb-item"><a href="ha-index.html">High Availability</a></li>
+      <li class="breadcrumb-item active">Cluster Failover</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cluster-failover">
+<h1>Cluster Failover<a class="headerlink" href="#cluster-failover" title="Link to this heading"></a></h1>
+<p>SynxDB Elastic v4 features fast failover. When a data warehouse node or other service in the cluster fails, the cluster can quickly detect the failure and automatically recover the failed node and its stored data, ensuring a rapid restoration to the state before the failure.</p>
+<section id="failover-mechanism">
+<h2>Failover mechanism<a class="headerlink" href="#failover-mechanism" title="Link to this heading"></a></h2>
+<p>SynxDB Elastic is deployed in a containerized environment based on <a class="reference external" href="https://kubernetes.io/">Kubernetes</a> (K8s). Components and services that form the database cluster are deployed in different pods and are managed and scheduled by the K8s cluster.</p>
+<p>When a data warehouse node (Segment), data warehouse proxy service, or cluster-level control service in a SynxDB Elastic cluster fails, K8s can automatically restart the corresponding Pod and re-associate its Persistent Volume in a short time. Data from before the failure is completely preserved and restored. The restarted Pod has the same network configuration as before the failure. Once the failed Pod restarts and enters the <code class="docutils literal notranslate"><span class="pre">Running</span></code> state, the database can resume normal operation.</p>
+<p><strong>Note</strong>: Before the failed Pod enters the <code class="docutils literal notranslate"><span class="pre">Running</span></code> state, the database cluster or the data warehouse corresponding to the Pod will not function normally.</p>
+</section>
+<section id="failover-scenarios">
+<h2>Failover scenarios<a class="headerlink" href="#failover-scenarios" title="Link to this heading"></a></h2>
+<p>This section lists the following failover scenarios and provides corresponding examples.</p>
+<ul class="simple">
+<li><p>Failover for cluster metadata proxy service (example Pod: <code class="docutils literal notranslate"><span class="pre">cloudberry-proxy-0</span></code>)</p></li>
+<li><p>Failover for cluster metadata <code class="docutils literal notranslate"><span class="pre">safekeeper</span></code> service (example Pod: <code class="docutils literal notranslate"><span class="pre">safekeeper-0</span></code>)</p></li>
+<li><p>Failover for cluster metadata <code class="docutils literal notranslate"><span class="pre">pageserver</span></code> service (example Pod: <code class="docutils literal notranslate"><span class="pre">pageserver-0</span></code>)</p></li>
+<li><p>Failover for data warehouse proxy service in the cluster (example Pod: <code class="docutils literal notranslate"><span class="pre">cloudberry-proxy-0</span></code>)</p></li>
+<li><p>Failover for data warehouse node in the cluster (example Pod: <code class="docutils literal notranslate"><span class="pre">wh9527-0</span></code>)</p></li>
+</ul>
+<p>The following examples simulate a failure by deleting the Pod of the corresponding service in the K8s cluster. After deleting the Pod, the success of the failover is determined by observing the Pod restart process and testing the functionality of the corresponding module in the database.</p>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h3>
+<p>Before proceeding with the following tests, ensure the following prerequisites are met:</p>
+<ol class="arabic simple">
+<li><p>An example SynxDB Elastic cluster has been created and is accessible.</p></li>
+<li><p>The Kubernetes command-line tool <code class="docutils literal notranslate"><span class="pre">kubectl</span></code> and the <code class="docutils literal notranslate"><span class="pre">k9s</span></code> console are installed locally.</p></li>
+</ol>
+</section>
+<section id="cluster-metadata-proxy-service-failover">
+<h3>Cluster metadata proxy service failover<a class="headerlink" href="#cluster-metadata-proxy-service-failover" title="Link to this heading"></a></h3>
+<p>This example simulates the failover of the SynxDB Elastic cluster metadata proxy service after a failure.</p>
+<ol class="arabic">
+<li><p>Access the <code class="docutils literal notranslate"><span class="pre">k9s</span></code> console and locate the <code class="docutils literal notranslate"><span class="pre">cloudberry-proxy-0</span></code> Pod in the <code class="docutils literal notranslate"><span class="pre">synxdb-system</span></code> namespace.</p>
+<p><img alt="dr1" src="../../_images/dr1.png" /></p>
+</li>
+<li><p>Set a local forwarding port for <code class="docutils literal notranslate"><span class="pre">cloudberry-proxy-0</span></code>. Use <code class="docutils literal notranslate"><span class="pre">shift</span> <span class="pre">+</span> <span class="pre">f</span></code> to open the port forwarding settings, enter the container port (default is <code class="docutils literal notranslate"><span class="pre">5432</span></code>) and the local port to forward to. The address can be the default <code class="docutils literal notranslate"><span class="pre">localhost</span></code>.</p>
+<p><strong>Note</strong>: Avoid setting the local port to <code class="docutils literal notranslate"><span class="pre">5432</span></code> to prevent conflicts with a local PostgreSQL installation.</p>
+<p><img alt="dr2" src="../../_images/dr2.png" /></p>
+</li>
+<li><p>Log in to the cluster using the forwarding port and address set in the previous step: <code class="docutils literal notranslate"><span class="pre">psql</span> <span class="pre">-h</span> <span class="pre">localhost</span> <span class="pre">-p</span> <span class="pre">15432</span> <span class="pre">-U</span> <span class="pre">gpadmin</span> <span class="pre">-d</span> <span class="pre">postgres</span></code>.</p></li>
+<li><p>Enter the <code class="docutils literal notranslate"><span class="pre">cloudmeta</span></code> database and verify that data can be accessed:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">--Enter the cloudmeta database</span>
+<span class="err">\</span><span class="k">c</span><span class="w"> </span><span class="n">cloudmeta</span>
+<span class="c1">--List tables in the current database</span>
+<span class="err">\</span><span class="n">dt</span>
+</pre></div>
+</div>
+</li>
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">k9s</span></code> cluster, switch to the Persistent Volume Claim (PVC) view: <code class="docutils literal notranslate"><span class="pre">:pvc</span></code>. Find the corresponding storage claim and delete it using <code class="docutils literal notranslate"><span class="pre">CTRL+D</span></code>.</p>
+<p><img alt="dr3" src="../../_images/dr3.png" /></p>
+</li>
+<li><p>In the Pod list, delete <code class="docutils literal notranslate"><span class="pre">cloudberry-proxy-0</span></code>.</p>
+<p><img alt="dr4" src="../../_images/dr4.png" /></p>
+<p>After the Pod is deleted, k8s will restart it. The metadata cluster will be temporarily inaccessible until the Pod’s status returns to <code class="docutils literal notranslate"><span class="pre">Running</span></code>.</p>
+</li>
+<li><p>Wait for the Pod to restart. Once its status is <code class="docutils literal notranslate"><span class="pre">Running</span></code>, set up local port forwarding again and access the <code class="docutils literal notranslate"><span class="pre">cloudmeta</span></code> database. The database should now be accessible.</p>
+<p><img alt="dr5" src="../../_images/dr5.png" /></p>
+</li>
+</ol>
+</section>
+<section id="cluster-metadata-safekeeper-service-failover">
+<h3>Cluster metadata <code class="docutils literal notranslate"><span class="pre">safekeeper</span></code> service failover<a class="headerlink" href="#cluster-metadata-safekeeper-service-failover" title="Link to this heading"></a></h3>
+<p>This example simulates the failover of the SynxDB Elastic cluster metadata <code class="docutils literal notranslate"><span class="pre">safekeeper-0</span></code> service after a failure. For specific screenshots and commands, refer to the cluster metadata proxy service failover example.</p>
+<ol class="arabic simple">
+<li><p>Access the <code class="docutils literal notranslate"><span class="pre">k9s</span></code> console and locate the <code class="docutils literal notranslate"><span class="pre">safekeeper-0</span></code> Pod in the <code class="docutils literal notranslate"><span class="pre">synxdb-system</span></code> namespace.</p></li>
+<li><p>Switch to the PVC view, find the corresponding storage claim, and delete it.</p></li>
+<li><p>Delete the <code class="docutils literal notranslate"><span class="pre">safekeeper-0</span></code> Pod. k8s will automatically restart it. The database remains accessible during this period.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">safekeeper-0</span></code> Pod’s status returns to <code class="docutils literal notranslate"><span class="pre">Running</span></code>, and the failover is complete.</p></li>
+</ol>
+</section>
+<section id="cluster-metadata-pageserver-service-failover">
+<h3>Cluster metadata <code class="docutils literal notranslate"><span class="pre">pageserver</span></code> service failover<a class="headerlink" href="#cluster-metadata-pageserver-service-failover" title="Link to this heading"></a></h3>
+<p>This example simulates the failover of the SynxDB Elastic cluster metadata <code class="docutils literal notranslate"><span class="pre">pageserver</span></code> service after a failure. For specific screenshots and commands, refer to the cluster metadata proxy service failover example.</p>
+<ol class="arabic simple">
+<li><p>Access the <code class="docutils literal notranslate"><span class="pre">k9s</span></code> console and locate the <code class="docutils literal notranslate"><span class="pre">pageserver-0</span></code> Pod in the <code class="docutils literal notranslate"><span class="pre">synxdb-system</span></code> namespace.</p></li>
+<li><p>Switch to the PVC view, find the corresponding storage claim, and delete it.</p></li>
+<li><p>Delete the <code class="docutils literal notranslate"><span class="pre">pageserver-0</span></code> Pod. k8s will automatically restart it. The database remains accessible during this period.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">pageserver-0</span></code> Pod’s status returns to <code class="docutils literal notranslate"><span class="pre">Running</span></code>, and the failover is complete.</p></li>
+</ol>
+</section>
+<section id="data-warehouse-proxy-service-failover">
+<h3>Data warehouse proxy service failover<a class="headerlink" href="#data-warehouse-proxy-service-failover" title="Link to this heading"></a></h3>
+<p>This example simulates the failover of the SynxDB Elastic data warehouse cluster proxy service after a failure.</p>
+<ol class="arabic">
+<li><p>In <code class="docutils literal notranslate"><span class="pre">k9s</span></code>, go to the data warehouse namespace (e.g., <code class="docutils literal notranslate"><span class="pre">cloud007-513d75d5-3033-4649-b913-07f6115ec41a+</span></code>) and locate the proxy service Pod <code class="docutils literal notranslate"><span class="pre">cloudberry-proxy-0</span></code>.</p></li>
+<li><p>Set a local forwarding port for <code class="docutils literal notranslate"><span class="pre">cloudberry-proxy-0</span></code>. Use <code class="docutils literal notranslate"><span class="pre">shift</span> <span class="pre">+</span> <span class="pre">f</span></code> to open the port forwarding settings, enter the container port (default is <code class="docutils literal notranslate"><span class="pre">5432</span></code>) and the local port to forward to. The address can be the default <code class="docutils literal notranslate"><span class="pre">localhost</span></code>.</p></li>
+<li><p>Log in to the cluster locally using the forwarding port and address set in the previous step: <code class="docutils literal notranslate"><span class="pre">psql</span> <span class="pre">-h</span> <span class="pre">localhost</span> <span class="pre">-p</span> <span class="pre">15432</span> <span class="pre">-U</span> <span class="pre">gpadmin</span> <span class="pre">-d</span> <span class="pre">postgres</span></code></p></li>
+<li><p>Create a test database and insert test data:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">--Creates the database.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">test_db</span><span class="p">;</span>
+
+<span class="c1">--Enters the database.</span>
+<span class="err">\</span><span class="k">c</span><span class="w"> </span><span class="n">test_db</span><span class="p">;</span>
+
+<span class="c1">--Creates a table and inserts data.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">projects</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">project_id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">project_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">project_manager</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">department</span><span class="w"> </span><span class="nb">TEXT</span>
+<span class="p">)</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">heap</span><span class="p">;</span>
+
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">projects</span><span class="w"> </span><span class="p">(</span><span class="n">project_name</span><span class="p">,</span><span class="w"> </span><span class="n">project_manager</span><span class="p">,</span><span class="w"> </span><span class="n">department</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+<span class="p">(</span><span class="s1">&#39;Project Alpha&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Engineering&#39;</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">&#39;Project Beta&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Bob&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;HR&#39;</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">&#39;Project Gamma&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Sales&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Delete the <code class="docutils literal notranslate"><span class="pre">cloudberry-proxy-0</span></code> Pod and its corresponding PVC. At this point, <code class="docutils literal notranslate"><span class="pre">test_db</span></code> will be temporarily inaccessible.</p>
+<p><img alt="dr6" src="../../_images/dr6.png" /></p>
+<p><img alt="dr7" src="../../_images/dr7.png" /></p>
+</li>
+<li><p>When the Pod’s status automatically changes to <code class="docutils literal notranslate"><span class="pre">Running</span></code>, <code class="docutils literal notranslate"><span class="pre">test_db</span></code> becomes accessible again.</p>
+<p><img alt="dr8" src="../../_images/dr8.png" /></p>
+</li>
+</ol>
+</section>
+<section id="data-warehouse-node-failover">
+<h3>Data warehouse node failover<a class="headerlink" href="#data-warehouse-node-failover" title="Link to this heading"></a></h3>
+<p>This example simulates the failover of a SynxDB Elastic cluster data node after a failure.</p>
+<ol class="arabic">
+<li><p>In <code class="docutils literal notranslate"><span class="pre">k9s</span></code>, go to the data warehouse namespace (e.g., <code class="docutils literal notranslate"><span class="pre">cloud007-513d75d5-3033-4649-b913-07f6115ec41a+</span></code>) and locate the data node Pod (e.g., <code class="docutils literal notranslate"><span class="pre">wh9527-0</span></code>).</p></li>
+<li><p>Go to the PVC list, locate the corresponding PVC, and delete it.</p>
+<p><img alt="dr9" src="../../_images/dr9.png" /></p>
+</li>
+<li><p>Delete the Pod <code class="docutils literal notranslate"><span class="pre">wh9527-0</span></code>. At this point, <code class="docutils literal notranslate"><span class="pre">test_db</span></code> will be briefly inaccessible.</p>
+<p><img alt="dr10" src="../../_images/dr10.png" /></p>
+</li>
+<li><p>The deleted Pod is automatically restarted. When its status changes to <code class="docutils literal notranslate"><span class="pre">Running</span></code>, database access is restored.</p></li>
+</ol>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="../../security-and-permissions/set-security-and-permission-index.html" class="btn btn-neutral float-right" title="Configure Security and Permissions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="time-travel.html" class="btn btn-neutral float-left" title="Time Travel and Flashback Recovery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

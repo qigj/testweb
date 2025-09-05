@@ -1,0 +1,31 @@
+View and Create Contact Groups
+==============================
+
+You can view and create contact groups in the |monitor_console|. When an alert is triggered, the system promptly notifies the relevant members of the contact group.
+
+Access the contact group page
+-----------------------------
+
+1. Make sure you are logged in to the |monitor_console|:
+
+   .. code-block::
+
+      http://<ip>:8080/
+
+2. In the left navigation bar, click **Contact Groups** to enter the contact group page.
+
+.. image:: /images/monitor-console-contact-groups.png
+
+View existing contact groups
+-----------------------------
+
+At the top of the page, search for the target contact group by group name or creation time.
+
+Create a contact group
+-----------------------
+
+1. Click **Create Contact Group** to open the creation window.
+2. Fill in the group name, contact, and contact channel (email).
+3. To add multiple contacts, click **+ Create Contacts**.
+
+.. image:: /images/monitor-console-create-contact-groups.png

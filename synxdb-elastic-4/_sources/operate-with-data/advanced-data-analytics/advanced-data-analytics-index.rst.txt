@@ -1,0 +1,9 @@
+Advanced Data Analytics
+***********************
+
+.. toctree::
+   :maxdepth: 2
+
+   directory-table
+   pgvector
+   vectorization-queries

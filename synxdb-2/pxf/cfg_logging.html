@@ -1,0 +1,375 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Logging - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="logging"><a class="header" href="#logging">Logging</a></h1>
+<p>PXF provides two categories of message logging: service-level and client-level.</p>
+<p>PXF manages its service-level logging, and supports the following log levels (more to less severe):</p>
+<ul>
+<li>fatal</li>
+<li>error</li>
+<li>warn</li>
+<li>info</li>
+<li>debug</li>
+<li>trace</li>
+</ul>
+<p>The default configuration for the PXF Service logs at the <code>info</code> and more severe levels. For some third-party libraries, the PXF Service logs at the <code>warn</code> or <code>error</code> and more severe levels to reduce verbosity.</p>
+<ul>
+<li>PXF captures messages written to <code>stdout</code> and <code>stderr</code> and writes them to the <code>$PXF_LOGDIR/pxf-app.out</code> file. This file may contain service startup messages that PXF logs before logging is fully configured. The file may also contain debug output.</li>
+<li>Messages that PXF logs after start-up are written to the <code>$PXF_LOGDIR/pxf-service.log</code> file.</li>
+</ul>
+<p>You can change the PXF log directory if you choose.</p>
+<p>Client-level logging is managed by the SynxDB client; this topic details configuring logging for a <code>psql</code> client.</p>
+<p>Enabling more verbose service-level or client-level logging for PXF may aid troubleshooting efforts.</p>
+<h2 id="configuring-the-log-directory"><a class="header" href="#configuring-the-log-directory"><a id="cfglogdir"></a>Configuring the Log Directory</a></h2>
+<p>The default PXF logging configuration writes log messages to <code>$PXF_LOGDIR</code>, where the default log directory is <code>PXF_LOGDIR=$PXF_BASE/logs</code>.</p>
+<p>To change the PXF log directory, you must update the <code>$PXF_LOGDIR</code> property in the <code>pxf-env.sh</code> configuration file, synchronize the configuration change to the SynxDB cluster, and then restart PXF.</p>
+<p><strong>Note:</strong> The new log directory must exist on all SynxDB hosts, and must be accessible by the <code>gpadmin</code> user.</p>
+<ol>
+<li>
+<p>Log in to your SynxDB coordinator host:</p>
+<pre><code class="language-shell">$ ssh gpadmin@&lt;coordinator&gt;
+</code></pre>
+</li>
+<li>
+<p>Use a text editor to uncomment the <code>export PXF_LOGDIR</code> line in <code>$PXF_BASE/conf/pxf-env.sh</code>, and replace the value with the new PXF log directory. For example:</p>
+<pre><code class="language-xml"># Path to Log directory
+export PXF_LOGDIR="/new/log/dir"
+</code></pre>
+</li>
+<li>
+<p>Use the <code>pxf cluster sync</code> command to copy the updated <code>pxf-env.sh</code> file to all hosts in the SynxDB cluster:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ pxf cluster sync
+</code></pre>
+</li>
+<li>
+<p>Restart PXF on each SynxDB host as described in <a href="cfginitstart_pxf.html#restart_pxf">Restarting PXF</a>.</p>
+</li>
+</ol>
+<h2 id="configuring-service-level-logging"><a class="header" href="#configuring-service-level-logging"><a id="pxfsvclogmsg"></a>Configuring Service-Level Logging</a></h2>
+<p>PXF utilizes Apache Log4j 2 for service-level logging. PXF Service-related log messages are captured in <code>$PXF_LOGDIR/pxf-app.out</code> and <code>$PXF_LOGDIR/pxf-service.log</code>. The default configuration for the PXF Service logs at the <code>info</code> and more severe levels.</p>
+<p>You can change the log level for the PXF Service on a single SynxDB host, or on all hosts in the SynxDB cluster.</p>
+<div class="note"><b>Note:</b> PXF provides more detailed logging when the <code>debug</code> and <code>trace</code> log levels are enabled. Logging at these levels is quite verbose, and has both a performance and a storage impact. Be sure to turn it off after you have collected the desired information.</div>
+<h3 id="configuring-for-a-specific-host"><a class="header" href="#configuring-for-a-specific-host"><a id="cfg_host"></a>Configuring for a Specific Host</a></h3>
+<p>You can change the log level for the PXF Service running on a specific SynxDB host in two ways:</p>
+<ul>
+<li>Setting the <code>PXF_LOG_LEVEL</code> environment variable on the <code>pxf restart</code> command line.</li>
+<li>Setting the log level via a property update.</li>
+</ul>
+<p><strong>Procedure</strong>:</p>
+<ol>
+<li>
+<p>Log in to the SynxDB host:</p>
+<pre><code class="language-shell">$ ssh gpadmin@&lt;gphost&gt;
+</code></pre>
+</li>
+<li>
+<p>Choose one of the following methods:</p>
+<ul>
+<li>
+<p>Set the log level on the <code>pxf restart</code> command line. For example, to change the log level from <code>info</code> (the default) to <code>debug</code>:</p>
+<pre><code class="language-shell">gpadmin@gphost$ PXF_LOG_LEVEL=debug pxf restart
+</code></pre>
+</li>
+<li>
+<p>Set the log level in the <code>pxf-application.properties</code> file:</p>
+<ol>
+<li>
+<p>Use a text editor to uncomment the following line in the <code>$PXF_BASE/conf/pxf-application.properties</code> file and set the desired log level.  For example, to change the log level from <code>info</code> (the default) to <code>debug</code>:</p>
+<pre><code class="language-xml">pxf.log.level=debug
+</code></pre>
+</li>
+<li>
+<p>Restart PXF on the host:</p>
+<pre><code class="language-shell">gpadmin@gphost$ pxf restart
+</code></pre>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>
+<p><code>debug</code> logging is now enabled. Make note of the time; this will direct you to the relevant log messages in <code>$PXF_LOGDIR/pxf-service.log</code>.</p>
+<pre><code class="language-shell">$ date
+Wed Oct  4 09:30:06 MDT 2017
+$ psql -d &lt;dbname&gt;
+</code></pre>
+</li>
+<li>
+<p>Perform operations that exercise the PXF Service.</p>
+</li>
+<li>
+<p>Collect and examine the log messages in <code>pxf-service.log</code>.</p>
+</li>
+<li>
+<p>Depending upon how you originally set the log level, reinstate <code>info</code>-level logging on the host:</p>
+<ul>
+<li>
+<p>Command line method:</p>
+<pre><code class="language-shell">gpadmin@gphost$ pxf restart
+</code></pre>
+</li>
+<li>
+<p>Properties file method: Comment out the line or set the property value back to <code>info</code>, and then restart PXF on the host.</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="configuring-for-the-cluster"><a class="header" href="#configuring-for-the-cluster"><a id="cfg_cluster"></a>Configuring for the Cluster</a></h3>
+<p>To change the log level for the PXF service running on every host in the SynxDB cluster:</p>
+<ol>
+<li>
+<p>Log in to the SynxDB coordinator host:</p>
+<pre><code class="language-shell">$ ssh gpadmin@&lt;coordinator&gt;
+</code></pre>
+</li>
+<li>
+<p>Use a text editor to uncomment the following line in the <code>$PXF_BASE/conf/pxf-application.properties</code> file and set the desired log level.  For example, to change the log level from <code>info</code> (the default) to <code>debug</code>:</p>
+<pre><code class="language-xml">pxf.log.level=debug
+</code></pre>
+</li>
+<li>
+<p>Use the <code>pxf cluster sync</code> command to copy the updated <code>pxf-application.properties</code> file to all hosts in the SynxDB cluster. For example:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ pxf cluster sync
+</code></pre>
+</li>
+<li>
+<p>Restart PXF on each SynxDB host:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ pxf cluster restart
+</code></pre>
+</li>
+<li>
+<p>Perform operations that exercise the PXF Service, and then collect and examine the information in <code>$PXF_LOGDIR/pxf-service.log</code>.</p>
+</li>
+<li>
+<p>Reinstate <code>info</code>-level logging by repeating the steps above with <code>pxf.log.level=info</code>.</p>
+</li>
+</ol>
+<h2 id="configuring-client-level-logging"><a class="header" href="#configuring-client-level-logging"><a id="pxfdblogmsg"></a>Configuring Client-Level Logging</a></h2>
+<p>Database-level client session logging may provide insight into internal PXF Service operations.</p>
+<p>Enable SynxDB client debug message logging by setting the <code>client_min_messages</code> server configuration parameter to <code>DEBUG2</code> in your <code>psql</code> session. This logging configuration writes messages to <code>stdout</code>, and will apply to all operations that you perform in the session, including operations on PXF external tables. For example:</p>
+<pre><code class="language-shell">$ psql -d &lt;dbname&gt;
+</code></pre>
+<pre><code class="language-sql">dbname=# SET client_min_messages=DEBUG2;
+dbname=# SELECT * FROM hdfstest;
+...
+DEBUG2:  churl http header: cell #26: X-GP-URL-HOST: localhost  (seg0 slice1 127.0.0.1:7002 pid=10659)
+CONTEXT:  External table pxf_hdfs_textsimple, line 1 of file pxf://data/pxf_examples/pxf_hdfs_simple.txt?PROFILE=hdfs:text
+DEBUG2:  churl http header: cell #27: X-GP-URL-PORT: 5888  (seg0 slice1 127.0.0.1:7002 pid=10659)
+CONTEXT:  External table pxf_hdfs_textsimple, line 1 of file pxf://data/pxf_examples/pxf_hdfs_simple.txt?PROFILE=hdfs:text
+DEBUG2:  churl http header: cell #28: X-GP-DATA-DIR: data%2Fpxf_examples%2Fpxf_hdfs_simple.txt  (seg0 slice1 127.0.0.1:7002 pid=10659)
+CONTEXT:  External table pxf_hdfs_textsimple, line 1 of file pxf://data/pxf_examples/pxf_hdfs_simple.txt?PROFILE=hdfs:text
+DEBUG2:  churl http header: cell #29: X-GP-TABLE-NAME: pxf_hdfs_textsimple  (seg0 slice1 127.0.0.1:7002 pid=10659)
+CONTEXT:  External table pxf_hdfs_textsimple, line 1 of file pxf://data/pxf_examples/pxf_hdfs_simple.txt?PROFILE=hdfs:text
+...
+</code></pre>
+<p>Collect and examine the log messages written to <code>stdout</code>.</p>
+<p><strong>Note</strong>: <code>DEBUG2</code> database client session logging has a performance impact.  Remember to turn off <code>DEBUG2</code> logging after you have collected the desired information.</p>
+<pre><code class="language-sql">dbname=# SET client_min_messages=NOTICE;
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pxf/cfghostport.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pxf/cfg_mem.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pxf/cfghostport.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pxf/cfg_mem.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

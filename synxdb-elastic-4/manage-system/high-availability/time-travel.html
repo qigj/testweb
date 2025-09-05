@@ -1,0 +1,340 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Time Travel and Flashback Recovery &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Cluster Failover" href="cluster-failover.html" />
+    <link rel="prev" title="High Availability" href="ha-index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../manage-system-index.html">Manage System</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../configure-database-system.html">Configure Database System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../routine-maintenance.html">Routine Maintenance Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../backup-and-restore/br-index.html">Backup and Restore</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ha-index.html">High Availability</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Time Travel and Flashback Recovery</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#user-value">User value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#typical-application-scenarios">Typical application scenarios</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-it-works">How it works</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core-concepts">Core concepts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration-and-management">Configuration and management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage-query-historical-data">Usage: Query historical data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage-restore-dropped-objects-flashback">Usage: Restore dropped objects (Flashback)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#limitations-and-considerations">Limitations and considerations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cluster-failover.html">Cluster Failover</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../manage-system-index.html">Manage System</a></li>
+          <li class="breadcrumb-item"><a href="ha-index.html">High Availability</a></li>
+      <li class="breadcrumb-item active">Time Travel and Flashback Recovery</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="time-travel-and-flashback-recovery">
+<h1>Time Travel and Flashback Recovery<a class="headerlink" href="#time-travel-and-flashback-recovery" title="Link to this heading"></a></h1>
+<p>Time Travel provides SynxDB Elastic with a powerful suite of data protection and historical data analysis capabilities. It allows users to query the state of data at a specific point in the past (that is, historical query) and to quickly recover database objects that were accidentally deleted (that is, flashback recovery).</p>
+<p>This feature is a valuable tool for data auditing, recovering from operational errors, and analyzing data evolution trends.</p>
+<section id="user-value">
+<h2>User value<a class="headerlink" href="#user-value" title="Link to this heading"></a></h2>
+<p>Introducing the Time Travel feature brings the following core values to users:</p>
+<ul class="simple">
+<li><p><strong>Instant data recovery</strong>: When operational errors occur (such as an <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> without a <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> clause or a <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> that removes too much data), there’s no need to restore from complex backups. You can quickly retrieve the correct data simply by querying its state before the erroneous operation.</p></li>
+<li><p><strong>Historical data auditing and analysis</strong>: Easily query and analyze data at any point in the past for troubleshooting, data auditing, or analyzing trends over time.</p></li>
+<li><p><strong>Simplified database operations</strong>: Quickly recover an accidentally dropped table with a simple <code class="docutils literal notranslate"><span class="pre">UNDROP</span></code> command, significantly reducing operational complexity and recovery time objective (RTO).</p></li>
+<li><p><strong>Flexible query capabilities</strong>: Support joining and analyzing different tables at various historical points in time within a single query.</p></li>
+</ul>
+</section>
+<section id="typical-application-scenarios">
+<h2>Typical application scenarios<a class="headerlink" href="#typical-application-scenarios" title="Link to this heading"></a></h2>
+<p>The following are some typical application scenarios for the Time Travel feature.</p>
+<section id="scenario-1-recover-data-from-operational-errors">
+<h3>Scenario 1: Recover data from operational errors<a class="headerlink" href="#scenario-1-recover-data-from-operational-errors" title="Link to this heading"></a></h3>
+<ul>
+<li><p><strong>Problem</strong>: A developer forgets to add a <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> clause when executing an <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> statement in the production environment, causing the entire table’s data to be updated incorrectly.</p></li>
+<li><p><strong>Solution</strong>: Use the Time Travel feature to query the table’s state before the incorrect operation and restore the correct data, quickly fixing the issue.</p></li>
+<li><p>Query the state of table <code class="docutils literal notranslate"><span class="pre">t1</span></code> from 10 minutes ago and table <code class="docutils literal notranslate"><span class="pre">t2</span></code> from 30 minutes ago:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="n">TRAVELON</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">interval</span><span class="w"> </span><span class="s1">&#39;10 min&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="n">TRAVELON</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">interval</span><span class="w"> </span><span class="s1">&#39;30 min&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="scenario-2-verify-historical-report-data">
+<h3>Scenario 2: Verify historical report data<a class="headerlink" href="#scenario-2-verify-historical-report-data" title="Link to this heading"></a></h3>
+<ul>
+<li><p><strong>Problem</strong>: This month’s sales report data differs significantly from last month’s. It is necessary to verify if the source data at that time was accurate.</p></li>
+<li><p><strong>Solution</strong>: Set the state of multiple source tables back to the time when last month’s report was generated. Then, perform a join query to compare and identify the cause of the discrepancy.</p></li>
+<li><p>Query the state of tables <code class="docutils literal notranslate"><span class="pre">t1</span></code> and <code class="docutils literal notranslate"><span class="pre">t2</span></code> at different specific date and time:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="n">TRAVELON</span><span class="w"> </span><span class="p">(</span><span class="k">timestamp</span><span class="w"> </span><span class="s1">&#39;2024-10-11 10:24:00&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="n">TRAVELON</span><span class="w"> </span><span class="p">(</span><span class="k">timestamp</span><span class="w"> </span><span class="s1">&#39;2024-10-11 11:24:00&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="scenario-3-quickly-recover-an-accidentally-dropped-table">
+<h3>Scenario 3: Quickly recover an accidentally dropped table<a class="headerlink" href="#scenario-3-quickly-recover-an-accidentally-dropped-table" title="Link to this heading"></a></h3>
+<ul>
+<li><p><strong>Problem</strong>: While cleaning up test tables, a database administrator accidentally drops an important production table, <code class="docutils literal notranslate"><span class="pre">t1</span></code>.</p></li>
+<li><p><strong>Solution</strong>: Instead of a time-consuming and complex data recovery process, simply execute the <code class="docutils literal notranslate"><span class="pre">UNDROP</span></code> command to restore the table and its data in seconds.</p></li>
+<li><p>Restore the dropped table <code class="docutils literal notranslate"><span class="pre">t1</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">UNDROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">t1</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="how-it-works">
+<h2>How it works<a class="headerlink" href="#how-it-works" title="Link to this heading"></a></h2>
+<p>The core of this feature is based on the database’s multi-version concurrency control (MVCC) mechanism, which ensures that all historical versions of data are retained in the data tables. The system records a precise commit timestamp for each successfully committed transaction. When a user initiates a historical query, the database uses this sequence of timestamps to compute the data snapshot at the target moment, thus presenting the data state at that time.</p>
+<p>To ensure the validity of historical queries, the system must control the cleanup of historical data. For DML operations (like <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>), this means managing the progress of <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> to prevent premature reclamation of historical data versions. For DDL operations (like <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">TABLE</span></code>), it relies on a recycle bin mechanism to enable the recovery of dropped objects.</p>
+</section>
+<section id="core-concepts">
+<h2>Core concepts<a class="headerlink" href="#core-concepts" title="Link to this heading"></a></h2>
+<p>Before using Time Travel, it is important to understand the following core concepts.</p>
+<section id="data-retention-period">
+<h3>Data retention period<a class="headerlink" href="#data-retention-period" title="Link to this heading"></a></h3>
+<p>When data in a table is modified (<code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>) or the table itself is dropped (<code class="docutils literal notranslate"><span class="pre">DROP</span></code>), SynxDB Elastic does not immediately and permanently remove the data. Instead, it retains these historical data versions or the dropped objects for a period of time, known as the “data retention period”.</p>
+<ul class="simple">
+<li><p><strong>Feature availability</strong>: You can only query historical data or restore dropped objects using Time Travel within the data retention period.</p></li>
+<li><p><strong>Storage costs</strong>: Note that a longer data retention period means more historical data needs to be stored, which will consume additional storage space and increase storage costs. You need to balance your business’s recovery time objective (RTO) and cost budget to set a reasonable retention period.</p></li>
+</ul>
+</section>
+<section id="recycle-bin">
+<h3>Recycle bin<a class="headerlink" href="#recycle-bin" title="Link to this heading"></a></h3>
+<p>For DDL operations like <code class="docutils literal notranslate"><span class="pre">DROP</span></code>, information about the dropped object (e.g., a table) is stored in a system-level recycle bin (the <code class="docutils literal notranslate"><span class="pre">pg_recycle_bin</span></code> system table). The <code class="docutils literal notranslate"><span class="pre">UNDROP</span></code> command locates and restores the object by querying information from this recycle bin. The retention time for objects in the recycle bin is also governed by the data retention period.</p>
+</section>
+</section>
+<section id="configuration-and-management">
+<h2>Configuration and management<a class="headerlink" href="#configuration-and-management" title="Link to this heading"></a></h2>
+<p>To use the Time Travel feature, you need to perform the following configurations.</p>
+<section id="enable-transaction-timestamp-tracking">
+<h3>Enable transaction timestamp tracking<a class="headerlink" href="#enable-transaction-timestamp-tracking" title="Link to this heading"></a></h3>
+<p>First, you must ensure that the system’s <code class="docutils literal notranslate"><span class="pre">track_commit_timestamp</span></code> parameter is enabled. This parameter is used to record the commit timestamp of each transaction and is fundamental to the Time Travel feature. You can set it at the session level or by modifying the configuration file.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Enable in the current session</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">track_commit_timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">on</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>It is recommended to set <code class="docutils literal notranslate"><span class="pre">track_commit_timestamp</span></code> to <code class="docutils literal notranslate"><span class="pre">on</span></code> in the database configuration file (<code class="docutils literal notranslate"><span class="pre">postgresql.conf</span></code>) to ensure the feature is enabled by default for all sessions.</p>
+</section>
+<section id="set-the-data-retention-period">
+<h3>Set the data retention period<a class="headerlink" href="#set-the-data-retention-period" title="Link to this heading"></a></h3>
+<p>The data retention period determines how long historical data versions and dropped objects are kept before being permanently purged. This period is set globally using the GUC parameter <code class="docutils literal notranslate"><span class="pre">time_travel_minutes</span></code>, with the unit in minutes.</p>
+<p>For example, to set the data retention period to 1 hour (60 minutes):</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">time_travel_minutes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">60</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Similarly, you can persist this session-level setting into the configuration file to make it permanent.</p>
+</section>
+</section>
+<section id="usage-query-historical-data">
+<h2>Usage: Query historical data<a class="headerlink" href="#usage-query-historical-data" title="Link to this heading"></a></h2>
+<p>Time Travel allows you to query historical data using the <code class="docutils literal notranslate"><span class="pre">TRAVELON</span></code> clause in your <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> statement. You can specify different historical points in time for different tables within the same query.</p>
+<p><strong>Syntax</strong></p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="p">...</span>
+<span class="k">FROM</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">alias</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="n">TRAVELON</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">timestamp_expression</span><span class="w"> </span><span class="p">)</span>
+<span class="p">[</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">TRAVELON</span></code> clause follows the table name and takes a timestamp expression as its argument, such as <code class="docutils literal notranslate"><span class="pre">now()</span> <span class="pre">-</span> <span class="pre">interval</span> <span class="pre">'5</span> <span class="pre">seconds'</span></code> or <code class="docutils literal notranslate"><span class="pre">timestamp</span> <span class="pre">'2024-01-01</span> <span class="pre">10:00:00'</span></code>.</p>
+<ul>
+<li><p>Query a data snapshot at a precise point in time.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Query the state of t1 at a specific time and t2 at another specific time</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="n">TRAVELON</span><span class="w"> </span><span class="p">(</span><span class="k">timestamp</span><span class="w"> </span><span class="s1">&#39;2024-10-11 10:24:00&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="n">TRAVELON</span><span class="w"> </span><span class="p">(</span><span class="k">timestamp</span><span class="w"> </span><span class="s1">&#39;2024-10-11 11:24:00&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Query data from a period before the current time.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Query the state of t1 from 1 day ago and t2 from 30 minutes ago</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="n">TRAVELON</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">interval</span><span class="w"> </span><span class="s1">&#39;1 day&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="n">TRAVELON</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">interval</span><span class="w"> </span><span class="s1">&#39;30 min&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="usage-restore-dropped-objects-flashback">
+<h2>Usage: Restore dropped objects (Flashback)<a class="headerlink" href="#usage-restore-dropped-objects-flashback" title="Link to this heading"></a></h2>
+<p>The flashback feature allows you to quickly recover objects that have been dropped.</p>
+<section id="restore-a-table-undrop-table">
+<h3>Restore a table (<code class="docutils literal notranslate"><span class="pre">UNDROP</span> <span class="pre">TABLE</span></code>)<a class="headerlink" href="#restore-a-table-undrop-table" title="Link to this heading"></a></h3>
+<p>When a table is dropped, you can restore it within the data retention period using the <code class="docutils literal notranslate"><span class="pre">UNDROP</span> <span class="pre">TABLE</span></code> command. Before restoring, you must first query the system table <code class="docutils literal notranslate"><span class="pre">pg_recycle_bin</span></code> to find the unique name of the table in the recycle bin.</p>
+<p><strong>Syntax:</strong></p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">UNDROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">new_table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="o">&lt;</span><span class="n">recycle_bin_table_name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;new_table_name&gt;</span></code>: The new name for the restored table.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;recycle_bin_table_name&gt;</span></code>: The name of the table to be restored, as it exists in <code class="docutils literal notranslate"><span class="pre">pg_recycle_bin</span></code>.</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Assume table t1 was accidentally dropped.</span>
+<span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">t1</span><span class="p">;</span>
+
+<span class="c1">-- 1. Query the recycle bin for the unique name of the dropped table.</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">relname</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_recycle_bin</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">orig_relname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;t1&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Assume the query result is &#39;t1_1678886400&#39;.</span>
+
+<span class="c1">-- 2. Use the retrieved name to restore the table and name it t1.</span>
+<span class="n">UNDROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">&quot;t1_1678886400&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="limitations-and-considerations">
+<h2>Limitations and considerations<a class="headerlink" href="#limitations-and-considerations" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Supported objects</strong>: Time Travel and flashback generally support permanent tables.</p></li>
+<li><p><strong>Unsupported objects</strong>: Non-persistent objects such as temporary tables and external tables do not typically support Time Travel.</p></li>
+<li><p><strong>Data retention period is key</strong>: All Time Travel operations are strictly limited by the configured data retention period. Once this period is exceeded, historical data may be permanently deleted.</p></li>
+<li><p><strong>Impact of <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code></strong>: The background <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> process is responsible for cleaning up expired data versions. The data retention period setting directly affects <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code>’s behavior.</p></li>
+<li><p><strong>Storage costs</strong>: Enabling Time Travel and setting a long retention period will increase your storage costs. Be sure to monitor and plan accordingly.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="cluster-failover.html" class="btn btn-neutral float-right" title="Cluster Failover" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="ha-index.html" class="btn btn-neutral float-left" title="High Availability" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

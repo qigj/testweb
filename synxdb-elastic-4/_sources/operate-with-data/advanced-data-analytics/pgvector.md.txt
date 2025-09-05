@@ -1,0 +1,161 @@
+# Use pgvector for Vector Similarity Search
+
+pgvector is an open-source plugin for vector similarity search. It supports both exact and approximate nearest neighbor searches, as well as L2 distance, inner product, and cosine distance. For more details, see [pgvector/pgvector: Open-source vector similarity search for Postgres](https://github.com/pgvector/pgvector). 
+
+{{ product_name }} allows you to use pgvector for data storage, querying, hybrid searches, and more through SQL statements. This document explains how to use pgvector in {{ product_name }}.
+
+## Quick start
+
+Enable the extension (do this once in each database where you want to use it):
+
+```sql
+CREATE EXTENSION vector;
+```
+
+Create a vector column with 3 dimensions:
+
+```sql
+CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3));
+```
+
+Insert vector data:
+
+```sql
+INSERT INTO items (embedding) VALUES ('[1,2,3]'), ('[4,5,6]');
+```
+
+Get the nearest neighbors by L2 distance:
+
+```sql
+SELECT * FROM items ORDER BY embedding <-> '[3,1,2]' LIMIT 5;
+```
+
+Note: Use `<#>` for inner product and `<=>` for cosine distance. 
+
+## Store data
+
+Create a table with a vector column:
+
+```sql
+CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3));
+```
+
+Or add a vector column to an existing table:
+
+```sql
+ALTER TABLE items ADD COLUMN embedding vector(3);
+```
+
+Insert vectors:
+
+```sql
+INSERT INTO items (embedding) VALUES ('[1,2,3]'), ('[4,5,6]');
+```
+
+Insert and update vectors:
+
+```sql
+INSERT INTO items (id, embedding) VALUES (1, '[1,2,3]'), (2, '[4,5,6]')
+    ON CONFLICT (id) DO UPDATE SET embedding = EXCLUDED.embedding;
+```
+
+Update vectors:
+
+```sql
+UPDATE items SET embedding = '[1,2,3]' WHERE id = 1;
+```
+
+Delete vectors:
+
+```sql
+DELETE FROM items WHERE id = 1;
+```
+
+## Query data
+
+Get the nearest neighbors to a vector:
+
+```sql
+SELECT * FROM items ORDER BY embedding <-> '[3,1,2]' LIMIT 5;
+```
+
+The supported distance functions are:
+
+- `<->`: L2 distance
+- `<#>`: negative inner product
+- `<=>`: cosine distance
+
+Get the nearest neighbors of a row:
+
+```sql
+SELECT * FROM items WHERE id != 1 ORDER BY embedding <-> (SELECT embedding FROM items WHERE id = 1) LIMIT 5;
+```
+
+Get rows within a specific distance range:
+
+```sql
+SELECT * FROM items WHERE embedding <-> '[3,1,2]' < 5;
+```
+
+Get the distance:
+
+```sql
+SELECT embedding <-> '[3,1,2]' AS distance FROM items;
+```
+
+For inner product, multiply by `-1` (because `<#>` returns the negative inner product).
+
+```sql
+SELECT (embedding <#> '[3,1,2]') * -1 AS inner_product FROM items;
+```
+
+For cosine similarity, use `1` minus the cosine distance.
+
+```sql
+SELECT 1 - (embedding <=> '[3,1,2]') AS cosine_similarity FROM items;
+```
+
+Calculate the average of vectors:
+
+```sql
+SELECT AVG(embedding) FROM items;
+```
+
+Calculate the average of a group of vectors:
+
+```sql
+SELECT category_id, AVG(embedding) FROM items GROUP BY category_id;
+```
+
+## Hybrid search
+
+Perform hybrid search using {{ product_name }} full-text search:
+
+```sql
+SELECT id, content FROM items, plainto_tsquery('hello search') query
+    WHERE textsearch @@ query ORDER BY ts_rank_cd(textsearch, query) DESC LIMIT 5;
+```
+
+## pgvector performance
+
+Use `EXPLAIN ANALYZE` for performance debugging:
+
+```sql
+EXPLAIN ANALYZE SELECT * FROM items ORDER BY embedding <-> '[3,1,2]' LIMIT 5;
+```
+
+### Exact search
+
+To speed up queries, you can increase the value of the `max_parallel_workers_per_gather` parameter.
+
+```sql
+SET max_parallel_workers_per_gather = 4;
+```
+
+If vectors are already normalized to a length of `1` (for example, the [OpenAI embeddings](https://platform.openai.com/docs/guides/embeddings/which-distance-function-should-i-use)), using inner product can provide the best performance.
+
+```sql
+SELECT * FROM items ORDER BY embedding <#> '[3,1,2]' LIMIT 5;
+```
+
+These are some guidelines for nearest neighbor search and performance optimization in pgvector. Depending on your needs and data structure, you can adjust and optimize based on these recommendations.

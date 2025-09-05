@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automatically Use Materialized Views for Query Optimization &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Push Down Aggregation Operations" href="push-down-agg-operators.html" />
+    <link rel="prev" title="Query Hints" href="query-hints.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../optimize-performance-index.html">Optimize Performance</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="optimize-queries-index.html">Optimize Query Performance</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="optimize-query-performance-overview.html">Query Performance Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="use-orca/use-orca-index.html">Use GPORCA Optimizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="update-statistics.html">Update Statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="query-hints.html">Query Hints</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Automatically Use Materialized Views for Query Optimization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#scenarios">Scenarios</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-it-works">How it works</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#limitations">Limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="push-down-agg-operators.html">Push Down Aggregation Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="execute-queries-in-parallel.html">Execute Queries in Parallel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto-clustering.html">Auto-Clustering Tables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../optimize-performance-index.html">Optimize Performance</a></li>
+          <li class="breadcrumb-item"><a href="optimize-queries-index.html">Optimize Query Performance</a></li>
+      <li class="breadcrumb-item active">Automatically Use Materialized Views for Query Optimization</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="automatically-use-materialized-views-for-query-optimization">
+<h1>Automatically Use Materialized Views for Query Optimization<a class="headerlink" href="#automatically-use-materialized-views-for-query-optimization" title="Link to this heading"></a></h1>
+<p>SynxDB Elastic supports automatically using <a class="reference internal" href="../../operate-with-data/operate-with-db-objects/create-and-manage-materialized-views.html"><span class="std std-doc">materialized views</span></a> during the query planning phase to compute part or all of a query (a feature known as AQUMV). This is particularly useful for queries on large tables, significantly improving query processing time. AQUMV utilizes incremental materialized views (IMVs) because they generally stay up-to-date when the underlying tables have write operations.</p>
+<section id="scenarios">
+<h2>Scenarios<a class="headerlink" href="#scenarios" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Large-scale aggregate queries</strong>: For queries that need to aggregate millions of records, AQUMV can significantly reduce query time.</p></li>
+<li><p><strong>Frequently updated large tables</strong>: In environments with frequent data updates, using IMVs ensures the timeliness and accuracy of query results.</p></li>
+<li><p><strong>Complex calculation scenarios</strong>: For queries involving complex calculations (like the square root and absolute value calculations in the example below), AQUMV can speed up queries by pre-calculating these values in a materialized view.</p></li>
+<li><p><strong>High-frequency data write scenarios</strong>: When the base table has very frequent data writes, synchronously updating the materialized view might greatly impact write performance. In this case, you can use asynchronous incremental materialized views to run refresh tasks in the background, reducing the impact on foreground business operations.</p></li>
+<li><p><strong>Aggregate queries on large partitioned tables</strong>: Partitioned tables are often used to manage large amounts of data. Building materialized views on large partitioned tables allows complex aggregate queries or join operations across multiple partitions to be pre-computed. The AQUMV feature can automatically leverage these materialized views, improving query analysis performance on large partitioned tables and avoiding the significant overhead of full table scans.</p></li>
+</ul>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<p>To enable the AQUMV feature, you first need to create a materialized view and set the system parameter <code class="docutils literal notranslate"><span class="pre">enable_answer_query_using_materialized_views</span></code> to <code class="docutils literal notranslate"><span class="pre">ON</span></code>. The following is a comparison of executing the same complex query with and without AQUMV.</p>
+<ol class="arabic">
+<li><p>Disable the GPORCA optimizer and use the Postgres-based planner.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">optimizer</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="k">off</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create the table <code class="docutils literal notranslate"><span class="pre">aqumv_t1</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">aqumv_t1</span><span class="p">(</span><span class="n">c1</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">c2</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">c3</span><span class="w"> </span><span class="nb">INT</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Insert data into the table and collect statistics on it.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">aqumv_t1</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">100000000</span><span class="p">)</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="k">ANALYZE</span><span class="w"> </span><span class="n">aqumv_t1</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Execute the query without AQUMV enabled. It takes 7384.329 ms.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">SQRT</span><span class="p">(</span><span class="k">ABS</span><span class="p">(</span><span class="k">ABS</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">ABS</span><span class="p">(</span><span class="n">c2</span><span class="p">))</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">aqumv_t1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">40</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">SQRT</span><span class="p">(</span><span class="k">ABS</span><span class="p">(</span><span class="n">c2</span><span class="p">))</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="p">.</span><span class="mi">8</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">sqrt</span>
+<span class="c1">-------------------66.0827625302982196.2449979983983985.9160797830996166.1644140029689766.3245553203367595.830951894845301</span>
+<span class="p">(</span><span class="mi">7</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+
+<span class="k">Time</span><span class="p">:</span><span class="w"> </span><span class="mi">7384</span><span class="p">.</span><span class="mi">329</span><span class="w"> </span><span class="n">ms</span><span class="w"> </span><span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">07</span><span class="p">.</span><span class="mi">384</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The query plan is as follows, showing that the optimizer performs a scan on the table (<code class="docutils literal notranslate"><span class="pre">Seq</span> <span class="pre">Scan</span> <span class="pre">on</span> <span class="pre">aqumv_t1</span></code>).</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">EXPLAIN</span><span class="p">(</span><span class="n">COSTS</span><span class="w"> </span><span class="k">OFF</span><span class="p">)</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">SQRT</span><span class="p">(</span><span class="k">ABS</span><span class="p">(</span><span class="k">ABS</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">ABS</span><span class="p">(</span><span class="n">c2</span><span class="p">))</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">aqumv_t1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">40</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">SQRT</span><span class="p">(</span><span class="k">ABS</span><span class="p">(</span><span class="n">c2</span><span class="p">))</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="p">.</span><span class="mi">8</span><span class="p">;</span>
+
+<span class="w">                                                </span><span class="n">QUERY</span><span class="w"> </span><span class="n">PLAN</span>
+
+<span class="c1">-------------------------------------------------------------------------------------------------------------</span>
+<span class="n">Gather</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span><span class="w">  </span><span class="p">(</span><span class="n">slice1</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="o">-&gt;</span><span class="w">  </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">aqumv_t1</span>
+<span class="w">        </span><span class="n">Filter</span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">c1</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">30</span><span class="p">)</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="p">(</span><span class="n">c1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">40</span><span class="p">)</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="p">(</span><span class="n">sqrt</span><span class="p">((</span><span class="k">abs</span><span class="p">(</span><span class="n">c2</span><span class="p">))::</span><span class="n">double</span><span class="w"> </span><span class="k">precision</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="s1">&#39;5.8&#39;</span><span class="p">::</span><span class="n">double</span><span class="w"> </span><span class="n">pre</span>
+<span class="n">cision</span><span class="p">))</span>
+<span class="n">Optimizer</span><span class="p">:</span><span class="w"> </span><span class="n">Postgres</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="n">optimizer</span>
+<span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a materialized view <code class="docutils literal notranslate"><span class="pre">mvt1</span></code> based on <code class="docutils literal notranslate"><span class="pre">aqumv_t1</span></code> and collect statistics on the view.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">INCREMENTAL</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">mvt1</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">mc1</span><span class="p">,</span><span class="w"> </span><span class="n">c2</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">mc2</span><span class="p">,</span><span class="w"> </span><span class="k">ABS</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">mc3</span><span class="p">,</span><span class="w"> </span><span class="k">ABS</span><span class="p">(</span><span class="k">ABS</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">mc4</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">aqumv_t1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">40</span><span class="p">;</span>
+
+<span class="k">ANALYZE</span><span class="w"> </span><span class="n">mvt1</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In the example above, the materialized view <code class="docutils literal notranslate"><span class="pre">mvt1</span></code> is updated synchronously. If data is inserted into the <code class="docutils literal notranslate"><span class="pre">aqumv_t1</span></code> table very frequently, you can change it to asynchronous refresh mode to improve write performance.</p>
+<p>Just add the <code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">DEFERRED</span></code> and <code class="docutils literal notranslate"><span class="pre">SCHEDULE</span></code> clauses during creation:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Changes the materialized view to asynchronous refresh with a 10-second interval.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">INCREMENTAL</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">mvt1</span>
+<span class="n">REFRESH</span><span class="w"> </span><span class="k">DEFERRED</span><span class="w"> </span><span class="n">SCHEDULE</span><span class="w"> </span><span class="s1">&#39;10 seconds&#39;</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">mc1</span><span class="p">,</span><span class="w"> </span><span class="n">c2</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">mc2</span><span class="p">,</span><span class="w"> </span><span class="k">ABS</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">mc3</span><span class="p">,</span><span class="w"> </span><span class="k">ABS</span><span class="p">(</span><span class="k">ABS</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">mc4</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">aqumv_t1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">40</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This way, the data in the materialized view will be periodically updated by a background task, and the query acceleration feature (AQUMV) will still automatically use this up-to-date materialized view.</p>
+</li>
+<li><p>Enable the AQUMV-related configuration parameter:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">enable_answer_query_using_materialized_views</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Now that AQUMV is enabled, execute the same query again. It takes 45.701 ms.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">SQRT</span><span class="p">(</span><span class="k">ABS</span><span class="p">(</span><span class="k">ABS</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">ABS</span><span class="p">(</span><span class="n">c2</span><span class="p">))</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">aqumv_t1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">40</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">SQRT</span><span class="p">(</span><span class="k">ABS</span><span class="p">(</span><span class="n">c2</span><span class="p">))</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="p">.</span><span class="mi">8</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">sqrt</span>
+<span class="c1">-------------------66.0827625302982196.2449979983983985.8309518948453015.9160797830996166.1644140029689766.324555320336759</span>
+<span class="p">(</span><span class="mi">7</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+
+<span class="k">Time</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">.</span><span class="mi">701</span><span class="w"> </span><span class="n">ms</span>
+</pre></div>
+</div>
+<p>The query plan is as follows, showing that the optimizer scans the materialized view <code class="docutils literal notranslate"><span class="pre">mvt1</span></code> (<code class="docutils literal notranslate"><span class="pre">Seq</span> <span class="pre">Scan</span> <span class="pre">on</span> <span class="pre">public.mvt1</span></code>) instead of the table <code class="docutils literal notranslate"><span class="pre">aqumv_t1</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">explain</span><span class="p">(</span><span class="k">verbose</span><span class="p">,</span><span class="w"> </span><span class="n">costs</span><span class="w"> </span><span class="k">off</span><span class="p">)</span><span class="k">select</span><span class="w"> </span><span class="n">sqrt</span><span class="p">(</span><span class="k">abs</span><span class="p">(</span><span class="k">abs</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">abs</span><span class="p">(</span><span class="n">c2</span><span class="p">))</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">aqumv_t1</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">40</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">sqrt</span><span class="p">(</span><span class="k">abs</span><span class="p">(</span><span class="n">c2</span><span class="p">))</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="p">.</span><span class="mi">8</span><span class="p">;</span>
+
+<span class="w">                                </span><span class="n">QUERY</span><span class="w"> </span><span class="n">PLAN</span>
+<span class="c1">--------------------------------------------------------------------------------</span>
+<span class="n">Gather</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span><span class="w">  </span><span class="p">(</span><span class="n">slice1</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="k">Output</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">mc4</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">mc3</span><span class="p">))::</span><span class="n">double</span><span class="w"> </span><span class="k">precision</span><span class="p">))</span>
+<span class="o">-&gt;</span><span class="w">  </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">mvt1</span>
+<span class="w">        </span><span class="k">Output</span><span class="p">:</span><span class="w"> </span><span class="n">sqrt</span><span class="p">(((</span><span class="n">mc4</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">mc3</span><span class="p">))::</span><span class="n">double</span><span class="w"> </span><span class="k">precision</span><span class="p">)</span>
+<span class="w">        </span><span class="n">Filter</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">sqrt</span><span class="p">((</span><span class="n">mvt1</span><span class="p">.</span><span class="n">mc3</span><span class="p">)::</span><span class="n">double</span><span class="w"> </span><span class="k">precision</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="s1">&#39;5.8&#39;</span><span class="p">::</span><span class="n">double</span><span class="w"> </span><span class="k">precision</span><span class="p">)</span>
+<span class="n">Settings</span><span class="p">:</span><span class="w"> </span><span class="n">enable_answer_query_using_materialized_views</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;on&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">optimizer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;off&#39;</span>
+<span class="n">Optimizer</span><span class="p">:</span><span class="w"> </span><span class="n">Postgres</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="n">optimizer</span>
+<span class="p">(</span><span class="mi">7</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the example above, the query took 7384.329 ms without using a materialized view. After enabling AQUMV, the same query using the materialized view took only 45.701 ms. This demonstrates that the materialized view greatly improves performance by pre-calculating and storing the relevant computation results, containing only the rows that satisfy the specific condition (<code class="docutils literal notranslate"><span class="pre">c1</span> <span class="pre">&gt;</span> <span class="pre">30</span> <span class="pre">and</span> <span class="pre">c1</span> <span class="pre">&lt;</span> <span class="pre">40</span></code>).</p>
+<p>Therefore, the table query <code class="docutils literal notranslate"><span class="pre">select</span> <span class="pre">sqrt(abs(abs(c2)</span> <span class="pre">-</span> <span class="pre">c1</span> <span class="pre">-</span> <span class="pre">1)</span> <span class="pre">+</span> <span class="pre">abs(c2))</span> <span class="pre">from</span> <span class="pre">aqumv_t1</span> <span class="pre">where</span> <span class="pre">c1</span> <span class="pre">&gt;</span> <span class="pre">30</span> <span class="pre">and</span> <span class="pre">c1</span> <span class="pre">&lt;</span> <span class="pre">40</span> <span class="pre">and</span> <span class="pre">sqrt(abs(c2))</span> <span class="pre">&gt;</span> <span class="pre">5.8;</span></code> is actually equivalent to the query on the materialized view <code class="docutils literal notranslate"><span class="pre">select</span> <span class="pre">sqrt(mc4</span> <span class="pre">+</span> <span class="pre">mc3)</span> <span class="pre">from</span> <span class="pre">mvt1</span> <span class="pre">where</span> <span class="pre">sqrt(mc3)</span> <span class="pre">&gt;</span> <span class="pre">5.8;</span></code>.</p>
+</li>
+</ol>
+<p>This way, when executing the same query, data can be fetched directly from the materialized view instead of the original table. This allows AQUMV to greatly improve query performance, especially when dealing with large data volumes and complex calculations.</p>
+</section>
+<section id="how-it-works">
+<h2>How it works<a class="headerlink" href="#how-it-works" title="Link to this heading"></a></h2>
+<p>AQUMV achieves query optimization by performing an equivalent transformation of the query tree.</p>
+<p>SynxDB Elastic automatically uses a materialized view for a table query only if the following conditions are met:</p>
+<ul class="simple">
+<li><p>The materialized view must contain all the rows required by the query expression.</p></li>
+<li><p>If the materialized view contains more rows than the query, additional filtering conditions might need to be added.</p></li>
+<li><p>All output expressions must be computable from the view’s output.</p></li>
+<li><p>The output expressions can fully or partially match the target list of the materialized view.</p></li>
+</ul>
+<p>When there are multiple valid materialized view candidates, or when the cost of querying from the materialized view is higher than querying directly from the original table, the planner can decide the best choice based on cost estimation.</p>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Only <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> queries on a single relation are supported, applicable to both the materialized view query and the original query.</p></li>
+<li><p>Currently, the following features are not supported: aggregations (AGG), subqueries, sorting in the original query (ORDER BY), joins (JOIN), sublinks (SUBLINK), grouping (GROUP BY), window functions, Common Table Expressions (CTE), deduplication (DISTINCT ON), <code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code>, and <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">AS</span></code> statements.</p></li>
+<li><p>Incremental materialized views are currently optimized primarily for data append (<code class="docutils literal notranslate"><span class="pre">INSERT</span></code>) scenarios. If <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, or <code class="docutils literal notranslate"><span class="pre">TRUNCATE</span></code> operations occur on its base table, the materialized view will perform a costly full refresh instead of an incremental update.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="push-down-agg-operators.html" class="btn btn-neutral float-right" title="Push Down Aggregation Operations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="query-hints.html" class="btn btn-neutral float-left" title="Query Hints" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

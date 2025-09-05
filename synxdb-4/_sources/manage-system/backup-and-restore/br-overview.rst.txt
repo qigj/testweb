@@ -1,0 +1,128 @@
+Backup and Restore Overview
+===========================
+
+|product_name| offers both parallel and non-parallel methods for database backups and restores. Parallel operations handle large systems efficiently because each segment host writes data to its local disk at the same time. Non-parallel operations, however, transfer all data over the network to the coordinator, which then writes it to its storage. This method not only concentrates I/O on a single host but also requires the coordinator to have enough local disk space for the entire database.
+
+Parallel backup with ``gpbackup`` and ``gprestore``
+---------------------------------------------------
+
+|product_name| provides ``gpbackup`` and ``gprestore`` for parallel backup and restore utilities. ``gpbackup`` uses table-level ``ACCESS SHARE`` locks instead of ``EXCLUSIVE`` locks on the ``pg_class`` catalog table. This enables you to execute DDL statements such as ``CREATE``, ``ALTER``, ``DROP``, and ``TRUNCATE`` during backups, as long as these statements do not target the current backup set.
+
+Backup files created with ``gpbackup`` are designed to provide future capabilities for restoring individual database objects along with their dependencies, such as functions and required user-defined data types.
+
+For details about backup and restore using ``gpbackup`` and ``gprestore``, see :ref:`manage-system/backup-and-restore/full-backup-and-restore:perform full backup and restore` and :ref:`manage-system/backup-and-restore/incremental-backup-and-restore:perform incremental backup and restore`.
+
+Command-line flags for gpbackup and gprestore
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The command-line flags for ``gpbackup`` are as follows:
+
+.. code:: bash
+
+   Usage:
+   gpbackup [flags]
+
+   Flags:
+         --backup-dir string            The absolute path of the directory to which all backup files will be written
+         --compression-level int        Level of compression to use during data backup. Range of valid values depends on compression type (default 1)
+         --compression-type string      Type of compression to use during data backup. Valid values are 'gzip', 'zstd' (default "gzip")
+         --copy-queue-size int          number of COPY commands gpbackup should enqueue when backing up using the --single-data-file option (default 1)
+         --data-only                    Only back up data, do not back up metadata
+         --dbname string                The database to be backed up
+         --debug                        Print verbose and debug log messages
+         --exclude-schema stringArray   Back up all metadata except objects in the specified schema(s). --exclude-schema can be specified multiple times.
+         --exclude-schema-file string   A file containing a list of schemas to be excluded from the backup
+         --exclude-table stringArray    Back up all metadata except the specified table(s). --exclude-table can be specified multiple times.
+         --exclude-table-file string    A file containing a list of fully-qualified tables to be excluded from the backup
+         --from-timestamp string        A timestamp to use to base the current incremental backup off
+         --help                         Help for gpbackup
+         --include-schema stringArray   Back up only the specified schema(s). --include-schema can be specified multiple times.
+         --include-schema-file string   A file containing a list of schema(s) to be included in the backup
+         --include-table stringArray    Back up only the specified table(s). --include-table can be specified multiple times.
+         --include-table-file string    A file containing a list of fully-qualified tables to be included in the backup
+         --incremental                  Only back up data for AO tables that have been modified since the last backup
+         --jobs int                     The number of parallel connections to use when backing up data (default 1)
+         --leaf-partition-data          For partition tables, create one data file per leaf partition instead of one data file for the whole table
+         --metadata-only                Only back up metadata, do not back up data
+         --no-compression               Skip compression of data files
+         --plugin-config string         The configuration file to use for a plugin
+         --quiet                        Suppress non-warning, non-error log messages
+         --single-data-file             Back up all data to a single file instead of one per table
+         --verbose                      Print verbose log messages
+         --version                      Print version number and exit
+         --with-stats                   Back up query plan statistics
+         --without-globals              Skip backup of global metadata
+
+The command-line flags for ``gprestore`` are as follows:
+
+.. code:: bash
+
+   Usage:
+   gprestore [flags]
+
+   Flags:
+         --backup-dir string            The absolute path of the directory in which the backup files to be restored are located
+         --copy-queue-size int          Number of COPY commands gprestore should enqueue when restoring a backup taken using the --single-data-file option (default 1)
+         --create-db                    Create the database before metadata restore
+         --data-only                    Only restore data, do not restore metadata
+         --debug                        Print verbose and debug log messages
+         --exclude-schema stringArray   Restore all metadata except objects in the specified schema(s). --exclude-schema can be specified multiple times.
+         --exclude-schema-file string   A file containing a list of schemas that will not be restored
+         --exclude-table stringArray    Restore all metadata except the specified relation(s). --exclude-table can be specified multiple times.
+         --exclude-table-file string    A file containing a list of fully-qualified relation(s) that will not be restored
+         --help                         Help for gprestore
+         --include-schema stringArray   Restore only the specified schema(s). --include-schema can be specified multiple times.
+         --include-schema-file string   A file containing a list of schemas that will be restored
+         --include-table stringArray    Restore only the specified relation(s). --include-table can be specified multiple times.
+         --include-table-file string    A file containing a list of fully-qualified relation(s) that will be restored
+         --incremental                  BETA FEATURE: Only restore data for all heap tables and only AO tables that have been modified since the last backup
+         --jobs int                     Number of parallel connections to use when restoring table data and post-data (default 1)
+         --metadata-only                Only restore metadata, do not restore data
+         --on-error-continue            Log errors and continue restore, instead of exiting on first error
+         --plugin-config string         The configuration file to use for a plugin
+         --quiet                        Suppress non-warning, non-error log messages
+         --redirect-db string           Restore to the specified database instead of the database that was backed up
+         --redirect-schema string       Restore to the specified schema instead of the schema that was backed up
+         --resize-cluster               Restore a backup taken on a cluster with more or fewer segments than the cluster to which it will be restored
+         --run-analyze                  Run ANALYZE on restored tables
+         --timestamp string             The timestamp to be restored, in the format YYYYMMDDHHMMSS
+         --truncate-table               Removes data of the tables getting restored
+         --verbose                      Print verbose log messages
+         --version                      Print version number and exit
+         --with-globals                 Restore global metadata
+         --with-stats                   Restore query plan statistics
+
+Non-parallel backup with ``pg_dump``
+------------------------------------
+
+You can also use the PostgreSQL non-parallel backup utilitiesm\ ``pg_dump`` and ``pg_dumpall`` to create a single dump file on the coordinator host that contains all data from all active segments.
+
+The PostgreSQL non-parallel utilities should be used only for special cases. They are much slower than using ``gpbackup`` and ``gprestore`` because all of the data must pass through the coordinator. In addition, it is often the case that the coordinator host has insufficient disk space to save a backup of an entire distributed |product_name|.
+
+The ``pg_restore`` utility requires compressed dump files created by ``pg_dump`` or ``pg_dumpall``. Before starting the restore, you should modify the ``CREATE TABLE`` statements in the dump files to include the |product_name| ``DISTRIBUTED`` clause. If you do not include the ``DISTRIBUTED`` clause, |product_name| assigns default values, which might not be optimal.
+
+To perform a non-parallel restore using parallel backup files, you can copy the backup files from each segment host to the coordinator host, and then load them through the coordinator.
+
+Another non-parallel method for backing up |product_name| data is to use the ``COPY TO`` SQL command to copy all or a portion of a table out of the database to a delimited text file on the coordinator host.
+
+Backup and recovery with CBDR at the WAL level
+-----------------------------------------------------------
+
+CBDR is a backup and restore tool built on top of WAL-G, designed for |product_name|. It supports both full and incremental backups via the command line and is well suited for disaster recovery and long-term archival use cases.
+
+Key features of CBDR include:
+
+- **Full backup**: Supports full backup of the entire database cluster.
+- **Incremental backup**: Captures only changes since the last backup based on WAL logs.
+- **Restore point support**: Allows creating and restoring to named restore points for point-in-time recovery.
+- **Backup listing and management**: Lists all full and incremental backups as well as restore points.
+- **Storage support**: Supports S3-compatible object storage.
+- **Compression options**: Supports lz4, lzma, zstd, and brotli compression algorithms.
+- **Backup encryption**: Enables encryption of backup data.
+- **Configuration management**: Automatically generates and manages required backup and restore configuration files.
+
+For details of the CBDR tool, see the document :ref:`manage-system/backup-and-restore/cbdr:cbdr`.
+
+.. tip::
+
+   Compared to traditional tools like ``gpbackup`` and ``gprestore``, CBDR offers more flexible incremental backup capabilities and supports storing backup files in remote object storage, reducing reliance on local disk space. In addition, CBDR uses WAL-based physical backup and recovery, making it suitable for large-scale clusters and cross-region disaster recovery scenarios.

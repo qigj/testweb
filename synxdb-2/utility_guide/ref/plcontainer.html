@@ -1,0 +1,379 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>plcontainer - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="plcontainer"><a class="header" href="#plcontainer">plcontainer</a></h1>
+<p>The <code>plcontainer</code> utility installs Docker images and manages the PL/Container configuration. The utility consists of two sets of commands.</p>
+<ul>
+<li><code>image-*</code> commands manage Docker images on the SynxDB system hosts.</li>
+<li><code>runtime-*</code> commands manage the PL/Container configuration file on the SynxDB instances. You can add Docker image information to the PL/Container configuration file including the image name, location, and shared folder information. You can also edit the configuration file.</li>
+</ul>
+<p>To configure PL/Container to use a Docker image, you install the Docker image on all the SynxDB hosts and then add configuration information to the PL/Container configuration.</p>
+<p>PL/Container configuration values, such as image names, runtime IDs, and parameter values and names are case sensitive.</p>
+<h2 id="plcontainer-syntax"><a class="header" href="#plcontainer-syntax"><a id="synt"></a>plcontainer Syntax</a></h2>
+<pre><code>plcontainer [&lt;command&gt;] [-h | --help]  [--verbose]
+</code></pre>
+<p>Where &lt;command&gt; is one of the following.</p>
+<pre><code>  image-add {{-f | --file} &lt;image_file&gt; [-ulc | --use_local_copy]} | {{-u | --URL} &lt;image_URL&gt;}
+  image-delete {-i | --image} &lt;image_name&gt;
+  image-list
+
+  runtime-add {-r | --runtime} &lt;runtime_id&gt;
+     {-i | --image} &lt;image_name&gt; {-l | --language} {python | python3 | r}
+     [{-v | --volume} &lt;shared_volume&gt; [{-v| --volume} &lt;shared_volume&gt;...]]
+     [{-s | --setting} &lt;param=value&gt; [{-s | --setting} &lt;param=value&gt; ...]]
+  runtime-replace {-r | --runtime} &lt;runtime_id&gt;
+     {-i | --image} &lt;image_name&gt; -l {r | python}
+     [{-v | --volume} &lt;shared_volume&gt; [{-v | --volume} &lt;shared_volume&gt;...]]
+     [{-s | --setting} &lt;param=value&gt; [{-s | --setting} &lt;param=value&gt; ...]]
+  runtime-show {-r | --runtime} &lt;runtime_id&gt;
+  runtime-delete {-r | --runtime} &lt;runtime_id&gt;
+  runtime-edit [{-e | --editor} &lt;editor&gt;]
+  runtime-backup {-f | --file} &lt;config_file&gt;
+  runtime-restore {-f | --file} &lt;config_file&gt;
+  runtime-verify
+</code></pre>
+<h2 id="plcontainer-commands-and-options"><a class="header" href="#plcontainer-commands-and-options"><a id="cmds"></a>plcontainer Commands and Options</a></h2>
+<h3 id="image-add-location"><a class="header" href="#image-add-location">image-add location</a></h3>
+<p>Install a Docker image on the SynxDB hosts. Specify either the location of the Docker image file on the host or the URL to the Docker image. These are the supported location options:</p>
+<ul>
+<li>{<strong>-f</strong> | <strong>–file</strong>} image_file Specify the file system location of the Docker image tar archive file on the local host. This example specifies an image file in the <code>gpadmin</code> user’s home directory: <code>/home/gpadmin/test_image.tar.gz</code></li>
+<li>{<strong>-u</strong> | <strong>–URL</strong>} image_URL Specify the URL of the Docker repository and image. This example URL points to a local Docker repository <code>192.168.0.1:5000/images/mytest_plc_r:devel</code></li>
+</ul>
+<p>By default, the <code>image-add</code> command copies the image to each SynxDB segment and standby master host, and installs the image. When you specify an image_file and provide the [<strong>-ulc</strong> | <strong>–use_local_copy</strong>] option, <code>plcontainer</code> installs the image only on the host on which you run the command.</p>
+<p>After installing the Docker image, use the <code>runtime-add</code> command to configure PL/Container to use the Docker image.</p>
+<h3 id="image-delete--i--image-image_name"><a class="header" href="#image-delete--i--image-image_name">image-delete {<strong>-i</strong> | <strong>–image</strong>} image_name</a></h3>
+<p>Remove an installed Docker image from all SynxDB hosts. Specify the full Docker image name including the tag for example <code>synxdata/plcontainer_python_shared:1.0.0</code></p>
+<h3 id="image-list"><a class="header" href="#image-list">image-list</a></h3>
+<p>List the Docker images installed on the host. The command list only the images on the local host, not remote hosts. The command lists all installed Docker images, including images installed with Docker commands.</p>
+<h3 id="runtime-add-options"><a class="header" href="#runtime-add-options">runtime-add options</a></h3>
+<p>Add configuration information to the PL/Container configuration file on all SynxDB hosts. If the specified runtime_id exists, the utility returns an error and the configuration information is not added.</p>
+<p>These are the supported options:</p>
+<h4 id="-i--image-docker-image"><a class="header" href="#-i--image-docker-image">{<strong>-i</strong> | <strong>–image</strong>} docker-image</a></h4>
+<p>Required. Specify the full Docker image name, including the tag, that is installed on the SynxDB hosts. For example <code>synxdata/plcontainer_python:1.0.0</code>.</p>
+<p>The utility returns a warning if the specified Docker image is not installed.</p>
+<p>The <code>plcontainer image-list</code> command displays installed image information including the name and tag (the Repository and Tag columns).</p>
+<h4 id="-l--language-python--python3--r"><a class="header" href="#-l--language-python--python3--r">{<strong>-l</strong> | <strong>–language</strong>} python | python3 | r</a></h4>
+<p>Required. Specify the PL/Container language type, supported values are <code>python</code> (PL/Python using Python 2), <code>python3</code> (PL/Python using Python 3) and <code>r</code> (PL/R). When adding configuration information for a new runtime, the utility adds a startup command to the configuration based on the language you specify.</p>
+<p>Startup command for the Python 2 language.</p>
+<pre><code>/clientdir/pyclient.sh
+</code></pre>
+<p>Startup command for the Python 3 language.</p>
+<pre><code>/clientdir/pyclient3.sh
+</code></pre>
+<p>Startup command for the R language.</p>
+<pre><code>/clientdir/rclient.sh
+</code></pre>
+<h4 id="-r--runtime-runtime_id"><a class="header" href="#-r--runtime-runtime_id">{<strong>-r</strong> | <strong>–runtime</strong>} runtime_id</a></h4>
+<p>Required. Add the runtime ID. When adding a <code>runtime</code> element in the PL/Container configuration file, this is the value of the <code>id</code> element in the PL/Container configuration file. Maximum length is 63 Bytes.</p>
+<p>You specify the name in the SynxDB UDF on the <code># container</code> line.</p>
+<h4 id="-s--setting-paramvalue"><a class="header" href="#-s--setting-paramvalue">{<strong>-s</strong> | <strong>–setting</strong>} param=value</a></h4>
+<p>Optional. Specify a setting to add to the runtime configuration information. You can specify this option multiple times. The setting applies to the runtime configuration specified by the runtime_id. The parameter is the XML attribute of the <code>settings</code> element in the PL/Container configuration file. These are valid parameters.</p>
+<ul>
+<li><code>cpu_share</code> - Set the CPU limit for each container in the runtime configuration. The default value is 1024. The value is a relative weighting of CPU usage compared to other containers.</li>
+<li><code>memory_mb</code> - Set the memory limit for each container in the runtime configuration. The default value is 1024. The value is an integer that specifies the amount of memory in MB.</li>
+<li><code>resource_group_id</code> - Assign the specified resource group to the runtime configuration. The resource group limits the total CPU and memory resource usage for all containers that share this runtime configuration. You must specify the <code>groupid</code> of the resource group.</li>
+<li><code>roles</code> - Specify the SynxDB roles that are allowed to run a container for the runtime configuration. You can specify a single role name or comma separated lists of role names. The default is no restriction.</li>
+<li><code>use_container_logging</code> - Enable or deactivate Docker logging for the container. The value is either <code>yes</code> (activate logging) or <code>no</code> (deactivate logging, the default).
+<br/><br/>The SynxDB server configuration parameter <a href="../../ref_guide/config_params/guc-list.html">log_min_messages</a> controls the log level. The default log level is <code>warning</code>.</li>
+</ul>
+<h4 id="-v--volume-shared-volume"><a class="header" href="#-v--volume-shared-volume">{<strong>-v</strong> | <strong>–volume</strong>} shared-volume</a></h4>
+<p>Optional. Specify a Docker volume to bind mount. You can specify this option multiple times to define multiple volumes.</p>
+<p>The format for a shared volume: <code>host-dir:container-dir:[rw|ro]</code>. The information is stored as attributes in the <code>shared_directory</code> element of the <code>runtime</code> element in the PL/Container configuration file.</p>
+<ul>
+<li>host-dir - absolute path to a directory on the host system. The SynxDB administrator user (gpadmin) must have appropriate access to the directory.</li>
+<li>container-dir - absolute path to a directory in the Docker container.</li>
+<li><code>[rw|ro]</code> - read-write or read-only access to the host directory from the container.</li>
+</ul>
+<p>When adding configuration information for a new runtime, the utility adds this read-only shared volume information.</p>
+<p><code>&lt;greenplum-home&gt;/bin/plcontainer_clients:/clientdir:ro</code></p>
+<p>If needed, you can specify other shared directories. The utility returns an error if the specified container-dir is the same as the one that is added by the utility, or if you specify multiple shared volumes with the same container-dir.</p>
+<blockquote>
+<p><strong>Caution</strong> Allowing read-write access to a host directory requires special considerations.</p>
+<ul>
+<li>When specifying read-write access to host directory, ensure that the specified host directory has the correct permissions.</li>
+<li>When running PL/Container user-defined functions, multiple concurrent Docker containers that are running on a host could change data in the host directory. Ensure that the functions support multiple concurrent access to the data in the host directory.</li>
+</ul>
+</blockquote>
+<h3 id="runtime-backup--f--file-config_file"><a class="header" href="#runtime-backup--f--file-config_file">runtime-backup {<strong>-f</strong> | <strong>–file</strong>} config_file</a></h3>
+<p>Copies the PL/Container configuration file to the specified file on the local host.</p>
+<h3 id="runtime-delete--r--runtime-runtime_id"><a class="header" href="#runtime-delete--r--runtime-runtime_id">runtime-delete {<strong>-r</strong> | <strong>–runtime</strong>} runtime_id</a></h3>
+<p>Removes runtime configuration information in the PL/Container configuration file on all SynxDB instances. The utility returns a message if the specified runtime_id does not exist in the file.</p>
+<h3 id="runtime-edit--e--editor-editor"><a class="header" href="#runtime-edit--e--editor-editor">runtime-edit [{<strong>-e</strong> | <strong>–editor</strong>} editor]</a></h3>
+<p>Edit the XML file <code>plcontainer_configuration.xml</code> with the specified editor. The default editor is <code>vi</code>.</p>
+<p>Saving the file updates the configuration file on all SynxDB hosts. If errors exist in the updated file, the utility returns an error and does not update the file.</p>
+<h3 id="runtime-replace-options"><a class="header" href="#runtime-replace-options">runtime-replace options</a></h3>
+<p>Replaces runtime configuration information in the PL/Container configuration file on all SynxDB instances. If the runtime_id does not exist, the information is added to the configuration file. The utility adds a startup command and shared directory to the configuration.</p>
+<p>See <code>runtime-add</code> for command options and information added to the configuration.</p>
+<h3 id="runtime-restore--f--file-config_file"><a class="header" href="#runtime-restore--f--file-config_file">runtime-restore {<strong>-f</strong> | <strong>–file</strong>} config_file</a></h3>
+<p>Replaces information in the PL/Container configuration file <code>plcontainer_configuration.xml</code> on all SynxDB instances with the information from the specified file on the local host.</p>
+<h3 id="runtime-show--r--runtime-runtime_id"><a class="header" href="#runtime-show--r--runtime-runtime_id">runtime-show [{<strong>-r</strong> | <strong>–runtime</strong>} runtime_id]</a></h3>
+<p>Displays formatted PL/Container runtime configuration information. If a runtime_id is not specified, the configuration for all runtime IDs are displayed.</p>
+<h3 id="runtime-verify"><a class="header" href="#runtime-verify">runtime-verify</a></h3>
+<p>Checks the PL/Container configuration information on the SynxDB instances with the configuration information on the master. If the utility finds inconsistencies, you are prompted to replace the remote copy with the local copy. The utility also performs XML validation.</p>
+<h3 id="-h--help"><a class="header" href="#-h--help"><strong>-h</strong> | <strong>–help</strong></a></h3>
+<p>Display help text. If specified without a command, displays help for all <code>plcontainer</code> commands. If specified with a command, displays help for the command.</p>
+<h3 id="verbose"><a class="header" href="#verbose"><strong>–verbose</strong></a></h3>
+<p>Enable verbose logging for the command.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="exs"></a>Examples</a></h2>
+<p>These are examples of common commands to manage PL/Container:</p>
+<ul>
+<li>
+<p>Install a Docker image on all SynxDB hosts. This example loads a Docker image from a file. The utility displays progress information on the command line as the utility installs the Docker image on all the hosts.</p>
+<pre><code>plcontainer image-add -f plc_newr.tar.gz
+</code></pre>
+<p>After installing the Docker image, you add or update a runtime entry in the PL/Container configuration file to give PL/Container access to the Docker image to start Docker containers.</p>
+</li>
+<li>
+<p>Install the Docker image only on the local SynxDB host:</p>
+<pre><code>plcontainer image-add -f /home/gpadmin/plc_python_image.tar.gz --use_local_copy
+</code></pre>
+</li>
+<li>
+<p>Add a container entry to the PL/Container configuration file. This example adds configuration information for a PL/R runtime, and specifies a shared volume and settings for memory and logging.</p>
+<pre><code>plcontainer runtime-add -r runtime2 -i test_image2:0.1 -l r \
+  -v /host_dir2/shared2:/container_dir2/shared2:ro \
+  -s memory_mb=512 -s use_container_logging=yes
+</code></pre>
+<p>The utility displays progress information on the command line as it adds the runtime configuration to the configuration file and distributes the updated configuration to all instances.</p>
+</li>
+<li>
+<p>Show specific runtime with given runtime id in configuration file</p>
+<pre><code>plcontainer runtime-show -r plc_python_shared
+</code></pre>
+<p>The utility displays the configuration information similar to this output.</p>
+<pre><code>PL/Container Runtime Configuration:
+---------------------------------------------------------
+ Runtime ID: plc_python_shared
+ Linked Docker Image: test1:latest
+ Runtime Setting(s):
+ Shared Directory:
+ ---- Shared Directory From HOST '/usr/local/synxdb/bin/plcontainer_clients' to Container '/clientdir', access mode is 'ro'
+ ---- Shared Directory From HOST '/home/gpadmin/share/' to Container '/opt/share', access mode is 'rw'
+---------------------------------------------------------
+</code></pre>
+</li>
+<li>
+<p>Edit the configuration in an interactive editor of your choice. This example edits the configuration file with the vim editor.</p>
+<pre><code>plcontainer runtime-edit -e vim
+</code></pre>
+<p>When you save the file, the utility displays progress information on the command line as it distributes the file to the SynxDB hosts.</p>
+</li>
+<li>
+<p>Save the current PL/Container configuration to a file. This example saves the file to the local file <code>/home/gpadmin/saved_plc_config.xml</code></p>
+<pre><code>plcontainer runtime-backup -f /home/gpadmin/saved_plc_config.xml
+</code></pre>
+</li>
+<li>
+<p>Overwrite PL/Container configuration file with an XML file. This example replaces the information in the configuration file with the information from the file in the <code>/home/gpadmin</code> directory.</p>
+<pre><code>plcontainer runtime-restore -f /home/gpadmin/new_plcontainer_configuration.xml
+</code></pre>
+<p>The utility displays progress information on the command line as it distributes the updated file to the SynxDB instances.</p>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../utility_guide/ref/pgbouncer-admin.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../utility_guide/ref/plcontainer-configuration.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../utility_guide/ref/pgbouncer-admin.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../utility_guide/ref/plcontainer-configuration.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

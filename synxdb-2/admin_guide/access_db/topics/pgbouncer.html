@@ -1,0 +1,468 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Using the PgBouncer Connection Pooler - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../../highlight.css">
+        <link rel="stylesheet" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="using-the-pgbouncer-connection-pooler"><a class="header" href="#using-the-pgbouncer-connection-pooler">Using the PgBouncer Connection Pooler</a></h1>
+<p>The PgBouncer utility manages connection pools for PostgreSQL and SynxDB connections.</p>
+<p>The following topics describe how to set up and use PgBouncer with SynxDB. Refer to the <a href="https://pgbouncer.github.io">PgBouncer web site</a> for information about using PgBouncer with PostgreSQL.</p>
+<ul>
+<li><a href="#topic_nzk_nqg_cs">Overview</a></li>
+<li><a href="#pgb_migrate">Migrating PgBouncer</a></li>
+<li><a href="#pgb_config">Configuring PgBouncer</a></li>
+<li><a href="#pgb_start">Starting PgBouncer</a></li>
+<li><a href="#topic_manage">Managing PgBouncer</a></li>
+</ul>
+<h2 id="overview"><a class="header" href="#overview"><a id="topic_nzk_nqg_cs"></a>Overview</a></h2>
+<p>A database connection pool is a cache of database connections. Once a pool of connections is established, connection pooling eliminates the overhead of creating new database connections, so clients connect much faster and the server load is reduced.</p>
+<p>The PgBouncer connection pooler, from the PostgreSQL community, is included in your SynxDB installation. PgBouncer is a light-weight connection pool manager for SynxDB and PostgreSQL. PgBouncer maintains a pool for connections for each database and user combination. PgBouncer either creates a new database connection for a client or reuses an existing connection for the same user and database. When the client disconnects, PgBouncer returns the connection to the pool for re-use.</p>
+<p>In order not to compromise transaction semantics for connection pooling, PgBouncer supports several types of pooling when rotating connections:</p>
+<ul>
+<li>
+<p><em>Session pooling</em> - Most polite method. When a client connects, a server connection will be assigned to it for the whole duration the client stays connected. When the client disconnects, the server connection will be put back into the pool. This is the default method.</p>
+</li>
+<li>
+<p><em>Transaction pooling</em> - A server connection is assigned to a client only during a transaction. When PgBouncer notices that transaction is over, the server connection will be put back into the pool.</p>
+</li>
+<li>
+<p><em>Statement pooling</em> - Most aggressive method. The server connection will be put back into the pool immediately after a query completes. Multi-statement transactions are disallowed in this mode as they would break.</p>
+</li>
+</ul>
+<p>You can set a default pool mode for the PgBouncer instance. You can override this mode for individual databases and users.</p>
+<p>PgBouncer supports the standard connection interface shared by PostgreSQL and SynxDB. The SynxDB client application (for example, <code>psql</code>) connects to the host and port on which PgBouncer is running rather than the SynxDB master host and port.</p>
+<p>PgBouncer includes a <code>psql</code>-like administration console. Authorized users can connect to a virtual database to monitor and manage PgBouncer. You can manage a PgBouncer daemon process via the admin console. You can also use the console to update and reload PgBouncer configuration at runtime without stopping and restarting the process.</p>
+<p>PgBouncer natively supports TLS.</p>
+<h2 id="migrating-pgbouncer"><a class="header" href="#migrating-pgbouncer"><a id="pgb_migrate"></a>Migrating PgBouncer</a></h2>
+<p>When you migrate to a new SynxDB version, you must migrate your PgBouncer instance to that in the new SynxDB installation.</p>
+<ul>
+<li>
+<p><strong>If you are migrating to a SynxDB version 5.8.x or earlier</strong>, you can migrate PgBouncer without dropping connections. Launch the new PgBouncer process with the <code>-R</code> option and the configuration file that you started the process with:</p>
+<pre><code>$ pgbouncer -R -d pgbouncer.ini
+</code></pre>
+<p>The <code>-R</code> (reboot) option causes the new process to connect to the console of the old process through a Unix socket and issue the following commands:</p>
+<pre><code>SUSPEND;
+SHOW FDS;
+SHUTDOWN;
+</code></pre>
+<p>When the new process detects that the old process is gone, it resumes the work with the old connections. This is possible because the <code>SHOW FDS</code> command sends actual file descriptors to the new process. If the transition fails for any reason, kill the new process and the old process will resume.</p>
+</li>
+<li>
+<p><strong>If you are migrating to a SynxDB version 5.9.0 or later</strong>, you must shut down the PgBouncer instance in your old installation and reconfigure and restart PgBouncer in your new installation.</p>
+</li>
+<li>
+<p>If you used stunnel to secure PgBouncer connections in your old installation, you must configure SSL/TLS in your new installation using the built-in TLS capabilities of PgBouncer 1.8.1 and later.</p>
+</li>
+<li>
+<p>If you currently use the built-in PAM LDAP integration, you may choose to migrate to the new native LDAP PgBouncer integration introduced in SynxDB version 1; refer to <a href="#pgb_ldap">Configuring LDAP-based Authentication for PgBouncer</a> for configuration information.</p>
+</li>
+</ul>
+<h2 id="configuring-pgbouncer"><a class="header" href="#configuring-pgbouncer"><a id="pgb_config"></a>Configuring PgBouncer</a></h2>
+<p>You configure PgBouncer and its access to SynxDB via a configuration file. This configuration file, commonly named <code>pgbouncer.ini</code>, provides location information for SynxDB databases. The <code>pgbouncer.ini</code> file also specifies process, connection pool, authorized users, and authentication configuration for PgBouncer.</p>
+<p>Sample <code>pgbouncer.ini</code> file contents:</p>
+<pre><code>[databases]
+postgres = host=127.0.0.1 port=5432 dbname=postgres
+pgb_mydb = host=127.0.0.1 port=5432 dbname=mydb
+
+[pgbouncer]
+pool_mode = session
+listen_port = 6543
+listen_addr = 127.0.0.1
+auth_type = md5
+auth_file = users.txt
+logfile = pgbouncer.log
+pidfile = pgbouncer.pid
+admin_users = gpadmin
+</code></pre>
+<p>Refer to the <a href="../../../utility_guide/ref/pgbouncer-ini.html">pgbouncer.ini</a> reference page for the PgBouncer configuration file format and the list of configuration properties it supports.</p>
+<p>When a client connects to PgBouncer, the connection pooler looks up the the configuration for the requested database (which may be an alias for the actual database) that was specified in the <code>pgbouncer.ini</code> configuration file to find the host name, port, and database name for the database connection. The configuration file also identifies the authentication mode in effect for the database.</p>
+<p>PgBouncer requires an authentication file, a text file that contains a list of SynxDB users and passwords. The contents of the file are dependent on the <code>auth_type</code> you configure in the <code>pgbouncer.ini</code> file. Passwords may be either clear text or MD5-encoded strings. You can also configure PgBouncer to query the destination database to obtain password information for users that are not in the authentication file.</p>
+<h3 id="pgbouncer-authentication-file-format"><a class="header" href="#pgbouncer-authentication-file-format"><a id="pgb_auth"></a>PgBouncer Authentication File Format</a></h3>
+<p>PgBouncer requires its own user authentication file. You specify the name of this file in the <code>auth_file</code> property of the <code>pgbouncer.ini</code> configuration file. <code>auth_file</code> is a text file in the following format:</p>
+<pre><code>"username1" "password" ...
+"username2" "md5abcdef012342345" ...
+"username2" "SCRAM-SHA-256$&lt;iterations&gt;:&lt;salt&gt;$&lt;storedkey&gt;:&lt;serverkey&gt;"
+</code></pre>
+<p><code>auth_file</code> contains one line per user. Each line must have at least two fields, both of which are enclosed in double quotes (<code>" "</code>). The first field identifies the SynxDB user name. The second field is either a plain-text password, an MD5-encoded password, or or a SCRAM secret. PgBouncer ignores the remainder of the line.</p>
+<p>(The format of <code>auth_file</code> is similar to that of the <code>pg_auth</code> text file that SynxDB uses for authentication information. PgBouncer can work directly with this SynxDB authentication file.)</p>
+<p>Use an MD5 encoded password. The format of an MD5 encoded password is:</p>
+<pre><code>"md5" + MD5_encoded(&lt;password&gt;&lt;username&gt;)
+</code></pre>
+<p>You can also obtain the MD5-encoded passwords of all SynxDB users from the <code>pg_shadow</code> view.</p>
+<p>PostgreSQL SCRAM secret format:</p>
+<pre><code>SCRAM-SHA-256$&lt;iterations&gt;:&lt;salt&gt;$&lt;storedkey&gt;:&lt;serverkey&gt;
+</code></pre>
+<p>See the PostgreSQL documentation and RFC 5803 for details on this.</p>
+<p>The passwords or secrets stored in the authentication file serve two purposes. First, they are used to verify the passwords of incoming client connections, if a password-based authentication method is configured. Second, they are used as the passwords for outgoing connections to the backend server, if the backend server requires password-based authentication (unless the password is specified directly in the database’s connection string). The latter works if the password is stored in plain text or MD5-hashed.</p>
+<p>SCRAM secrets can only be used for logging into a server if the client authentication also uses SCRAM, the PgBouncer database definition does not specify a user name, and the SCRAM secrets are identical in PgBouncer and the PostgreSQL server (same salt and iterations, not merely the same password). This is due to an inherent security property of SCRAM: The stored SCRAM secret cannot by itself be used for deriving login credentials.</p>
+<p>The authentication file can be written by hand, but it’s also useful to generate it from some other list of users and passwords. See <code>./etc/mkauth.py</code> for a sample script to generate the authentication file from the <code>pg_shadow</code> system table. Alternatively, use</p>
+<pre><code>auth_query
+</code></pre>
+<p>instead of <code>auth_file</code> to avoid having to maintain a separate authentication file.</p>
+<h3 id="configuring-hba-based-authentication-for-pgbouncer"><a class="header" href="#configuring-hba-based-authentication-for-pgbouncer"><a id="pgb_hba"></a>Configuring HBA-based Authentication for PgBouncer</a></h3>
+<p>PgBouncer supports HBA-based authentication. To configure HBA-based authentication for PgBouncer, you set <code>auth_type=hba</code> in the <code>pgbouncer.ini</code> configuration file. You also provide the filename of the HBA-format file in the <code>auth_hba_file</code> parameter of the <code>pgbouncer.ini</code> file.</p>
+<p>Contents of an example PgBouncer HBA file named <code>hba_bouncer.conf</code>:</p>
+<pre><code>local       all     bouncer             trust
+host        all     bouncer      127.0.0.1/32       trust
+</code></pre>
+<p>Example excerpt from the related <code>pgbouncer.ini</code> configuration file:</p>
+<pre><code>[databases]
+p0 = port=15432 host=127.0.0.1 dbname=p0 user=bouncer pool_size=2
+p1 = port=15432 host=127.0.0.1 dbname=p1 user=bouncer
+...
+
+[pgbouncer]
+...
+auth_type = hba
+auth_file = userlist.txt
+auth_hba_file = hba_bouncer.conf
+...
+</code></pre>
+<p>Refer to the <a href="https://pgbouncer.github.io/config.html#hba-file-format">HBA file format</a> discussion in the PgBouncer documentation for information about PgBouncer support of the HBA authentication file format.</p>
+<h3 id="configuring-ldap-based-authentication-for-pgbouncer"><a class="header" href="#configuring-ldap-based-authentication-for-pgbouncer"><a id="pgb_ldap"></a>Configuring LDAP-based Authentication for PgBouncer</a></h3>
+<p>PgBouncer supports native LDAP authentication between the <code>psql</code> client and the <code>pgbouncer</code> process. Configuring this LDAP-based authentication is similar to configuring HBA-based authentication for PgBouncer:</p>
+<ul>
+<li>Specify <code>auth-type=hba</code> in the <code>pgbouncer.ini</code> configuration file.</li>
+<li>Provide the file name of an HBA-format file in the <code>auth_hba_file</code> parameter of the <code>pgbouncer.ini</code> file, and specify the LDAP parameters (server address, base DN, bind DN, bind password, search attribute, etc.) in the file.</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> You may, but are not required to, specify LDAP user names and passwords in the <code>auth-file</code>. When you do <em>not</em> specify these strings in the <code>auth-file</code>, LDAP user password changes require no PgBouncer configuration changes.</p>
+</blockquote>
+<p>If you enable LDAP authentication between <code>psql</code> and <code>pgbouncer</code> and you use <code>md5</code>, <code>password</code>, or <code>scram-sha-256</code> for authentication between PgBouncer and SynxDB, ensure that you configure the latter password independently.</p>
+<p>Excerpt of an example PgBouncer HBA file named <code>hba_bouncer_for_ldap.conf</code> that specifies LDAP authentication follows:</p>
+<pre><code class="language-pre">host all user1 0.0.0.0/0 ldap ldapserver=&lt;ldap-server-address&gt; ldapbasedn="CN=Users,DC=greenplum,DC=org" ldapbinddn="CN=Administrator,CN=Users,DC=greenplum,DC=org" ldapbindpasswd="ChangeMe1!!" ldapsearchattribute="SomeAttrName"
+</code></pre>
+<p>Refer to the SynxDB <a href="../../../security-guide/topics/Authenticate.html#ldap_auth">LDAP Authentication</a> discussion for more information on configuring an HBA file for LDAP.</p>
+<p>Example excerpt from the related <code>pgbouncer.ini</code> configuration file:</p>
+<pre><code class="language-pre">[databases]
+* = port = 6000 host=127.0.0.1
+
+[pgbouncer]
+listen_addr = 0.0.0.0
+listen_port = 6432
+
+auth_type = hba
+auth_hba_file = hba_bouncer_for_ldap.conf
+...
+</code></pre>
+<h4 id="about-specifying-an-encrypted-ldap-password"><a class="header" href="#about-specifying-an-encrypted-ldap-password"><a id="pgb_ldap_encrypt_passwd"></a>About Specifying an Encrypted LDAP Password</a></h4>
+<p>PgBouncer supports encrypted LDAP passwords. To utilize an encrypted LDAP password with PgBouncer, you must:</p>
+<ul>
+<li>Place the encrypted password in the <code>${HOME}/.ldapbindpass</code> file.</li>
+<li>Specify <code>ldapbindpasswd="$bindpasswd"</code> in the HBA-based authentication file for PgBouncer.</li>
+<li>Specify the file system path to the encryption key in the <code>auth_key_file</code> setting in the <code>pgbouncer.ini</code> configuration file.</li>
+<li>Specify the encryption cipher in the <code>auth_cipher</code> setting in the <code>pgbouncer.ini</code> configuration file.</li>
+</ul>
+<p>The following example commands create an encrypted password and place it in <code>${HOME}/.ldapbindpass</code>:</p>
+<pre><code># generate a key file named ldkeyfile
+$ openssl rand -base64 256 | tr -d '\n' &gt; ldkeyfile
+
+# encrypt the password
+$ encrypted_passwd=$(echo -n "your_secret_password_here" | openssl enc -aes-256-cbc -base64 -md sha256 -pass file:ldkeyfile
+
+# copy the encrypted password to required location
+$ echo -n $encrypted_passwd &gt; "${HOME}/.ldapbindpass"
+</code></pre>
+<p>An excerpt of an example PgBouncer HBA file named <code>hba_bouncer_with_ldap_encrypted.conf</code> that specifies LDAP authentication with an encrypted password follows:</p>
+<pre><code class="language-pre">host all user2 0.0.0.0/0 ldap ldapserver=&lt;ldap-server-address&gt; ldapbindpasswd="$bindpasswd" ldapbasedn="CN=Users,DC=greenplum,DC=org" ldapbinddn="CN=Administrator,CN=Users,DC=greenplum,DC=org" ldapsearchattribute="SomeAttrName"
+</code></pre>
+<p>Example excerpt from the related <code>pgbouncer.ini</code> configuration file:</p>
+<pre><code class="language-pre">[databases]
+* = port = 6000 host=127.0.0.1
+
+[pgbouncer]
+listen_addr = 0.0.0.0
+listen_port = 6432
+
+auth_type = hba
+auth_hba_file = hba_bouncer_with_ldap_encrypted.conf
+auth_key_file = /home/user2/ldkeyfile
+auth_cipher = -aes-128-ecb
+...
+</code></pre>
+<h2 id="starting-pgbouncer"><a class="header" href="#starting-pgbouncer"><a id="pgb_start"></a>Starting PgBouncer</a></h2>
+<p>You can run PgBouncer on the SynxDB master or on another server. If you install PgBouncer on a separate server, you can easily switch clients to the standby master by updating the PgBouncer configuration file and reloading the configuration using the PgBouncer Administration Console.</p>
+<p>Follow these steps to set up PgBouncer.</p>
+<ol>
+<li>
+<p>Create a PgBouncer configuration file. For example, add the following text to a file named <code>pgbouncer.ini</code>:</p>
+<pre><code>[databases]
+postgres = host=127.0.0.1 port=5432 dbname=postgres
+pgb_mydb = host=127.0.0.1 port=5432 dbname=mydb
+
+[pgbouncer]
+pool_mode = session
+listen_port = 6543
+listen_addr = 127.0.0.1
+auth_type = md5
+auth_file = users.txt
+logfile = pgbouncer.log
+pidfile = pgbouncer.pid
+admin_users = gpadmin
+</code></pre>
+<p>The file lists databases and their connection details. The file also configures the PgBouncer instance. Refer to the <a href="../../../utility_guide/ref/pgbouncer-ini.html">pgbouncer.ini</a> reference page for information about the format and content of a PgBouncer configuration file.</p>
+</li>
+<li>
+<p>Create an authentication file. The filename should be the name you specified for the <code>auth_file</code> parameter of the <code>pgbouncer.ini</code> file, <code>users.txt</code>. Each line contains a user name and password. The format of the password string matches the <code>auth_type</code> you configured in the PgBouncer configuration file. If the <code>auth_type</code> parameter is <code>plain</code>, the password string is a clear text password, for example:</p>
+<pre><code>"gpadmin" "gpadmin1234"
+</code></pre>
+<p>If the <code>auth_type</code> in the following example is <code>md5</code>, the authentication field must be MD5-encoded. The format for an MD5-encoded password is:</p>
+<pre><code>"md5" + MD5_encoded(&lt;password&gt;&lt;username&gt;)
+</code></pre>
+</li>
+<li>
+<p>Launch <code>pgbouncer</code>:</p>
+<pre><code>$ $GPHOME/bin/pgbouncer -d pgbouncer.ini
+</code></pre>
+<p>The <code>-d</code> option runs PgBouncer as a background (daemon) process. Refer to the <a href="../../../utility_guide/ref/pgbouncer.html">pgbouncer</a> reference page for the <code>pgbouncer</code> command syntax and options.</p>
+</li>
+<li>
+<p>Update your client applications to connect to <code>pgbouncer</code> instead of directly to SynxDB server. For example, to connect to the SynxDB database named <code>mydb</code> configured above, run <code>psql</code> as follows:</p>
+<pre><code>$ psql -p 6543 -U someuser pgb_mydb
+</code></pre>
+<p>The <code>-p</code> option value is the <code>listen_port</code> that you configured for the PgBouncer instance.</p>
+</li>
+</ol>
+<h2 id="managing-pgbouncer"><a class="header" href="#managing-pgbouncer"><a id="topic_manage"></a>Managing PgBouncer</a></h2>
+<p>PgBouncer provides a <code>psql</code>-like administration console. You log in to the PgBouncer Administration Console by specifying the PgBouncer port number and a virtual database named <code>pgbouncer</code>. The console accepts SQL-like commands that you can use to monitor, reconfigure, and manage PgBouncer.</p>
+<p>For complete documentation of PgBouncer Administration Console commands, refer to the <a href="../../../utility_guide/ref/pgbouncer-admin.html">pgbouncer-admin</a> command reference.</p>
+<p>Follow these steps to get started with the PgBouncer Administration Console.</p>
+<ol>
+<li>
+<p>Use <code>psql</code> to log in to the <code>pgbouncer</code> virtual database:</p>
+<pre><code>$ psql -p 6543 -U username pgbouncer
+</code></pre>
+<p>The username that you specify must be listed in the <code>admin_users</code> parameter in the <code>pgbouncer.ini</code> configuration file. You can also log in to the PgBouncer Administration Console with the current Unix username if the <code>pgbouncer</code> process is running under that user’s UID.</p>
+</li>
+<li>
+<p>To view the available PgBouncer Administration Console commands, run the <code>SHOW help</code> command:</p>
+<pre><code>pgbouncer=# SHOW help;
+NOTICE:  Console usage
+DETAIL:
+    SHOW HELP|CONFIG|DATABASES|FDS|POOLS|CLIENTS|SERVERS|SOCKETS|LISTS|VERSION|...
+    SET key = arg
+    RELOAD
+    PAUSE
+    SUSPEND
+    RESUME
+    SHUTDOWN
+    [...]
+</code></pre>
+</li>
+<li>
+<p>If you update PgBouncer configuration by editing the <code>pgbouncer.ini</code> configuration file, you use the <code>RELOAD</code> command to reload the file:</p>
+<pre><code>pgbouncer=# RELOAD;
+</code></pre>
+</li>
+</ol>
+<h3 id="mapping-pgbouncer-clients-to-synxdb-server-connections"><a class="header" href="#mapping-pgbouncer-clients-to-synxdb-server-connections"><a id="mapbouncclient"></a>Mapping PgBouncer Clients to SynxDB Server Connections</a></h3>
+<p>To map a PgBouncer client to a SynxDB server connection, use the PgBouncer Administration Console <code>SHOW CLIENTS</code> and <code>SHOW SERVERS</code> commands:</p>
+<ol>
+<li>Use <code>ptr</code> and <code>link</code> to map the local client connection to the server connection.</li>
+<li>Use the <code>addr</code> and the <code>port</code> of the client connection to identify the TCP connection from the client.</li>
+<li>Use <code>local_addr</code> and <code>local_port</code> to identify the TCP connection to the server.</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../admin_guide/access_db/topics/g-connecting-with-psql.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../admin_guide/access_db/topics/g-database-application-interfaces.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../admin_guide/access_db/topics/g-connecting-with-psql.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../admin_guide/access_db/topics/g-database-application-interfaces.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

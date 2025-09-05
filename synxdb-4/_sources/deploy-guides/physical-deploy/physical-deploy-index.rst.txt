@@ -1,0 +1,10 @@
+Deploy on Physical Machines
+*******************************
+
+.. toctree::
+   :maxdepth: 2
+
+   software-and-hardware-config-requirements
+   prepare-to-deploy
+   deploy-multi-nodes
+   deploy-single-node

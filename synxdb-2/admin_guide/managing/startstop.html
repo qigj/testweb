@@ -1,0 +1,310 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Starting and Stopping SynxDB - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="starting-and-stopping-synxdb"><a class="header" href="#starting-and-stopping-synxdb">Starting and Stopping SynxDB</a></h1>
+<p>In a SynxDB DBMS, the database server instances (the master and all segments) are started or stopped across all of the hosts in the system in such a way that they can work together as a unified DBMS.</p>
+<p>Because a SynxDB system is distributed across many machines, the process for starting and stopping a SynxDB system is different than the process for starting and stopping a regular PostgreSQL DBMS.</p>
+<p>Use the <code>gpstart</code> and <code>gpstop</code> utilities to start and stop SynxDB, respectively. These utilities are located in the $GPHOME/bin directory on your SynxDB master host.</p>
+<blockquote>
+<p><strong>Important</strong> Do not issue a <code>kill</code> command to end any Postgres process. Instead, use the database command <code>pg_cancel_backend()</code>.</p>
+</blockquote>
+<p>Issuing a <code>kill -9</code> or <code>kill -11</code> can introduce database corruption and prevent root cause analysis from being performed.</p>
+<p>For information about <code>gpstart</code> and <code>gpstop</code>, see the <em>SynxDB Utility Guide</em>.</p>
+<h2 id="starting-synxdb"><a class="header" href="#starting-synxdb"><a id="task_hkd_gzv_fp"></a>Starting SynxDB</a></h2>
+<p>Start an initialized SynxDB system by running the <code>gpstart</code> utility on the master instance.</p>
+<p>Use the <code>gpstart</code> utility to start a SynxDB system that has already been initialized by the <code>gpinitsystem</code> utility, but has been stopped by the <code>gpstop</code> utility. The <code>gpstart</code> utility starts SynxDB by starting all the Postgres database instances on the SynxDB cluster. <code>gpstart</code> orchestrates this process and performs the process in parallel.</p>
+<p>Run <code>gpstart</code> on the master host to start SynxDB:</p>
+<pre><code>$ gpstart
+</code></pre>
+<h2 id="restarting-synxdb"><a class="header" href="#restarting-synxdb"><a id="task_gpdb_restart"></a>Restarting SynxDB</a></h2>
+<p>Stop the SynxDB system and then restart it.</p>
+<p>The <code>gpstop</code> utility with the <code>-r</code> option can stop and then restart SynxDB after the shutdown completes.</p>
+<p>To restart SynxDB, enter the following command on the master host:</p>
+<pre><code>$ gpstop -r
+</code></pre>
+<h2 id="reloading-configuration-file-changes-only"><a class="header" href="#reloading-configuration-file-changes-only"><a id="task_upload_config"></a>Reloading Configuration File Changes Only</a></h2>
+<p>Reload changes to SynxDB configuration files without interrupting the system.</p>
+<p>The <code>gpstop</code> utility can reload changes to the pg_hba.conf configuration file and to <em>runtime</em> parameters in the master postgresql.conf file without service interruption. Active sessions pick up changes when they reconnect to the database. Many server configuration parameters require a full system restart (<code>gpstop -r</code>) to activate. For information about server configuration parameters, see the <em>SynxDB Reference Guide</em>.</p>
+<p>Reload configuration file changes without shutting down the SynxDB system using the <code>gpstop</code> utility:</p>
+<pre><code>$ gpstop -u
+</code></pre>
+<h2 id="starting-the-master-in-maintenance-mode"><a class="header" href="#starting-the-master-in-maintenance-mode"><a id="task_maint_mode"></a>Starting the Master in Maintenance Mode</a></h2>
+<p>Start only the master to perform maintenance or administrative tasks without affecting data on the segments.</p>
+<p>Maintenance mode should only be used with direction from Synx Data Labs Support. For example, you could connect to a database only on the master instance in maintenance mode and edit system catalog settings. For more information about system catalog tables, see the <em>SynxDB Reference Guide</em>.</p>
+<ol>
+<li>
+<p>Run <code>gpstart</code> using the -m option:</p>
+<pre><code>$ gpstart -m
+</code></pre>
+</li>
+<li>
+<p>Connect to the master in maintenance mode to do catalog maintenance. For example:</p>
+<p><a id="kg155401"></a></p>
+<pre><code>$ PGOPTIONS='-c gp_session_role=utility' psql postgres
+</code></pre>
+</li>
+<li>
+<p>After completing your administrative tasks, stop the master in maintenance mode. Then, restart it in production mode.</p>
+<pre><code>$ gpstop -m
+$ gpstart
+</code></pre>
+</li>
+</ol>
+<blockquote>
+<p><strong>Caution</strong> Incorrect use of maintenance mode connections can result in an inconsistent system state. Only Technical Support should perform this operation.</p>
+</blockquote>
+<h2 id="stopping-synxdb"><a class="header" href="#stopping-synxdb"><a id="task_gpdb_stop"></a>Stopping SynxDB</a></h2>
+<p>The <code>gpstop</code> utility stops or restarts your SynxDB system and always runs on the master host. When activated, <code>gpstop</code> stops all <code>postgres</code> processes in the system, including the master and all segment instances. The <code>gpstop</code> utility uses a default of up to 64 parallel worker threads to bring down the Postgres instances that make up the SynxDB cluster. The system waits for any active transactions to finish before shutting down. If after two minutes there are still active connections, <code>gpstop</code> will prompt you to either continue waiting in smart mode, stop in fast mode, or stop in immediate mode. To stop SynxDB immediately, use fast mode.</p>
+<blockquote>
+<p><strong>Important</strong> Immediate shut down mode is not recommended. This mode stops all database processes without allowing the database server to complete transaction processing or clean up any temporary or in-process work files.</p>
+</blockquote>
+<ul>
+<li>
+<p>To stop SynxDB:</p>
+<pre><code>$ gpstop
+</code></pre>
+</li>
+<li>
+<p>To stop SynxDB in fast mode:</p>
+<pre><code>$ gpstop -M fast
+</code></pre>
+<p>By default, you are not allowed to shut down SynxDB if there are any client connections to the database. Use the <code>-M fast</code> option to roll back all in progress transactions and terminate any connections before shutting down.</p>
+</li>
+</ul>
+<h2 id="stopping-client-processes"><a class="header" href="#stopping-client-processes"><a id="topic13"></a>Stopping Client Processes</a></h2>
+<p>SynxDB launches a new backend process for each client connection. A SynxDB user with <code>SUPERUSER</code> privileges can cancel and terminate these client backend processes.</p>
+<p>Canceling a backend process with the <code>pg_cancel_backend()</code> function ends a specific queued or active client query. Terminating a backend process with the <code>pg_terminate_backend()</code> function terminates a client connection to a database.</p>
+<p>The <code>pg_cancel_backend()</code> function has two signatures:</p>
+<ul>
+<li><code>pg_cancel_backend( pid int4 )</code></li>
+<li><code>pg_cancel_backend( pid int4, msg text )</code></li>
+</ul>
+<p>The <code>pg_terminate_backend()</code> function has two similar signatures:</p>
+<ul>
+<li><code>pg_terminate_backend( pid int4 )</code></li>
+<li><code>pg_terminate_backend( pid int4, msg text )</code></li>
+</ul>
+<p>If you provide a <code>msg</code>, SynxDB includes the text in the cancel message returned to the client. <code>msg</code> is limited to 128 bytes; SynxDB truncates anything longer.</p>
+<p>The <code>pg_cancel_backend()</code> and <code>pg_terminate_backend()</code> functions return <code>true</code> if successful, and <code>false</code> otherwise.</p>
+<p>To cancel or terminate a backend process, you must first identify the process ID of the backend. You can obtain the process ID from the <code>pid</code> column of the <code>pg_stat_activity</code> view. For example, to view the process information associated with all running and queued queries:</p>
+<pre><code>=# SELECT usename, pid, waiting, state, query, datname
+     FROM pg_stat_activity;
+</code></pre>
+<p>Sample partial query output:</p>
+<pre><code> usename |  pid     | waiting | state  |         query          | datname
+---------+----------+---------+--------+------------------------+---------
+  sammy  |   31861  |    f    | idle   | SELECT * FROM testtbl; | testdb
+  billy  |   31905  |    t    | active | SELECT * FROM topten;  | testdb
+</code></pre>
+<p>Use the output to identify the process id (<code>pid</code>) of the query or client connection.</p>
+<p>For example, to cancel the waiting query identified in the sample output above and include <code>'Admin canceled long-running query.'</code> as the message returned to the client:</p>
+<pre><code>=# SELECT pg_cancel_backend(31905 ,'Admin canceled long-running query.');
+ERROR:  canceling statement due to user request: "Admin canceled long-running query."
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/managing/versioning.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/partIII.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/managing/versioning.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/partIII.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

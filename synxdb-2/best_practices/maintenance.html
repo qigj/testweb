@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>System Monitoring and Maintenance - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="system-monitoring-and-maintenance"><a class="header" href="#system-monitoring-and-maintenance">System Monitoring and Maintenance</a></h1>
+<p>Best practices for regular maintenance that will ensure SynxDB high availability and optimal performance.</p>
+<ul>
+<li>
+<p><strong><a href="analyze.html">Updating Statistics with ANALYZE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="bloat.html">Managing Bloat in a Database</a></strong></p>
+</li>
+<li>
+<p><strong><a href="logfiles.html">Monitoring SynxDB Log Files</a></strong></p>
+</li>
+</ul>
+<h2 id="monitoring"><a class="header" href="#monitoring"><a id="topic_izw_bwb_s4"></a>Monitoring</a></h2>
+<p>SynxDB includes utilities that are useful for monitoring the system.</p>
+<p>The <code>gp_toolkit</code> schema contains several views that can be accessed using SQL commands to query system catalogs, log files, and operating environment for system status information.</p>
+<p>The <code>gp_stats_missing</code> view shows tables that do not have statistics and require <code>ANALYZE</code> to be run.</p>
+<p>For additional information on <code>gpstate</code> and <code>gpcheckperf</code> refer to the <em>SynxDB Utility Guide</em>. For information about the <code>gp_toolkit</code> schema, see the <em>SynxDB Reference Guide</em>.</p>
+<h3 id="gpstate"><a class="header" href="#gpstate"><a id="gpstate"></a>gpstate</a></h3>
+<p>The <code>gpstate</code> utility program displays the status of the SynxDB system, including which segments are down, master and segment configuration information (hosts, data directories, etc.), the ports used by the system, and mapping of primary segments to their corresponding mirror segments.</p>
+<p>Run <code>gpstate -Q</code> to get a list of segments that are marked “down” in the master system catalog.</p>
+<p>To get detailed status information for the SynxDB system, run <code>gpstate -s</code>.</p>
+<h3 id="gpcheckperf"><a class="header" href="#gpcheckperf"><a id="gpcheckperf"></a>gpcheckperf</a></h3>
+<p>The <code>gpcheckperf</code> utility tests baseline hardware performance for a list of hosts. The results can help identify hardware issues. It performs the following checks:</p>
+<ul>
+<li>disk I/O test – measures I/O performance by writing and reading a large file using the <code>dd</code> operating system command. It reports read and write rates in megabytes per second.</li>
+<li>memory bandwidth test – measures sustainable memory bandwidth in megabytes per second using the STREAM benchmark.</li>
+<li>network performance test – runs the <code>gpnetbench</code> network benchmark program (optionally <code>netperf)</code> to test network performance. The test is run in one of three modes: parallel pair test (<code>-r N</code>), serial pair test (<code>-r n</code>), or full-matrix test (<code>-r M)</code>. The minimum, maximum, average, and median transfer rates are reported in megabytes per second.</li>
+</ul>
+<p>To obtain valid numbers from <code>gpcheckperf</code>, the database system must be stopped. The numbers from <code>gpcheckperf</code> can be inaccurate even if the system is up and running with no query activity.</p>
+<p><code>gpcheckperf</code> requires a trusted host setup between the hosts involved in the performance test. It calls <code>gpssh</code> and <code>gpscp</code>, so these utilities must also be in your <code>PATH</code>. Specify the hosts to check individually (<code>-h *host1* -h *host2* ...</code>) or with <code>-f *hosts_file*</code>, where <code>*hosts_file*</code> is a text file containing a list of the hosts to check. If you have more than one subnet, create a separate host file for each subnet so that you can test the subnets separately.</p>
+<p>By default, <code>gpcheckperf</code> runs the disk I/O test, the memory test, and a serial pair network performance test. With the disk I/O test, you must use the <code>-d</code> option to specify the file systems you want to test. The following command tests disk I/O and memory bandwidth on hosts listed in the <code>subnet_1_hosts</code> file:</p>
+<pre><code>$ gpcheckperf -f subnet_1_hosts -d /data1 -d /data2 -r ds
+</code></pre>
+<p>The <code>-r</code> option selects the tests to run: disk I/O (<code>d</code>), memory bandwidth (<code>s</code>), network parallel pair (<code>N</code>), network serial pair test (<code>n</code>), network full-matrix test (<code>M</code>). Only one network mode can be selected per execution. See the <em>SynxDB Reference Guide</em> for the detailed <code>gpcheckperf</code> reference.</p>
+<h3 id="monitoring-with-operating-system-utilities"><a class="header" href="#monitoring-with-operating-system-utilities"><a id="monos"></a>Monitoring with Operating System Utilities</a></h3>
+<p>The following Linux/UNIX utilities can be used to assess host performance:</p>
+<ul>
+<li><code>iostat</code> allows you to monitor disk activity on segment hosts.</li>
+<li><code>top</code> displays a dynamic view of operating system processes.</li>
+<li><code>vmstat</code> displays memory usage statistics.</li>
+</ul>
+<p>You can use <code>gpssh</code> to run utilities on multiple hosts.</p>
+<h3 id="best-practices"><a class="header" href="#best-practices"><a id="bp1"></a>Best Practices</a></h3>
+<ul>
+<li>Implement the “Recommended Monitoring and Maintenance Tasks” in the <em>SynxDB Administrator Guide</em>.</li>
+<li>Run <code>gpcheckperf</code> at install time and periodically thereafter, saving the output to compare system performance over time.</li>
+<li>Use all the tools at your disposal to understand how your system behaves under different loads.</li>
+<li>Examine any unusual event to determine the cause.</li>
+<li>Monitor query activity on the system by running explain plans periodically to ensure the queries are running optimally.</li>
+<li>Review plans to determine whether index are being used and partition elimination is occurring as expected.</li>
+</ul>
+<h3 id="additional-information"><a class="header" href="#additional-information"><a id="addinfo"></a>Additional Information</a></h3>
+<ul>
+<li><code>gpcheckperf</code> reference in the <em>SynxDB Utility Guide</em>.</li>
+<li>“Recommended Monitoring and Maintenance Tasks” in the <em>SynxDB Administrator Guide</em>.</li>
+<li><a href="http://www.cs.virginia.edu/%7Emccalpin/papers/bandwidth/bandwidth.html">Sustainable Memory Bandwidth in Current High Performance Computers</a>. John D. McCalpin. Oct 12, 1995.</li>
+<li><a href="http://www.netperf.org/netperf">www.netperf.org</a> to use <code>netperf</code>, netperf must be installed on each host you test. See <code>gpcheckperf</code> reference for more information.</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../best_practices/workloads.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../best_practices/analyze.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../best_practices/workloads.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../best_practices/analyze.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

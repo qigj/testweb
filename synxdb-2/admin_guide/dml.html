@@ -1,0 +1,453 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Inserting, Updating, and Deleting Data - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="inserting-updating-and-deleting-data"><a class="header" href="#inserting-updating-and-deleting-data">Inserting, Updating, and Deleting Data</a></h1>
+<p>This section provides information about manipulating data and concurrent access in SynxDB.</p>
+<p>This topic includes the following subtopics:</p>
+<ul>
+<li><a href="#topic2">About Concurrency Control in SynxDB</a></li>
+<li><a href="#topic3">Inserting Rows</a></li>
+<li><a href="#topic4">Updating Existing Rows</a></li>
+<li><a href="#topic5">Deleting Rows</a></li>
+<li><a href="#topic7">Working With Transactions</a></li>
+<li><a href="#topic_gdd">Global Deadlock Detector</a></li>
+<li><a href="#topic9">Vacuuming the Database</a></li>
+<li><a href="#topic11">Running Out of Locks</a></li>
+</ul>
+<h2 id="about-concurrency-control-in-synxdb"><a class="header" href="#about-concurrency-control-in-synxdb"><a id="topic2"></a>About Concurrency Control in SynxDB</a></h2>
+<p>SynxDB and PostgreSQL do not use locks for concurrency control. They maintain data consistency using a multiversion model, Multiversion Concurrency Control (MVCC). MVCC achieves transaction isolation for each database session, and each query transaction sees a snapshot of data. This ensures the transaction sees consistent data that is not affected by other concurrent transactions.</p>
+<p>Because MVCC does not use explicit locks for concurrency control, lock contention is minimized and SynxDB maintains reasonable performance in multiuser environments. Locks acquired for querying (reading) data do not conflict with locks acquired for writing data.</p>
+<p>SynxDB provides multiple lock modes to control concurrent access to data in tables. Most SynxDB SQL commands automatically acquire the appropriate locks to ensure that referenced tables are not dropped or modified in incompatible ways while a command runs. For applications that cannot adapt easily to MVCC behavior, you can use the <code>LOCK</code> command to acquire explicit locks. However, proper use of MVCC generally provides better performance.</p>
+<div class="table-wrapper"><table><thead><tr><th>Lock Mode</th><th>Associated SQL Commands</th><th>Conflicts With</th></tr></thead><tbody>
+<tr><td>ACCESS SHARE</td><td><code>SELECT</code></td><td>ACCESS EXCLUSIVE</td></tr>
+<tr><td>ROW SHARE</td><td><code>SELECT...FOR lock_strength</code></td><td>EXCLUSIVE, ACCESS EXCLUSIVE</td></tr>
+<tr><td>ROW EXCLUSIVE</td><td><code>INSERT</code>, <code>COPY</code></td><td>SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, ACCESS EXCLUSIVE</td></tr>
+<tr><td>SHARE UPDATE EXCLUSIVE</td><td><code>VACUUM</code> (without <code>FULL</code>), <code>ANALYZE</code></td><td>SHARE UPDATE EXCLUSIVE, SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, ACCESS EXCLUSIVE</td></tr>
+<tr><td>SHARE</td><td><code>CREATE INDEX</code></td><td>ROW EXCLUSIVE, SHARE UPDATE EXCLUSIVE, SHARE ROW EXCLUSIVE, EXCLUSIVE, ACCESS EXCLUSIVE</td></tr>
+<tr><td>SHARE ROW EXCLUSIVE</td><td> </td><td>ROW EXCLUSIVE, SHARE UPDATE EXCLUSIVE, SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, ACCESS EXCLUSIVE</td></tr>
+<tr><td>EXCLUSIVE</td><td><code>DELETE</code>, <code>UPDATE</code>, <code>SELECT...FOR lock_strength</code>, <code>REFRESH MATERIALIZED VIEW CONCURRENTLY</code></td><td>ROW SHARE, ROW EXCLUSIVE, SHARE UPDATE EXCLUSIVE, SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, ACCESS EXCLUSIVE</td></tr>
+<tr><td>ACCESS EXCLUSIVE</td><td><code>ALTER TABLE</code>, <code>DROP TABLE</code>, <code>TRUNCATE</code>, <code>REINDEX</code>, <code>CLUSTER</code>, <code>REFRESH MATERIALIZED VIEW</code> (without <code>CONCURRENTLY</code>), <code>VACUUM FULL</code></td><td>ACCESS SHARE, ROW SHARE, ROW EXCLUSIVE, SHARE UPDATE EXCLUSIVE, SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, ACCESS EXCLUSIVE</td></tr>
+</tbody></table>
+</div>
+<blockquote>
+<p><strong>Note</strong> By default SynxDB acquires the more restrictive <code>EXCLUSIVE</code> lock (rather than <code>ROW EXCLUSIVE</code> in PostgreSQL) for <code>UPDATE</code>, <code>DELETE</code>, and <code>SELECT...FOR UPDATE</code> operations on heap tables. When the Global Deadlock Detector is enabled the lock mode for <code>UPDATE</code> and <code>DELETE</code> operations on heap tables is <code>ROW EXCLUSIVE</code>. See <a href="#topic_gdd">Global Deadlock Detector</a>. SynxDB always holds a table-level lock with <code>SELECT...FOR UPDATE</code> statements.</p>
+</blockquote>
+<h2 id="inserting-rows"><a class="header" href="#inserting-rows"><a id="topic3"></a>Inserting Rows</a></h2>
+<p>Use the <code>INSERT</code> command to create rows in a table. This command requires the table name and a value for each column in the table; you may optionally specify the column names in any order. If you do not specify column names, list the data values in the order of the columns in the table, separated by commas.</p>
+<p>For example, to specify the column names and the values to insert:</p>
+<pre><code>INSERT INTO products (name, price, product_no) VALUES ('Cheese', 9.99, 1);
+</code></pre>
+<p>To specify only the values to insert:</p>
+<pre><code>INSERT INTO products VALUES (1, 'Cheese', 9.99);
+
+</code></pre>
+<p>Usually, the data values are literals (constants), but you can also use scalar expressions. For example:</p>
+<pre><code>INSERT INTO films SELECT * FROM tmp_films WHERE date_prod &lt; 
+'2016-05-07';
+
+</code></pre>
+<p>You can insert multiple rows in a single command. For example:</p>
+<pre><code>INSERT INTO products (product_no, name, price) VALUES
+    (1, 'Cheese', 9.99),
+    (2, 'Bread', 1.99),
+    (3, 'Milk', 2.99);
+
+</code></pre>
+<p>To insert data into a partitioned table, you specify the root partitioned table, the table created with the <code>CREATE TABLE</code> command. You also can specify a leaf child table of the partitioned table in an <code>INSERT</code> command. An error is returned if the data is not valid for the specified leaf child table. Specifying a child table that is not a leaf child table in the <code>INSERT</code> command is not supported.</p>
+<p>To insert large amounts of data, use external tables or the <code>COPY</code> command. These load mechanisms are more efficient than <code>INSERT</code> for inserting large quantities of rows. See <a href="load/topics/g-loading-and-unloading-data.html">Loading and Unloading Data</a> for more information about bulk data loading.</p>
+<p>The storage model of append-optimized tables is optimized for bulk data loading. SynxDB does not recommend single row <code>INSERT</code> statements for append-optimized tables. For append-optimized tables, SynxDB supports a maximum of 127 concurrent <code>INSERT</code> transactions into a single append-optimized table.</p>
+<h2 id="updating-existing-rows"><a class="header" href="#updating-existing-rows"><a id="topic4"></a>Updating Existing Rows</a></h2>
+<p>The <code>UPDATE</code> command updates rows in a table. You can update all rows, a subset of all rows, or individual rows in a table. You can update each column separately without affecting other columns.</p>
+<p>To perform an update, you need:</p>
+<ul>
+<li>The name of the table and columns to update</li>
+<li>The new values of the columns</li>
+<li>One or more conditions specifying the row or rows to be updated.</li>
+</ul>
+<p>For example, the following command updates all products that have a price of <em>5</em> to have a price of <em>10</em>:</p>
+<pre><code>UPDATE products SET price = 10 WHERE price = 5;
+
+</code></pre>
+<p>Using <code>UPDATE</code> in SynxDB has the following restrictions:</p>
+<ul>
+<li>While GPORCA supports updates to SynxDB distribution key columns, the Postgres Planner does not.</li>
+<li>If mirrors are enabled, you cannot use <code>STABLE</code> or <code>VOLATILE</code> functions in an <code>UPDATE</code> statement.</li>
+<li>SynxDB partitioning columns cannot be updated.</li>
+</ul>
+<h2 id="deleting-rows"><a class="header" href="#deleting-rows"><a id="topic5"></a>Deleting Rows</a></h2>
+<p>The <code>DELETE</code> command deletes rows from a table. Specify a <code>WHERE</code> clause to delete rows that match certain criteria. If you do not specify a <code>WHERE</code> clause, all rows in the table are deleted. The result is a valid, but empty, table. For example, to remove all rows from the products table that have a price of <em>10</em>:</p>
+<pre><code>DELETE FROM products WHERE price = 10;
+
+</code></pre>
+<p>To delete all rows from a table:</p>
+<pre><code>DELETE FROM products; 
+
+</code></pre>
+<p>Using <code>DELETE</code> in SynxDB has similar restrictions to using <code>UPDATE</code>:</p>
+<ul>
+<li>If mirrors are enabled, you cannot use <code>STABLE</code> or <code>VOLATILE</code> functions in an <code>UPDATE</code> statement.</li>
+</ul>
+<h3 id="truncating-a-table"><a class="header" href="#truncating-a-table"><a id="topic6"></a>Truncating a Table</a></h3>
+<p>Use the <code>TRUNCATE</code> command to quickly remove all rows in a table. For example:</p>
+<pre><code>TRUNCATE mytable;
+
+</code></pre>
+<p>This command empties a table of all rows in one operation. Note that <code>TRUNCATE</code> does not scan the table, therefore it does not process inherited child tables or <code>ON DELETE</code> rewrite rules. The command truncates only rows in the named table.</p>
+<h2 id="working-with-transactions"><a class="header" href="#working-with-transactions"><a id="topic7"></a>Working With Transactions</a></h2>
+<p>Transactions allow you to bundle multiple SQL statements in one all-or-nothing operation.</p>
+<p>The following are the SynxDB SQL transaction commands:</p>
+<ul>
+<li><code>BEGIN</code> or <code>START TRANSACTION</code>starts a transaction block.</li>
+<li><code>END</code> or <code>COMMIT</code> commits the results of a transaction.</li>
+<li><code>ROLLBACK</code> abandons a transaction without making any changes.</li>
+<li><code>SAVEPOINT</code> marks a place in a transaction and enables partial rollback. You can roll back commands run after a savepoint while maintaining commands run before the savepoint.</li>
+<li><code>ROLLBACK TO SAVEPOINT</code> rolls back a transaction to a savepoint.</li>
+<li><code>RELEASE SAVEPOINT</code> destroys a savepoint within a transaction.</li>
+</ul>
+<h3 id="transaction-isolation-levels"><a class="header" href="#transaction-isolation-levels"><a id="topic8"></a>Transaction Isolation Levels</a></h3>
+<p>SynxDB accepts the standard SQL transaction levels as follows:</p>
+<ul>
+<li><code>READ UNCOMMITTED</code> and <code>READ COMMITTED</code> behave like the standard <code>READ COMMITTED</code>.</li>
+<li><code>REPEATABLE READ</code> and <code>SERIALIZABLE</code> behave like <code>REPEATABLE READ</code>.</li>
+</ul>
+<p>The following information describes the behavior of the SynxDB transaction levels.</p>
+<h4 id="read-uncommitted-and-read-committed"><a class="header" href="#read-uncommitted-and-read-committed"><a id="readunc"></a>Read Uncommitted and Read Committed</a></h4>
+<p>SynxDB does not allow any command to see an uncommitted update in another concurrent transaction, so <code>READ UNCOMMITTED</code> behaves the same as <code>READ COMMITTED</code>. <code>READ COMMITTED</code> provides fast, simple, partial transaction isolation. <code>SELECT</code>, <code>UPDATE</code>, and <code>DELETE</code> commands operate on a snapshot of the database taken when the query started.</p>
+<p>A <code>SELECT</code> query:</p>
+<ul>
+<li>Sees data committed before the query starts.</li>
+<li>Sees updates run within the transaction.</li>
+<li>Does not see uncommitted data outside the transaction.</li>
+<li>Can possibly see changes that concurrent transactions made if the concurrent transaction is committed after the initial read in its own transaction.</li>
+</ul>
+<p>Successive <code>SELECT</code> queries in the same transaction can see different data if other concurrent transactions commit changes between the successive queries. <code>UPDATE</code> and <code>DELETE</code> commands find only rows committed before the commands started.</p>
+<p><code>READ COMMITTED</code> transaction isolation allows concurrent transactions to modify or lock a row before <code>UPDATE</code> or <code>DELETE</code> find the row. <code>READ COMMITTED</code> transaction isolation may be inadequate for applications that perform complex queries and updates and require a consistent view of the database.</p>
+<h4 id="repeatable-read-and-serializable"><a class="header" href="#repeatable-read-and-serializable"><a id="repread"></a>Repeatable Read and Serializable</a></h4>
+<p><code>SERIALIZABLE</code> transaction isolation, as defined by the SQL standard, ensures that transactions that run concurrently produce the same results as if they were run one after another. If you specify <code>SERIALIZABLE</code> SynxDB falls back to <code>REPEATABLE READ</code>. <code>REPEATABLE READ</code> transactions prevent dirty reads, non-repeatable reads, and phantom reads without expensive locking, but SynxDB does not detect all serializability interactions that can occur during concurrent transaction execution. Concurrent transactions should be examined to identify interactions that are not prevented by disallowing concurrent updates of the same data. You can prevent these interactions by using explicit table locks or by requiring the conflicting transactions to update a dummy row introduced to represent the conflict.</p>
+<p>With <code>REPEATABLE READ</code> transactions, a <code>SELECT</code> query:</p>
+<ul>
+<li>Sees a snapshot of the data as of the start of the transaction (not as of the start of the current query within the transaction).</li>
+<li>Sees only data committed before the query starts.</li>
+<li>Sees updates run within the transaction.</li>
+<li>Does not see uncommitted data outside the transaction.</li>
+<li>Does not see changes that concurrent transactions make.</li>
+<li>Successive <code>SELECT</code> commands within a single transaction always see the same data.</li>
+<li><code>UPDATE</code>, <code>DELETE</code>, <code>SELECT FOR UPDATE</code>, and <code>SELECT FOR SHARE</code> commands find only rows committed before the command started. If a concurrent transaction has updated, deleted, or locked a target row, the <code>REPEATABLE READ</code> transaction waits for the concurrent transaction to commit or roll back the change. If the concurrent transaction commits the change, the <code>REPEATABLE READ</code> transaction rolls back. If the concurrent transaction rolls back its change, the <code>REPEATABLE READ</code> transaction can commit its changes.</li>
+</ul>
+<p>The default transaction isolation level in SynxDB is <code>READ COMMITTED</code>. To change the isolation level for a transaction, declare the isolation level when you <code>BEGIN</code> the transaction or use the <code>SET TRANSACTION</code> command after the transaction starts.</p>
+<h2 id="global-deadlock-detector"><a class="header" href="#global-deadlock-detector"><a id="topic_gdd"></a>Global Deadlock Detector</a></h2>
+<p>The SynxDB Global Deadlock Detector background worker process collects lock information on all segments and uses a directed algorithm to detect the existence of local and global deadlocks. This algorithm allows SynxDB to relax concurrent update and delete restrictions on heap tables. (SynxDB still employs table-level locking on AO/CO tables, restricting concurrent <code>UPDATE</code>, <code>DELETE</code>, and <code>SELECT...FOR lock_strength</code> operations.)</p>
+<p>By default, the Global Deadlock Detector is deactivated and SynxDB runs the concurrent <code>UPDATE</code> and <code>DELETE</code> operations on a heap table serially. You can activate these concurrent updates and have the Global Deadlock Detector determine when a deadlock exists by setting the server configuration parameter <a href="../ref_guide/config_params/guc-list.html"><code>gp_enable_global_deadlock_detector</code></a>.</p>
+<p>When the Global Deadlock Detector is enabled, the background worker process is automatically started on the master host when you start SynxDB. You configure the interval at which the Global Deadlock Detector collects and analyzes lock waiting data via the <a href="../ref_guide/config_params/guc-list.html">gp_global_deadlock_detector_period</a> server configuration parameter.</p>
+<p>If the Global Deadlock Detector determines that deadlock exists, it breaks the deadlock by cancelling one or more backend processes associated with the youngest transaction(s) involved.</p>
+<p>When the Global Deadlock Detector determines a deadlock exists for the following types of transactions, only one of the transactions will succeed. The other transactions will fail with an error indicating that concurrent updates to the same row is not allowed.</p>
+<ul>
+<li>Concurrent transactions on the same row of a heap table where the first transaction is an update operation and a later transaction runs an update or delete and the query plan contains a motion operator.</li>
+<li>Concurrent update transactions on the same distribution key of a heap table that are run by the Postgres Planner.</li>
+<li>Concurrent update transactions on the same row of a hash table that are run by the GPORCA optimizer.</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> SynxDB uses the interval specified in the <a href="../ref_guide/config_params/guc-list.html">deadlock_timeout</a> server configuration parameter for local deadlock detection. Because the local and global deadlock detection algorithms differ, the cancelled process(es) may differ depending upon which detector (local or global) SynxDB triggers first.</p>
+</blockquote>
+<blockquote>
+<p><strong>Note</strong> If the <a href="../ref_guide/config_params/guc-list.html">lock_timeout</a> server configuration parameter is turned on and set to a value smaller than <code>deadlock_timeout</code> and <code>gp_global_deadlock_detector_period</code>, SynxDB will cancel a statement before it would ever trigger a deadlock check in that session.</p>
+</blockquote>
+<p>To view lock waiting information for all segments, run the <code>gp_dist_wait_status()</code> user-defined function. You can use the output of this function to determine which transactions are waiting on locks, which transactions are holding locks, the lock types and mode, the waiter and holder session identifiers, and which segments are running the transactions. Sample output of the <code>gp_dist_wait_status()</code> function follows:</p>
+<pre><code>SELECT * FROM pg_catalog.gp_dist_wait_status();
+-[ RECORD 1 ]----+--------------
+segid            | 0
+waiter_dxid      | 11
+holder_dxid      | 12
+holdTillEndXact  | t
+waiter_lpid      | 31249
+holder_lpid      | 31458
+waiter_lockmode  | ShareLock
+waiter_locktype  | transactionid
+waiter_sessionid | 8
+holder_sessionid | 9
+-[ RECORD 2 ]----+--------------
+segid            | 1
+waiter_dxid      | 12
+holder_dxid      | 11
+holdTillEndXact  | t
+waiter_lpid      | 31467
+holder_lpid      | 31250
+waiter_lockmode  | ShareLock
+waiter_locktype  | transactionid
+waiter_sessionid | 9
+holder_sessionid | 8
+
+</code></pre>
+<p>When it cancels a transaction to break a deadlock, the Global Deadlock Detector reports the following error message:</p>
+<pre><code>ERROR:  canceling statement due to user request: "cancelled by global deadlock detector"
+</code></pre>
+<h3 id="global-deadlock-detector-update-and-delete-compatibility"><a class="header" href="#global-deadlock-detector-update-and-delete-compatibility"><a id="gdd_example"></a>Global Deadlock Detector UPDATE and DELETE Compatibility</a></h3>
+<p>The Global Deadlock Detector can manage concurrent updates for these types of <code>UPDATE</code> and <code>DELETE</code> commands on heap tables:</p>
+<ul>
+<li>
+<p>Simple <code>UPDATE</code> of a single table. Update a non-distribution key with the Postgres Planner. The command does not contain a <code>FROM</code> clause, or a sub-query in the <code>WHERE</code> clause.</p>
+<pre><code>UPDATE t SET c2 = c2 + 1 WHERE c1 &gt; 10;
+</code></pre>
+</li>
+<li>
+<p>Simple <code>DELETE</code> of a single table. The command does not contain a sub-query in the <code>FROM</code> or <code>WHERE</code> clauses.</p>
+<pre><code>DELETE FROM t WHERE c1 &gt; 10;
+</code></pre>
+</li>
+<li>
+<p>Split <code>UPDATE</code>. For the Postgres Planner, the <code>UPDATE</code> command updates a distribution key.</p>
+<pre><code>UPDATE t SET c = c + 1; -- c is a distribution key
+</code></pre>
+<p>For GPORCA, the <code>UPDATE</code> command updates a distribution key or references a distribution key.</p>
+<pre><code>UPDATE t SET b = b + 1 WHERE c = 10; -- c is a distribution key
+</code></pre>
+</li>
+<li>
+<p>Complex <code>UPDATE</code>. The <code>UPDATE</code> command includes multiple table joins.</p>
+<pre><code>UPDATE t1 SET c = t1.c+1 FROM t2 WHERE t1.c = t2.c;
+</code></pre>
+<p>Or the command contains a sub-query in the <code>WHERE</code> clause.</p>
+<pre><code>UPDATE t SET c = c + 1 WHERE c &gt; ALL(SELECT * FROM t1);
+</code></pre>
+</li>
+<li>
+<p>Complex <code>DELETE</code>. A complex <code>DELETE</code> command is similar to a complex <code>UPDATE</code>, and involves multiple table joins or a sub-query.</p>
+<pre><code>DELETE FROM t USING t1 WHERE t.c &gt; t1.c;
+</code></pre>
+</li>
+</ul>
+<p>The following table shows the concurrent <code>UPDATE</code> or <code>DELETE</code> commands that are managed by the Global Deadlock Detector. For example, concurrent simple <code>UPDATE</code> commands on the same table row are managed by the Global Deadlock Detector. For a concurrent complex <code>UPDATE</code> and a simple <code>UPDATE</code>, only one <code>UPDATE</code> is performed, and an error is returned for the other <code>UPDATE</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Command</th><th>Simple <code>UPDATE</code></th><th>Simple <code>DELETE</code></th><th>Split <code>UPDATE</code></th><th>Complex <code>UPDATE</code></th><th>Complex <code>DELETE</code></th></tr></thead><tbody>
+<tr><td>Simple <code>UPDATE</code></td><td>YES</td><td>YES</td><td>NO</td><td>NO</td><td>NO</td></tr>
+<tr><td>Simple <code>DELETE</code></td><td>YES</td><td>YES</td><td>NO</td><td>YES</td><td>YES</td></tr>
+<tr><td>Split <code>UPDATE</code></td><td>NO</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td></tr>
+<tr><td>Complex <code>UPDATE</code></td><td>NO</td><td>YES</td><td>NO</td><td>NO</td><td>NO</td></tr>
+<tr><td>Complex <code>DELETE</code></td><td>NO</td><td>YES</td><td>NO</td><td>NO</td><td>YES</td></tr>
+</tbody></table>
+</div>
+<h2 id="vacuuming-the-database"><a class="header" href="#vacuuming-the-database"><a id="topic9"></a>Vacuuming the Database</a></h2>
+<p>Deleted or updated data rows occupy physical space on disk even though new transactions cannot see them. Periodically running the <code>VACUUM</code> command removes these expired rows. For example:</p>
+<pre><code>VACUUM mytable;
+
+</code></pre>
+<p>The <code>VACUUM</code> command collects table-level statistics such as the number of rows and pages. Vacuum all tables after loading data, including append-optimized tables. For information about recommended routine vacuum operations, see <a href="managing/maintain.html">Routine Vacuum and Analyze</a>.</p>
+<blockquote>
+<p><strong>Important</strong> The <code>VACUUM</code>, <code>VACUUM FULL</code>, and <code>VACUUM ANALYZE</code> commands should be used to maintain the data in a SynxDB database especially if updates and deletes are frequently performed on your database data. See the <code>VACUUM</code> command in the <em>SynxDB Reference Guide</em> for information about using the command.</p>
+</blockquote>
+<h2 id="running-out-of-locks"><a class="header" href="#running-out-of-locks"><a id="topic11"></a>Running Out of Locks</a></h2>
+<p>SynxDB can potentially run out of locks when a database operation accesses multiple tables in a single transaction. Backup and restore are examples of such operations.</p>
+<p>When SynxDB runs out of locks, the error message that you may observe references a shared memory error:</p>
+<pre><code>... "WARNING","53200","out of shared memory",,,,,,"LOCK TABLE ...
+... "ERROR","53200","out of shared memory",,"You might need to increase max_locks_per_transaction.",,,,"LOCK TABLE ...
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> “shared memory” in this context refers to the shared memory of the internal object: the lock slots. “Out of shared memory” does <em>not</em> refer to exhaustion of system- or SynxDB-level memory resources.</p>
+</blockquote>
+<p>As the hint describes, consider increasing the <a href="../ref_guide/config_params/guc-list.html"><code>max_locks_per_transaction</code></a> server configuration parameter when you encounter this error.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../analytics/pl_r.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pxf/overview_pxf.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../analytics/pl_r.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pxf/overview_pxf.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

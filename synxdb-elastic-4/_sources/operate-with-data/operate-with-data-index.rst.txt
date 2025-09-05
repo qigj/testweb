@@ -1,0 +1,12 @@
+Operate with Data
+******************
+
+.. toctree::
+   :maxdepth: 2
+
+   operate-with-db-objects/operate-with-db-objects-index
+   choose-table-storage-models/choose-table-storage-models-index
+   sql-queries/sql-queries-index
+   advanced-data-analytics/advanced-data-analytics-index
+   work-with-transactions
+   transaction-concurrency-control

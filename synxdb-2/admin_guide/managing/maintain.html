@@ -1,0 +1,343 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Routine System Maintenance Tasks - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="routine-system-maintenance-tasks"><a class="header" href="#routine-system-maintenance-tasks">Routine System Maintenance Tasks</a></h1>
+<p>To keep a SynxDB system running efficiently, the database must be regularly cleared of expired data and the table statistics must be updated so that the query optimizer has accurate information.</p>
+<p>SynxDB requires that certain tasks be performed regularly to achieve optimal performance. The tasks discussed here are required, but database administrators can automate them using standard UNIX tools such as <code>cron</code> scripts. An administrator sets up the appropriate scripts and checks that they ran successfully. See <a href="../monitoring/monitoring.html">Recommended Monitoring and Maintenance Tasks</a> for additional suggested maintenance activities you can implement to keep your SynxDB system running optimally.</p>
+<h2 id="routine-vacuum-and-analyze"><a class="header" href="#routine-vacuum-and-analyze"><a id="topic2"></a>Routine Vacuum and Analyze</a></h2>
+<p>The design of the MVCC transaction concurrency model used in SynxDB means that deleted or updated data rows still occupy physical space on disk even though they are not visible to new transactions. If your database has many updates and deletes, many expired rows exist and the space they use must be reclaimed with the <code>VACUUM</code> command. The <code>VACUUM</code> command also collects table-level statistics, such as numbers of rows and pages, so it is also necessary to vacuum append-optimized tables, even when there is no space to reclaim from updated or deleted rows.</p>
+<p>Vacuuming an append-optimized table follows a different process than vacuuming heap tables. On each segment, a new segment file is created and visible rows are copied into it from the current segment. When the segment file has been copied, the original is scheduled to be dropped and the new segment file is made available. This requires sufficient available disk space for a copy of the visible rows until the original segment file is dropped.</p>
+<p>If the ratio of hidden rows to total rows in a segment file is less than a threshold value (10, by default), the segment file is not compacted. The threshold value can be configured with the <code>gp_appendonly_compaction_threshold</code> server configuration parameter. <code>VACUUM FULL</code> ignores the value of <code>gp_appendonly_compaction_threshold</code> and rewrites the segment file regardless of the ratio.</p>
+<p>You can use the <code>__gp_aovisimap_compaction_info()</code> function in the <em>gp_toolkit</em> schema to investigate the effectiveness of a VACUUM operation on append-optimized tables.</p>
+<p>For information about the <code>__gp_aovisimap_compaction_info()</code> function see, “Checking Append-Optimized Tables” in the <em>SynxDB Reference Guide</em>.</p>
+<p><code>VACUUM</code> can be deactivated for append-optimized tables using the <code>gp_appendonly_compaction</code> server configuration parameter.</p>
+<p>For details about vacuuming a database, see <a href="../dml.html">Vacuuming the Database</a>.</p>
+<p>For information about the <code>gp_appendonly_compaction_threshold</code> server configuration parameter and the <code>VACUUM</code> command, see the <em>SynxDB Reference Guide</em>.</p>
+<h3 id="transaction-id-management"><a class="header" href="#transaction-id-management"><a id="topic3"></a>Transaction ID Management</a></h3>
+<p>SynxDB’s MVCC transaction semantics depend on comparing transaction ID (XID) numbers to determine visibility to other transactions. Transaction ID numbers are compared using modulo 232 arithmetic, so a SynxDB system that runs more than about two billion transactions can experience transaction ID wraparound, where past transactions appear to be in the future. This means past transactions’ outputs become invisible. Therefore, it is necessary to <code>VACUUM</code> every table in every database at least once per two billion transactions.</p>
+<p>SynxDB assigns XID values only to transactions that involve DDL or DML operations, which are typically the only transactions that require an XID.</p>
+<blockquote>
+<p><strong>Important</strong> SynxDB monitors transaction IDs. If you do not vacuum the database regularly, SynxDB will generate a warning and error.</p>
+</blockquote>
+<p>SynxDB issues the following warning when a significant portion of the transaction IDs are no longer available and before transaction ID wraparound occurs:</p>
+<p><code>WARNING: database "database_name" must be vacuumed within *number\_of\_transactions* transactions</code></p>
+<p>When the warning is issued, a <code>VACUUM</code> operation is required. If a <code>VACUUM</code> operation is not performed, SynxDB stops creating transactions when it reaches a limit prior to when transaction ID wraparound occurs. SynxDB issues this error when it stops creating transactions to avoid possible data loss:</p>
+<pre><code>FATAL: database is not accepting commands to avoid 
+wraparound data loss in database "database_name"
+
+</code></pre>
+<p>The SynxDB configuration parameter <code>xid_warn_limit</code> controls when the warning is displayed. The parameter <code>xid_stop_limit</code> controls when SynxDB stops creating transactions.</p>
+<h4 id="recovering-from-a-transaction-id-limit-error"><a class="header" href="#recovering-from-a-transaction-id-limit-error"><a id="np160654"></a>Recovering from a Transaction ID Limit Error</a></h4>
+<p>When SynxDB reaches the <code>xid_stop_limit</code> transaction ID limit due to infrequent <code>VACUUM</code> maintenance, it becomes unresponsive. To recover from this situation, perform the following steps as database administrator:</p>
+<ol>
+<li>Shut down SynxDB.</li>
+<li>Temporarily lower the <code>xid_stop_limit</code> by 10,000,000.</li>
+<li>Start SynxDB.</li>
+<li>Run <code>VACUUM FREEZE</code> on all affected databases.</li>
+<li>Reset the <code>xid_stop_limit</code> to its original value.</li>
+<li>Restart SynxDB.</li>
+</ol>
+<p>For information about the configuration parameters, see the <em>SynxDB Reference Guide</em>.</p>
+<p>For information about transaction ID wraparound see the <a href="https://www.postgresql.org/docs/9.4/index.html">PostgreSQL documentation</a>.</p>
+<h3 id="system-catalog-maintenance"><a class="header" href="#system-catalog-maintenance"><a id="topic4"></a>System Catalog Maintenance</a></h3>
+<p>Numerous database updates with <code>CREATE</code> and <code>DROP</code> commands increase the system catalog size and affect system performance. For example, running many <code>DROP TABLE</code> statements degrades the overall system performance due to excessive data scanning during metadata operations on catalog tables. The performance loss occurs between thousands to tens of thousands of <code>DROP TABLE</code> statements, depending on the system.</p>
+<p>You should run a system catalog maintenance procedure regularly to reclaim the space occupied by deleted objects. If a regular procedure has not been run for a long time, you may need to run a more intensive procedure to clear the system catalog. This topic describes both procedures.</p>
+<h4 id="regular-system-catalog-maintenance"><a class="header" href="#regular-system-catalog-maintenance"><a id="topic5"></a>Regular System Catalog Maintenance</a></h4>
+<p>It is recommended that you periodically run <code>REINDEX</code> and <code>VACUUM</code> on the system catalog to clear the space that deleted objects occupy in the system indexes and tables. If regular database operations include numerous <code>DROP</code> statements, it is safe and appropriate to run a system catalog maintenance procedure with <code>VACUUM</code> daily at off-peak hours. You can do this while the system is available.</p>
+<p>These are SynxDB system catalog maintenance steps.</p>
+<ol>
+<li>
+<p>Perform a <code>REINDEX</code> on the system catalog tables to rebuild the system catalog indexes. This removes bloat in the indexes and improves <code>VACUUM</code> performance.</p>
+<blockquote>
+<p><strong>Note</strong> <code>REINDEX</code> causes locking of system catalog tables, which could affect currently running queries. To avoid disrupting ongoing business operations, schedule the <code>REINDEX</code> operation during a period of low activity.</p>
+</blockquote>
+</li>
+<li>
+<p>Perform a <code>VACUUM</code> on the system catalog tables.</p>
+</li>
+<li>
+<p>Perform an <code>ANALYZE</code> on the system catalog tables to update the catalog table statistics.</p>
+</li>
+</ol>
+<p>This example script performs a <code>REINDEX</code>, <code>VACUUM</code>, and <code>ANALYZE</code> of a SynxDB system catalog. In the script, replace <code>&lt;database-name&gt;</code> with a database name.</p>
+<pre><code>#!/bin/bash
+DBNAME="&lt;database-name&gt;"
+SYSTABLES="' pg_catalog.' || relname || ';' FROM pg_class a, pg_namespace b 
+WHERE a.relnamespace=b.oid AND b.nspname='pg_catalog' AND a.relkind='r'"
+
+reindexdb --system -d $DBNAME
+psql -tc "SELECT 'VACUUM' || $SYSTABLES" $DBNAME | psql -a $DBNAME
+analyzedb -as pg_catalog -d $DBNAME
+
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> If you are performing catalog maintenance during a maintenance period and you need to stop a process due to time constraints, run the SynxDB function <code>pg_cancel_backend(&lt;PID&gt;)</code> to safely stop the SynxDB process.</p>
+</blockquote>
+<h4 id="intensive-system-catalog-maintenance"><a class="header" href="#intensive-system-catalog-maintenance"><a id="topic6"></a>Intensive System Catalog Maintenance</a></h4>
+<p>If system catalog maintenance has not been performed in a long time, the catalog can become bloated with dead space; this causes excessively long wait times for simple metadata operations. A wait of more than two seconds to list user tables, such as with the <code>\d</code> metacommand from within <code>psql</code>, is an indication of catalog bloat.</p>
+<p>If you see indications of system catalog bloat, you must perform an intensive system catalog maintenance procedure with <code>VACUUM FULL</code> during a scheduled downtime period. During this period, stop all catalog activity on the system; the <code>VACUUM FULL</code> system catalog maintenance procedure takes exclusive locks against the system catalog.</p>
+<p>Running regular system catalog maintenance procedures can prevent the need for this more costly procedure.</p>
+<p>These are steps for intensive system catalog maintenance.</p>
+<ol>
+<li>Stop all catalog activity on the SynxDB system.</li>
+<li>Perform a <code>REINDEX</code> on the system catalog tables to rebuild the system catalog indexes. This removes bloat in the indexes and improves <code>VACUUM</code> performance.</li>
+<li>Perform a <code>VACUUM FULL</code> on the system catalog tables. See the following Note.</li>
+<li>Perform an <code>ANALYZE</code> on the system catalog tables to update the catalog table statistics.</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong> The system catalog table <code>pg_attribute</code> is usually the largest catalog table. If the <code>pg_attribute</code> table is significantly bloated, a <code>VACUUM FULL</code> operation on the table might require a significant amount of time and might need to be performed separately. The presence of both of these conditions indicate a significantly bloated <code>pg_attribute</code> table that might require a long <code>VACUUM FULL</code> time:</p>
+</blockquote>
+<ul>
+<li>The <code>pg_attribute</code> table contains a large number of records.</li>
+<li>The diagnostic message for <code>pg_attribute</code> is <code>significant amount of bloat</code> in the <code>gp_toolkit.gp_bloat_diag</code> view.</li>
+</ul>
+<h3 id="vacuum-and-analyze-for-query-optimization"><a class="header" href="#vacuum-and-analyze-for-query-optimization"><a id="topic7"></a>Vacuum and Analyze for Query Optimization</a></h3>
+<p>SynxDB uses a cost-based query optimizer that relies on database statistics. Accurate statistics allow the query optimizer to better estimate selectivity and the number of rows that a query operation retrieves. These estimates help it choose the most efficient query plan. The <code>ANALYZE</code> command collects column-level statistics for the query optimizer.</p>
+<p>You can run both <code>VACUUM</code> and <code>ANALYZE</code> operations in the same command. For example:</p>
+<pre><code>=# VACUUM ANALYZE mytable;
+
+</code></pre>
+<p>Running the VACUUM ANALYZE command might produce incorrect statistics when the command is run on a table with a significant amount of bloat (a significant amount of table disk space is occupied by deleted or obsolete rows). For large tables, the <code>ANALYZE</code> command calculates statistics from a random sample of rows. It estimates the number rows in the table by multiplying the average number of rows per page in the sample by the number of actual pages in the table. If the sample contains many empty pages, the estimated row count can be inaccurate.</p>
+<p>For a table, you can view information about the amount of unused disk space (space that is occupied by deleted or obsolete rows) in the <em>gp_toolkit</em> view <em>gp_bloat_diag</em>. If the <code>bdidiag</code> column for a table contains the value <code>significant amount of bloat suspected</code>, a significant amount of table disk space consists of unused space. Entries are added to the <em>gp_bloat_diag</em> view after a table has been vacuumed.</p>
+<p>To remove unused disk space from the table, you can run the command VACUUM FULL on the table. Due to table lock requirements, VACUUM FULL might not be possible until a maintenance period.</p>
+<p>As a temporary workaround, run ANALYZE to compute column statistics and then run VACUUM on the table to generate an accurate row count. This example runs ANALYZE and then VACUUM on the <em>cust_info</em> table.</p>
+<pre><code>ANALYZE cust_info;
+VACUUM cust_info;
+</code></pre>
+<blockquote>
+<p><strong>Important</strong> If you intend to run queries on partitioned tables with GPORCA enabled (the default), you must collect statistics on the partitioned table root partition with the ANALYZE command. For information about GPORCA, see <a href="../query/topics/query-piv-opt-overview.html">Overview of GPORCA</a>.</p>
+</blockquote>
+<blockquote>
+<p><strong>Note</strong> You can use the SynxDB utility analyzedb to update table statistics. Tables can be analyzed concurrently. For append optimized tables, analyzedb updates statistics only if the statistics are not current. See the <a href="../../utility_guide/ref/analyzedb.html">analyzedb</a> utility.</p>
+</blockquote>
+<h2 id="routine-reindexing"><a class="header" href="#routine-reindexing"><a id="topic8"></a>Routine Reindexing</a></h2>
+<p>For B-tree indexes, a freshly-constructed index is slightly faster to access than one that has been updated many times because logically adjacent pages are usually also physically adjacent in a newly built index. Reindexing older indexes periodically can improve access speed. If all but a few index keys on a page have been deleted, there will be wasted space on the index page. A reindex will reclaim that wasted space. In SynxDB it is often faster to drop an index (<code>DROP INDEX</code>) and then recreate it (<code>CREATE INDEX</code>) than it is to use the <code>REINDEX</code> command.</p>
+<p>For table columns with indexes, some operations such as bulk updates or inserts to the table might perform more slowly because of the updates to the indexes. To enhance performance of bulk operations on tables with indexes, you can drop the indexes, perform the bulk operation, and then re-create the index.</p>
+<h2 id="managing-synxdb-log-files"><a class="header" href="#managing-synxdb-log-files"><a id="topic9"></a>Managing SynxDB Log Files</a></h2>
+<ul>
+<li><a href="#topic10">Database Server Log Files</a></li>
+<li><a href="#topic11">Management Utility Log Files</a></li>
+</ul>
+<h3 id="database-server-log-files"><a class="header" href="#database-server-log-files"><a id="topic10"></a>Database Server Log Files</a></h3>
+<p>SynxDB log output tends to be voluminous, especially at higher debug levels, and you do not need to save it indefinitely. Administrators should purge older log files periodically.</p>
+<p>SynxDB by default has log file rotation enabled for the master and segment database logs. Log files are created in the <code>log</code> subdirectory of the master and each segment data directory using the following naming convention: <code>gpdb-*YYYY*-*MM*-*DD_hhmmss*.csv</code>. Administrators need to implement scripts or programs to periodically clean up old log files in the <code>log</code> directory of the master and each segment instance.</p>
+<p>Log rotation can be triggered by the size of the current log file or the age of the current log file. The <code>log_rotation_size</code> configuration parameter sets the size of an individual log file that triggers log rotation. When the log file size is equal to or greater than the specified size, the file is closed and a new log file is created. The <code>log_rotation_size</code> value is specified in kilobytes. The default is 1048576 kilobytes, or 1GB. If <code>log_rotation_size</code> is set to 0, size-based rotation is deactivated.</p>
+<p>The <code>log_rotation_age</code> configuration parameter specifies the age of a log file that triggers rotation. When the specified amount of time has elapsed since the log file was created, the file is closed and a new log file is created. The default <code>log_rotation_age</code>, 1d, creates a new log file 24 hours after the current log file was created. If <code>log_rotation_age</code> is set to 0, time-based rotation is deactivated.</p>
+<p>For information about viewing the database server log files, see <a href="monitor.html">Viewing the Database Server Log Files</a>.</p>
+<h3 id="management-utility-log-files"><a class="header" href="#management-utility-log-files"><a id="topic11"></a>Management Utility Log Files</a></h3>
+<p>Log files for the SynxDB management utilities are written to <code>~/gpAdminLogs</code> by default. The naming convention for management log files is:</p>
+<pre><code>&lt;script_name&gt;_&lt;date&gt;.log
+
+</code></pre>
+<p>The log entry format is:</p>
+<pre><code>&lt;timestamp&gt;:&lt;utility&gt;:&lt;host&gt;:&lt;user&gt;:[INFO|WARN|FATAL]:&lt;message&gt;
+
+</code></pre>
+<p>The log file for a particular utility execution is appended to its daily log file each time that utility is run.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/managing/monitor.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/monitoring/monitoring.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/managing/monitor.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/monitoring/monitoring.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

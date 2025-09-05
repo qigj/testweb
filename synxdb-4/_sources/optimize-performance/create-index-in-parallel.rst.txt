@@ -1,0 +1,148 @@
+Create Indexes Concurrently
+=============================
+
+CREATE INDEX CONCURRENTLY
+--------------------------
+
+This document describes how to create indexes concurrently in |product_name|, that is, to execute insert, update, and delete statements while creating indexes.
+
+When using ``CREATE INDEX`` to create an index in |product_name|, although other transactions can read table data normally, |product_name| blocks DML operations such as data insertion, updates, and deletions on the table. |product_name| only executes these DML operations after the index creation is complete.
+
+For tables in production environments, if the table has a large amount of data, using ``CREATE INDEX`` to create an index might take a long time, causing table data updates to be blocked for an extended period, which can lead to serious problems.
+
+To solve this problem, you can use the ``CREATE INDEX CONCURRENTLY`` syntax to create indexes concurrently. During index creation, |product_name| will not block corresponding table data updates.
+
+.. tip::
+
+   When this option is specified, |product_name| will perform two table scans and wait for all transactions that update table data to complete. This adds some additional table scanning overhead when creating indexes, which might take longer than normal index creation. However, because this method does not block normal table update operations, it is very useful for data tables in production environments.
+
+Use cases
+~~~~~~~~~
+
+-  Suitable for tables with large amounts of data in production environments, where you want to perform DML operations such as insert, update, and delete normally while creating indexes for the table.
+-  When there are no high requirements for index creation speed, and there are sufficient system resources available for consumption, you can accept that index creation takes slightly longer than ``CREATE INDEX``.
+
+Usage
+~~~~~
+
+1. Execute the following command and restart the |product_name| database to enable GDD-related configuration parameters.
+
+   .. code:: shell
+
+      gpconfig -c gp_enable_global_deadlock_detector -v true
+      gpstop -ra
+
+   .. note::
+
+      In the |product_name| database, GDD is disabled by default (controlled by the configuration parameter ``gp_enable_global_deadlock_detector``). In this case, ``UPDATE`` or ``DELETE`` statements executed on ``heap`` tables will hold ``ExclusiveLock`` locks, which will conflict with ``CREATE INDEX CONCURRENTLY``. Therefore, to avoid blocking ``UPDATE`` or ``DELETE`` operations on tables when creating indexes concurrently, you must first enable GDD.
+
+2. Use the ``CREATE INDEX CONCURRENTLY`` syntax to create indexes concurrently.
+
+   Assuming there is a table named ``orders`` that contains a date column named ``order_date``, you can concurrently create an index ``idx_orders_order_date`` based on that column:
+
+   .. code:: sql
+
+      CREATE INDEX CONCURRENTLY idx_orders_order_date ON orders (order_date);
+
+Usage restrictions
+~~~~~~~~~~~~~~~~~~
+
+-  Creating indexes concurrently on temporary tables is not supported.
+-  Explicitly starting a transaction with ``BEGIN`` and then executing ``CREATE INDEX CONCURRENTLY`` is not supported.
+-  Currently, concurrent index creation only supports ``heap`` tables, not ``AO``/``AOCS`` tables and partitioned tables. However, for partitioned tables, you can create indexes concurrently for each partition table individually.
+
+Common issue handling
+~~~~~~~~~~~~~~~~~~~~~
+
+When using ``CREATE INDEX CONCURRENTLY`` to create table indexes, if errors occur, such as deadlocks or unique constraint validation failures for unique indexes, the index creation will fail, but an ``INVALID`` invalid index will be left in the table. During queries, |product_name| will ignore this invalid index because it is incomplete.
+
+To view invalid indexes of a table, you can use the ``\d`` option to view the ``INVALID`` indexes of that table:
+
+.. code:: shell
+
+   \d tab
+
+                   Table "public.tab"
+    Column |  Type   | Collation | Nullable | Default
+   --------+---------+-----------+----------+---------
+    col    | integer |           |          |
+   Indexes:
+       "idx_col" btree (col) INVALID
+   Distributed by: (col)
+
+For such ``INVALID`` invalid indexes, you can manually ``DROP`` delete them or rebuild the indexes using ``REINDEX``.
+
+REINDEX CONCURRENTLY
+--------------------
+
+This section describes how to rebuild indexes concurrently in |product_name|, that is, to execute insert, update, and delete statements while rebuilding indexes.
+
+When using ``REINDEX`` to rebuild indexes in |product_name|, |product_name| locks the table whose index is being rebuilt to prevent writes and performs the entire index rebuild through a single scan of the table. During this period, although other transactions can read table data normally, |product_name| blocks DML operations such as data insertion, updates, and deletions on the table. |product_name| only executes these DML operations after the index rebuild is complete.
+
+For databases in real-time production environments, executing ``REINDEX`` index rebuilds on large tables might take hours to complete. Even for smaller tables, index rebuilds lock writers for a period of time, which is unacceptable for production systems.
+
+To solve this problem, you can use the ``REINDEX CONCURRENTLY`` syntax to rebuild indexes concurrently, allowing |product_name| to rebuild indexes with minimal write locking, enabling DML operations such as insert, update, and delete during index rebuilding.
+
+Use cases
+~~~~~~~~~~~~
+
+-  Suitable for tables with large amounts of data in production environments, where you want to perform DML operations such as insert, update, and delete normally while rebuilding indexes for the table.
+-  When there are no high requirements for index rebuilding speed, and there are sufficient system resources available for consumption, you can accept that index rebuilding takes longer than ``REINDEX``.
+
+How it works
+~~~~~~~~~~~~
+
+When using ``REINDEX CONCURRENTLY`` to rebuild indexes concurrently, |product_name| performs the following internal operations in multiple separate transactions:
+
+1. |product_name| adds a new temporary index definition to the ``pg_index`` table to replace the old index. It also acquires a ``SHARE UPDATE EXCLUSIVE`` lock at the session level to prevent any schema modifications to the table during processing.
+2. Scans the table data and performs the first index creation operation. Once the index is built, its flag ``pg_index.indisready`` is set to ``true`` to prepare for insertion. After the transaction that executes the index creation ends, the index is visible to other sessions. This step is completed in a separate transaction for each index.
+3. |product_name| performs another table scan to update the data that was modified during the first scan into the index. This step is also completed in a separate transaction.
+4. Changes the old index definition to reference the new index definition and modifies the index name. The value of ``pg_index.indisvalid`` is switched to ``true`` for the new index and to ``false`` for the old index.
+5. The old index's ``pg_index.indisready`` is switched to ``false`` to prevent any new tuple insertions.
+6. The old index is dropped. The ``SHARE UPDATE EXCLUSIVE`` locks on the index and table are released.
+
+Usage
+~~~~~
+
+1. Execute the following command and restart the |product_name| database to enable GDD-related configuration parameters.
+
+   .. code:: shell
+
+      gpconfig -c gp_enable_global_deadlock_detector -v true
+      gpstop -ra
+
+2. Use the ``REINDEX CONCURRENTLY`` syntax to rebuild indexes concurrently.
+
+   Assuming there is a table named ``orders`` that contains a date column named ``order_date``, and the index for this column is ``idx_orders_order_date``, you can concurrently rebuild the index ``idx_orders_order_date``:
+
+   .. code:: sql
+
+      REINDEX INDEX CONCURRENTLY idx_orders_order_date;
+
+Usage restrictions
+~~~~~~~~~~~~~~~~~~~~~
+
+-  Executing ``REINDEX CONCURRENTLY`` in a transaction block is not supported, which means you cannot explicitly start a transaction with ``BEGIN`` and then execute concurrent index rebuilding.
+-  ``REINDEX SYSTEM`` does not support ``CONCURRENTLY`` concurrent rebuilding because system catalogs cannot be rebuilt concurrently.
+
+Common issue handling
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+When using ``REINDEX CONCURRENTLY`` to rebuild indexes, if problems occur, such as violating uniqueness constraints in a unique index, the ``REINDEX CONCURRENTLY`` command will fail. In addition to the existing old index, an ``INVALID`` temporary index will be left, which will be ignored in queries because it is incomplete.
+
+To view the ``INVALID`` index of this table, you can use the ``\d`` option:
+
+.. code:: shell
+
+   \d tab
+
+                   Table "public.tab"
+    Column |  Type   | Collation | Nullable | Default
+   --------+---------+-----------+----------+---------
+    col    | integer |           |          |
+   Indexes:
+       "idx_col_ccnew" btree (col) INVALID
+   Distributed by: (col)
+
+-  If the index marked as ``INVALID`` has the suffix ``ccnew`` (as in the example above), it corresponds to the temporary index created during the concurrent rebuild operation. It is recommended to use ``DROP INDEX`` to drop this index and then try ``REINDEX CONCURRENTLY`` again.
+-  If the index marked as ``INVALID`` has the suffix ``ccold``, it corresponds to the original index. It is recommended to drop this index directly using ``DROP INDEX`` because the rebuild work has already succeeded.

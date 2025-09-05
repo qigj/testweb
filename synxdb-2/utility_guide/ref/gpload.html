@@ -1,0 +1,551 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>gpload - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gpload"><a class="header" href="#gpload">gpload</a></h1>
+<p>Runs a load job as defined in a YAML formatted control file.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code>gpload -f &lt;control_file&gt; [-l &lt;log_file&gt;] [-h &lt;hostname&gt;] [-p &lt;port&gt;] 
+   [-U &lt;username&gt;] [-d &lt;database&gt;] [-W] [--gpfdist_timeout &lt;seconds&gt;] 
+   [--no_auto_trans] [--max_retries &lt;retry_times&gt;] [[-v | -V] [-q]] [-D]
+
+gpload -? 
+
+gpload --version
+</code></pre>
+<h2 id="requirements"><a class="header" href="#requirements"><a id="section3"></a>Requirements</a></h2>
+<p>The client machine where <code>gpload</code> is run must have the following:</p>
+<ul>
+<li>The <a href="gpfdist.html">gpfdist</a> parallel file distribution program installed and in your <code>$PATH</code>. This program is located in <code>$GPHOME/bin</code> of your SynxDB server installation.</li>
+<li>Network access to and from all hosts in your SynxDB array (master and segments).</li>
+<li>Network access to and from the hosts where the data to be loaded resides (ETL servers).</li>
+</ul>
+<h2 id="description"><a class="header" href="#description"><a id="section4"></a>Description</a></h2>
+<p><code>gpload</code> is a data loading utility that acts as an interface to the SynxDB external table parallel loading feature. Using a load specification defined in a YAML formatted control file, <code>gpload</code> runs a load by invoking the SynxDB parallel file server (<a href="gpfdist.html">gpfdist</a>), creating an external table definition based on the source data defined, and running an <code>INSERT</code>, <code>UPDATE</code> or <code>MERGE</code> operation to load the source data into the target table in the database.</p>
+<blockquote>
+<p><strong>Note</strong> <code>gpfdist</code> is compatible only with the SynxDB major version in which it is shipped. For example, a <code>gpfdist</code> utility that is installed with SynxDB 4.x cannot be used with SynxDB 5.x or 6.x.</p>
+</blockquote>
+<blockquote>
+<p><strong>Note</strong> The SynxDB 5.22 and later <code>gpload</code> for Linux is compatible with SynxDB 2. The SynxDB 2 <code>gpload</code> for both Linux and Windows is compatible with SynxDB 5.x.</p>
+</blockquote>
+<blockquote>
+<p><strong>Note</strong> <code>MERGE</code> and <code>UPDATE</code> operations are not supported if the target table column name is a reserved keyword, has capital letters, or includes any character that requires quotes (“ “) to identify the column.</p>
+</blockquote>
+<p>The operation, including any SQL commands specified in the <code>SQL</code> collection of the YAML control file (see <a href="#section7">Control File Format</a>), are performed as a single transaction to prevent inconsistent data when performing multiple, simultaneous load operations on a target table.</p>
+<h2 id="options"><a class="header" href="#options"><a id="section5"></a>Options</a></h2>
+<h3 id="-f-control_file"><a class="header" href="#-f-control_file">-f control_file</a></h3>
+<p>Required. A YAML file that contains the load specification details. See <a href="#section7">Control File Format</a>.</p>
+<h3 id="gpfdist_timeout-seconds"><a class="header" href="#gpfdist_timeout-seconds">–gpfdist_timeout seconds</a></h3>
+<p>Sets the timeout for the <code>gpfdist</code> parallel file distribution program to send a response. Enter a value from <code>0</code> to <code>30</code> seconds (entering “<code>0</code>” to deactivates timeouts). Note that you might need to increase this value when operating on high-traffic networks.</p>
+<h3 id="-l-log_file"><a class="header" href="#-l-log_file">-l log_file</a></h3>
+<p>Specifies where to write the log file. Defaults to <code>~/gpAdminLogs/gpload_YYYYMMDD</code>. For more information about the log file, see <a href="#section9">Log File Format</a>.</p>
+<h3 id="no_auto_trans"><a class="header" href="#no_auto_trans">–no_auto_trans</a></h3>
+<p>Specify <code>--no_auto_trans</code> to deactivate processing the load operation as a single transaction if you are performing a single load operation on the target table.</p>
+<p>By default, <code>gpload</code> processes each load operation as a single transaction to prevent inconsistent data when performing multiple, simultaneous operations on a target table.</p>
+<h3 id="-q-no-screen-output"><a class="header" href="#-q-no-screen-output">-q (no screen output)</a></h3>
+<p>Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.</p>
+<h3 id="-d-debug-mode"><a class="header" href="#-d-debug-mode">-D (debug mode)</a></h3>
+<p>Check for error conditions, but do not run the load.</p>
+<h3 id="-v-verbose-mode"><a class="header" href="#-v-verbose-mode">-v (verbose mode)</a></h3>
+<p>Show verbose output of the load steps as they are run.</p>
+<h3 id="-v-very-verbose-mode"><a class="header" href="#-v-very-verbose-mode">-V (very verbose mode)</a></h3>
+<p>Shows very verbose output.</p>
+<h3 id="--show-help"><a class="header" href="#--show-help">-? (show help)</a></h3>
+<p>Show help, then exit.</p>
+<h3 id="version"><a class="header" href="#version">–version</a></h3>
+<p>Show the version of this utility, then exit.</p>
+<p><strong>Connection Options</strong></p>
+<h3 id="-d-database"><a class="header" href="#-d-database">-d database</a></h3>
+<p>The database to load into. If not specified, reads from the load control file, the environment variable <code>$PGDATABASE</code> or defaults to the current system user name.</p>
+<h3 id="-h-hostname"><a class="header" href="#-h-hostname">-h hostname</a></h3>
+<p>Specifies the host name of the machine on which the SynxDB master database server is running. If not specified, reads from the load control file, the environment variable <code>$PGHOST</code> or defaults to <code>localhost</code>.</p>
+<h3 id="-p-port"><a class="header" href="#-p-port">-p port</a></h3>
+<p>Specifies the TCP port on which the SynxDB master database server is listening for connections. If not specified, reads from the load control file, the environment variable <code>$PGPORT</code> or defaults to 5432.</p>
+<h3 id="max_retries-retry_times"><a class="header" href="#max_retries-retry_times">–max_retries retry_times</a></h3>
+<p>Specifies the maximum number of times <code>gpload</code> attempts to connect to SynxDB after a connection timeout. The default value is <code>0</code>, do not attempt to connect after a connection timeout. A negative integer, such as <code>-1</code>, specifies an unlimited number of attempts.</p>
+<h3 id="-u-username"><a class="header" href="#-u-username">-U username</a></h3>
+<p>The database role name to connect as. If not specified, reads from the load control file, the environment variable <code>$PGUSER</code> or defaults to the current system user name.</p>
+<h3 id="-w-force-password-prompt"><a class="header" href="#-w-force-password-prompt">-W (force password prompt)</a></h3>
+<p>Force a password prompt. If not specified, reads the password from the environment variable <code>$PGPASSWORD</code> or from a password file specified by <code>$PGPASSFILE</code> or in <code>~/.pgpass</code>. If these are not set, then <code>gpload</code> will prompt for a password even if <code>-W</code> is not supplied.</p>
+<h2 id="control-file-format"><a class="header" href="#control-file-format"><a id="section7"></a>Control File Format</a></h2>
+<p>The <code>gpload</code> control file uses the <a href="http://yaml.org/spec/1.1/">YAML 1.1</a> document format and then implements its own schema for defining the various steps of a SynxDB load operation. The control file must be a valid YAML document.</p>
+<p>The <code>gpload</code> program processes the control file document in order and uses indentation (spaces) to determine the document hierarchy and the relationships of the sections to one another. The use of white space is significant. White space should not be used simply for formatting purposes, and tabs should not be used at all.</p>
+<p>The basic structure of a load control file is:</p>
+<pre><code>---
+VERSION: 1.0.0.1
+DATABASE: &lt;db_name&gt;
+USER: &lt;db_username&gt;
+HOST: &lt;master_hostname&gt;
+PORT: &lt;master_port&gt;
+GPLOAD:
+   INPUT:
+    - SOURCE:
+         LOCAL_HOSTNAME:
+           - &lt;hostname_or_ip&gt;
+         PORT: &lt;http_port&gt;
+       | PORT_RANGE: [&lt;start_port_range&gt;, &lt;end_port_range&gt;]
+         FILE: 
+           - &lt;/path/to/input_file&gt;
+         SSL: true | false
+         CERTIFICATES_PATH: &lt;/path/to/certificates&gt;
+    - FULLY_QUALIFIED_DOMAIN_NAME: true | false
+    - COLUMNS:
+           - &lt;field_name&gt;: &lt;data_type&gt;
+    - TRANSFORM: '&lt;transformation&gt;'
+    - TRANSFORM_CONFIG: '&lt;configuration-file-path&gt;' 
+    - MAX_LINE_LENGTH: &lt;integer&gt; 
+    - FORMAT: text | csv
+    - DELIMITER: '&lt;delimiter_character&gt;'
+    - ESCAPE: '&lt;escape_character&gt;' | 'OFF'
+    - NEWLINE: 'LF' | 'CR' | 'CRLF'
+    - NULL_AS: '&lt;null_string&gt;'
+    - FILL_MISSING_FIELDS: true | false
+    - FORCE_NOT_NULL: true | false
+    - QUOTE: '&lt;csv_quote_character&gt;'
+    - HEADER: true | false
+    - ENCODING: &lt;database_encoding&gt;
+    - ERROR_LIMIT: &lt;integer&gt;
+    - LOG_ERRORS: true | false
+   EXTERNAL:
+      - SCHEMA: &lt;schema&gt; | '%'
+   OUTPUT:
+    - TABLE: &lt;schema.table_name&gt;
+    - MODE: insert | update | merge
+    - MATCH_COLUMNS:
+           - &lt;target_column_name&gt;
+    - UPDATE_COLUMNS:
+           - &lt;target_column_name&gt;
+    - UPDATE_CONDITION: '&lt;boolean_condition&gt;'
+    - MAPPING:
+              &lt;target_column_name&gt;: &lt;source_column_name&gt; | '&lt;expression&gt;'
+   PRELOAD:
+    - TRUNCATE: true | false
+    - REUSE_TABLES: true | false
+    - STAGING_TABLE: &lt;external_table_name&gt;
+    - FAST_MATCH: true | false
+   SQL:
+    - BEFORE: "&lt;sql_command&gt;"
+    - AFTER: "&lt;sql_command&gt;"
+</code></pre>
+<h3 id="version-1"><a class="header" href="#version-1">VERSION</a></h3>
+<p>Optional. The version of the <code>gpload</code> control file schema. The current version is 1.0.0.1.</p>
+<h3 id="database"><a class="header" href="#database">DATABASE</a></h3>
+<p>Optional. Specifies which database in the SynxDB system to connect to. If not specified, defaults to <code>$PGDATABASE</code> if set or the current system user name. You can also specify the database on the command line using the <code>-d</code> option.</p>
+<h3 id="user"><a class="header" href="#user">USER</a></h3>
+<p>Optional. Specifies which database role to use to connect. If not specified, defaults to the current user or <code>$PGUSER</code> if set. You can also specify the database role on the command line using the <code>-U</code> option.</p>
+<p>If the user running <code>gpload</code> is not a SynxDB superuser, then the appropriate rights must be granted to the user for the load to be processed. See the <em>SynxDB Reference Guide</em> for more information.</p>
+<h3 id="host"><a class="header" href="#host">HOST</a></h3>
+<p>Optional. Specifies SynxDB master host name. If not specified, defaults to localhost or <code>$PGHOST</code> if set. You can also specify the master host name on the command line using the <code>-h</code> option.</p>
+<h3 id="port"><a class="header" href="#port">PORT</a></h3>
+<p>Optional. Specifies SynxDB master port. If not specified, defaults to 5432 or <code>$PGPORT</code> if set. You can also specify the master port on the command line using the <code>-p</code> option.</p>
+<h3 id="gpload-1"><a class="header" href="#gpload-1">GPLOAD</a></h3>
+<p>Required. Begins the load specification section. A <code>GPLOAD</code> specification must have an <code>INPUT</code> and an <code>OUTPUT</code> section defined.</p>
+<h3 id="input"><a class="header" href="#input">INPUT</a></h3>
+<p>Required. Defines the location and the format of the input data to be loaded. <code>gpload</code> will start one or more instances of the <a href="gpfdist.html">gpfdist</a> file distribution program on the current host and create the required external table definition(s) in SynxDB that point to the source data. Note that the host from which you run <code>gpload</code> must be accessible over the network by all SynxDB hosts (master and segments).</p>
+<h3 id="source"><a class="header" href="#source">SOURCE</a></h3>
+<p>Required. The <code>SOURCE</code> block of an <code>INPUT</code> specification defines the location of a source file. An <code>INPUT</code> section can have more than one <code>SOURCE</code> block defined. Each <code>SOURCE</code> block defined corresponds to one instance of the <a href="gpfdist.html">gpfdist</a> file distribution program that will be started on the local machine. Each <code>SOURCE</code> block defined must have a <code>FILE</code> specification.</p>
+<p>For more information about using the <code>gpfdist</code> parallel file server and single and multiple <code>gpfdist</code> instances, see <a href="../../admin_guide/load/topics/g-loading-and-unloading-data.html">Loading and Unloading Data</a>.</p>
+<h3 id="local_hostname"><a class="header" href="#local_hostname">LOCAL_HOSTNAME</a></h3>
+<p>Optional. Specifies the host name or IP address of the local machine on which <code>gpload</code> is running. If this machine is configured with multiple network interface cards (NICs), you can specify the host name or IP of each individual NIC to allow network traffic to use all NICs simultaneously. The default is to use the local machine’s primary host name or IP only.</p>
+<h3 id="port-1"><a class="header" href="#port-1">PORT</a></h3>
+<p>Optional. Specifies the specific port number that the <a href="gpfdist.html">gpfdist</a> file distribution program should use. You can also supply a <code>PORT_RANGE</code> to select an available port from the specified range. If both <code>PORT</code> and <code>PORT_RANGE</code> are defined, then <code>PORT</code> takes precedence. If neither <code>PORT</code> or <code>PORT_RANGE</code> are defined, the default is to select an available port between 8000 and 9000.</p>
+<p>If multiple host names are declared in <code>LOCAL_HOSTNAME</code>, this port number is used for all hosts. This configuration is desired if you want to use all NICs to load the same file or set of files in a given directory location.</p>
+<h3 id="port_range"><a class="header" href="#port_range">PORT_RANGE</a></h3>
+<p>Optional. Can be used instead of <code>PORT</code> to supply a range of port numbers from which <code>gpload</code> can choose an available port for this instance of the <a href="gpfdist.html">gpfdist</a> file distribution program.</p>
+<h3 id="file"><a class="header" href="#file">FILE</a></h3>
+<p>Required. Specifies the location of a file, named pipe, or directory location on the local file system that contains data to be loaded. You can declare more than one file so long as the data is of the same format in all files specified.</p>
+<p>If the files are compressed using <code>gzip</code> or <code>bzip2</code> (have a <code>.gz</code> or <code>.bz2</code> file extension), the files will be uncompressed automatically (provided that <code>gunzip</code> or <code>bunzip2</code> is in your path).</p>
+<p>When specifying which source files to load, you can use the wildcard character (<code>*</code>) or other C-style pattern matching to denote multiple files. The files specified are assumed to be relative to the current directory from which <code>gpload</code> is run (or you can declare an absolute path).</p>
+<h3 id="ssl"><a class="header" href="#ssl">SSL</a></h3>
+<p>Optional. Specifies usage of SSL encryption. If <code>SSL</code> is set to true, <code>gpload</code> starts the <code>gpfdist</code> server with the <code>--ssl</code> option and uses the <code>gpfdists://</code> protocol.</p>
+<h3 id="certificates_path"><a class="header" href="#certificates_path">CERTIFICATES_PATH</a></h3>
+<p>Required when SSL is <code>true</code>; cannot be specified when SSL is <code>false</code> or unspecified. The location specified in <code>CERTIFICATES_PATH</code> must contain the following files:</p>
+<ul>
+<li>The server certificate file, <code>server.crt</code></li>
+<li>The server private key file, <code>server.key</code></li>
+<li>The trusted certificate authorities, <code>root.crt</code></li>
+</ul>
+<p>The root directory (<code>/</code>) cannot be specified as <code>CERTIFICATES_PATH</code>.</p>
+<h3 id="fully_qualified_domain_name"><a class="header" href="#fully_qualified_domain_name">FULLY_QUALIFIED_DOMAIN_NAME</a></h3>
+<p>Optional. Specifies whether <code>gpload</code> resolve hostnames to the fully qualified domain name (FQDN) or the local hostname. If the value is set to <code>true</code>, names are resolved to the FQDN. If the value is set to <code>false</code>, resolution is to the local hostname. The default is <code>false</code>.</p>
+<p>A fully qualified domain name might be required in some situations. For example, if the SynxDB system is in a different domain than an ETL application that is being accessed by <code>gpload</code>.</p>
+<h3 id="columns"><a class="header" href="#columns">COLUMNS</a></h3>
+<p>Optional. Specifies the schema of the source data file(s) in the format of <code>field\_name:data\_type</code>. The <code>DELIMITER</code> character in the source file is what separates two data value fields (columns). A row is determined by a line feed character (<code>0x0a</code>).</p>
+<p>If the input <code>COLUMNS</code> are not specified, then the schema of the output <code>TABLE</code> is implied, meaning that the source data must have the same column order, number of columns, and data format as the target table.</p>
+<p>The default source-to-target mapping is based on a match of column names as defined in this section and the column names in the target <code>TABLE</code>. This default mapping can be overridden using the <code>MAPPING</code> section.</p>
+<h3 id="transform"><a class="header" href="#transform">TRANSFORM</a></h3>
+<p>Optional. Specifies the name of the input transformation passed to <code>gpload</code>. For information about XML transformations, see “Loading and Unloading Data” in the <em>SynxDB Administrator Guide</em>.</p>
+<h3 id="transform_config"><a class="header" href="#transform_config">TRANSFORM_CONFIG</a></h3>
+<p>Required when <code>TRANSFORM</code> is specified. Specifies the location of the transformation configuration file that is specified in the <code>TRANSFORM</code> parameter, above.</p>
+<h3 id="max_line_length"><a class="header" href="#max_line_length">MAX_LINE_LENGTH</a></h3>
+<p>Optional. Sets the maximum allowed data row length in bytes. Default is 32768. Should be used when user data includes very wide rows (or when <code>line too long</code> error message occurs). Should not be used otherwise as it increases resource allocation. Valid range is 32K to 256MB. The upper limit is 1MB on Windows systems.</p>
+<h3 id="format"><a class="header" href="#format">FORMAT</a></h3>
+<p>Optional. Specifies the format of the source data file(s) - either plain text (<code>TEXT</code>) or comma separated values (<code>CSV</code>) format. Defaults to <code>TEXT</code> if not specified. For more information about the format of the source data, see <a href="../../admin_guide/load/topics/g-loading-and-unloading-data.html">Loading and Unloading Data</a>.</p>
+<h3 id="delimiter"><a class="header" href="#delimiter">DELIMITER</a></h3>
+<p>Optional. Specifies a single ASCII character that separates columns within each row (line) of data. The default is a tab character in TEXT mode, a comma in CSV mode. You can also specify a non- printable ASCII character or a non-printable unicode character, for example: <code>"\x1B"</code> or <code>"\u001B"</code>. The escape string syntax, <code>E'&lt;character-code&gt;'</code>, is also supported for non-printable characters. The ASCII or unicode character must be enclosed in single quotes. For example: <code>E'\x1B'</code> or <code>E'\u001B'</code>.</p>
+<h3 id="escape"><a class="header" href="#escape">ESCAPE</a></h3>
+<p>Specifies the single character that is used for C escape sequences (such as <code>\n</code>, <code>\t</code>, <code>\100</code>, and so on) and for escaping data characters that might otherwise be taken as row or column delimiters. Make sure to choose an escape character that is not used anywhere in your actual column data. The default escape character is a \ (backslash) for text-formatted files and a <code>"</code> (double quote) for csv-formatted files, however it is possible to specify another character to represent an escape. It is also possible to deactivate escaping in text-formatted files by specifying the value <code>'OFF'</code> as the escape value. This is very useful for data such as text-formatted web log data that has many embedded backslashes that are not intended to be escapes.</p>
+<h3 id="newline"><a class="header" href="#newline">NEWLINE</a></h3>
+<p>Specifies the type of newline used in your data files, one of:</p>
+<ul>
+<li>LF (Line feed, 0x0A)</li>
+<li>CR (Carriage return, 0x0D)</li>
+<li>CRLF (Carriage return plus line feed, 0x0D 0x0A).</li>
+</ul>
+<p>If not specified, SynxDB detects the newline type by examining the first row of data that it receives, and uses the first newline type that it encounters.</p>
+<h3 id="null_as"><a class="header" href="#null_as">NULL_AS</a></h3>
+<p>Optional. Specifies the string that represents a null value. The default is <code>\N</code> (backslash-N) in <code>TEXT</code> mode, and an empty value with no quotations in <code>CSV</code> mode. You might prefer an empty string even in <code>TEXT</code> mode for cases where you do not want to distinguish nulls from empty strings. Any source data item that matches this string will be considered a null value.</p>
+<h3 id="fill_missing_fields"><a class="header" href="#fill_missing_fields">FILL_MISSING_FIELDS</a></h3>
+<p>Optional. The default value is <code>false</code>. When reading a row of data that has missing trailing field values (the row of data has missing data fields at the end of a line or row), SynxDB returns an error.</p>
+<p>If the value is <code>true</code>, when reading a row of data that has missing trailing field values, the values are set to <code>NULL</code>. Blank rows, fields with a <code>NOT NULL</code> constraint, and trailing delimiters on a line will still report an error.</p>
+<p>See the <code>FILL MISSING FIELDS</code> clause of the <a href="../../ref_guide/sql_commands/CREATE_EXTERNAL_TABLE.html">CREATE EXTERNAL TABLE</a> command.</p>
+<h3 id="force_not_null"><a class="header" href="#force_not_null">FORCE_NOT_NULL</a></h3>
+<p>Optional. In CSV mode, processes each specified column as though it were quoted and hence not a NULL value. For the default null string in CSV mode (nothing between two delimiters), this causes missing values to be evaluated as zero-length strings.</p>
+<h3 id="quote"><a class="header" href="#quote">QUOTE</a></h3>
+<p>Required when <code>FORMAT</code> is <code>CSV</code>. Specifies the quotation character for <code>CSV</code> mode. The default is double-quote (<code>"</code>).</p>
+<h3 id="header"><a class="header" href="#header">HEADER</a></h3>
+<p>Optional. Specifies that the first line in the data file(s) is a header row (contains the names of the columns) and should not be included as data to be loaded. If using multiple data source files, all files must have a header row. The default is to assume that the input files do not have a header row.</p>
+<h3 id="encoding"><a class="header" href="#encoding">ENCODING</a></h3>
+<p>Optional. Character set encoding of the source data. Specify a string constant (such as <code>'SQL_ASCII'</code>), an integer encoding number, or <code>'DEFAULT'</code> to use the default client encoding. If not specified, the default client encoding is used. For information about supported character sets, see the <em>SynxDB Reference Guide</em>.</p>
+<blockquote>
+<p><strong>Note</strong> If you <em>change</em> the <code>ENCODING</code> value in an existing <code>gpload</code> control file, you must manually drop any external tables that were creating using the previous <code>ENCODING</code> configuration. <code>gpload</code> does not drop and recreate external tables to use the new <code>ENCODING</code> if <code>REUSE_TABLES</code> is set to <code>true</code>.</p>
+</blockquote>
+<h3 id="error_limit"><a class="header" href="#error_limit">ERROR_LIMIT</a></h3>
+<p>Optional. Enables single row error isolation mode for this load operation. When enabled, input rows that have format errors will be discarded provided that the error limit count is not reached on any SynxDB segment instance during input processing. If the error limit is not reached, all good rows will be loaded and any error rows will either be discarded or captured as part of error log information. The default is to cancel the load operation on the first error encountered. Note that single row error isolation only applies to data rows with format errors; for example, extra or missing attributes, attributes of a wrong data type, or invalid client encoding sequences. Constraint errors, such as primary key violations, will still cause the load operation to be cancelled if encountered. For information about handling load errors, see <a href="../../admin_guide/load/topics/g-loading-and-unloading-data.html">Loading and Unloading Data</a>.</p>
+<h3 id="log_errors"><a class="header" href="#log_errors">LOG_ERRORS</a></h3>
+<p>Optional when <code>ERROR_LIMIT</code> is declared. Value is either <code>true</code> or <code>false</code>. The default value is <code>false</code>. If the value is <code>true</code>, rows with formatting errors are logged internally when running in single row error isolation mode. You can examine formatting errors with the SynxDB built-in SQL function <code>gp_read_error_log('&lt;table_name&gt;')</code>. If formatting errors are detected when loading data, <code>gpload</code> generates a warning message with the name of the table that contains the error information similar to this message.</p>
+<pre><code>&lt;timestamp&gt;|WARN|1 bad row, please use GPDB built-in function gp_read_error_log('table-name') 
+to access the detailed error row
+</code></pre>
+<p>If <code>LOG_ERRORS: true</code> is specified, <code>REUSE_TABLES: true</code> must be specified to retain the formatting errors in SynxDB error logs. If <code>REUSE_TABLES: true</code> is not specified, the error information is deleted after the <code>gpload</code> operation. Only summary information about formatting errors is returned. You can delete the formatting errors from the error logs with the SynxDB function <code>gp_truncate_error_log()</code>.</p>
+<blockquote>
+<p><strong>Note</strong> When <code>gpfdist</code> reads data and encounters a data formatting error, the error message includes a row number indicating the location of the formatting error. <code>gpfdist</code> attempts to capture the row that contains the error. However, <code>gpfdist</code> might not capture the exact row for some formatting errors.</p>
+</blockquote>
+<p>For more information about handling load errors, see “Loading and Unloading Data” in the <em>SynxDB Administrator Guide</em>. For information about the <code>gp_read_error_log()</code> function, see the <a href="../../ref_guide/sql_commands/CREATE_EXTERNAL_TABLE.html">CREATE EXTERNAL TABLE</a> command.</p>
+<h3 id="external"><a class="header" href="#external">EXTERNAL</a></h3>
+<p>Optional. Defines the schema of the external table database objects created by <code>gpload</code>.</p>
+<p>The default is to use the SynxDB <code>search_path</code>.</p>
+<h3 id="schema"><a class="header" href="#schema">SCHEMA</a></h3>
+<p>Required when <code>EXTERNAL</code> is declared. The name of the schema of the external table. If the schema does not exist, an error is returned.</p>
+<p>If <code>%</code> (percent character) is specified, the schema of the table name specified by <code>TABLE</code> in the <code>OUTPUT</code> section is used. If the table name does not specify a schema, the default schema is used.</p>
+<h3 id="output"><a class="header" href="#output">OUTPUT</a></h3>
+<p>Required. Defines the target table and final data column values that are to be loaded into the database.</p>
+<h3 id="table"><a class="header" href="#table">TABLE</a></h3>
+<p>Required. The name of the target table to load into.</p>
+<h3 id="mode"><a class="header" href="#mode">MODE</a></h3>
+<p>Optional. Defaults to <code>INSERT</code> if not specified. There are three available load modes:</p>
+<p>INSERT - Loads data into the target table using the following method:</p>
+<pre><code>INSERT INTO &lt;target_table&gt; SELECT * FROM &lt;input_data&gt;;
+</code></pre>
+<p>UPDATE - Updates the <code>UPDATE_COLUMNS</code> of the target table where the rows have <code>MATCH_COLUMNS</code> attribute values equal to those of the input data, and the optional <code>UPDATE_CONDITION</code> is true. <code>UPDATE</code> is not supported if the target table column name is a reserved keyword, has capital letters, or includes any character that requires quotes (“ “) to identify the column.</p>
+<p>MERGE - Inserts new rows and updates the <code>UPDATE_COLUMNS</code> of existing rows where attribute values are equal to those of the input data, and the optional <code>MATCH_COLUMNS</code> is true. New rows are identified when the <code>MATCH_COLUMNS</code> value in the source data does not have a corresponding value in the existing data of the target table. In those cases, the <strong>entire row</strong> from the source file is inserted, not only the <code>MATCH</code> and <code>UPDATE</code> columns. If there are multiple new <code>MATCH_COLUMNS</code> values that are the same, only one new row for that value will be inserted. Use <code>UPDATE_CONDITION</code> to filter out the rows to discard. <code>MERGE</code> is not supported if the target table column name is a reserved keyword, has capital letters, or includes any character that requires quotes (“ “) to identify the column.</p>
+<h3 id="match_columns"><a class="header" href="#match_columns">MATCH_COLUMNS</a></h3>
+<p>Required if <code>MODE</code> is <code>UPDATE</code> or <code>MERGE</code>. Specifies the column(s) to use as the join condition for the update. The attribute value in the specified target column(s) must be equal to that of the corresponding source data column(s) in order for the row to be updated in the target table.</p>
+<h3 id="update_columns"><a class="header" href="#update_columns">UPDATE_COLUMNS</a></h3>
+<p>Required if <code>MODE</code> is <code>UPDATE</code> or <code>MERGE</code>. Specifies the column(s) to update for the rows that meet the <code>MATCH_COLUMNS</code> criteria and the optional <code>UPDATE_CONDITION</code>.</p>
+<h3 id="update_condition"><a class="header" href="#update_condition">UPDATE_CONDITION</a></h3>
+<p>Optional. Specifies a Boolean condition (similar to what you would declare in a <code>WHERE</code> clause) that must be met in order for a row in the target table to be updated.</p>
+<h3 id="mapping"><a class="header" href="#mapping">MAPPING</a></h3>
+<p>Optional. If a mapping is specified, it overrides the default source-to-target column mapping. The default source-to-target mapping is based on a match of column names as defined in the source <code>COLUMNS</code> section and the column names of the target <code>TABLE</code>. A mapping is specified as either:</p>
+<p><code>&lt;target_column_name&gt;: &lt;source_column_name&gt;</code></p>
+<p>or</p>
+<p><code>&lt;target_column_name&gt;: '&lt;expression&gt;'</code></p>
+<p>Where &lt;expression&gt; is any expression that you would specify in the <code>SELECT</code> list of a query, such as a constant value, a column reference, an operator invocation, a function call, and so on.</p>
+<p>PRELOAD
+Optional. Specifies operations to run prior to the load operation. Right now the only preload operation is <code>TRUNCATE</code>.</p>
+<h3 id="truncate"><a class="header" href="#truncate">TRUNCATE</a></h3>
+<p>Optional. If set to true, <code>gpload</code> will remove all rows in the target table prior to loading it. Default is false.</p>
+<h3 id="reuse_tables"><a class="header" href="#reuse_tables">REUSE_TABLES</a></h3>
+<p>Optional. If set to true, <code>gpload</code> will not drop the external table objects and staging table objects it creates. These objects will be reused for future load operations that use the same load specifications. This improves performance of trickle loads (ongoing small loads to the same target table).</p>
+<p>If <code>LOG_ERRORS: true</code> is specified, <code>REUSE_TABLES: true</code> must be specified to retain the formatting errors in SynxDB error logs. If <code>REUSE_TABLES: true</code> is not specified, formatting error information is deleted after the <code>gpload</code> operation.</p>
+<p>If the &lt;external_table_name&gt; exists, the utility uses the existing table. The utility returns an error if the table schema does not match the <code>OUTPUT</code> table schema.</p>
+<h3 id="staging_table"><a class="header" href="#staging_table">STAGING_TABLE</a></h3>
+<p>Optional. Specify the name of the temporary external table that is created during a <code>gpload</code> operation. The external table is used by <code>gpfdist</code>. <code>REUSE_TABLES: true</code> must also specified. If <code>REUSE_TABLES</code> is false or not specified, <code>STAGING_TABLE</code> is ignored. By default, <code>gpload</code> creates a temporary external table with a randomly generated name.</p>
+<p>If external_table_name contains a period (.), <code>gpload</code> returns an error. If the table exists, the utility uses the table. The utility returns an error if the existing table schema does not match the <code>OUTPUT</code> table schema.</p>
+<p>The utility uses the value of <code>SCHEMA</code> in the <code>EXTERNAL</code> section as the schema for &lt;external_table_name&gt;. If the <code>SCHEMA</code> value is <code>%</code>, the schema for &lt;external_table_name&gt; is the same as the schema of the target table, the schema of <code>TABLE</code> in the <code>OUTPUT</code> section.</p>
+<p>If <code>SCHEMA</code> is not set, the utility searches for the table (using the schemas in the database <code>search_path</code>). If the table is not found, external_table_name is created in the default <code>PUBLIC</code> schema.</p>
+<p><code>gpload</code> creates the staging table using the distribution key(s) of the target table as the distribution key(s) for the staging table. If the target table was created <code>DISTRIBUTED RANDOMLY</code>, <code>gpload</code> uses <code>MATCH_COLUMNS</code> as the staging table’s distribution key(s).</p>
+<h3 id="fast_match"><a class="header" href="#fast_match">FAST_MATCH</a></h3>
+<p>Optional. If set to true, <code>gpload</code> only searches the database for matching external table objects when reusing external tables. The utility does not check the external table column names and column types in the catalog table <code>pg_attribute</code> to ensure that the table can be used for a <code>gpload</code> operation. Set the value to true to improve <code>gpload</code> performance when reusing external table objects and the database catalog table <code>pg_attribute</code> contains a large number of rows. The utility returns an error and quits if the column definitions are not compatible.</p>
+<p>The default value is false, the utility checks the external table definition column names and column types.</p>
+<p><code>REUSE_TABLES: true</code> must also specified. If <code>REUSE_TABLES</code> is false or not specified and <code>FAST_MATCH: true</code> is specified, <code>gpload</code> returns a warning message.</p>
+<p>SQL
+Optional. Defines SQL commands to run before and/or after the load operation. You can specify multiple <code>BEFORE</code> and/or <code>AFTER</code> commands. List commands in the order of desired execution.</p>
+<h3 id="before"><a class="header" href="#before">BEFORE</a></h3>
+<p>Optional. An SQL command to run before the load operation starts. Enclose commands in quotes.</p>
+<h3 id="after"><a class="header" href="#after">AFTER</a></h3>
+<p>Optional. An SQL command to run after the load operation completes. Enclose commands in quotes.</p>
+<h2 id="log-file-format"><a class="header" href="#log-file-format"><a id="section9"></a>Log File Format</a></h2>
+<p>Log files output by <code>gpload</code> have the following format:</p>
+<pre><code>&lt;timestamp&gt;|&lt;level&gt;|&lt;message&gt;
+</code></pre>
+<p>Where &lt;timestamp&gt; takes the form: <code>YYYY-MM-DD HH:MM:SS</code>, level is one of <code>DEBUG</code>, <code>LOG</code>, <code>INFO</code>, <code>ERROR</code>, and message is a normal text message.</p>
+<p>Some <code>INFO</code> messages that may be of interest in the log files are (where # corresponds to the actual number of seconds, units of data, or failed rows):</p>
+<pre><code>INFO|running time: &lt;#.##&gt; seconds
+INFO|transferred &lt;#.#&gt; kB of &lt;#.#&gt; kB.
+INFO|gpload succeeded
+INFO|gpload succeeded with warnings
+INFO|gpload failed
+INFO|1 bad row
+INFO|&lt;#&gt; bad rows
+</code></pre>
+<h2 id="notes"><a class="header" href="#notes"><a id="section8"></a>Notes</a></h2>
+<p>If your database object names were created using a double-quoted identifier (delimited identifier), you must specify the delimited name within single quotes in the <code>gpload</code> control file. For example, if you create a table as follows:</p>
+<pre><code>CREATE TABLE "MyTable" ("MyColumn" text);
+</code></pre>
+<p>Your YAML-formatted <code>gpload</code> control file would refer to the above table and column names as follows:</p>
+<pre><code>- COLUMNS:
+- '"MyColumn"': text
+OUTPUT:
+- TABLE: public.'"MyTable"'
+</code></pre>
+<p>If the YAML control file contains the <code>ERROR_TABLE</code> element that was available in SynxDB 4.3.x, <code>gpload</code> logs a warning stating that <code>ERROR_TABLE</code> is not supported, and load errors are handled as if the <code>LOG_ERRORS</code> and <code>REUSE_TABLE</code> elements were set to <code>true</code>. Rows with formatting errors are logged internally when running in single row error isolation mode.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section10"></a>Examples</a></h2>
+<p>Run a load job as defined in <code>my_load.yml</code>:</p>
+<pre><code>gpload -f my_load.yml
+</code></pre>
+<p>Example load control file:</p>
+<pre><code>---
+VERSION: 1.0.0.1
+DATABASE: ops
+USER: gpadmin
+HOST: mdw-1
+PORT: 5432
+GPLOAD:
+   INPUT:
+    - SOURCE:
+         LOCAL_HOSTNAME:
+           - etl1-1
+           - etl1-2
+           - etl1-3
+           - etl1-4
+         PORT: 8081
+         FILE: 
+           - /var/load/data/*
+    - COLUMNS:
+           - name: text
+           - amount: float4
+           - category: text
+           - descr: text
+           - date: date
+    - FORMAT: text
+    - DELIMITER: '|'
+    - ERROR_LIMIT: 25
+    - LOG_ERRORS: true
+   OUTPUT:
+    - TABLE: payables.expenses
+    - MODE: INSERT
+   PRELOAD:
+    - REUSE_TABLES: true 
+   SQL:
+   - BEFORE: "INSERT INTO audit VALUES('start', current_timestamp)"
+   - AFTER: "INSERT INTO audit VALUES('end', current_timestamp)"
+</code></pre>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section11"></a>See Also</a></h2>
+<p><a href="gpfdist.html">gpfdist</a>, <a href="../../ref_guide/sql_commands/CREATE_EXTERNAL_TABLE.html">CREATE EXTERNAL TABLE</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../utility_guide/ref/gpinitsystem.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../utility_guide/ref/gplogfilter.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../utility_guide/ref/gpinitsystem.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../utility_guide/ref/gplogfilter.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

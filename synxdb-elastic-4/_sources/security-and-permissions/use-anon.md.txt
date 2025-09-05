@@ -1,0 +1,134 @@
+# Data Anonymization Using Anon
+
+Anon is an extension for {{ product_name }}, adapted from [PostgreSQL Anonymizer](https://postgresql-anonymizer.readthedocs.io/en/stable/). It provides data anonymization features for {{ product_name }} to prevent sensitive data leakage.
+
+Data anonymization, also known as data masking, is the process of removing sensitive information from data. This includes personal names, phone numbers, addresses, and ID numbers. Anon uses the `SECURITY LABEL` feature from PostgreSQL to define masking rules and applies them to specific database objects. For example, an original phone number `0609110911` becomes `06******11` after anonymization.
+
+## How it works
+
+Anon primarily uses PostgreSQL's `SECURITY LABEL` feature to store masking rules. For dynamic masking, when a role marked as a masked user accesses data, Anon rewrites the SQL query at the optimizer level, replacing sensitive data with masked data. This way, the database can return different data for different users, achieving data anonymization without creating extra views or modifying the original data.
+
+## Usage guide
+
+Anon provides two data anonymization methods: static and dynamic.
+
+### Declare masking rules
+
+The core concept of Anon is to provide "anonymization by design".
+
+Masking rules should be written by application developers who best understand the data model. Therefore, the rules must be implemented directly within the database schema. This allows data to be anonymized directly inside the PostgreSQL instance without external tools, thus limiting the risk of data exposure and leakage.
+
+Declare masking rules using `SECURITY LABEL`:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS anon CASCADE;
+SELECT anon.init();
+
+CREATE TABLE player( id SERIAL, name TEXT, points INT);
+
+SECURITY LABEL FOR anon ON COLUMN player.name
+IS 'MASKED WITH FUNCTION anon.fake_last_name()';
+
+SECURITY LABEL FOR anon ON COLUMN player.id
+IS 'MASKED WITH VALUE NULL';
+```
+
+### Static masking
+
+:::{warning}
+Anon also provides a static masking feature, but it is "dangerous" because it directly updates the database with masked data, causing the loss of original data. Therefore, it is not recommended to use this feature in a production environment.
+
+However, this feature is useful in testing scenarios, and many existing tests use static masking. The relevant functions are `anon.anonymize_database()`, `anon.anonymize_table()`, and `anon.anonymize_column()`.
+:::
+
+You can use the `anon.anonymize_database()` function to permanently remove Personally Identifiable Information (PII) from the database. This will destroy the original data, so use it with caution.
+
+For example:
+
+```sql
+-- Original data
+SELECT * FROM customer;
+ id  |   full_name      |   birth    |    employer   | zipcode | fk_shop
+-----+------------------+------------+---------------+---------+---------
+ 911 | Chuck Norris     | 1940-03-10 | Texas Rangers | 75001   | 12
+ 112 | David Hasselhoff | 1952-07-17 | Baywatch      | 90001   | 423
+
+-- Define masking rules
+SECURITY LABEL FOR anon ON COLUMN customer.full_name
+IS 'MASKED WITH FUNCTION anon.fake_first_name() || '' '' || anon.fake_last_name()';
+
+SECURITY LABEL FOR anon ON COLUMN customer.birth
+IS 'MASKED WITH FUNCTION anon.random_date_between(''1920-01-01''::DATE,now())';
+
+SECURITY LABEL FOR anon ON COLUMN customer.employer
+IS 'MASKED WITH FUNCTION anon.fake_company()';
+
+SECURITY LABEL FOR anon ON COLUMN customer.zipcode
+IS 'MASKED WITH FUNCTION anon.random_zip()';
+
+-- Performs static anonymization on the database.
+SELECT anon.anonymize_database();
+
+-- Anonymized data
+SELECT * FROM customer;
+ id  |     full_name     |   birth    |     employer     | zipcode | fk_shop
+-----+-------------------+------------+------------------+---------+---------
+ 911 | michel Duffus     | 1970-03-24 | Body Expressions | 63824   | 12
+ 112 | andromach Tulip   | 1921-03-24 | Dot Darcy        | 38199   | 423
+```
+
+You can also use the `anon.anonymize_table()` and `anon.anonymize_column()` functions to anonymize a subset of the database (a specified table or column).
+
+### Dynamic masking
+
+Dynamic masking refers to applying different masking rules for different users. For example, you can declare a role as "MASKED" to hide sensitive information from that role, while other user roles can still access the original data.
+
+Dynamic masking hides sensitive information for specified users. Let's walk through an example.
+
+1. Create and initialize the extension.
+
+    ```sql
+    CREATE EXTENSION IF NOT EXISTS pgcrypto;
+    CREATE EXTENSION IF NOT EXISTS anon CASCADE;
+    SELECT anon.start_dynamic_masking();
+    -- Because this example uses faking functions, you need to run anon.init().
+    SELECT anon.init();
+    ```
+
+2. Create a table for testing.
+
+    ```sql
+    CREATE TABLE people ( id TEXT, firstname TEXT, lastname TEXT, phone TEXT); 
+    INSERT INTO people VALUES ('T1','Sarah', 'Conor','0609110911');
+    ```
+
+3. Define masking rules for the columns of the `people` table.
+
+    ```sql
+    SECURITY LABEL FOR anon ON COLUMN people.lastname IS 'MASKED WITH FUNCTION anon.fake_last_name()';
+    SECURITY LABEL FOR anon ON COLUMN people.phone IS 'MASKED WITH FUNCTION anon.partial(phone,2,$$******$$,2)';
+    ```
+
+4. Create a new user and designate it as "MASKED".
+
+    ```sql
+    CREATE ROLE skynet LOGIN;
+    alter ROLE skynet with password '123456';
+    SECURITY LABEL FOR anon ON ROLE skynet IS 'MASKED';
+    ```
+
+5. Switch to the new user to view the anonymized data.
+
+    ```sql
+    \c - skynet
+    SELECT * FROM people;
+    
+    -- The test result is as follows:
+    dynamic_masking=> SELECT * FROM people;
+    id | firstname | lastname |   phone
+    ----+-----------+----------+------------
+    T1 | Sarah     | Watsica  | 06******11
+    (1 row)
+    ```
+
+As you can see, in addition to the general operations of creating and initializing the extension, the basic steps for dynamic masking are: define masking rules for the database object you want to anonymize (for example, a specific column), designate a user as "MASKED", and start dynamic masking. When this user logs in, the data they see will be anonymized.

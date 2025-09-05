@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Common Causes of Performance Issues - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="common-causes-of-performance-issues"><a class="header" href="#common-causes-of-performance-issues">Common Causes of Performance Issues</a></h1>
+<p>This section explains the troubleshooting processes for common performance issues and potential solutions to these issues.</p>
+<h2 id="identifying-hardware-and-segment-failures"><a class="header" href="#identifying-hardware-and-segment-failures"><a id="topic2"></a>Identifying Hardware and Segment Failures</a></h2>
+<p>The performance of SynxDB depends on the hardware and IT infrastructure on which it runs. SynxDB is comprised of several servers (hosts) acting together as one cohesive system (array); as a first step in diagnosing performance problems, ensure that all SynxDB segments are online. SynxDB’s performance will be as fast as the slowest host in the array. Problems with CPU utilization, memory management, I/O processing, or network load affect performance. Common hardware-related issues are:</p>
+<ul>
+<li>
+<p><strong>Disk Failure</strong> – Although a single disk failure should not dramatically affect database performance if you are using RAID, disk resynchronization does consume resources on the host with failed disks. The <code>gpcheckperf</code> utility can help identify segment hosts that have disk I/O issues.</p>
+</li>
+<li>
+<p><strong>Host Failure</strong> – When a host is offline, the segments on that host are nonoperational. This means other hosts in the array must perform twice their usual workload because they are running the primary segments and multiple mirrors. If mirrors are not enabled, service is interrupted. Service is temporarily interrupted to recover failed segments. The <code>gpstate</code> utility helps identify failed segments.</p>
+</li>
+<li>
+<p><strong>Network Failure</strong> – Failure of a network interface card, a switch, or DNS server can bring down segments. If host names or IP addresses cannot be resolved within your SynxDB array, these manifest themselves as interconnect errors in SynxDB. The <code>gpcheckperf</code> utility helps identify segment hosts that have network issues.</p>
+</li>
+<li>
+<p><strong>Disk Capacity</strong> – Disk capacity on your segment hosts should never exceed 70 percent full. SynxDB needs some free space for runtime processing. To reclaim disk space that deleted rows occupy, run <code>VACUUM</code> after loads or updates.The <em>gp_toolkit</em> administrative schema has many views for checking the size of distributed database objects.</p>
+<p>See the <em>SynxDB Reference Guide</em> for information about checking database object sizes and disk space.</p>
+</li>
+</ul>
+<h2 id="managing-workload"><a class="header" href="#managing-workload"><a id="topic3"></a>Managing Workload</a></h2>
+<p>A database system has a limited CPU capacity, memory, and disk I/O resources. When multiple workloads compete for access to these resources, database performance degrades. Resource management maximizes system throughput while meeting varied business requirements. SynxDB provides resource queues and resource groups to help you manage these system resources.</p>
+<p>Resource queues and resource groups limit resource usage and the total number of concurrent queries running in the particular queue or group. By assigning database roles to the appropriate queue or group, administrators can control concurrent user queries and prevent system overload. For more information about resource queues and resource groups, including selecting the appropriate scheme for your SynxDB environment, see <a href="wlmgmt.html">Managing Resources</a>.</p>
+<p>SynxDB administrators should run maintenance workloads such as data loads and <code>VACUUM ANALYZE</code> operations after business hours. Do not compete with database users for system resources; perform administrative tasks at low-usage times.</p>
+<h2 id="avoiding-contention"><a class="header" href="#avoiding-contention"><a id="topic4"></a>Avoiding Contention</a></h2>
+<p>Contention arises when multiple users or workloads try to use the system in a conflicting way; for example, contention occurs when two transactions try to update a table simultaneously. A transaction that seeks a table-level or row-level lock will wait indefinitely for conflicting locks to be released. Applications should not hold transactions open for long periods of time, for example, while waiting for user input.</p>
+<h2 id="maintaining-database-statistics"><a class="header" href="#maintaining-database-statistics"><a id="topic5"></a>Maintaining Database Statistics</a></h2>
+<p>SynxDB uses a cost-based query optimizer that relies on database statistics. Accurate statistics allow the query optimizer to better estimate the number of rows retrieved by a query to choose the most efficient query plan. Without database statistics, the query optimizer cannot estimate how many records will be returned. The optimizer does not assume it has sufficient memory to perform certain operations such as aggregations, so it takes the most conservative action and does these operations by reading and writing from disk. This is significantly slower than doing them in memory. ANALYZE collects statistics about the database that the query optimizer needs.</p>
+<blockquote>
+<p><strong>Note</strong> When running an SQL command with GPORCA, SynxDB issues a warning if the command performance could be improved by collecting statistics on a column or set of columns referenced by the command. The warning is issued on the command line and information is added to the SynxDB log file. For information about collecting statistics on table columns, see the ANALYZE command in the <em>SynxDB Reference Guide</em></p>
+</blockquote>
+<h3 id="identifying-statistics-problems-in-query-plans"><a class="header" href="#identifying-statistics-problems-in-query-plans"><a id="topic6"></a>Identifying Statistics Problems in Query Plans</a></h3>
+<p>Before you interpret a query plan for a query using EXPLAIN or <code>EXPLAIN ANALYZE</code>, familiarize yourself with the data to help identify possible statistics problems. Check the plan for the following indicators of inaccurate statistics:</p>
+<ul>
+<li><strong>Are the optimizer’s estimates close to reality?</strong> Run <code>EXPLAIN ANALYZE</code> and see if the number of rows the optimizer estimated is close to the number of rows the query operation returned.</li>
+<li><strong>Are selective predicates applied early in the plan?</strong> The most selective filters should be applied early in the plan so fewer rows move up the plan tree.</li>
+<li><strong>Is the optimizer choosing the best join order?</strong> When you have a query that joins multiple tables, make sure the optimizer chooses the most selective join order. Joins that eliminate the largest number of rows should be done earlier in the plan so fewer rows move up the plan tree.</li>
+</ul>
+<p>See <a href="query/topics/query-profiling.html">Query Profiling</a> for more information about reading query plans.</p>
+<h3 id="tuning-statistics-collection"><a class="header" href="#tuning-statistics-collection"><a id="topic7"></a>Tuning Statistics Collection</a></h3>
+<p>The following configuration parameters control the amount of data sampled for statistics collection:</p>
+<ul>
+<li><code>default_statistics_target</code></li>
+</ul>
+<p>These parameters control statistics sampling at the system level. It is better to sample only increased statistics for columns used most frequently in query predicates. You can adjust statistics for a particular column using the command:</p>
+<p><code>ALTER TABLE...SET STATISTICS</code></p>
+<p>For example:</p>
+<pre><code>ALTER TABLE sales ALTER COLUMN region SET STATISTICS 50;
+
+</code></pre>
+<p>This is equivalent to changing <code>default_statistics_target</code> for a particular column. Subsequent <code>ANALYZE</code> operations will then gather more statistics data for that column and produce better query plans as a result.</p>
+<h2 id="optimizing-data-distribution"><a class="header" href="#optimizing-data-distribution"><a id="topic8"></a>Optimizing Data Distribution</a></h2>
+<p>When you create a table in SynxDB, you must declare a distribution key that allows for even data distribution across all segments in the system. Because the segments work on a query in parallel, SynxDB will always be as fast as the slowest segment. If the data is unbalanced, the segments that have more data will return their results slower and therefore slow down the entire system.</p>
+<h2 id="optimizing-your-database-design"><a class="header" href="#optimizing-your-database-design"><a id="topic9"></a>Optimizing Your Database Design</a></h2>
+<p>Many performance issues can be improved by database design. Examine your database design and consider the following:</p>
+<ul>
+<li>Does the schema reflect the way the data is accessed?</li>
+<li>Can larger tables be broken down into partitions?</li>
+<li>Are you using the smallest data type possible to store column values?</li>
+<li>Are columns used to join tables of the same datatype?</li>
+<li>Are your indexes being used?</li>
+</ul>
+<h3 id="synxdb-maximum-limits"><a class="header" href="#synxdb-maximum-limits"><a id="topic10"></a>SynxDB Maximum Limits</a></h3>
+<p>To help optimize database design, review the maximum limits that SynxDB supports:</p>
+<div class="table-wrapper"><table><thead><tr><th>Dimension</th><th>Limit</th></tr></thead><tbody>
+<tr><td>Database Size</td><td>Unlimited</td></tr>
+<tr><td>Table Size</td><td>Unlimited, 128 TB per partition per segment</td></tr>
+<tr><td>Row Size</td><td>1.6 TB (1600 columns * 1 GB)</td></tr>
+<tr><td>Field Size</td><td>1 GB</td></tr>
+<tr><td>Rows per Table</td><td>281474976710656 (2^48)</td></tr>
+<tr><td>Columns per Table/View</td><td>1600</td></tr>
+<tr><td>Indexes per Table</td><td>Unlimited</td></tr>
+<tr><td>Columns per Index</td><td>32</td></tr>
+<tr><td>Table-level Constraints per Table</td><td>Unlimited</td></tr>
+<tr><td>Table Name Length</td><td>63 Bytes (Limited by <em>name</em> data type)</td></tr>
+</tbody></table>
+</div>
+<p>Dimensions listed as unlimited are not intrinsically limited by SynxDB. However, they are limited in practice to available disk space and memory/swap space. Performance may degrade when these values are unusually large.</p>
+<blockquote>
+<p><strong>Note</strong> There is a maximum limit on the number of objects (tables, indexes, and views, but not rows) that may exist at one time. This limit is 4294967296 (2^32).</p>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../admin_guide/distribution.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../admin_guide/wlmgmt_intro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../admin_guide/distribution.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../admin_guide/wlmgmt_intro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

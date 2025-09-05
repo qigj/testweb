@@ -1,0 +1,276 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Redistributing Tables - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="redistributing-tables"><a class="header" href="#redistributing-tables">Redistributing Tables</a></h1>
+<p>Redistribute tables to balance existing data over the newly expanded cluster.</p>
+<p>After creating an expansion schema, you can redistribute tables across the entire system with <a href="../../utility_guide/ref/gpexpand.html">gpexpand</a>. Plan to run this during low-use hours when the utility’s CPU usage and table locks have minimal impact on operations. Rank tables to redistribute the largest or most critical tables first.</p>
+<blockquote>
+<p><strong>Note</strong> When redistributing data, SynxDB must be running in production mode. SynxDB cannot be in restricted mode or in master mode. The <a href="../../utility_guide/ref/gpstart.html">gpstart</a> options <code>-R</code> or <code>-m</code> cannot be specified to start SynxDB.</p>
+</blockquote>
+<p>While table redistribution is underway, any new tables or partitions created are distributed across all segments exactly as they would be under normal operating conditions. Queries can access all segments, even before the relevant data is redistributed to tables on the new segments. The table or partition being redistributed is locked and unavailable for read or write operations. When its redistribution completes, normal operations resume.</p>
+<ul>
+<li><a href="#topic29">Ranking Tables for Redistribution</a></li>
+<li><a href="#topic30">Redistributing Tables Using gpexpand</a></li>
+<li><a href="#topic31">Monitoring Table Redistribution</a></li>
+</ul>
+<h2 id="ranking-tables-for-redistribution"><a class="header" href="#ranking-tables-for-redistribution"><a id="topic29"></a>Ranking Tables for Redistribution</a></h2>
+<p>For large systems, you can control the table redistribution order. Adjust tables’ <code>rank</code> values in the expansion schema to prioritize heavily-used tables and minimize performance impact. Available free disk space can affect table ranking; see <a href="expand-planning.html">Managing Redistribution in Large-Scale SynxDB Systems</a>.</p>
+<p>To rank tables for redistribution by updating <code>rank</code> values in <em><a href="../../ref_guide/system_catalogs/gp_expansion_tables.html">gpexpand.status_detail</a></em>, connect to SynxDB using <code>psql</code> or another supported client. Update <em>gpexpand.status_detail</em> with commands such as:</p>
+<pre><code>=&gt; UPDATE gpexpand.status_detail SET rank=10;
+
+=&gt; UPDATE gpexpand.status_detail SET rank=1 WHERE fq_name = 'public.lineitem';
+=&gt; UPDATE gpexpand.status_detail SET rank=2 WHERE fq_name = 'public.orders';
+</code></pre>
+<p>These commands lower the priority of all tables to <code>10</code> and then assign a rank of <code>1</code> to <code>lineitem</code> and a rank of <code>2</code> to <code>orders</code>. When table redistribution begins, <code>lineitem</code> is redistributed first, followed by <code>orders</code> and all other tables in <em>gpexpand.status_detail</em>. To exclude a table from redistribution, remove the table from the <em>gpexpand.status_detail</em> table.</p>
+<h2 id="redistributing-tables-using-gpexpand"><a class="header" href="#redistributing-tables-using-gpexpand"><a id="topic30"></a>Redistributing Tables Using gpexpand</a></h2>
+<h3 id="to-redistribute-tables-with-gpexpand"><a class="header" href="#to-redistribute-tables-with-gpexpand"><a id="no162282"></a>To redistribute tables with gpexpand</a></h3>
+<ol>
+<li>
+<p>Log in on the master host as the user who will run your SynxDB system, for example, <code>gpadmin</code>.</p>
+</li>
+<li>
+<p>Run the <code>gpexpand</code> utility. You can use the <code>-d</code> or <code>-e</code> option to define the expansion session time period. For example, to run the utility for up to 60 consecutive hours:</p>
+<pre><code>$ gpexpand -d 60:00:00
+</code></pre>
+<p>The utility redistributes tables until the last table in the schema completes or it reaches the specified duration or end time. <code>gpexpand</code> updates the status and time in <em><a href="../../ref_guide/system_catalogs/gp_expansion_status.html">gpexpand.status</a></em> when a session starts and finishes.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong> After completing table redistribution, run the <code>VACUUM ANALYZE</code> and <code>REINDEX</code>commands on the catalog tables to update table statistics, and rebuild indexes. See <a href="../managing/maintain.html">Routine Vacuum and Analyze</a> in the <em>Administration Guide</em> and <a href="../../ref_guide/sql_commands/VACUUM.html"><code>VACUUM</code></a> in the <em>Reference Guide</em>.</p>
+</blockquote>
+<h2 id="monitoring-table-redistribution"><a class="header" href="#monitoring-table-redistribution"><a id="topic31"></a>Monitoring Table Redistribution</a></h2>
+<p>During the table redistribution process you can query the expansion schema to view:</p>
+<ul>
+<li>a current progress summary, the estimated rate of table redistribution, and the estimated time to completion. Use <em><a href="../../ref_guide/system_catalogs/gpexpand_expansion_progress.html">gpexpand.expansion_progress</a></em>, as described in <a href="#topic32">Viewing Expansion Status</a>.</li>
+<li>per-table status information, using <em><a href="../../ref_guide/system_catalogs/gp_expansion_tables.html">gpexpand.status_detail</a></em>. See <a href="#topic33">Viewing Table Status</a>.</li>
+</ul>
+<p>See also <a href="expand-initialize.html">Monitoring the Cluster Expansion State</a> for information about monitoring the overall expansion progress with the <code>gpstate</code> utility.</p>
+<h3 id="viewing-expansion-status"><a class="header" href="#viewing-expansion-status"><a id="topic32"></a>Viewing Expansion Status</a></h3>
+<p>After the first table completes redistribution, <em>gpexpand.expansion_progress</em> calculates its estimates and refreshes them based on all tables’ redistribution rates. Calculations restart each time you start a table redistribution session with <code>gpexpand</code>. To monitor progress, connect to SynxDB using <code>psql</code> or another supported client; query <em>gpexpand.expansion_progress</em> with a command like the following:</p>
+<pre><code>=# SELECT * FROM gpexpand.expansion_progress;
+             name             |         value
+------------------------------+-----------------------
+ Bytes Left                   | 5534842880
+ Bytes Done                   | 142475264
+ Estimated Expansion Rate     | 680.75667095996092 MB/s
+ Estimated Time to Completion | 00:01:01.008047
+ Tables Expanded              | 4
+ Tables Left                  | 4
+(6 rows)
+</code></pre>
+<h3 id="viewing-table-status"><a class="header" href="#viewing-table-status"><a id="topic33"></a>Viewing Table Status</a></h3>
+<p>The table <em>gpexpand.status_detail</em> stores status, time of last update, and more facts about each table in the schema. To see a table’s status, connect to SynxDB using <code>psql</code> or another supported client and query <em>gpexpand.status_detail</em>:</p>
+<pre><code>=&gt; SELECT status, expansion_started, source_bytes FROM
+gpexpand.status_detail WHERE fq_name = 'public.sales';
+  status   |     expansion_started      | source_bytes
+-----------+----------------------------+--------------
+ COMPLETED | 2017-02-20 10:54:10.043869 |   4929748992
+(1 row)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/expand/expand-initialize.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/expand/expand-post.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/expand/expand-initialize.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/expand/expand-post.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

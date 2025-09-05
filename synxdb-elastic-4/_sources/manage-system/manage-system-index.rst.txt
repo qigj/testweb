@@ -1,0 +1,10 @@
+Manage System
+****************
+
+.. toctree::
+   :maxdepth: 2
+
+   configure-database-system
+   routine-maintenance
+   backup-and-restore/br-index
+   high-availability/ha-index

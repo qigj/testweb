@@ -1,0 +1,724 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Parameter Categories - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="parameter-categories"><a class="header" href="#parameter-categories">Parameter Categories</a></h1>
+<p>Configuration parameters affect categories of server behaviors, such as resource consumption, query tuning, and authentication. The following topics describe SynxDB configuration parameter categories.</p>
+<ul>
+<li><a href="#topic12">Connection and Authentication Parameters</a></li>
+<li><a href="#topic15">System Resource Consumption Parameters</a></li>
+<li><a href="#topic57">GPORCA Parameters</a></li>
+<li><a href="#topic21">Query Tuning Parameters</a></li>
+<li><a href="#topic29">Error Reporting and Logging Parameters</a></li>
+<li><a href="#topic33">System Monitoring Parameters</a></li>
+<li><a href="#topic37">Runtime Statistics Collection Parameters</a></li>
+<li><a href="#topic38">Automatic Statistics Collection Parameters</a></li>
+<li><a href="#topic39">Client Connection Default Parameters</a></li>
+<li><a href="#topic43">Lock Management Parameters</a></li>
+<li><a href="#topic44">Resource Management Parameters (Resource Queues)</a></li>
+<li><a href="#topic444">Resource Management Parameters (Resource Groups)</a></li>
+<li><a href="#topic45">External Table Parameters</a></li>
+<li><a href="#topic46">Database Table Parameters</a></li>
+<li><a href="#topic48">Past Version Compatibility Parameters</a></li>
+<li><a href="#topic49">SynxDB Array Configuration Parameters</a></li>
+<li><a href="#topic55">SynxDB Mirroring Parameters for Master and Segments</a></li>
+<li><a href="#topic56">SynxDB PL/Java Parameters</a></li>
+</ul>
+<h2 id="connection-and-authentication-parameters"><a class="header" href="#connection-and-authentication-parameters"><a id="topic12"></a>Connection and Authentication Parameters</a></h2>
+<p>These parameters control how clients connect and authenticate to SynxDB.</p>
+<h3 id="connection-parameters"><a class="header" href="#connection-parameters"><a id="topic13"></a>Connection Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#client_connection_check_interval">client_connection_check_interval</a></li>
+<li><a href="guc-list.html#gp_connection_send_timeout">gp_connection_send_timeout</a></li>
+<li><a href="guc-list.html#gp_dispatch_keepalives_count">gp_dispatch_keepalives_count</a></li>
+<li><a href="guc-list.html#gp_dispatch_keepalives_idle">gp_dispatch_keepalives_idle</a></li>
+<li><a href="guc-list.html#gp_dispatch_keepalives_interval">gp_dispatch_keepalives_interval</a></li>
+<li><a href="guc-list.html#gp_vmem_idle_resource_timeout">gp_vmem_idle_resource_timeout</a></li>
+<li><a href="guc-list.html#listen_addresses">listen_addresses</a></li>
+<li><a href="guc-list.html#max_connections">max_connections</a></li>
+<li><a href="guc-list.html#max_prepared_transactions">max_prepared_transactions</a></li>
+<li><a href="guc-list.html#superuser_reserved_connections">superuser_reserved_connections</a></li>
+<li><a href="guc-list.html#tcp_keepalives_count">tcp_keepalives_count</a></li>
+<li><a href="guc-list.html#tcp_keepalives_idle">tcp_keepalives_idle</a></li>
+<li><a href="guc-list.html#tcp_keepalives_interval">tcp_keepalives_interval</a></li>
+<li><a href="guc-list.html#unix_socket_directories">unix_socket_directories</a></li>
+<li><a href="guc-list.html#unix_socket_group">unix_socket_group</a></li>
+<li><a href="guc-list.html#unix_socket_permissions">unix_socket_permissions</a></li>
+</ul>
+<h3 id="security-and-authentication-parameters"><a class="header" href="#security-and-authentication-parameters"><a id="topic14"></a>Security and Authentication Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#authentication_timeout">authentication_timeout</a></li>
+<li><a href="guc-list.html#db_user_namespace">db_user_namespace</a></li>
+<li><a href="guc-list.html#krb_caseins_users">krb_caseins_users</a></li>
+<li><a href="guc-list.html#krb_server_keyfile">krb_server_keyfile</a></li>
+<li><a href="guc-list.html#password_encryption">password_encryption</a></li>
+<li><a href="guc-list.html#password_hash_algorithm">password_hash_algorithm</a></li>
+<li><a href="guc-list.html#ssl">ssl</a></li>
+<li><a href="guc-list.html#ssl_ciphers">ssl_ciphers</a></li>
+</ul>
+<h2 id="system-resource-consumption-parameters"><a class="header" href="#system-resource-consumption-parameters"><a id="topic15"></a>System Resource Consumption Parameters</a></h2>
+<p>These parameters set the limits for system resources consumed by SynxDB.</p>
+<h3 id="memory-consumption-parameters"><a class="header" href="#memory-consumption-parameters"><a id="topic16"></a>Memory Consumption Parameters</a></h3>
+<p>These parameters control system memory usage.</p>
+<ul>
+<li><a href="guc-list.html#gp_vmem_idle_resource_timeout">gp_vmem_idle_resource_timeout</a></li>
+<li><a href="guc-list.html#gp_resource_group_memory_limit">gp_resource_group_memory_limit</a> (resource group-based resource management)</li>
+<li><a href="guc-list.html#gp_vmem_protect_limit">gp_vmem_protect_limit</a> (resource queue-based resource management)</li>
+<li><a href="guc-list.html#gp_vmem_protect_segworker_cache_limit">gp_vmem_protect_segworker_cache_limit</a></li>
+<li><a href="guc-list.html#gp_workfile_limit_files_per_query">gp_workfile_limit_files_per_query</a></li>
+<li><a href="guc-list.html#gp_workfile_limit_per_query">gp_workfile_limit_per_query</a></li>
+<li><a href="guc-list.html#gp_workfile_limit_per_segment">gp_workfile_limit_per_segment</a></li>
+<li><a href="guc-list.html#maintenance_work_mem">maintenance_work_mem</a></li>
+<li><a href="guc-list.html#max_stack_depth">max_stack_depth</a></li>
+<li><a href="guc-list.html#shared_buffers">shared_buffers</a></li>
+<li><a href="guc-list.html#temp_buffers">temp_buffers</a></li>
+<li><a href="guc-list.html#work_mem">work_mem</a></li>
+</ul>
+<h3 id="os-resource-parameters"><a class="header" href="#os-resource-parameters"><a id="topic18"></a>OS Resource Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#max_files_per_process">max_files_per_process</a></li>
+<li><a href="guc-list.html#shared_preload_libraries">shared_preload_libraries</a></li>
+</ul>
+<h3 id="cost-based-vacuum-delay-parameters"><a class="header" href="#cost-based-vacuum-delay-parameters"><a id="topic19"></a>Cost-Based Vacuum Delay Parameters</a></h3>
+<blockquote>
+<p><strong>Caution</strong> Do not use cost-based vacuum delay because it runs asynchronously among the segment instances. The vacuum cost limit and delay is invoked at the segment level without taking into account the state of the entire SynxDB array</p>
+</blockquote>
+<p>You can configure the execution cost of <code>VACUUM</code> and <code>ANALYZE</code> commands to reduce the I/O impact on concurrent database activity. When the accumulated cost of I/O operations reaches the limit, the process performing the operation sleeps for a while, Then resets the counter and continues execution</p>
+<ul>
+<li><a href="guc-list.html#vacuum_cost_delay">vacuum_cost_delay</a></li>
+<li><a href="guc-list.html#vacuum_cost_limit">vacuum_cost_limit</a></li>
+<li><a href="guc-list.html#vacuum_cost_page_dirty">vacuum_cost_page_dirty</a></li>
+<li><a href="guc-list.html#vacuum_cost_page_hit">vacuum_cost_page_hit</a></li>
+<li><a href="guc-list.html#vacuum_cost_page_miss">vacuum_cost_page_miss</a></li>
+</ul>
+<h3 id="transaction-id-management-parameters"><a class="header" href="#transaction-id-management-parameters"><a id="topic20"></a>Transaction ID Management Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#xid_stop_limit">xid_stop_limit</a></li>
+<li><a href="guc-list.html#xid_warn_limit">xid_warn_limit</a></li>
+</ul>
+<h3 id="other-parameters"><a class="header" href="#other-parameters"><a id="topic20other"></a>Other Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#gp_max_parallel_cursors">gp_max_parallel_cursors</a></li>
+</ul>
+<h2 id="gporca-parameters"><a class="header" href="#gporca-parameters"><a id="topic57"></a>GPORCA Parameters</a></h2>
+<p>These parameters control the usage of GPORCA by SynxDB. For information about GPORCA, see <a href="../../admin_guide/query/topics/query-piv-optimizer.html">About GPORCA</a> in the <em>SynxDB Administrator Guide</em>.</p>
+<ul>
+<li><a href="guc-list.html#gp_enable_relsize_collection">gp_enable_relsize_collection</a></li>
+<li><a href="guc-list.html#optimizer">optimizer</a></li>
+<li><a href="guc-list.html#optimizer_analyze_root_partition">optimizer_analyze_root_partition</a></li>
+<li><a href="guc-list.html#optimizer_array_expansion_threshold">optimizer_array_expansion_threshold</a></li>
+<li><a href="guc-list.html#optimizer_control">optimizer_control</a></li>
+<li><a href="guc-list.html#optimizer_cost_model">optimizer_cost_model</a></li>
+<li><a href="guc-list.html#optimizer_cte_inlining_bound">optimizer_cte_inlining_bound</a></li>
+<li><a href="guc-list.html#optimizer_dpe_stats">optimizer_dpe_stats</a></li>
+<li><a href="guc-list.html#optimizer_discard_redistribute_hashjoin">optimizer_discard_redistribute_hashjoin</a></li>
+<li><a href="guc-list.html#optimizer_enable_associativity">optimizer_enable_associativity</a></li>
+<li><a href="guc-list.html#optimizer_enable_dml">optimizer_enable_dml</a></li>
+<li><a href="guc-list.html#optimizer_enable_indexonlyscan">optimizer_enable_indexonlyscan</a></li>
+<li><a href="guc-list.html#optimizer_enable_master_only_queries">optimizer_enable_master_only_queries</a></li>
+<li><a href="guc-list.html#optimizer_enable_multiple_distinct_aggs">optimizer_enable_multiple_distinct_aggs</a></li>
+<li><a href="guc-list.html#optimizer_enable_orderedagg">optimizer_enable_orderedagg</a></li>
+<li><a href="guc-list.html#optimizer_enable_replicated_table">optimizer_enable_replicated_table</a></li>
+<li><a href="guc-list.html#optimizer_force_agg_skew_avoidance">optimizer_force_agg_skew_avoidance</a></li>
+<li><a href="guc-list.html#optimizer_force_comprehensive_join_implementation">optimizer_force_comprehensive_join_implementation</a></li>
+<li><a href="guc-list.html#optimizer_force_multistage_agg">optimizer_force_multistage_agg</a></li>
+<li><a href="guc-list.html#optimizer_force_three_stage_scalar_dqa">optimizer_force_three_stage_scalar_dqa</a></li>
+<li><a href="guc-list.html#optimizer_join_arity_for_associativity_commutativity">optimizer_join_arity_for_associativity_commutativity</a></li>
+<li><a href="guc-list.html#optimizer_join_order">optimizer_join_order</a></li>
+<li><a href="guc-list.html#optimizer_join_order_threshold">optimizer_join_order_threshold</a></li>
+<li><a href="guc-list.html#optimizer_mdcache_size">optimizer_mdcache_size</a></li>
+<li><a href="guc-list.html#optimizer_metadata_caching">optimizer_metadata_caching</a></li>
+<li><a href="guc-list.html#optimizer_parallel_union">optimizer_parallel_union</a></li>
+<li><a href="guc-list.html#optimizer_penalize_broadcast_threshold">optimizer_penalize_broadcast_threshold</a></li>
+<li><a href="guc-list.html#optimizer_penalize_skew">optimizer_penalize_skew</a></li>
+<li><a href="guc-list.html#optimizer_print_missing_stats">optimizer_print_missing_stats</a></li>
+<li><a href="guc-list.html#optimizer_print_optimization_stats">optimizer_print_optimization_stats</a></li>
+<li><a href="guc-list.html#optimizer_skew_factor">optimizer_skew_factor</a></li>
+<li><a href="guc-list.html#optimizer_sort_factor">optimizer_sort_factor</a></li>
+<li><a href="guc-list.html#optimizer_use_gpdb_allocators">optimizer_use_gpdb_allocators</a></li>
+<li><a href="guc-list.html#optimizer_xform_bind_threshold">optimizer_xform_bind_threshold</a></li>
+</ul>
+<h2 id="query-tuning-parameters"><a class="header" href="#query-tuning-parameters"><a id="topic21"></a>Query Tuning Parameters</a></h2>
+<p>These parameters control aspects of SQL query processing such as query operators and operator settings and statistics sampling.</p>
+<h3 id="postgres-planner-control-parameters"><a class="header" href="#postgres-planner-control-parameters"><a id="topic22"></a>Postgres Planner Control Parameters</a></h3>
+<p>The following parameters control the types of plan operations the Postgres Planner can use. Enable or deactivate plan operations to force the Postgres Planner to choose a different plan. This is useful for testing and comparing query performance using different plan types.</p>
+<ul>
+<li><a href="guc-list.html#enable_bitmapscan">enable_bitmapscan</a></li>
+<li><a href="guc-list.html#enable_groupagg">enable_groupagg</a></li>
+<li><a href="guc-list.html#enable_hashagg">enable_hashagg</a></li>
+<li><a href="guc-list.html#enable_hashjoin">enable_hashjoin</a></li>
+<li><a href="guc-list.html#enable_indexscan">enable_indexscan</a></li>
+<li><a href="guc-list.html#enable_mergejoin">enable_mergejoin</a></li>
+<li><a href="guc-list.html#enable_nestloop">enable_nestloop</a></li>
+<li><a href="guc-list.html#enable_seqscan">enable_seqscan</a></li>
+<li><a href="guc-list.html#enable_sort">enable_sort</a></li>
+<li><a href="guc-list.html#enable_tidscan">enable_tidscan</a></li>
+<li><a href="guc-list.html#gp_eager_two_phase_agg">gp_eager_two_phase_agg</a></li>
+<li><a href="guc-list.html#gp_enable_agg_distinct">gp_enable_agg_distinct</a></li>
+<li><a href="guc-list.html#gp_enable_agg_distinct_pruning">gp_enable_agg_distinct_pruning</a></li>
+<li><a href="guc-list.html#gp_enable_direct_dispatch">gp_enable_direct_dispatch</a></li>
+<li><a href="guc-list.html#gp_enable_fast_sri">gp_enable_fast_sri</a></li>
+<li><a href="guc-list.html#gp_enable_groupext_distinct_gather">gp_enable_groupext_distinct_gather</a></li>
+<li><a href="guc-list.html#gp_enable_groupext_distinct_pruning">gp_enable_groupext_distinct_pruning</a></li>
+<li><a href="guc-list.html#gp_enable_multiphase_agg">gp_enable_multiphase_agg</a></li>
+<li><a href="guc-list.html#gp_enable_predicate_propagation">gp_enable_predicate_propagation</a></li>
+<li><a href="guc-list.html#gp_enable_preunique">gp_enable_preunique</a></li>
+<li><a href="guc-list.html#gp_enable_relsize_collection">gp_enable_relsize_collection</a></li>
+<li><a href="guc-list.html#gp_enable_sort_distinct">gp_enable_sort_distinct</a></li>
+<li><a href="guc-list.html#gp_enable_sort_limit">gp_enable_sort_limit</a></li>
+<li><a href="guc-list.html#gp_keep_partition_children_locks">gp_keep_partition_children_locks</a></li>
+</ul>
+<h3 id="postgres-planner-costing-parameters"><a class="header" href="#postgres-planner-costing-parameters"><a id="topic23"></a>Postgres Planner Costing Parameters</a></h3>
+<blockquote>
+<p><strong>Caution</strong> Do not adjust these query costing parameters. They are tuned to reflect SynxDB hardware configurations and typical workloads. All of these parameters are related. Changing one without changing the others can have adverse affects on performance.</p>
+</blockquote>
+<ul>
+<li><a href="guc-list.html#cpu_index_tuple_cost">cpu_index_tuple_cost</a></li>
+<li><a href="guc-list.html#cpu_operator_cost">cpu_operator_cost</a></li>
+<li><a href="guc-list.html#cpu_tuple_cost">cpu_tuple_cost</a></li>
+<li><a href="guc-list.html#cursor_tuple_fraction">cursor_tuple_fraction</a></li>
+<li><a href="guc-list.html#effective_cache_size">effective_cache_size</a></li>
+<li><a href="guc-list.html#gp_motion_cost_per_row">gp_motion_cost_per_row</a></li>
+<li><a href="guc-list.html#gp_segments_for_planner">gp_segments_for_planner</a></li>
+<li><a href="guc-list.html#random_page_cost">random_page_cost</a></li>
+<li><a href="guc-list.html#seq_page_cost">seq_page_cost</a></li>
+</ul>
+<h3 id="database-statistics-sampling-parameters"><a class="header" href="#database-statistics-sampling-parameters"><a id="topic24"></a>Database Statistics Sampling Parameters</a></h3>
+<p>These parameters adjust the amount of data sampled by an <code>ANALYZE</code> operation. Adjusting these parameters affects statistics collection system-wide. You can configure statistics collection on particular tables and columns by using the <code>ALTER TABLE SET STATISTICS</code> clause.</p>
+<ul>
+<li><a href="guc-list.html#default_statistics_target">default_statistics_target</a></li>
+</ul>
+<h3 id="sort-operator-configuration-parameters"><a class="header" href="#sort-operator-configuration-parameters"><a id="topic25"></a>Sort Operator Configuration Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#gp_enable_sort_distinct">gp_enable_sort_distinct</a></li>
+<li><a href="guc-list.html#gp_enable_sort_limit">gp_enable_sort_limit</a></li>
+</ul>
+<h3 id="aggregate-operator-configuration-parameters"><a class="header" href="#aggregate-operator-configuration-parameters"><a id="topic26"></a>Aggregate Operator Configuration Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#gp_enable_agg_distinct">gp_enable_agg_distinct</a></li>
+<li><a href="guc-list.html#gp_enable_agg_distinct_pruning">gp_enable_agg_distinct_pruning</a></li>
+<li><a href="guc-list.html#gp_enable_multiphase_agg">gp_enable_multiphase_agg</a></li>
+<li><a href="guc-list.html#gp_enable_preunique">gp_enable_preunique</a></li>
+<li><a href="guc-list.html#gp_enable_groupext_distinct_gather">gp_enable_groupext_distinct_gather</a></li>
+<li><a href="guc-list.html#gp_enable_groupext_distinct_pruning">gp_enable_groupext_distinct_pruning</a></li>
+<li><a href="guc-list.html#gp_workfile_compression">gp_workfile_compression</a></li>
+</ul>
+<h3 id="join-operator-configuration-parameters"><a class="header" href="#join-operator-configuration-parameters"><a id="topic27"></a>Join Operator Configuration Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#join_collapse_limit">join_collapse_limit</a></li>
+<li><a href="guc-list.html#gp_adjust_selectivity_for_outerjoins">gp_adjust_selectivity_for_outerjoins</a></li>
+<li><a href="guc-list.html#gp_hashjoin_tuples_per_bucket">gp_hashjoin_tuples_per_bucket</a></li>
+<li><a href="guc-list.html#gp_statistics_use_fkeys">gp_statistics_use_fkeys</a></li>
+<li><a href="guc-list.html#gp_workfile_compression">gp_workfile_compression</a></li>
+</ul>
+<h3 id="other-postgres-planner-configuration-parameters"><a class="header" href="#other-postgres-planner-configuration-parameters"><a id="topic28"></a>Other Postgres Planner Configuration Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#from_collapse_limit">from_collapse_limit</a></li>
+<li><a href="guc-list.html#gp_enable_predicate_propagation">gp_enable_predicate_propagation</a></li>
+<li><a href="guc-list.html#gp_max_plan_size">gp_max_plan_size</a></li>
+<li><a href="guc-list.html#gp_statistics_pullup_from_child_partition">gp_statistics_pullup_from_child_partition</a></li>
+</ul>
+<h3 id="query-plan-execution"><a class="header" href="#query-plan-execution"><a id="topic_zd5_p32_mdb"></a>Query Plan Execution</a></h3>
+<p>Control the query plan execution.</p>
+<ul>
+<li><a href="guc-list.html#gp_max_slices">gp_max_slices</a></li>
+<li><a href="guc-list.html#plan_cache_mode">plan_cache_mode</a></li>
+</ul>
+<h2 id="error-reporting-and-logging-parameters"><a class="header" href="#error-reporting-and-logging-parameters"><a id="topic29"></a>Error Reporting and Logging Parameters</a></h2>
+<p>These configuration parameters control SynxDB logging.</p>
+<h3 id="log-rotation"><a class="header" href="#log-rotation"><a id="topic30"></a>Log Rotation</a></h3>
+<ul>
+<li><a href="guc-list.html#log_rotation_age">log_rotation_age</a></li>
+<li><a href="guc-list.html#log_rotation_size">log_rotation_size</a></li>
+<li><a href="guc-list.html#log_truncate_on_rotation">log_truncate_on_rotation</a></li>
+</ul>
+<h3 id="when-to-log"><a class="header" href="#when-to-log"><a id="topic31"></a>When to Log</a></h3>
+<ul>
+<li><a href="guc-list.html#client_min_messages">client_min_messages</a></li>
+<li><a href="guc-list.html#gp_interconnect_debug_retry_interval">gp_interconnect_debug_retry_interval</a></li>
+<li><a href="guc-list.html#log_error_verbosity">log_error_verbosity</a></li>
+<li><a href="guc-list.html#log_file_mode">log_file_mode</a></li>
+<li><a href="guc-list.html#log_min_duration_statement">log_min_duration_statement</a></li>
+<li><a href="guc-list.html#log_min_error_statement">log_min_error_statement</a></li>
+<li><a href="guc-list.html#log_min_messages">log_min_messages</a></li>
+<li><a href="guc-list.html#optimizer_minidump">optimizer_minidump</a></li>
+</ul>
+<h3 id="what-to-log"><a class="header" href="#what-to-log"><a id="topic32"></a>What to Log</a></h3>
+<ul>
+<li><a href="guc-list.html#debug_pretty_print">debug_pretty_print</a></li>
+<li><a href="guc-list.html#debug_print_parse">debug_print_parse</a></li>
+<li><a href="guc-list.html#debug_print_plan">debug_print_plan</a></li>
+<li><a href="guc-list.html#debug_print_prelim_plan">debug_print_prelim_plan</a></li>
+<li><a href="guc-list.html#debug_print_rewritten">debug_print_rewritten</a></li>
+<li><a href="guc-list.html#debug_print_slice_table">debug_print_slice_table</a></li>
+<li><a href="guc-list.html#gp_log_format">gp_log_format</a></li>
+<li><a href="guc-list.html#gp_log_interconnect">gp_log_interconnect</a></li>
+<li><a href="guc-list.html#gp_log_resqueue_priority_sleep_time">gp_log_resqueue_priority_sleep_time</a></li>
+<li><a href="guc-list.html#log_autostats">log_autostats</a></li>
+<li><a href="guc-list.html#log_connections">log_connections</a></li>
+<li><a href="guc-list.html#log_disconnections">log_disconnections</a></li>
+<li><a href="guc-list.html#log_dispatch_stats">log_dispatch_stats</a></li>
+<li><a href="guc-list.html#log_duration">log_duration</a></li>
+<li><a href="guc-list.html#log_executor_stats">log_executor_stats</a></li>
+<li><a href="guc-list.html#log_hostname">log_hostname</a></li>
+<li><a href="guc-list.html#gp_log_endpoints">gp_log_endpoints</a></li>
+<li><a href="guc-list.html#gp_log_interconnect">gp_log_interconnect</a></li>
+<li><a href="guc-list.html#gp_print_create_gang_time">gp_print_create_gang_time</a></li>
+<li><a href="guc-list.html#log_parser_stats">log_parser_stats</a></li>
+<li><a href="guc-list.html#log_planner_stats">log_planner_stats</a></li>
+<li><a href="guc-list.html#log_statement">log_statement</a></li>
+<li><a href="guc-list.html#log_statement_stats">log_statement_stats</a></li>
+<li><a href="guc-list.html#log_timezone">log_timezone</a></li>
+<li><a href="guc-list.html#gp_debug_linger">gp_debug_linger</a></li>
+<li><a href="guc-list.html#gp_reraise_signal">gp_reraise_signal</a></li>
+</ul>
+<h2 id="system-monitoring-parameters"><a class="header" href="#system-monitoring-parameters"><a id="topic33"></a>System Monitoring Parameters</a></h2>
+<p>These configuration parameters control SynxDB data collection and notifications related to database monitoring.</p>
+<h3 id="synxdb-performance-database"><a class="header" href="#synxdb-performance-database"><a id="topic36"></a>SynxDB Performance Database</a></h3>
+<p>The following parameters configure the data collection agents that populate the <code>gpperfmon</code> database.</p>
+<ul>
+<li><a href="guc-list.html#gp_enable_gpperfmon">gp_enable_gpperfmon</a></li>
+<li><a href="guc-list.html#gp_gpperfmon_send_interval">gp_gpperfmon_send_interval</a></li>
+<li><a href="guc-list.html#gpperfmon_log_alert_level">gpperfmon_log_alert_level</a></li>
+<li><a href="guc-list.html#gpperfmon_port">gpperfmon_port</a></li>
+</ul>
+<h3 id="query-metrics-collection-parameters"><a class="header" href="#query-metrics-collection-parameters"><a id="query-metrics"></a>Query Metrics Collection Parameters</a></h3>
+<p>These parameters enable and configure query metrics collection. When enabled, SynxDB saves metrics to shared memory during query execution.</p>
+<ul>
+<li><a href="guc-list.html#gp_enable_query_metrics">gp_enable_query_metrics</a></li>
+<li><a href="guc-list.html#gp_instrument_shmem_size">gp_instrument_shmem_size</a></li>
+</ul>
+<h2 id="runtime-statistics-collection-parameters"><a class="header" href="#runtime-statistics-collection-parameters"><a id="topic37"></a>Runtime Statistics Collection Parameters</a></h2>
+<p>These parameters control the server statistics collection feature. When statistics collection is enabled, you can access the statistics data using the <em>pg_stat</em> family of system catalog views.</p>
+<ul>
+<li><a href="guc-list.html#stats_queue_level">stats_queue_level</a></li>
+<li><a href="guc-list.html#track_activities">track_activities</a></li>
+<li><a href="guc-list.html#track_counts">track_counts</a></li>
+<li><a href="guc-list.html#update_process_title">update_process_title</a></li>
+</ul>
+<h2 id="automatic-statistics-collection-parameters"><a class="header" href="#automatic-statistics-collection-parameters"><a id="topic38"></a>Automatic Statistics Collection Parameters</a></h2>
+<p>When automatic statistics collection is enabled, you can run <code>ANALYZE</code> automatically in the same transaction as an <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>COPY</code> or <code>CREATE TABLE...AS SELECT</code> statement when a certain threshold of rows is affected (<code>on_change</code>), or when a newly generated table has no statistics (<code>on_no_stats</code>). To enable this feature, set the following server configuration parameters in your SynxDB master <code>postgresql.conf</code> file and restart SynxDB:</p>
+<ul>
+<li><a href="guc-list.html#gp_autostats_allow_nonowner">gp_autostats_allow_nonowner</a></li>
+<li><a href="guc-list.html#gp_autostats_mode">gp_autostats_mode</a></li>
+<li><a href="guc-list.html#gp_autostats_mode_in_functions">gp_autostats_mode_in_functions</a></li>
+<li><a href="guc-list.html#gp_autostats_on_change_threshold">gp_autostats_on_change_threshold</a></li>
+<li><a href="guc-list.html#log_autostats">log_autostats</a></li>
+</ul>
+<blockquote>
+<p><strong>Caution</strong> Depending on the specific nature of your database operations, automatic statistics collection can have a negative performance impact. Carefully evaluate whether the default setting of <code>on_no_stats</code> is appropriate for your system.</p>
+</blockquote>
+<h2 id="client-connection-default-parameters"><a class="header" href="#client-connection-default-parameters"><a id="topic39"></a>Client Connection Default Parameters</a></h2>
+<p>These configuration parameters set defaults that are used for client connections.</p>
+<h3 id="statement-behavior-parameters"><a class="header" href="#statement-behavior-parameters"><a id="topic40"></a>Statement Behavior Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#check_function_bodies">check_function_bodies</a></li>
+<li><a href="guc-list.html#default_tablespace">default_tablespace</a></li>
+<li><a href="guc-list.html#default_transaction_deferrable">default_transaction_deferrable</a></li>
+<li><a href="guc-list.html#default_transaction_isolation">default_transaction_isolation</a></li>
+<li><a href="guc-list.html#default_transaction_read_only">default_transaction_read_only</a></li>
+<li><a href="guc-list.html#search_path">search_path</a></li>
+<li><a href="guc-list.html#statement_timeout">statement_timeout</a></li>
+<li><a href="guc-list.html#temp_tablespaces">temp_tablespaces</a></li>
+<li><a href="guc-list.html#vacuum_freeze_min_age">vacuum_freeze_min_age</a></li>
+</ul>
+<h3 id="locale-and-formatting-parameters"><a class="header" href="#locale-and-formatting-parameters"><a id="topic41"></a>Locale and Formatting Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#client_encoding">client_encoding</a></li>
+<li><a href="guc-list.html#DateStyle">DateStyle</a></li>
+<li><a href="guc-list.html#extra_float_digits">extra_float_digits</a></li>
+<li><a href="guc-list.html#IntervalStyle">IntervalStyle</a></li>
+<li><a href="guc-list.html#lc_collate">lc_collate</a></li>
+<li><a href="guc-list.html#lc_ctype">lc_ctype</a></li>
+<li><a href="guc-list.html#lc_messages">lc_messages</a></li>
+<li><a href="guc-list.html#lc_monetary">lc_monetary</a></li>
+<li><a href="guc-list.html#lc_numeric">lc_numeric</a></li>
+<li><a href="guc-list.html#lc_time">lc_time</a></li>
+<li><a href="guc-list.html#TimeZone">TimeZone</a></li>
+</ul>
+<h3 id="other-client-default-parameters"><a class="header" href="#other-client-default-parameters"><a id="topic42"></a>Other Client Default Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#dynamic_library_path">dynamic_library_path</a></li>
+<li><a href="guc-list.html#explain_pretty_print">explain_pretty_print</a></li>
+<li><a href="guc-list.html#local_preload_libraries">local_preload_libraries</a></li>
+</ul>
+<h2 id="lock-management-parameters"><a class="header" href="#lock-management-parameters"><a id="topic43"></a>Lock Management Parameters</a></h2>
+<p>These configuration parameters set limits for locks and deadlocks.</p>
+<ul>
+<li><a href="guc-list.html#deadlock_timeout">deadlock_timeout</a></li>
+<li>[gp_enable global_deadlock_detector](guc-list.html#gp_enable global_deadlock_detector)</li>
+<li><a href="guc-list.html#gp_global_deadlock_detector_period">gp_global_deadlock_detector_period</a></li>
+<li><a href="guc-list.html#lock_timeout">lock_timeout</a></li>
+<li><a href="guc-list.html#max_locks_per_transaction">max_locks_per_transaction</a></li>
+</ul>
+<h2 id="resource-management-parameters-resource-queues"><a class="header" href="#resource-management-parameters-resource-queues"><a id="topic44"></a>Resource Management Parameters (Resource Queues)</a></h2>
+<p>The following configuration parameters configure the SynxDB resource management feature (resource queues), query prioritization, memory utilization and concurrency control.</p>
+<ul>
+<li><a href="guc-list.html#gp_log_resqueue_priority_sleep_time">gp_log_resqueue_priority_sleep_time</a></li>
+<li><a href="guc-list.html#gp_resqueue_memory_policy">gp_resqueue_memory_policy</a></li>
+<li><a href="guc-list.html#gp_resqueue_priority">gp_resqueue_priority</a></li>
+<li><a href="guc-list.html#gp_resqueue_priority_cpucores_per_segment">gp_resqueue_priority_cpucores_per_segment</a></li>
+<li><a href="guc-list.html#gp_resqueue_priority_sweeper_interval">gp_resqueue_priority_sweeper_interval</a></li>
+<li><a href="guc-list.html#gp_vmem_idle_resource_timeout">gp_vmem_idle_resource_timeout</a></li>
+<li><a href="guc-list.html#gp_vmem_protect_limit">gp_vmem_protect_limit</a></li>
+<li><a href="guc-list.html#gp_vmem_protect_segworker_cache_limit">gp_vmem_protect_segworker_cache_limit</a></li>
+<li><a href="guc-list.html#max_resource_queues">max_resource_queues</a></li>
+<li><a href="guc-list.html#max_resource_portals_per_transaction">max_resource_portals_per_transaction</a></li>
+<li><a href="guc-list.html#max_statement_mem">max_statement_mem</a></li>
+<li><a href="guc-list.html#resource_cleanup_gangs_on_wait">resource_cleanup_gangs_on_wait</a></li>
+<li><a href="guc-list.html#resource_select_only">resource_select_only</a></li>
+<li><a href="guc-list.html#runaway_detector_activation_percent">runaway_detector_activation_percent</a></li>
+<li><a href="guc-list.html#statement_mem">statement_mem</a></li>
+<li><a href="guc-list.html#stats_queue_level">stats_queue_level</a></li>
+<li><a href="guc-list.html#vmem_process_interrupt">vmem_process_interrupt</a></li>
+</ul>
+<h2 id="resource-management-parameters-resource-groups"><a class="header" href="#resource-management-parameters-resource-groups"><a id="topic444"></a>Resource Management Parameters (Resource Groups)</a></h2>
+<p>The following parameters configure the SynxDB resource group workload management feature.</p>
+<ul>
+<li><a href="guc-list.html#gp_count_host_segments_using_address">gp_count_host_segments_using_address</a></li>
+<li><a href="guc-list.html#gp_resgroup_memory_policy">gp_resgroup_memory_policy</a></li>
+<li><a href="guc-list.html#gp_resource_group_bypass">gp_resource_group_bypass</a></li>
+<li><a href="guc-list.html#gp_resource_group_bypass_catalog_query">gp_resource_group_bypass_catalog_query</a></li>
+<li><a href="guc-list.html#gp_resource_group_cpu_ceiling_enforcement">gp_resource_group_cpu_ceiling_enforcement</a></li>
+<li><a href="guc-list.html#gp_resource_group_cpu_limit">gp_resource_group_cpu_limit</a></li>
+<li><a href="guc-list.html#gp_resource_group_cpu_priority">gp_resource_group_cpu_priority</a></li>
+<li><a href="guc-list.html#gp_resource_group_enable_recalculate_query_mem">gp_resource_group_enable_recalculate_query_mem</a></li>
+<li><a href="guc-list.html#gp_resource_group_memory_limit">gp_resource_group_memory_limit</a></li>
+<li><a href="guc-list.html#gp_resource_group_queuing_timeout">gp_resource_group_queuing_timeout</a></li>
+<li><a href="guc-list.html#gp_resource_manager">gp_resource_manager</a></li>
+<li><a href="guc-list.html#gp_vmem_idle_resource_timeout">gp_vmem_idle_resource_timeout</a></li>
+<li><a href="guc-list.html#gp_vmem_protect_segworker_cache_limit">gp_vmem_protect_segworker_cache_limit</a></li>
+<li><a href="guc-list.html#max_statement_mem">max_statement_mem</a></li>
+<li><a href="guc-list.html#memory_spill_ratio">memory_spill_ratio</a></li>
+<li><a href="guc-list.html#runaway_detector_activation_percent">runaway_detector_activation_percent</a></li>
+<li><a href="guc-list.html#statement_mem">statement_mem</a></li>
+<li><a href="guc-list.html#vmem_process_interrupt">vmem_process_interrupt</a></li>
+</ul>
+<h2 id="external-table-parameters"><a class="header" href="#external-table-parameters"><a id="topic45"></a>External Table Parameters</a></h2>
+<p>The following parameters configure the external tables feature of SynxDB.</p>
+<ul>
+<li><a href="guc-list.html#gp_external_enable_exec">gp_external_enable_exec</a></li>
+<li><a href="guc-list.html#gp_external_enable_filter_pushdown">gp_external_enable_filter_pushdown</a></li>
+<li><a href="guc-list.html#gp_external_max_segs">gp_external_max_segs</a></li>
+<li><a href="guc-list.html#gp_initial_bad_row_limit">gp_initial_bad_row_limit</a></li>
+<li><a href="guc-list.html#gp_reject_percent_threshold">gp_reject_percent_threshold</a></li>
+<li><a href="guc-list.html#gpfdist_retry_timeout">gpfdist_retry_timeout</a></li>
+<li><a href="guc-list.html#readable_external_table_timeout">readable_external_table_timeout</a></li>
+<li><a href="guc-list.html#writable_external_table_bufsize">writable_external_table_bufsize</a></li>
+<li><a href="guc-list.html#verify_gpfdists_cert">verify_gpfdists_cert</a></li>
+</ul>
+<h2 id="database-table-parameters"><a class="header" href="#database-table-parameters"><a id="topic46"></a>Database Table Parameters</a></h2>
+<p>The following parameter configures default option settings for SynxDB tables.</p>
+<ul>
+<li><a href="guc-list.html#gp_create_table_random_default_distribution">gp_create_table_random_default_distribution</a></li>
+<li><a href="guc-list.html#gp_default_storage_options">gp_default_storage_options</a></li>
+<li><a href="guc-list.html#gp_enable_exchange_default_partition">gp_enable_exchange_default_partition</a></li>
+<li><a href="guc-list.html#gp_enable_segment_copy_checking">gp_enable_segment_copy_checking</a></li>
+<li><a href="guc-list.html#gp_use_legacy_hashops">gp_use_legacy_hashops</a></li>
+</ul>
+<h3 id="append-optimized-table-parameters"><a class="header" href="#append-optimized-table-parameters"><a id="topic_hfd_1tl_zp"></a>Append-Optimized Table Parameters</a></h3>
+<p>The following parameters configure the append-optimized tables feature of SynxDB.</p>
+<ul>
+<li><a href="guc-list.html#max_appendonly_tables">max_appendonly_tables</a></li>
+<li><a href="guc-list.html">gp_add_column_inherits_table_setting</a> [gp_appendonly_compaction](guc-list.html#gp_add_column_inherits_table_setting](guc-list.html) [gp_appendonly_compaction)</li>
+<li><a href="guc-list.html#gp_appendonly_compaction_threshold">gp_appendonly_compaction_threshold</a></li>
+<li><a href="guc-list.html#validate_previous_free_tid">validate_previous_free_tid</a></li>
+</ul>
+<h2 id="past-version-compatibility-parameters"><a class="header" href="#past-version-compatibility-parameters"><a id="topic48"></a>Past Version Compatibility Parameters</a></h2>
+<p>The following parameters provide compatibility with older PostgreSQL and SynxDB versions. You do not need to change these parameters in SynxDB.</p>
+<h3 id="postgresql"><a class="header" href="#postgresql"><a id="topic_ax3_r1v_bdb"></a>PostgreSQL</a></h3>
+<ul>
+<li><a href="guc-list.html#array_nulls">array_nulls</a></li>
+<li><a href="guc-list.html#backslash_quote">backslash_quote</a></li>
+<li><a href="guc-list.html#escape_string_warning">escape_string_warning</a></li>
+<li><a href="guc-list.html#quote_all_identifiers">quote_all_identifiers</a></li>
+<li><a href="guc-list.html#standard_conforming_strings">standard_conforming_strings</a></li>
+<li><a href="guc-list.html#transform_null_equals">transform_null_equals</a></li>
+</ul>
+<h3 id="synxdb"><a class="header" href="#synxdb"><a id="topic_jq1_n1v_bdb"></a>SynxDB</a></h3>
+<ul>
+<li><a href="guc-list.html#enable_implicit_timeformat_YYYYMMDDHH24MISS">enable_implicit_timeformat_YYYYMMDDHH24MISS</a></li>
+<li><a href="guc-list.html#gp_ignore_error_table">gp_ignore_error_table</a></li>
+</ul>
+<h2 id="synxdb-array-configuration-parameters"><a class="header" href="#synxdb-array-configuration-parameters"><a id="topic49"></a>SynxDB Array Configuration Parameters</a></h2>
+<p>The parameters in this topic control the configuration of the SynxDB array and its components: segments, master, distributed transaction manager, master mirror, and interconnect.</p>
+<h3 id="interconnect-configuration-parameters"><a class="header" href="#interconnect-configuration-parameters"><a id="topic50"></a>Interconnect Configuration Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#gp_interconnect_address_type">gp_interconnect_address_type</a></li>
+<li><a href="guc-list.html#gp_interconnect_cursor_ic_table_size">gp_interconnect_cursor_ic_table_size</a></li>
+<li><a href="guc-list.html#gp_interconnect_fc_method">gp_interconnect_fc_method</a></li>
+<li><a href="guc-list.html#gp_interconnect_proxy_addresses">gp_interconnect_proxy_addresses</a></li>
+<li><a href="guc-list.html#gp_interconnect_queue_depth">gp_interconnect_queue_depth</a></li>
+<li><a href="guc-list.html#gp_interconnect_setup_timeout">gp_interconnect_setup_timeout</a></li>
+<li><a href="guc-list.html#gp_interconnect_snd_queue_depth">gp_interconnect_snd_queue_depth</a></li>
+<li><a href="guc-list.html#gp_interconnect_transmit_timeout">gp_interconnect_transmit_timeout</a></li>
+<li><a href="guc-list.html#gp_interconnect_type">gp_interconnect_type</a></li>
+<li><a href="guc-list.html#gp_max_packet_size">gp_max_packet_size</a></li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> SynxDB supports only the UDPIFC (default) and TCP interconnect types.</p>
+</blockquote>
+<h3 id="dispatch-configuration-parameters"><a class="header" href="#dispatch-configuration-parameters"><a id="topic51"></a>Dispatch Configuration Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#gp_cached_segworkers_threshold">gp_cached_segworkers_threshold</a></li>
+<li><a href="guc-list.html#gp_enable_direct_dispatch">gp_enable_direct_dispatch</a></li>
+<li><a href="guc-list.html#gp_segment_connect_timeout">gp_segment_connect_timeout</a></li>
+<li><a href="guc-list.html#gp_set_proc_affinity">gp_set_proc_affinity</a></li>
+</ul>
+<h3 id="fault-operation-parameters"><a class="header" href="#fault-operation-parameters"><a id="topic52"></a>Fault Operation Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#gp_set_read_only">gp_set_read_only</a></li>
+<li><a href="guc-list.html#gp_fts_probe_interval">gp_fts_probe_interval</a></li>
+<li><a href="guc-list.html#gp_fts_probe_retries">gp_fts_probe_retries</a></li>
+<li><a href="guc-list.html#gp_fts_probe_timeout">gp_fts_probe_timeout</a></li>
+<li><a href="guc-list.html#gp_fts_replication_attempt_count">gp_fts_replication_attempt_count</a></li>
+<li><a href="guc-list.html#gp_log_fts">gp_log_fts</a></li>
+</ul>
+<h3 id="distributed-transaction-management-parameters"><a class="header" href="#distributed-transaction-management-parameters"><a id="topic53"></a>Distributed Transaction Management Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#gp_max_local_distributed_cache">gp_max_local_distributed_cache</a></li>
+<li><a href="guc-list.html#dtx_phase2_retry_count">dtx_phase2_retry_count</a></li>
+</ul>
+<h3 id="read-only-parameters"><a class="header" href="#read-only-parameters"><a id="topic54"></a>Read-Only Parameters</a></h3>
+<ul>
+<li><a href="guc-list.html#gp_command_count">gp_command_count</a></li>
+<li><a href="guc-list.html#gp_content">gp_content</a></li>
+<li><a href="guc-list.html#gp_dbid">gp_dbid</a></li>
+<li><a href="guc-list.html#gp_retrieve_conn">gp_retrieve_conn</a></li>
+<li><a href="guc-list.html#gp_session_id">gp_session_id</a></li>
+<li><a href="guc-list.html#gp_session_role">gp_session_role</a></li>
+<li><a href="guc-list.html#gp_server_version">gp_server_version</a></li>
+<li><a href="guc-list.html#gp_server_version_num">gp_server_version_num</a></li>
+</ul>
+<h2 id="synxdb-mirroring-parameters-for-master-and-segments"><a class="header" href="#synxdb-mirroring-parameters-for-master-and-segments"><a id="topic55"></a>SynxDB Mirroring Parameters for Master and Segments</a></h2>
+<p>These parameters control the configuration of the replication between SynxDB primary master and standby master.</p>
+<ul>
+<li><a href="guc-list.html#max_slot_wal_keep_size">max_slot_wal_keep_size</a></li>
+<li><a href="guc-list.html#repl_catchup_within_range">repl_catchup_within_range</a></li>
+<li><a href="guc-list.html#replication_timeout">replication_timeout</a></li>
+<li><a href="guc-list.html#wait_for_replication_threshold">wait_for_replication_threshold</a></li>
+<li><a href="guc-list.html#wal_keep_segments">wal_keep_segments</a></li>
+<li><a href="guc-list.html#wal_receiver_status_interval">wal_receiver_status_interval</a></li>
+<li><a href="guc-list.html#wal_sender_archiving_status_interval">wal_sender_archiving_status_interval</a></li>
+</ul>
+<h2 id="synxdb-pljava-parameters"><a class="header" href="#synxdb-pljava-parameters"><a id="topic56"></a>SynxDB PL/Java Parameters</a></h2>
+<p>The parameters in this topic control the configuration of the SynxDB PL/Java language.</p>
+<ul>
+<li><a href="guc-list.html#pljava_classpath">pljava_classpath</a></li>
+<li><a href="guc-list.html#pljava_classpath_insecure">pljava_classpath_insecure</a></li>
+<li><a href="guc-list.html#pljava_statement_cache_size">pljava_statement_cache_size</a></li>
+<li><a href="guc-list.html#pljava_release_lingering_savepoints">pljava_release_lingering_savepoints</a></li>
+<li><a href="guc-list.html#pljava_vmoptions">pljava_vmoptions</a></li>
+</ul>
+<h2 id="xml-data-parameters"><a class="header" href="#xml-data-parameters"><a id="topic_t3n_qml_rz"></a>XML Data Parameters</a></h2>
+<p>The parameters in this topic control the configuration of the SynxDB XML data type.</p>
+<ul>
+<li><a href="guc-list.html#xmlbinary">xmlbinary</a></li>
+<li><a href="guc-list.html#xmloption">xmloption</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/config_params/guc_config.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/config_params/guc-list.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/config_params/guc_config.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/config_params/guc-list.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

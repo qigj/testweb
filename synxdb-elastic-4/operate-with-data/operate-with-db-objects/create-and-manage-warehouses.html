@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create and Manage Warehouses &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Create and Manage Tables" href="create-and-manage-tables.html" />
+    <link rel="prev" title="Basic Queries" href="basic-query-syntax.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../operate-with-data-index.html">Operate with Data</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="operate-with-db-objects-index.html">Operate with Database Objects</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="basic-query-syntax.html">Basic Queries</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Create and Manage Warehouses</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#check-existing-warehouses">Check existing warehouses</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-a-warehouse">Create a warehouse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#set-and-use-a-warehouse">Set and use a warehouse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#change-the-size-of-a-warehouse">Change the size of a warehouse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#optimize-query-execution-for-warehouses">Optimize query execution for warehouses</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stop-a-warehouse">Stop a warehouse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#resume-a-warehouse">Resume a warehouse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#delete-a-warehouse">Delete a warehouse</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="create-and-manage-tables.html">Create and Manage Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create-and-manage-views.html">Create and Manage Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create-and-manage-materialized-views.html">Create and Manage Materialized Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="insert-update-delete-row-data.html">Insert, Update, and Delete Row Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="use-tagging-for-db-objects.html">Use Tags to Manage Database Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="use-data-branching.html">Data Branching</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../choose-table-storage-models/choose-table-storage-models-index.html">Choose Table Storage Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-queries/sql-queries-index.html">Perform SQL Queries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced-data-analytics/advanced-data-analytics-index.html">Advanced Data Analytics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../work-with-transactions.html">Work with Transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transaction-concurrency-control.html">Control Transactional Concurrency</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../operate-with-data-index.html">Operate with Data</a></li>
+          <li class="breadcrumb-item"><a href="operate-with-db-objects-index.html">Operate with Database Objects</a></li>
+      <li class="breadcrumb-item active">Create and Manage Warehouses</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="create-and-manage-warehouses">
+<h1>Create and Manage Warehouses<a class="headerlink" href="#create-and-manage-warehouses" title="Link to this heading"></a></h1>
+<p>In SynxDB Elastic, warehouses are compute engines within an account to process queries. Each warehouse is composed of multiple segments, which can be scaled horizontally as needed. All warehouses within a single account have access to a shared pool of data and perform computing tasks independently. Key features of warehouses include:</p>
+<ul class="simple">
+<li><p>Resource management: Allows pausing, resuming, and resizing on demand.</p></li>
+<li><p>Scaling: Supports changing segment counts for online horizontal scaling.</p></li>
+</ul>
+<p>This document introduces how to create and manage warehouses in SynxDB Elastic.</p>
+<section id="check-existing-warehouses">
+<h2>Check existing warehouses<a class="headerlink" href="#check-existing-warehouses" title="Link to this heading"></a></h2>
+<p>To check the existing warehouses, you can use either of the methods:</p>
+<ul>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">psql</span></code> to run the following SQL command:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">TABLE</span><span class="w"> </span><span class="n">gp_warehouse</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Use the SynxDB Elastic console. Click <strong>Warehouses</strong> in the left navigation menu to enter the warehouse management page, and you will see a list of existing warehouses.</p></li>
+</ul>
+</section>
+<section id="create-a-warehouse">
+<h2>Create a warehouse<a class="headerlink" href="#create-a-warehouse" title="Link to this heading"></a></h2>
+<p>To create a warehouse, you can use either of the methods:</p>
+<ul>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">psql</span></code> to run the following SQL command:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">WAREHOUSE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">warehouse_name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">WAREHOUSE_SIZE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">segment_count</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In the command above, replace <code class="docutils literal notranslate"><span class="pre">&lt;warehouse_name&gt;</span></code> with the name of the warehouse you want to create and <code class="docutils literal notranslate"><span class="pre">&lt;segment_count&gt;</span></code> with the number of segments you want to allocate to the warehouse.</p>
+<p>For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">WAREHOUSE</span><span class="w"> </span><span class="n">my_warehouse</span><span class="w"> </span><span class="n">WAREHOUSE_SIZE</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Use the SynxDB Elastic console. For details, see <a class="reference internal" href="../../tutorials/quick-start.html#create-a-warehouse"><span class="std std-ref">Create a warehouse via console</span></a>.</p></li>
+</ul>
+</section>
+<section id="set-and-use-a-warehouse">
+<h2>Set and use a warehouse<a class="headerlink" href="#set-and-use-a-warehouse" title="Link to this heading"></a></h2>
+<p>Before updating data in a table or deleting database objects, you need to set and use a warehouse. To set a warehouse, you can use either of the methods:</p>
+<ul>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">psql</span></code> to run the following SQL command:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">WAREHOUSE</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="o">&lt;</span><span class="n">warehouse_name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In the command above, replace <code class="docutils literal notranslate"><span class="pre">&lt;warehouse_name&gt;</span></code> with the name of the warehouse you want to use.</p>
+</li>
+<li><p>Use the SynxDB Elastic console. For details, see <a class="reference internal" href="../../tutorials/quick-start.html#method-2-use-the-worksheet-in-the-console"><span class="std std-ref">Set and use a warehouse via console</span></a>.</p></li>
+</ul>
+</section>
+<section id="change-the-size-of-a-warehouse">
+<h2>Change the size of a warehouse<a class="headerlink" href="#change-the-size-of-a-warehouse" title="Link to this heading"></a></h2>
+<p>You can elastically scale warehouses to meet dynamic business workloads. You can use either of the methods:</p>
+<ul>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">psql</span></code> to run the following SQL command. Increase the value for scaling out or decrease it for scaling in based on your requirements.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="n">WAREHOUSE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">warehouse_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">WAREHOUSE_SIZE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">new_segment_count</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="n">WAREHOUSE</span><span class="w"> </span><span class="n">my_warehouse</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">WAREHOUSE_SIZE</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Use the SynxDB Elastic console. For details, see <a class="reference internal" href="../../tutorials/quick-start.html#warehouse-elastic-scaling-in-and-scaling-out"><span class="std std-ref">Change the size of a warehouse via console</span></a>.</p></li>
+</ul>
+</section>
+<section id="optimize-query-execution-for-warehouses">
+<h2>Optimize query execution for warehouses<a class="headerlink" href="#optimize-query-execution-for-warehouses" title="Link to this heading"></a></h2>
+<p>In high-concurrency scenarios, if a data warehouse has too many segment nodes (processes), frequent process scheduling and context switching can create significant overhead, affecting query performance. In some cases, reducing the number of segments involved in a query can actually lead to better execution performance. To address such scenarios, SynxDB Elastic allows you to set the number of segments to be used for a query at the session level.</p>
+<p>You can control the number of segments used in the current session by setting the <code class="docutils literal notranslate"><span class="pre">cloud.session_segments</span></code> parameter. The system will randomly select the specified number of segments from the current data warehouse to execute the query.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">cloud</span><span class="p">.</span><span class="n">session_segments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="n">number_of_segments</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Setting <code class="docutils literal notranslate"><span class="pre">number_of_segments</span></code> to <code class="docutils literal notranslate"><span class="pre">0</span></code> (the default) means the query will use all segments of the current data warehouse. Setting it to a positive integer <code class="docutils literal notranslate"><span class="pre">N</span></code> means the query will be executed on <code class="docutils literal notranslate"><span class="pre">N</span></code> randomly selected segments from the current data warehouse.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The value of <code class="docutils literal notranslate"><span class="pre">number_of_segments</span></code> cannot exceed the total number of segments in the current data warehouse.</p></li>
+<li><p>This parameter cannot be set within a transaction block (<code class="docutils literal notranslate"><span class="pre">BEGIN...COMMIT</span></code>).</p></li>
+<li><p>To restore the default behavior, execute <code class="docutils literal notranslate"><span class="pre">RESET</span> <span class="pre">cloud.session_segments;</span></code> or <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">cloud.session_segments</span> <span class="pre">=</span> <span class="pre">0;</span></code>.</p></li>
+</ul>
+</div>
+<p><strong>Example:</strong></p>
+<p>Suppose <code class="docutils literal notranslate"><span class="pre">my_warehouse</span></code> has a total of 4 segments. Now, you want to use only 2 of them to execute a query.</p>
+<ol class="arabic">
+<li><p>Switch to the target warehouse:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">warehouse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_warehouse</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Set the number of segments for the session:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">cloud</span><span class="p">.</span><span class="n">session_segments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Execute the query. At this point, the query will run on only 2 randomly selected segments from <code class="docutils literal notranslate"><span class="pre">my_warehouse</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">my_table</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">EXPLAIN</span></code> command to view the query plan and confirm the number of segments used for execution.</p>
+</li>
+<li><p>Restore the use of all segments:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">RESET</span><span class="w"> </span><span class="n">cloud</span><span class="p">.</span><span class="n">session_segments</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="stop-a-warehouse">
+<h2>Stop a warehouse<a class="headerlink" href="#stop-a-warehouse" title="Link to this heading"></a></h2>
+<p>To stop a warehouse, you can use either of the methods:</p>
+<ul>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">psql</span></code> to run the following SQL command:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="n">WAREHOUSE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">warehouse_name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SUSPEND</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Use the SynxDB Elastic console. Click <strong>Warehouses</strong> in the left navigation menu to enter the warehouse management page, and then click the stop button in the <strong>Start/Stop</strong> column of the warehouse you want to stop.</p></li>
+</ul>
+</section>
+<section id="resume-a-warehouse">
+<h2>Resume a warehouse<a class="headerlink" href="#resume-a-warehouse" title="Link to this heading"></a></h2>
+<p>To resume a warehouse, you can use either of the methods:</p>
+<ul>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">psql</span></code> to run the following SQL command:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="n">WAREHOUSE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">warehouse_name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">RESUME</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Use the SynxDB Elastic console. Click <strong>Warehouses</strong> in the left navigation menu to enter the warehouse management page, and then click the start button in the <strong>Start/Stop</strong> column of the warehouse you want to resume.</p></li>
+</ul>
+</section>
+<section id="delete-a-warehouse">
+<h2>Delete a warehouse<a class="headerlink" href="#delete-a-warehouse" title="Link to this heading"></a></h2>
+<p>To delete a warehouse, you can use either of the methods:</p>
+<ul>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">psql</span></code> to run the following SQL command:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="n">WAREHOUSE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">warehouse_name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Use the SynxDB Elastic console. Click <strong>Warehouses</strong> in the left navigation menu to enter the warehouse management page, and then click <strong>Delete</strong> in the <strong>Operation</strong> column of the warehouse you want to delete.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="create-and-manage-tables.html" class="btn btn-neutral float-right" title="Create and Manage Tables" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="basic-query-syntax.html" class="btn btn-neutral float-left" title="Basic Queries" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

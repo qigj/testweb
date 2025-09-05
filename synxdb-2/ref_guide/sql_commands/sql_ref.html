@@ -1,0 +1,850 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>SQL Commands - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="sql-commands"><a class="header" href="#sql-commands">SQL Commands</a></h1>
+<p>The following SQL commands are available in SynxDB:</p>
+<ul>
+<li><a href="ABORT.html">ABORT</a></li>
+<li><a href="ALTER_AGGREGATE.html">ALTER AGGREGATE</a></li>
+<li><a href="ALTER_COLLATION.html">ALTER COLLATION</a></li>
+<li><a href="ALTER_CONVERSION.html">ALTER CONVERSION</a></li>
+<li><a href="ALTER_DATABASE.html">ALTER DATABASE</a></li>
+<li><a href="ALTER_DEFAULT_PRIVILEGES.html">ALTER DEFAULT PRIVILEGES</a></li>
+<li><a href="ALTER_DOMAIN.html">ALTER DOMAIN</a></li>
+<li><a href="ALTER_EXTERNAL_TABLE.html">ALTER EXTERNAL TABLE</a></li>
+<li><a href="ALTER_FOREIGN_DATA_WRAPPER.html">ALTER FOREIGN DATA WRAPPER</a></li>
+<li><a href="ALTER_FOREIGN_TABLE.html">ALTER FOREIGN TABLE</a></li>
+<li><a href="ALTER_FUNCTION.html">ALTER FUNCTION</a></li>
+<li><a href="ALTER_GROUP.html">ALTER GROUP</a></li>
+<li><a href="ALTER_INDEX.html">ALTER INDEX</a></li>
+<li><a href="ALTER_LANGUAGE.html">ALTER LANGUAGE</a></li>
+<li><a href="ALTER_OPERATOR.html">ALTER OPERATOR</a></li>
+<li><a href="ALTER_OPERATOR_CLASS.html">ALTER OPERATOR CLASS</a></li>
+<li><a href="ALTER_OPERATOR_FAMILY.html">ALTER OPERATOR FAMILY</a></li>
+<li><a href="ALTER_PROTOCOL.html">ALTER PROTOCOL</a></li>
+<li><a href="ALTER_RESOURCE_GROUP.html">ALTER RESOURCE GROUP</a></li>
+<li><a href="ALTER_RESOURCE_QUEUE.html">ALTER RESOURCE QUEUE</a></li>
+<li><a href="ALTER_ROLE.html">ALTER ROLE</a></li>
+<li><a href="ALTER_RULE.html">ALTER RULE</a></li>
+<li><a href="ALTER_SCHEMA.html">ALTER SCHEMA</a></li>
+<li><a href="ALTER_SEQUENCE.html">ALTER SEQUENCE</a></li>
+<li><a href="ALTER_SERVER.html">ALTER SERVER</a></li>
+<li><a href="ALTER_TABLE.html">ALTER TABLE</a></li>
+<li><a href="ALTER_TABLESPACE.html">ALTER TABLESPACE</a></li>
+<li><a href="ALTER_TEXT_SEARCH_CONFIGURATION.html">ALTER TEXT SEARCH CONFIGURATION</a></li>
+<li><a href="ALTER_TEXT_SEARCH_DICTIONARY.html">ALTER TEXT SEARCH DICTIONARY</a></li>
+<li><a href="ALTER_TEXT_SEARCH_PARSER.html">ALTER TEXT SEARCH PARSER</a></li>
+<li><a href="ALTER_TEXT_SEARCH_TEMPLATE.html">ALTER TEXT SEARCH TEMPLATE</a></li>
+<li><a href="ALTER_TYPE.html">ALTER TYPE</a></li>
+<li><a href="ALTER_USER.html">ALTER USER</a></li>
+<li><a href="ALTER_USER_MAPPING.html">ALTER USER MAPPING</a></li>
+<li><a href="ALTER_VIEW.html">ALTER VIEW</a></li>
+<li><a href="ANALYZE.html">ANALYZE</a></li>
+<li><a href="BEGIN.html">BEGIN</a></li>
+<li><a href="CHECKPOINT.html">CHECKPOINT</a></li>
+<li><a href="CLOSE.html">CLOSE</a></li>
+<li><a href="CLUSTER.html">CLUSTER</a></li>
+<li><a href="COMMENT.html">COMMENT</a></li>
+<li><a href="COMMIT.html">COMMIT</a></li>
+<li><a href="COPY.html">COPY</a></li>
+<li><a href="CREATE_AGGREGATE.html">CREATE AGGREGATE</a></li>
+<li><a href="CREATE_CAST.html">CREATE CAST</a></li>
+<li><a href="CREATE_COLLATION.html">CREATE COLLATION</a></li>
+<li><a href="CREATE_CONVERSION.html">CREATE CONVERSION</a></li>
+<li><a href="CREATE_DATABASE.html">CREATE DATABASE</a></li>
+<li><a href="CREATE_DOMAIN.html">CREATE DOMAIN</a></li>
+<li><a href="CREATE_EXTERNAL_TABLE.html">CREATE EXTERNAL TABLE</a></li>
+<li><a href="CREATE_FOREIGN_DATA_WRAPPER.html">CREATE FOREIGN DATA WRAPPER</a></li>
+<li><a href="CREATE_FOREIGN_TABLE.html">CREATE FOREIGN TABLE</a></li>
+<li><a href="CREATE_FUNCTION.html">CREATE FUNCTION</a></li>
+<li><a href="CREATE_GROUP.html">CREATE GROUP</a></li>
+<li><a href="CREATE_INDEX.html">CREATE INDEX</a></li>
+<li><a href="CREATE_LANGUAGE.html">CREATE LANGUAGE</a></li>
+<li><a href="CREATE_OPERATOR.html">CREATE OPERATOR</a></li>
+<li><a href="CREATE_OPERATOR_CLASS.html">CREATE OPERATOR CLASS</a></li>
+<li><a href="CREATE_OPERATOR_FAMILY.html">CREATE OPERATOR FAMILY</a></li>
+<li><a href="CREATE_PROTOCOL.html">CREATE PROTOCOL</a></li>
+<li><a href="CREATE_RESOURCE_GROUP.html">CREATE RESOURCE GROUP</a></li>
+<li><a href="CREATE_RESOURCE_QUEUE.html">CREATE RESOURCE QUEUE</a></li>
+<li><a href="CREATE_ROLE.html">CREATE ROLE</a></li>
+<li><a href="CREATE_RULE.html">CREATE RULE</a></li>
+<li><a href="CREATE_SCHEMA.html">CREATE SCHEMA</a></li>
+<li><a href="CREATE_SEQUENCE.html">CREATE SEQUENCE</a></li>
+<li><a href="CREATE_SERVER.html">CREATE SERVER</a></li>
+<li><a href="CREATE_TABLE.html">CREATE TABLE</a></li>
+<li><a href="CREATE_TABLE_AS.html">CREATE TABLE AS</a></li>
+<li><a href="CREATE_TABLESPACE.html">CREATE TABLESPACE</a></li>
+<li><a href="CREATE_TEXT_SEARCH_CONFIGURATION.html">CREATE TEXT SEARCH CONFIGURATION</a></li>
+<li><a href="CREATE_TEXT_SEARCH_DICTIONARY.html">CREATE TEXT SEARCH DICTIONARY</a></li>
+<li><a href="CREATE_TEXT_SEARCH_PARSER.html">CREATE TEXT SEARCH PARSER</a></li>
+<li><a href="CREATE_TEXT_SEARCH_TEMPLATE.html">CREATE TEXT SEARCH TEMPLATE</a></li>
+<li><a href="CREATE_TYPE.html">CREATE TYPE</a></li>
+<li><a href="CREATE_USER.html">CREATE USER</a></li>
+<li><a href="CREATE_USER_MAPPING.html">CREATE USER MAPPING</a></li>
+<li><a href="CREATE_VIEW.html">CREATE VIEW</a></li>
+<li><a href="DEALLOCATE.html">DEALLOCATE</a></li>
+<li><a href="DECLARE.html">DECLARE</a></li>
+<li><a href="DELETE.html">DELETE</a></li>
+<li><a href="DISCARD.html">DISCARD</a></li>
+<li><a href="DO.html">DO</a></li>
+<li><a href="DROP_AGGREGATE.html">DROP AGGREGATE</a></li>
+<li><a href="DROP_CAST.html">DROP CAST</a></li>
+<li><a href="DROP_COLLATION.html">DROP COLLATION</a></li>
+<li><a href="DROP_CONVERSION.html">DROP CONVERSION</a></li>
+<li><a href="DROP_DATABASE.html">DROP DATABASE</a></li>
+<li><a href="DROP_DOMAIN.html">DROP DOMAIN</a></li>
+<li><a href="DROP_EXTERNAL_TABLE.html">DROP EXTERNAL TABLE</a></li>
+<li><a href="DROP_FOREIGN_DATA_WRAPPER.html">DROP FOREIGN DATA WRAPPER</a></li>
+<li><a href="DROP_FOREIGN_TABLE.html">DROP FOREIGN TABLE</a></li>
+<li><a href="DROP_FUNCTION.html">DROP FUNCTION</a></li>
+<li><a href="DROP_GROUP.html">DROP GROUP</a></li>
+<li><a href="DROP_INDEX.html">DROP INDEX</a></li>
+<li><a href="DROP_LANGUAGE.html">DROP LANGUAGE</a></li>
+<li><a href="DROP_OPERATOR.html">DROP OPERATOR</a></li>
+<li><a href="DROP_OPERATOR_CLASS.html">DROP OPERATOR CLASS</a></li>
+<li><a href="DROP_OPERATOR_FAMILY.html">DROP OPERATOR FAMILY</a></li>
+<li><a href="DROP_OWNED.html">DROP OWNED</a></li>
+<li><a href="DROP_PROTOCOL.html">DROP PROTOCOL</a></li>
+<li><a href="DROP_RESOURCE_GROUP.html">DROP RESOURCE GROUP</a></li>
+<li><a href="DROP_RESOURCE_QUEUE.html">DROP RESOURCE QUEUE</a></li>
+<li><a href="DROP_ROLE.html">DROP ROLE</a></li>
+<li><a href="DROP_RULE.html">DROP RULE</a></li>
+<li><a href="DROP_SCHEMA.html">DROP SCHEMA</a></li>
+<li><a href="DROP_SEQUENCE.html">DROP SEQUENCE</a></li>
+<li><a href="DROP_SERVER.html">DROP SERVER</a></li>
+<li><a href="DROP_TABLE.html">DROP TABLE</a></li>
+<li><a href="DROP_TABLESPACE.html">DROP TABLESPACE</a></li>
+<li><a href="DROP_TEXT_SEARCH_CONFIGURATION.html">DROP TEXT SEARCH CONFIGURATION</a></li>
+<li><a href="DROP_TEXT_SEARCH_DICTIONARY.html">DROP TEXT SEARCH DICTIONARY</a></li>
+<li><a href="DROP_TEXT_SEARCH_PARSER.html">DROP TEXT SEARCH PARSER</a></li>
+<li><a href="DROP_TEXT_SEARCH_TEMPLATE.html">DROP TEXT SEARCH TEMPLATE</a></li>
+<li><a href="DROP_TYPE.html">DROP TYPE</a></li>
+<li><a href="DROP_USER.html">DROP USER</a></li>
+<li><a href="DROP_USER_MAPPING.html">DROP USER MAPPING</a></li>
+<li><a href="DROP_VIEW.html">DROP VIEW</a></li>
+<li><a href="END.html">END</a></li>
+<li><a href="EXECUTE.html">EXECUTE</a></li>
+<li><a href="EXPLAIN.html">EXPLAIN</a></li>
+<li><a href="FETCH.html">FETCH</a></li>
+<li><a href="GRANT.html">GRANT</a></li>
+<li><a href="INSERT.html">INSERT</a></li>
+<li><a href="LISTEN.html">LISTEN</a></li>
+<li><a href="LOAD.html">LOAD</a></li>
+<li><a href="LOCK.html">LOCK</a></li>
+<li><a href="MOVE.html">MOVE</a></li>
+<li><a href="NOTIFY.html">NOTIFY</a></li>
+<li><a href="PREPARE.html">PREPARE</a></li>
+<li><a href="REASSIGN_OWNED.html">REASSIGN OWNED</a></li>
+<li><a href="REINDEX.html">REINDEX</a></li>
+<li><a href="RELEASE_SAVEPOINT.html">RELEASE SAVEPOINT</a></li>
+<li><a href="RESET.html">RESET</a></li>
+<li><a href="RETRIEVE.html">RETRIEVE</a></li>
+<li><a href="REVOKE.html">REVOKE</a></li>
+<li><a href="ROLLBACK.html">ROLLBACK</a></li>
+<li><a href="ROLLBACK_TO_SAVEPOINT.html">ROLLBACK TO SAVEPOINT</a></li>
+<li><a href="SAVEPOINT.html">SAVEPOINT</a></li>
+<li><a href="SELECT.html">SELECT</a></li>
+<li><a href="SELECT_INTO.html">SELECT INTO</a></li>
+<li><a href="SET.html">SET</a></li>
+<li><a href="SET_CONSTRAINTS.html">SET CONSTRAINTS</a></li>
+<li><a href="SET_ROLE.html">SET ROLE</a></li>
+<li><a href="SET_SESSION_AUTHORIZATION.html">SET SESSION AUTHORIZATION</a></li>
+<li><a href="SET_TRANSACTION.html">SET TRANSACTION</a></li>
+<li><a href="SHOW.html">SHOW</a></li>
+<li><a href="START_TRANSACTION.html">START TRANSACTION</a></li>
+<li><a href="TRUNCATE.html">TRUNCATE</a></li>
+<li><a href="UNLISTEN.html">UNLISTEN</a></li>
+<li><a href="UPDATE.html">UPDATE</a></li>
+<li><a href="VACUUM.html">VACUUM</a></li>
+<li><a href="VALUES.html">VALUES</a></li>
+</ul>
+<p>* <em>Not implemented in 5.0</em></p>
+<ul>
+<li>
+<p><strong><a href="../GPReferenceSQLSummaryLOP.html">SQL Syntax Summary</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ABORT.html">ABORT</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_AGGREGATE.html">ALTER AGGREGATE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_COLLATION.html">ALTER COLLATION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_CONVERSION.html">ALTER CONVERSION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_DATABASE.html">ALTER DATABASE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_DEFAULT_PRIVILEGES.html">ALTER DEFAULT PRIVILEGES</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_DOMAIN.html">ALTER DOMAIN</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_EXTENSION.html">ALTER EXTENSION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_EXTERNAL_TABLE.html">ALTER EXTERNAL TABLE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_FOREIGN_DATA_WRAPPER.html">ALTER FOREIGN DATA WRAPPER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_FOREIGN_TABLE.html">ALTER FOREIGN TABLE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_FUNCTION.html">ALTER FUNCTION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_GROUP.html">ALTER GROUP</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_INDEX.html">ALTER INDEX</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_LANGUAGE.html">ALTER LANGUAGE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_MATERIALIZED_VIEW.html">ALTER MATERIALIZED VIEW</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_OPERATOR.html">ALTER OPERATOR</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_OPERATOR_CLASS.html">ALTER OPERATOR CLASS</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_OPERATOR_FAMILY.html">ALTER OPERATOR FAMILY</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_PROTOCOL.html">ALTER PROTOCOL</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_RESOURCE_GROUP.html">ALTER RESOURCE GROUP</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_RESOURCE_QUEUE.html">ALTER RESOURCE QUEUE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_ROLE.html">ALTER ROLE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_SCHEMA.html">ALTER SCHEMA</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_SEQUENCE.html">ALTER SEQUENCE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_SERVER.html">ALTER SERVER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_TABLE.html">ALTER TABLE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_TABLESPACE.html">ALTER TABLESPACE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_TEXT_SEARCH_CONFIGURATION.html">ALTER TEXT SEARCH CONFIGURATION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_TEXT_SEARCH_DICTIONARY.html">ALTER TEXT SEARCH DICTIONARY</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_TEXT_SEARCH_PARSER.html">ALTER TEXT SEARCH PARSER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_TEXT_SEARCH_TEMPLATE.html">ALTER TEXT SEARCH TEMPLATE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_TRIGGER.html">ALTER TRIGGER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_TYPE.html">ALTER TYPE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_USER.html">ALTER USER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_USER_MAPPING.html">ALTER USER MAPPING</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ALTER_VIEW.html">ALTER VIEW</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ANALYZE.html">ANALYZE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/BEGIN.html">BEGIN</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CHECKPOINT.html">CHECKPOINT</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CLOSE.html">CLOSE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CLUSTER.html">CLUSTER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/COMMENT.html">COMMENT</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/COMMIT.html">COMMIT</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/COPY.html">COPY</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_AGGREGATE.html">CREATE AGGREGATE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_CAST.html">CREATE CAST</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_COLLATION.html">CREATE COLLATION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_CONVERSION.html">CREATE CONVERSION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_DATABASE.html">CREATE DATABASE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_DOMAIN.html">CREATE DOMAIN</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_EXTENSION.html">CREATE EXTENSION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_EXTERNAL_TABLE.html">CREATE EXTERNAL TABLE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_FOREIGN_DATA_WRAPPER.html">CREATE FOREIGN DATA WRAPPER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_FOREIGN_TABLE.html">CREATE FOREIGN TABLE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_FUNCTION.html">CREATE FUNCTION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_GROUP.html">CREATE GROUP</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_INDEX.html">CREATE INDEX</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_LANGUAGE.html">CREATE LANGUAGE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_MATERIALIZED_VIEW.html">CREATE MATERIALIZED VIEW</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_OPERATOR.html">CREATE OPERATOR</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_OPERATOR_CLASS.html">CREATE OPERATOR CLASS</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_OPERATOR_FAMILY.html">CREATE OPERATOR FAMILY</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_PROTOCOL.html">CREATE PROTOCOL</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_RESOURCE_GROUP.html">CREATE RESOURCE GROUP</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_RESOURCE_QUEUE.html">CREATE RESOURCE QUEUE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_ROLE.html">CREATE ROLE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_RULE.html">CREATE RULE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_SCHEMA.html">CREATE SCHEMA</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_SEQUENCE.html">CREATE SEQUENCE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_SERVER.html">CREATE SERVER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_TABLE.html">CREATE TABLE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_TABLE_AS.html">CREATE TABLE AS</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_TABLESPACE.html">CREATE TABLESPACE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_TRIGGER.html">CREATE TRIGGER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_TEXT_SEARCH_CONFIGURATION.html">CREATE TEXT SEARCH CONFIGURATION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_TEXT_SEARCH_DICTIONARY.html">CREATE TEXT SEARCH DICTIONARY</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_TEXT_SEARCH_PARSER.html">CREATE TEXT SEARCH PARSER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_TEXT_SEARCH_TEMPLATE.html">CREATE TEXT SEARCH TEMPLATE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_TYPE.html">CREATE TYPE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_USER.html">CREATE USER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_USER_MAPPING.html">CREATE USER MAPPING</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/CREATE_VIEW.html">CREATE VIEW</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DEALLOCATE.html">DEALLOCATE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DECLARE.html">DECLARE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DELETE.html">DELETE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DISCARD.html">DISCARD</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DO.html">DO</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_AGGREGATE.html">DROP AGGREGATE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_CAST.html">DROP CAST</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_COLLATION.html">DROP COLLATION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_CONVERSION.html">DROP CONVERSION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_DATABASE.html">DROP DATABASE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_DOMAIN.html">DROP DOMAIN</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_EXTENSION.html">DROP EXTENSION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_EXTERNAL_TABLE.html">DROP EXTERNAL TABLE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_FOREIGN_DATA_WRAPPER.html">DROP FOREIGN DATA WRAPPER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_FOREIGN_TABLE.html">DROP FOREIGN TABLE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_FUNCTION.html">DROP FUNCTION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_GROUP.html">DROP GROUP</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_INDEX.html">DROP INDEX</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_LANGUAGE.html">DROP LANGUAGE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_MATERIALIZED_VIEW.html">DROP MATERIALIZED VIEW</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_OPERATOR.html">DROP OPERATOR</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_OPERATOR_CLASS.html">DROP OPERATOR CLASS</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_OPERATOR_FAMILY.html">DROP OPERATOR FAMILY</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_OWNED.html">DROP OWNED</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_PROTOCOL.html">DROP PROTOCOL</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_RESOURCE_GROUP.html">DROP RESOURCE GROUP</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_RESOURCE_QUEUE.html">DROP RESOURCE QUEUE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_ROLE.html">DROP ROLE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_RULE.html">DROP RULE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_SCHEMA.html">DROP SCHEMA</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_SEQUENCE.html">DROP SEQUENCE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_SERVER.html">DROP SERVER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_TABLE.html">DROP TABLE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_TABLESPACE.html">DROP TABLESPACE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_TEXT_SEARCH_CONFIGURATION.html">DROP TEXT SEARCH CONFIGURATION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_TEXT_SEARCH_DICTIONARY.html">DROP TEXT SEARCH DICTIONARY</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_TEXT_SEARCH_PARSER.html">DROP TEXT SEARCH PARSER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_TEXT_SEARCH_TEMPLATE.html">DROP TEXT SEARCH TEMPLATE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_TRIGGER.html">DROP TRIGGER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_TYPE.html">DROP TYPE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_USER.html">DROP USER</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_USER_MAPPING.html">DROP USER MAPPING</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/DROP_VIEW.html">DROP VIEW</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/END.html">END</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/EXECUTE.html">EXECUTE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/EXPLAIN.html">EXPLAIN</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/FETCH.html">FETCH</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/GRANT.html">GRANT</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/INSERT.html">INSERT</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/LOAD.html">LOAD</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/LOCK.html">LOCK</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/MOVE.html">MOVE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/PREPARE.html">PREPARE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/REASSIGN_OWNED.html">REASSIGN OWNED</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/REFRESH_MATERIALIZED_VIEW.html">REFRESH MATERIALIZED VIEW</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/REINDEX.html">REINDEX</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/RELEASE_SAVEPOINT.html">RELEASE SAVEPOINT</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/RESET.html">RESET</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/RETRIEVE.html">RETRIEVE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/REVOKE.html">REVOKE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ROLLBACK.html">ROLLBACK</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/ROLLBACK_TO_SAVEPOINT.html">ROLLBACK TO SAVEPOINT</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/SAVEPOINT.html">SAVEPOINT</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/SELECT.html">SELECT</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/SELECT_INTO.html">SELECT INTO</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/SET.html">SET</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/SET_CONSTRAINTS.html">SET CONSTRAINTS</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/SET_ROLE.html">SET ROLE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/SET_SESSION_AUTHORIZATION.html">SET SESSION AUTHORIZATION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/SET_TRANSACTION.html">SET TRANSACTION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/SHOW.html">SHOW</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/START_TRANSACTION.html">START TRANSACTION</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/TRUNCATE.html">TRUNCATE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/UPDATE.html">UPDATE</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/VACUUM.html">VACUUM</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../sql_commands/VALUES.html">VALUES</a></strong></p>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/ref_guide.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/GPReferenceSQLSummaryLOP.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/ref_guide.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/GPReferenceSQLSummaryLOP.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

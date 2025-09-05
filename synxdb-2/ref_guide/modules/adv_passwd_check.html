@@ -1,0 +1,359 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>advanced_password_check - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="advanced_password_check"><a class="header" href="#advanced_password_check">advanced_password_check</a></h1>
+<p>The <code>advanced_password_check</code> module allows you to strengthen password policies for SynxDB. It is based on the <code>passwordcheck_extra</code> module, which enhances the PostgreSQL <code>passwordcheck</code> module to support user-defined policies to strengthen <code>passwordcheck</code>’s minimum password requirements.</p>
+<h2 id="loading-the-module"><a class="header" href="#loading-the-module"><a id="topic_reg"></a>Loading the Module</a></h2>
+<p>The <code>advanced_password_check</code> module provides no SQL-accessible functions. To use it, enable the extension as a preloaded library and restart SynxDB:</p>
+<p>First, check if there are any preloaded shared libraries by running the following command:</p>
+<pre><code>gpconfig -s shared_preload_libraries
+</code></pre>
+<p>Use the output of the above command to enable the <code>advanced_password_check</code> module, along any other shared libraries, and restart SynxDB:</p>
+<pre><code>gpconfig -c shared_preload_libraries -v '&lt;other_libraries&gt;,advanced_password_check'
+gpstop -ar 
+</code></pre>
+<p>Finally, install the extension in your database:</p>
+<pre><code>CREATE EXTENSION advanced_password_check;
+</code></pre>
+<h2 id="using-the-advanced_password_check-module"><a class="header" href="#using-the-advanced_password_check-module"><a id="topic_using"></a>Using the advanced_password_check Module</a></h2>
+<p><code>advanced_password_check</code> is a SynxDB module that you can enable and configure to check password strings against one or more user-defined policies. You can configure policies that:</p>
+<ul>
+<li>Set a minimum password string length.</li>
+<li>Set a maximum password string length.</li>
+<li>Set a maximum password age before the password expires.</li>
+<li>Set rules for reusing an old password: the number of days or the number of previous passwords before a user can reuse a password.</li>
+<li>Set the maximum number of failed login attempts before a user is locked, and the number of minutes the user remains locked.</li>
+<li>Define a custom list of special characters.</li>
+<li>Define rules for special character, upper/lower case character, and number inclusion in the password string.</li>
+<li>Use UDFs to manage an exception list for each feature so certain users can bypass the current restrictions.</li>
+</ul>
+<p>The <code>advanced_password_check</code> module defines server configuration parameters that you set to configure password setting policies. These parameters include:</p>
+<div class="table-wrapper"><table><thead><tr><th>Parameter Name</th><th>Type</th><th>Default Value</th><th>Description</th></tr></thead><tbody>
+<tr><td>minimum_length</td><td>int</td><td>8</td><td>The minimum allowable length of a SynxDB password.</td></tr>
+<tr><td>maximum_length</td><td>int</td><td>15</td><td>The maximum allowable length of a SynxDB password.</td></tr>
+<tr><td>special_chars</td><td>string</td><td>!@#$%^&amp;*()_+{}|&lt;&gt;?=</td><td>The set of characters that SynxDB considers to be special characters in a password.</td></tr>
+<tr><td>restrict_upper</td><td>bool</td><td>true</td><td>Specifies whether or not the password string must contain at least one upper case character.</td></tr>
+<tr><td>restrict_lower</td><td>bool</td><td>true</td><td>Specifies whether or not the password string must contain at least one lower case character.</td></tr>
+<tr><td>restrict_numbers</td><td>bool</td><td>true</td><td>Specifies whether or not the password string must contain at least one number.</td></tr>
+<tr><td>restrict_special</td><td>bool</td><td>true</td><td>Specifies whether or not the password string must contain at least one special character.</td></tr>
+<tr><td>password_login_attempts</td><td>int</td><td>0</td><td>The number of consecutive failed login attempts before a user is locked. If set to 0, this feature is disabled.</td></tr>
+<tr><td>password_max_age</td><td>int</td><td>0</td><td>The maximum number of days before the password expires. If set to 0, the password does not expire.</td></tr>
+<tr><td>password_reuse_days</td><td>int</td><td>0</td><td>The number of days before a user can reuse a password. If set to 0, the user can reuse any password.</td></tr>
+<tr><td>password_reuse_history</td><td>int</td><td>0</td><td>The number of previous passwords a user cannot reuse. If set to 0, the user can reuse any password.</td></tr>
+<tr><td>lockout_duration</td><td>int</td><td>0</td><td>The number of minutes a user is locked after reaching password_login_attempts. If set to 0, the user is locked indefinitely.</td></tr>
+</tbody></table>
+</div>
+<p>After you define your password policies, you run the <code>gpconfig</code> command for each configuration parameter that you must set. When you run the command, you must qualify the parameter with the module name. For example, to configure SynxDB to remove any requirements for a lower case letter in the password string, you run the following command:</p>
+<pre><code>gpconfig -c advanced_password_check.restrict_lower -v false
+</code></pre>
+<p>After you set or change module configuration in this manner, you must reload the SynxDB configuration:</p>
+<pre><code>gpstop -u
+</code></pre>
+<p>The <code>advanced_password_check</code> module provides the following user-defined functions (UDF). Specify all function arguments as single-quoted strings.</p>
+<div class="table-wrapper"><table><thead><tr><th>Function Signature</th><th>Arguments</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>manage_exception_list(action, role_name, exception_type)</code></td><td>- <code>action</code> can be <code>add</code>, <code>remove</code>, or <code>show</code>. <br>- <code>role_name</code><br>- <code>exception_type</code> can be <code>password_max_age</code>, <code>password_reuse_days</code>, <code>password_reuse_history</code>, or <code>password_login_attempts</code>.</td><td>Adds, removes, and shows roles in the exception list for a policy.</td></tr>
+<tr><td><code>unblock_account(role_name)</code></td><td><code>role_name</code></td><td>Unblocks a role</td></tr>
+<tr><td><code>status()</code></td><td></td><td>Lists active password policies.</td></tr>
+</tbody></table>
+</div>
+<p>Use the <code>manage_exception_list()</code> function to manage the exception list for a password policy. SynxDB does not enforce the rules set for the policy for any users specified in the exception list.
+The function takes three arguments: the action to take, the role name and the name of the exception. The value of <code>action</code> can be <code>add</code>, <code>remove</code>, or <code>show</code>. The value of <code>exception_type</code> can be <code>password_max_age</code>, <code>password_reuse_days</code>, <code>password_reuse_history</code>, <code>password_login_attempts</code>, or an empty string to represent all of the available exception types. When the action is <code>show</code>, you may specify <code>role_name</code> as an empty string to include all roles.</p>
+<p>For example, to add the role <code>user1</code> to the exception list for <code>password_max_age</code>, so the role does not have a password expiration date:</p>
+<pre><code>SELECT advanced_password_check.manage_exception_list('add', 'user1', 'password_max_age');
+
+role_id | role_name | exception_type 
+---------+-----------+---------------- 
+(0 rows) 
+</code></pre>
+<p>The following example checks all exception lists for all roles:</p>
+<pre><code>SELECT * FROM advanced_password_check.manage_exception_list('show','', ''); 
+
+role_id | role_name |     exception_type 
+---------+-----------+------------------------- 
+1826266 | user1     | password_max_age 
+1826267 | user2     | password_reuse_history 
+1826266 | user1     | password_reuse_days 
+1826266 | user1     | password_login_attempts 
+(4 rows) 
+</code></pre>
+<p>Use the <code>unblock_account_role()</code> function to manually unblock a user that reached the limit set by the configuration parameter <code>password_login_attempts</code>. For example:</p>
+<pre><code>SELECT * FROM advanced_password_check.unblock_account('user1'); 
+
+unblock_account 
+----------------- 
+(1 row) 
+</code></pre>
+<p>Use the <code>status()</code> function to view the values of all active password policies. For example:</p>
+<pre><code>SELECT * FROM advanced_password_check.status(); 
+
+           guc           |        value 
+-------------------------+--------------------- 
+special_chars           | !@#$%^&amp;*()_+{}|&lt;&gt;?= 
+restrict_lower          | t 
+restrict_upper          | t 
+restrict_numbers        | t 
+restrict_special        | t 
+minimum_length          | 8 
+maximum_length          | 15 
+password_max_age        | 192 
+password_reuse_days     | 0 
+password_reuse_history  | 0 
+password_login_attempts | 0 
+lockout_duration        | 0 
+(12 rows) 
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> The password history information is stored in the SynxDB master host only. In the event of a primary master failure, if you activate the standby master host, the <code>advanced_password_check</code> module  will not be able to access the password history information, and it will affect any server configuration parameters or UDFs that involve password history information. For example, a role may reuse a password even if the <code>password_reuse_history</code> is set, as there is no information about previous passwords. If you switch back to the original master host, unless there is data corruption, the password history information will be accessible again.</p>
+</blockquote>
+<h2 id="example"><a class="header" href="#example"><a id="topic_example"></a>Example</a></h2>
+<p>Suppose that you have defined the following password policies:</p>
+<ul>
+<li>The password must contain a minimum of 10 characters and a maximum of 18.</li>
+<li>The password must contain a mixture of upper case and lower case characters.</li>
+<li>The password must contain at least one of the default special characters.</li>
+<li>The are no requirements that the password contain a number.</li>
+<li>The password must not be the same as the current password.</li>
+<li>The password must expire after three months.</li>
+<li>The user must be blocked during an hour after the third of three unsuccessful login attempts.</li>
+</ul>
+<p>You would run the following commands to configure SynxDB to enforce these policies:</p>
+<pre><code>gpconfig -c advanced_password_check.minimum_length -v 10
+gpconfig -c advanced_password_check.maximum_length -v 18
+gpconfig -c advanced_password_check.restrict_numbers -v false
+gpconfig -c advanced_password_check.password_reuse_history -v 1
+gpconfig -c advanced_password_check.password_max_age -v 90
+gpconfig -c advanced_password_check.password_login_attempts -v 3
+gpconfig -c advanced_password_check.lockout_duration -v 60
+gpadmin@gpmaster$ gpstop -u
+</code></pre>
+<p>After loading the new configuration, passwords that the SynxDB superuser sets must now follow the policies, and SynxDB returns an error for every policy that is not met. Note that SynxDB checks the password string against all of the policies, and concatenates together the messages for any errors that it encounters. For example (line breaks added for better viewability):</p>
+<pre><code># testdb=# CREATE role r1 PASSWORD '12345678901112';
+ERROR:  Incorrect password format: lower-case character missing, upper-case character
+missing, special character missing (needs to be one listed in "&lt;list-of-special-chars&gt;")
+</code></pre>
+<h2 id="upgrading-the-module"><a class="header" href="#upgrading-the-module"><a id="topic_upgrade"></a>Upgrading the Module</a></h2>
+<p>You may upgrade the module from a previous version by following the steps below.</p>
+<ol>
+<li>
+<p>Check your existing version of the module by running <code>\dx</code> from your database.</p>
+</li>
+<li>
+<p>Verify that <code>advanced_password_check</code> is listed as one of the preloaded shared libraries by running the following command:</p>
+<pre><code>gpconfig -s shared_preload_libraries
+</code></pre>
+</li>
+<li>
+<p>Update the extension from your database prompt. The following example upgrades to version 1.2:</p>
+<pre><code>ALTER EXTENSION advanced_password_check UPDATE TO ‘1.2’;
+</code></pre>
+</li>
+</ol>
+<h2 id="additional-module-documentation"><a class="header" href="#additional-module-documentation"><a id="topic_info"></a>Additional Module Documentation</a></h2>
+<p>Refer to the <a href="https://www.postgresql.org/docs/9.4/passwordcheck.html">passwordcheck</a> PostgreSQL documentation for more information about this module.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/modules/intro.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/modules/auto-explain.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/modules/intro.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/modules/auto-explain.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

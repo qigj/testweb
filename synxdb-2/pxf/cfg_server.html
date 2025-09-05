@@ -1,0 +1,385 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Configuring Servers - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="configuring-pxf-servers"><a class="header" href="#configuring-pxf-servers">Configuring PXF Servers</a></h1>
+<p>This topic provides an overview of PXF server configuration. To configure a server, refer to the topic specific to the connector that you want to configure.</p>
+<p>You read from or write data to an external data store via a PXF connector. To access an external data store, you must provide the server location. You may also be required to provide client access credentials and other external data store-specific properties. PXF simplifies configuring access to external data stores by:</p>
+<ul>
+<li>Supporting file-based connector and user configuration</li>
+<li>Providing connector-specific template configuration files</li>
+</ul>
+<p>A PXF <em>Server</em> definition is simply a named configuration that provides access to a specific external data store. A PXF server name is the name of a directory residing in <code>$PXF_BASE/servers/</code>. The information that you provide in a server configuration is connector-specific. For example, a PXF JDBC Connector server definition may include settings for the JDBC driver class name, URL, username, and password. You can also configure connection-specific and session-specific properties in a JDBC server definition.</p>
+<p>PXF provides a server template file for each connector; this template identifies the typical set of properties that you must configure to use the connector.</p>
+<p>You will configure a server definition for each external data store that SynxDB users need to access. For example, if you require access to two Hadoop clusters, you will create a PXF Hadoop server configuration for each cluster. If you require access to an Oracle and a MySQL database, you will create one or more PXF JDBC server configurations for each database.</p>
+<p>A server configuration may include default settings for user access credentials and other properties for the external data store. You can allow SynxDB users to access the external data store using the default settings, or you can configure access and other properties on a per-user basis. This allows you to configure different SynxDB users with different external data store access credentials in a single PXF server definition.</p>
+<h2 id="about-server-template-files"><a class="header" href="#about-server-template-files"><a id="templates"></a>About Server Template Files</a></h2>
+<p>The configuration information for a PXF server resides in one or more <code>&lt;connector&gt;-site.xml</code> files in <code>$PXF_BASE/servers/&lt;server_name&gt;/</code>.</p>
+<p>PXF provides a template configuration file for each connector.  These server template configuration files are located in the <code>&lt;PXF_INSTALL_DIR&gt;/templates/</code> directory after you install PXF:</p>
+<pre><code>gpadmin@coordinator$ ls &lt;PXF_INSTALL_DIR&gt;/templates
+abfss-site.xml   hbase-site.xml  jdbc-site.xml    pxf-site.xml    yarn-site.xml
+core-site.xml  hdfs-site.xml   mapred-site.xml  s3-site.xml
+gs-site.xml    hive-site.xml   minio-site.xml   wasbs-site.xml
+</code></pre>
+<p>For example, the contents of the <code>s3-site.xml</code> template file follow:</p>
+<pre><code class="language-pre">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;configuration&gt;
+    &lt;property&gt;
+        &lt;name&gt;fs.s3a.access.key&lt;/name&gt;
+        &lt;value&gt;YOUR_AWS_ACCESS_KEY_ID&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;fs.s3a.secret.key&lt;/name&gt;
+        &lt;value&gt;YOUR_AWS_SECRET_ACCESS_KEY&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;fs.s3a.fast.upload&lt;/name&gt;
+        &lt;value&gt;true&lt;/value&gt;
+    &lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre>
+<div class="note"><b>Note:</b> You specify credentials to PXF in clear text in configuration files.</div>
+<p><strong>Note</strong>: The template files for the Hadoop connectors are not intended to be modified and used for configuration, as they only provide an example of the information needed. Instead of modifying the Hadoop templates, you will copy several Hadoop <code>*-site.xml</code> files from the Hadoop cluster to your PXF Hadoop server configuration.</p>
+<h2 id="about-the-default-server"><a class="header" href="#about-the-default-server"><a id="default"></a>About the Default Server</a></h2>
+<p>PXF defines a special server named <code>default</code>. The PXF installation creates a <code>$PXF_BASE/servers/default/</code> directory. This directory, initially empty, identifies the default PXF server configuration. You can configure and assign the default PXF server to any external data source. For example, you can assign the PXF default server to a Hadoop cluster, or to a MySQL database that your users frequently access.</p>
+<p>PXF automatically uses the <code>default</code> server configuration if you omit the <code>SERVER=&lt;server_name&gt;</code> setting in the <code>CREATE EXTERNAL TABLE</code> command <code>LOCATION</code> clause.</p>
+<h2 id="configuring-a-server"><a class="header" href="#configuring-a-server"><a id="cfgproc"></a>Configuring a Server</a></h2>
+<p>When you configure a PXF connector to an external data store, you add a named PXF server configuration for the connector. Among the tasks that you perform, you may:</p>
+<ol>
+<li>Determine if you are configuring the <code>default</code> PXF server, or choose a new name for the server configuration.</li>
+<li>Create the directory <code>$PXF_BASE/servers/&lt;server_name&gt;</code>.</li>
+<li>Copy template or other configuration files to the new server directory.</li>
+<li>Fill in appropriate default values for the properties in the template file.</li>
+<li>Add any additional configuration properties and values required for your environment.</li>
+<li>Configure one or more users for the server configuration as described in <a href="#usercfg">About Configuring a PXF User</a>.</li>
+<li>Synchronize the server and user configuration to the SynxDB cluster.</li>
+</ol>
+<p><strong>Note</strong>: You must re-sync the PXF configuration to the SynxDB cluster after you add or update PXF server configuration.</p>
+<p>After you configure a PXF server, you publish the server name to SynxDB users who need access to the data store. A user need only provide the server name when they create an external table that accesses the external data store. PXF obtains the external data source location and access credentials from server and user configuration files residing in the server configuration directory identified by the server name.</p>
+<p>To configure a PXF server, refer to the connector configuration topic:</p>
+<ul>
+<li>To configure a PXF server for Hadoop, refer to <a href="client_instcfg.html">Configuring PXF Hadoop Connectors </a>.</li>
+<li>To configure a PXF server for an object store, refer to <a href="s3_objstore_cfg.html">Configuring Connectors to MinIO, AWS S3, and Dell ECS Object Stores</a> and <a href="objstore_cfg.html">Configuring Connectors to Azure and Google Cloud Storage Object Stores</a>.</li>
+<li>To configure a PXF JDBC server, refer to <a href="jdbc_cfg.html">Configuring the JDBC Connector </a>.</li>
+<li><a href="nfs_pxf.html#ex_fscfg">Configuring a PXF Network File System Server</a> describes the process of configuring a PXF server for network file system access.</li>
+</ul>
+<h2 id="about-the-pxf-sitexml-configuration-file"><a class="header" href="#about-the-pxf-sitexml-configuration-file"><a id="pxf-site"></a>About the pxf-site.xml Configuration File</a></h2>
+<p>PXF includes a template file named <code>pxf-site.xml</code> for PXF-specific configuration parameters. You can use the <code>pxf-site.xml</code> template file to configure:</p>
+<ul>
+<li>Kerberos and/or user impersonation settings for server configurations</li>
+<li>a base directory for file access</li>
+<li>the action of PXF when it detects an overflow condition while writing numeric ORC or Parquet data</li>
+</ul>
+<div class="note"><b>Note:</b> The Kerberos and user impersonation settings in this file may apply only to Hadoop and JDBC server configurations; they do not apply to file system or object store server configurations.</div>
+<p>You configure properties in the <code>pxf-site.xml</code> file for a PXF server when one or more of the following conditions hold:</p>
+<ul>
+<li>The remote Hadoop system utilizes Kerberos authentication.</li>
+<li>You want to activate/deactivate user impersonation on the remote Hadoop or external database system.</li>
+<li>You want to activate/deactivate Kerberos constrained delegation for a Hadoop PXF server.</li>
+<li>You will access a network file system with the server configuration.</li>
+<li>You will access a remote Hadoop or object store file system with the server configuration, and you want to allow a user to access only a specific directory and subdirectories.</li>
+</ul>
+<p><code>pxf-site.xml</code> includes the following properties:</p>
+<div class="table-wrapper"><table><thead><tr><th>Property</th><th>Description</th><th>Default Value</th></tr></thead><tbody>
+<tr><td>pxf.service.kerberos.principal</td><td>The Kerberos principal name.</td><td>gpadmin/_HOST@EXAMPLE.COM</td></tr>
+<tr><td>pxf.service.kerberos.keytab</td><td>The file system path to the Kerberos keytab file.</td><td>$PXF_BASE/keytabs/pxf.service.keytab</td></tr>
+<tr><td>pxf.service.kerberos.constrained-delegation</td><td>Activates/deactivates <a href="pxf_kerbhdfs.html#kcd">Kerberos constrained delegation</a>. <strong>Note:</strong> This property is applicable only to Hadoop PXF server configurations, it is not applicable to JDBC PXF servers.</td><td>false</td></tr>
+<tr><td>pxf.service.kerberos.ticket-renew-window</td><td>The minimum elapsed lifespan (as a percentage) after which PXF attempts to renew/refresh a Kerberos ticket. Value range is from 0 (PXF generates a new ticket for all requests) to 1 (PXF renews after full ticket lifespan).</td><td>0.8 (80%)</td></tr>
+<tr><td>pxf.service.user.impersonation</td><td>Activates/deactivates user impersonation when connecting to the remote system.</td><td>If the <code>pxf.service.user.impersonation</code> property is missing from <code>pxf-site.xml</code>, the default is <code>true</code> (activated) for PXF Hadoop servers and <code>false</code> (deactivated) for JDBC servers.</td></tr>
+<tr><td>pxf.service.user.name</td><td>The login user for the remote system.</td><td>This property is commented out by default. When the property is unset, the default value is the operating system user that starts the pxf process, typically <code>gpadmin</code>. When the property is set, the default value depends on the user impersonation setting and, if you are accessing Hadoop, whether or not you are accessing a Kerberos-secured cluster; see the <a href="pxfuserimpers.html#pxf_cfg_scenarios">Use Cases and Configuration Scenarios</a> section in the <em>Configuring the Hadoop User, User Impersonation, and Proxying</em> topic.</td></tr>
+<tr><td>pxf.fs.basePath</td><td>Identifies the base path or share point on the remote file system. This property is applicable when the server configuration is used with a profile that accesses a file.</td><td>None; this property is commented out by default.</td></tr>
+<tr><td>pxf.ppd.hive<sup>1</sup></td><td>Specifies whether or not predicate pushdown is enabled for queries on external tables that specify the <code>hive</code>, <code>hive:rc</code>, or <code>hive:orc</code> profiles.</td><td>True; predicate pushdown is enabled.</td></tr>
+<tr><td>pxf.sasl.connection.retries</td><td>Specifies the maximum number of times that PXF retries a SASL connection request after a refused connection returns a <code>GSS initiate failed</code> error.</td><td>5</td></tr>
+<tr><td>pxf.orc.write.decimal.overflow</td><td>Specifies how PXF handles numeric data that exceeds the maximum precision of 38 and <a href="hdfs_orc.html#overflow">overflows</a> when writing to an ORC file. Valid values are: round, error, or ignore</td><td>round</td></tr>
+<tr><td>pxf.parquet.write.decimal.overflow</td><td>Specifies how PXF handles numeric data that exceeds the maximum precision of 38 and <a href="hdfs_parquet.html#overflow">overflows</a> when writing to a Parquet file. Valid values are: round, error, or ignore</td><td>round</td></tr>
+</tbody></table>
+</div>
+<p></br><sup>1</sup> Should you need to, you can override this setting on a per-table basis by specifying the <code>&amp;PPD=&lt;boolean&gt;</code> option in the <code>LOCATION</code> clause when you create the external table.</p>
+<p>Refer to <a href="client_instcfg.html">Configuring PXF Hadoop Connectors </a> and <a href="jdbc_cfg.html">Configuring the JDBC Connector </a> for information about relevant <code>pxf-site.xml</code> property settings for Hadoop and JDBC server configurations, respectively. See <a href="nfs_pxf.html#ex_fscfg">Configuring a PXF Network File System Server</a> for information about relevant <code>pxf-site.xml</code> property settings when you configure a PXF server to access a network file system.</p>
+<h3 id="about-the-pxffsbasepath-property"><a class="header" href="#about-the-pxffsbasepath-property"><a id="pxf-fs-basepath"></a>About the pxf.fs.basePath Property</a></h3>
+<p>You can use the <code>pxf.fs.basePath</code> property to restrict a user’s access to files in a specific remote directory. When set, this property applies to any profile that accesses a file, including <code>*:text</code>, <code>*:parquet</code>, <code>*:json</code>, etc.</p>
+<p>When you configure the <code>pxf.fs.basePath</code> property for a server, PXF considers the file path specified in the <code>CREATE EXTERNAL TABLE</code> <code>LOCATION</code> clause to be relative to this base path setting, and constructs the remote path accordingly.</p>
+<div class="note info"><b>Note:</b> You must set <code>pxf.fs.basePath</code> when you configure a PXF server for access to a network file system with a <code>file:*</code> profile. This property is optional for a PXF server that accesses a file in Hadoop or in an object store.</div>
+<h2 id="configuring-a-pxf-user"><a class="header" href="#configuring-a-pxf-user"><a id="usercfg"></a>Configuring a PXF User</a></h2>
+<p>You can configure access to an external data store on a per-server, per-SynxDB-user basis.</p>
+<div class="note info"><b>Note:</b> PXF per-server, per-user configuration provides the most benefit for JDBC servers.</div>
+<p>You configure external data store user access credentials and properties for a specific SynxDB user by providing a <code>&lt;synxdb_user_name&gt;-user.xml</code> user configuration file in the PXF server configuration directory, <code>$PXF_BASE/servers/&lt;server_name&gt;/</code>. For example, you specify the properties for the SynxDB user named <code>bill</code> in the file <code>$PXF_BASE/servers/&lt;server_name&gt;/bill-user.xml</code>. You can configure zero, one, or more users in a PXF server configuration.</p>
+<p>The properties that you specify in a user configuration file are connector-specific. You can specify any configuration property supported by the PXF connector server in a <code>&lt;synxdb_user_name&gt;-user.xml</code> configuration file.</p>
+<p>For example, suppose you have configured access to a PostgreSQL database in the PXF JDBC server configuration named <code>pgsrv1</code>. To allow the SynxDB user named <code>bill</code> to access this database as the PostgreSQL user named <code>pguser1</code>, password <code>changeme</code>, you create the user configuration file <code>$PXF_BASE/servers/pgsrv1/bill-user.xml</code> with the following properties:</p>
+<pre><code class="language-xml">&lt;configuration&gt;
+    &lt;property&gt;
+        &lt;name&gt;jdbc.user&lt;/name&gt;
+        &lt;value&gt;pguser1&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;jdbc.password&lt;/name&gt;
+        &lt;value&gt;changeme&lt;/value&gt;
+    &lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre>
+<p>If you want to configure a specific search path and a larger read fetch size for <code>bill</code>, you would also add the following properties to the <code>bill-user.xml</code> user configuration file:</p>
+<pre><code class="language-xml">    &lt;property&gt;
+        &lt;name&gt;jdbc.session.property.search_path&lt;/name&gt;
+        &lt;value&gt;bill_schema&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;jdbc.statement.fetchSize&lt;/name&gt;
+        &lt;value&gt;2000&lt;/value&gt;
+    &lt;/property&gt;
+</code></pre>
+<h3 id="procedure"><a class="header" href="#procedure"><a id="cfgproc_user"></a>Procedure</a></h3>
+<p>For each PXF user that you want to configure, you will:</p>
+<ol>
+<li>
+<p>Identify the name of the SynxDB user.</p>
+</li>
+<li>
+<p>Identify the PXF server definition for which you want to configure user access.</p>
+</li>
+<li>
+<p>Identify the name and value of each property that you want to configure for the user.</p>
+</li>
+<li>
+<p>Create/edit the file <code>$PXF_BASE/servers/&lt;server_name&gt;/&lt;synxdb_user_name&gt;-user.xml</code>, and add the outer configuration block:</p>
+<pre><code class="language-xml">&lt;configuration&gt;
+&lt;/configuration&gt;
+</code></pre>
+</li>
+<li>
+<p>Add each property/value pair that you identified in Step 3 within the configuration block in the <code>&lt;synxdb_user_name&gt;-user.xml</code> file.</p>
+</li>
+<li>
+<p>If you are adding the PXF user configuration to previously configured  PXF server definition, synchronize the user configuration to the SynxDB cluster.</p>
+</li>
+</ol>
+<h2 id="about-configuration-property-precedence"><a class="header" href="#about-configuration-property-precedence"><a id="override"></a>About Configuration Property Precedence</a></h2>
+<p>A PXF server configuration may include default settings for user access credentials and other properties for accessing an external data store. Some PXF connectors, such as the S3 and JDBC connectors, allow you to directly specify certain server properties via custom options in the <code>CREATE EXTERNAL TABLE</code> command <code>LOCATION</code> clause. A <code>&lt;synxdb_user_name&gt;-user.xml</code> file specifies property settings for an external data store that are specific to a SynxDB user.</p>
+<p>For a given SynxDB user, PXF uses the following precedence rules (highest to lowest) to obtain configuration property settings for the user:</p>
+<ol>
+<li>A property that you configure in <code>&lt;server_name&gt;/&lt;synxdb_user_name&gt;-user.xml</code> overrides any setting of the property elsewhere.</li>
+<li>A property that is specified via custom options in the <code>CREATE EXTERNAL TABLE</code> command <code>LOCATION</code> clause overrides any setting of the property in a PXF server configuration.</li>
+<li>Properties that you configure in the <code>&lt;server_name&gt;</code> PXF server definition identify the default property values.</li>
+</ol>
+<p>These precedence rules allow you create a single external table that can be accessed by multiple SynxDB users, each with their own unique external data store user credentials.</p>
+<h2 id="using-a-server-configuration"><a class="header" href="#using-a-server-configuration"><a id="using"></a>Using a Server Configuration</a></h2>
+<p>To access an external data store, the SynxDB user specifies the server name in the <code>CREATE EXTERNAL TABLE</code> command <code>LOCATION</code> clause <code>SERVER=&lt;server_name&gt;</code> option. The <code>&lt;server_name&gt;</code> that the user provides identifies the server configuration directory from which PXF obtains the configuration and credentials to access the external data store.</p>
+<p>For example, the following command accesses an S3 object store using the server configuration defined in the <code>$PXF_BASE/servers/s3srvcfg/s3-site.xml</code> file:</p>
+<pre>
+CREATE EXTERNAL TABLE pxf_ext_tbl(name text, orders int)
+  LOCATION ('pxf://BUCKET/dir/file.txt?PROFILE=s3:text&<b>SERVER=s3srvcfg</b>')
+FORMAT 'TEXT' (delimiter=E',');
+</pre>
+<p>PXF automatically uses the <code>default</code> server configuration when no <code>SERVER=&lt;server_name&gt;</code> setting is provided.</p>
+<p>For example, if the <code>default</code> server configuration identifies a Hadoop cluster, the following example command references the HDFS file located at <code>/path/to/file.txt</code>:</p>
+<pre>
+CREATE EXTERNAL TABLE pxf_ext_hdfs(location text, miles int)
+  LOCATION ('pxf://path/to/file.txt?PROFILE=hdfs:text')
+FORMAT 'TEXT' (delimiter=E',');
+</pre>
+<div class="note info"><b>Note:</b> A SynxDB user who queries or writes to an external table accesses the external data store with the credentials configured for the <code>&lt;server_name></code> user. If no user-specific credentials are configured for <code>&lt;server_name></code>, the SynxDB user accesses the external data store with the default credentials configured for <code>&lt;server_name></code>.</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pxf/instcfg_pxf.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pxf/client_instcfg.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pxf/instcfg_pxf.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pxf/client_instcfg.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

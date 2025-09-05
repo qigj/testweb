@@ -1,0 +1,156 @@
+# Create and Manage Warehouses
+
+In {{ product_name }}, warehouses are compute engines within an account to process queries. Each warehouse is composed of multiple segments, which can be scaled horizontally as needed. All warehouses within a single account have access to a shared pool of data and perform computing tasks independently. Key features of warehouses include:
+
+- Resource management: Allows pausing, resuming, and resizing on demand.
+- Scaling: Supports changing segment counts for online horizontal scaling.
+
+This document introduces how to create and manage warehouses in {{ product_name }}.
+
+## Check existing warehouses
+
+To check the existing warehouses, you can use either of the methods:
+
+- Use `psql` to run the following SQL command:
+
+    ```sql
+    TABLE gp_warehouse;
+    ```
+
+- Use the {{ product_name }} console. Click **Warehouses** in the left navigation menu to enter the warehouse management page, and you will see a list of existing warehouses.
+
+## Create a warehouse
+
+To create a warehouse, you can use either of the methods:
+
+- Use `psql` to run the following SQL command:
+
+    ```sql
+    CREATE WAREHOUSE <warehouse_name> WAREHOUSE_SIZE <segment_count>;
+    ```
+
+    In the command above, replace `<warehouse_name>` with the name of the warehouse you want to create and `<segment_count>` with the number of segments you want to allocate to the warehouse.
+
+    For example:
+
+    ```sql
+    CREATE WAREHOUSE my_warehouse WAREHOUSE_SIZE 2;
+    ```
+
+- Use the {{ product_name }} console. For details, see [Create a warehouse via console](../../tutorials/quick-start.rst#create-a-warehouse).
+
+## Set and use a warehouse
+
+Before updating data in a table or deleting database objects, you need to set and use a warehouse. To set a warehouse, you can use either of the methods:
+
+- Use `psql` to run the following SQL command:
+
+    ```sql
+    SET WAREHOUSE to <warehouse_name>;
+    ```
+
+    In the command above, replace `<warehouse_name>` with the name of the warehouse you want to use.
+
+- Use the {{ product_name }} console. For details, see [Set and use a warehouse via console](../../tutorials/quick-start.rst#method-2-use-the-worksheet-in-the-console).
+
+## Change the size of a warehouse
+
+You can elastically scale warehouses to meet dynamic business workloads. You can use either of the methods:
+
+- Use `psql` to run the following SQL command. Increase the value for scaling out or decrease it for scaling in based on your requirements.
+
+    ```sql
+    ALTER WAREHOUSE <warehouse_name> SET WAREHOUSE_SIZE <new_segment_count>;
+    ```
+
+    For example:
+
+    ```sql
+    ALTER WAREHOUSE my_warehouse SET WAREHOUSE_SIZE 4;
+    ```
+
+- Use the {{ product_name }} console. For details, see [Change the size of a warehouse via console](../../tutorials/quick-start.rst#warehouse-elastic-scaling-in-and-scaling-out).
+
+## Optimize query execution for warehouses
+
+In high-concurrency scenarios, if a data warehouse has too many segment nodes (processes), frequent process scheduling and context switching can create significant overhead, affecting query performance. In some cases, reducing the number of segments involved in a query can actually lead to better execution performance. To address such scenarios, {{ product_name }} allows you to set the number of segments to be used for a query at the session level.
+
+You can control the number of segments used in the current session by setting the `cloud.session_segments` parameter. The system will randomly select the specified number of segments from the current data warehouse to execute the query.
+
+```sql
+SET cloud.session_segments = <number_of_segments>;
+```
+
+Setting `number_of_segments` to `0` (the default) means the query will use all segments of the current data warehouse. Setting it to a positive integer `N` means the query will be executed on `N` randomly selected segments from the current data warehouse.
+
+:::{note}
+- The value of `number_of_segments` cannot exceed the total number of segments in the current data warehouse.
+- This parameter cannot be set within a transaction block (`BEGIN...COMMIT`).
+- To restore the default behavior, execute `RESET cloud.session_segments;` or `SET cloud.session_segments = 0;`.
+:::
+
+**Example:**
+
+Suppose `my_warehouse` has a total of 4 segments. Now, you want to use only 2 of them to execute a query.
+
+1. Switch to the target warehouse:
+
+    ```sql
+    SET warehouse = my_warehouse;
+    ```
+
+2. Set the number of segments for the session:
+
+    ```sql
+    SET cloud.session_segments = 2;
+    ```
+
+3. Execute the query. At this point, the query will run on only 2 randomly selected segments from `my_warehouse`:
+
+    ```sql
+    SELECT * FROM my_table;
+    ```
+
+    You can use the `EXPLAIN` command to view the query plan and confirm the number of segments used for execution.
+
+4. Restore the use of all segments:
+
+    ```sql
+    RESET cloud.session_segments;
+    ```
+
+## Stop a warehouse
+
+To stop a warehouse, you can use either of the methods:
+
+- Use `psql` to run the following SQL command:
+
+    ```sql
+    ALTER WAREHOUSE <warehouse_name> SUSPEND;
+    ```
+
+- Use the {{ product_name }} console. Click **Warehouses** in the left navigation menu to enter the warehouse management page, and then click the stop button in the **Start/Stop** column of the warehouse you want to stop.
+
+## Resume a warehouse
+
+To resume a warehouse, you can use either of the methods:
+
+- Use `psql` to run the following SQL command:
+
+    ```sql
+    ALTER WAREHOUSE <warehouse_name> RESUME;
+    ```
+
+- Use the {{ product_name }} console. Click **Warehouses** in the left navigation menu to enter the warehouse management page, and then click the start button in the **Start/Stop** column of the warehouse you want to resume.
+
+## Delete a warehouse
+
+To delete a warehouse, you can use either of the methods:
+
+- Use `psql` to run the following SQL command:
+
+    ```sql
+    DROP WAREHOUSE <warehouse_name>;
+    ```
+
+- Use the {{ product_name }} console. Click **Warehouses** in the left navigation menu to enter the warehouse management page, and then click **Delete** in the **Operation** column of the warehouse you want to delete.

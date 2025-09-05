@@ -1,0 +1,58 @@
+.. raw:: latex
+
+   \newpage
+
+Work with Transactions
+======================
+
+SQL transactions allow you to bundle multiple SQL statements together to form an all-or-nothing operation. For |product_name|, SQL transaction commands include:
+
+-  ``BEGIN`` or ``START TRANSACTION``: Start a transaction block.
+-  ``END`` or ``COMMIT``: Commit the results of the transaction.
+-  ``ROLLBACK``: Abandon the transaction without making any changes.
+-  ``SAVEPOINT``: Mark a position in a transaction that allows partial rollback. You can roll back commands that ran after the savepoint while keeping commands that ran before the savepoint.
+-  ``ROLLBACK TO SAVEPOINT``: Roll back the transaction to a savepoint.
+-  ``RELEASE SAVEPOINT``: Destroy a savepoint within a transaction.
+
+Transaction isolation levels
+----------------------------
+
+|product_name| supports the following standard SQL transaction isolation levels:
+
+-  ``READ UNCOMMITTED`` and ``READ COMMITTED`` behave the same as the standard ``READ COMMITTED``.
+-  ``REPEATABLE READ`` and ``SERIALIZABLE`` behave the same as ``REPEATABLE READ``.
+
+The following describes the behavior of |product_name| transaction isolation levels.
+
+Read uncommitted and read committed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In |product_name|, any running command cannot see uncommitted updates from other parallel transactions, so the ``READ UNCOMMITTED`` mode has the same effect as the ``READ COMMITTED`` mode. The ``READ COMMITTED`` mode provides a fast and simple way to achieve partial transaction isolation. In this mode, ``SELECT``, ``UPDATE``, and ``DELETE`` statements are all executed based on a snapshot of the database at the time the query begins.
+
+Specifically, a ``SELECT`` query will:
+
+-  See data that was committed before the query started.
+-  See updates performed within the current transaction.
+-  Not see uncommitted data outside the current transaction.
+-  Possibly see changes if other parallel transactions commit changes after the query's initial read.
+
+Multiple consecutive ``SELECT`` queries within the same transaction might see different data, because other parallel transactions might have committed changes between these queries. The ``UPDATE`` and ``DELETE`` commands will only find data rows that were already committed before they started executing.
+
+In ``READ COMMITTED`` transaction isolation mode, parallel transactions are allowed to modify or lock data rows before ``UPDATE`` or ``DELETE`` execution. However, for applications that perform complex queries and updates while requiring database view consistency, the ``READ COMMITTED`` transaction isolation level might not be sufficient to meet requirements.
+
+Repeatable read and serializable isolation levels
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In the SQL standard, the ``SERIALIZABLE`` transaction isolation level is designed to ensure that even if transactions run concurrently, the results produced should be the same as if the transactions ran sequentially. In |product_name|, when the ``SERIALIZABLE`` isolation level is specified, the ``REPEATABLE READ`` isolation level is actually used. The ``REPEATABLE READ`` isolation level can prevent dirty reads, non-repeatable reads, and phantom reads without using complex locking mechanisms, but this mode cannot detect all serialization conflicts that might occur during concurrent transaction execution. Therefore, you need to carefully examine concurrent transactions to identify which conflicts cannot be prevented by simply prohibiting concurrent updates to the same data. To avoid such conflicts, you can use explicit table locks or update a special dummy row that represents the conflict.
+
+At the ``REPEATABLE READ`` isolation level, ``SELECT`` queries will:
+
+-  View based on a data snapshot at the time the transaction started (not when the current query within the transaction started).
+-  Only see data that was committed before the query started.
+-  See updates made within the current transaction.
+-  Not see uncommitted data outside the transaction.
+-  Not see changes made by other concurrent transactions.
+-  Consecutive ``SELECT`` commands within the same transaction always see consistent data.
+-  ``UPDATE``, ``DELETE``, ``SELECT FOR UPDATE``, and ``SELECT FOR SHARE`` commands can only find rows that were already committed before the command started. If a concurrent transaction has updated, deleted, or locked the target row, the ``REPEATABLE READ`` transaction will wait for that concurrent transaction to commit or roll back the changes. If the concurrent transaction commits changes, the ``REPEATABLE READ`` transaction will choose to roll back; if the concurrent transaction rolls back changes, the ``REPEATABLE READ`` transaction can then commit its own changes.
+
+In |product_name|, the default transaction isolation level is ``READ COMMITTED``. To change the isolation level of a transaction, you can declare the isolation level when starting the transaction, or use the ``SET TRANSACTION`` command after the transaction has started.

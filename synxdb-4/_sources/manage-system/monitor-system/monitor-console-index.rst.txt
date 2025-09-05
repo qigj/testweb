@@ -1,0 +1,16 @@
+View Monitoring Data Using the Web Console
+##############################################
+
+|monitor_console| is a monitoring platform for |product_name| clusters. It provides dashboards and metrics for both the cluster and the database, helping users monitor and diagnose the current status of their systems more effectively. |monitor_console| supports monitoring multiple database clusters, and users can switch between clusters in the console.
+
+.. toctree::
+   :maxdepth: 2
+
+   install-monitor-console
+   monitor-console-view-cluster-overview
+   monitor-console-view-cluster-status
+   monitor-console-view-db-object-info
+   monitor-console-sql-monitor-info
+   monitor-console-storage-overview
+   monitor-console-alert-configs
+   monitor-console-contact-groups

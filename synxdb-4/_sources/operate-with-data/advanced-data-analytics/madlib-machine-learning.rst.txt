@@ -1,0 +1,485 @@
+.. raw:: latex
+
+   \newpage
+
+Use MADlib for Machine Learning and Deep Learning
+===================================================
+
+MADlib is an open-source library that provides scalable, in-database analytics functionalities. It implements data-parallel mathematical, statistical, and machine learning algorithms for both structured and unstructured data.
+
+In |product_name|, you can use MADlib by installing the MADlib extension. MADlib offers a set of SQL-based machine learning, data mining, and statistical algorithms, which run at scale within the database engine. This spares you from transferring data between the database and other tools.
+
+Using MADlib leverages the scalability and performance of the database, allowing you to perform analyses within a familiar SQL environment, which improves efficiency. It overcomes memory and CPU limitations often encountered with external database tools.
+
+Install MADlib components
+----------------------------
+
+To install the MADlib components, you first need to install a compatible |product_name| MADlib package, and then add the MADlib functions to the database.
+
+The ``gppkg`` tool installs database extensions and their dependencies across all hosts in a |product_name| cluster. ``gppkg`` also automatically installs extensions on any new hosts added during system expansion or segment recovery.
+
+Install the |product_name| MADlib package
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Before installing the MADlib package, make sure that |product_name| is running, that ``greenplum_path.sh`` is configured, and that the ``$MASTER_DATA_DIRECTORY`` and ``$GPHOME`` variables are set.
+
+1. Obtain the MADlib extension package.
+
+2. Copy the MADlib package to the coordinator node host of |product_name|.
+
+3. Extract the MADlib extension package, as shown in the following command:
+
+   .. code:: shell
+
+      $ tar xzvf madlib-1.21.0+1-gp5-rhel7-x86_64.tar.gz
+
+4. Use the ``gppkg`` tool to install the package, as shown in the following command:
+
+   .. code:: shell
+
+      $ gppkg -i ./madlib-1.21.0+1-gp5-rhel7-x86_64/madlib-1.21.0+1-gp5-rhel7-x86_64.gppkg
+
+Add MADlib functions to the database
+---------------------------------------
+
+After installing the MADlib package, run the ``madpack`` command to add MADlib functions to |product_name|. The ``madpack`` tool is located in the ``$GPHOME/madlib/bin`` directory.
+
+.. code:: shell
+
+   $ $GPHOME/madlib/bin/madpack install [-s <schema_name>] -p cloudberry -c <user>@<host>:<port>/<database>
+
+For example, to create MADlib functions in the ``testdb`` database on the server ``mdw`` with port ``5432``, specify the ``gpadmin`` user in the ``madpack`` command, which will prompt for a password. The target schema is ``madlib``.
+
+.. code:: shell
+
+   $ $GPHOME/madlib/bin/madpack install -s madlib -p cloudberry -c gpadmin@mdw:5432/testdb
+
+After installing the functions, the superuser role ``gpadmin`` in |product_name| grants all permissions on the target schema (``madlib`` in this example) to users who need access to MADlib functions. Without access permissions, users will encounter the error ``ERROR: permission denied for schema MADlib`` when trying to access the target schema.
+
+Uninstall MADlib from the database
+-------------------------------------
+
+To uninstall the MADlib components from the |product_name| cluster, use the ``madpack uninstall`` command. The following example removes MADlib objects from the ``testdb`` database. Any schema or other database objects that rely on MADlib will also be removed.
+
+.. code:: shell
+
+   $ $GPHOME/madlib/bin/madpack uninstall -s madlib -p cloudberry -c gpadmin@mdw:5432/testdb
+
+Usage examples
+--------------
+
+Check the MADlib version
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: sql
+
+   SELECT version FROM madlib.migrationhistory ORDER BY applied DESC LIMIT 1;
+
+Scenario 1: Perform linear regression on a database table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example runs a linear regression on the ``regr_example`` table. The dependent variable data is in the ``y`` column, and the independent variable data is in the ``x1`` and ``x2`` columns.
+
+The statements below create the ``regr_example`` table and load some sample data:
+
+.. code:: sql
+
+   DROP TABLE IF EXISTS regr_example;
+   CREATE TABLE regr_example (
+      id int,
+      y int,
+      x1 int,
+      x2 int
+   );
+   INSERT INTO regr_example VALUES 
+      (1,  5, 2, 3),
+      (2, 10, 7, 2),
+      (3,  6, 4, 1),
+      (4,  8, 3, 4);
+
+MADlib's ``linregr_train()`` function generates a regression model from the input table containing training data. The following ``SELECT`` statement performs a simple multiple regression on the ``regr_example`` table and saves the model in the ``reg_example_model`` table.
+
+.. code:: sql
+
+   SELECT madlib.linregr_train (
+      'regr_example',         -- Source table
+      'regr_example_model',   -- Output model table
+      'y',                    -- Dependent variable
+      'ARRAY[1, x1, x2]'      -- Independent variables
+   );
+
+The ``madlib.linregr_train()`` function can accept additional parameters to set grouping columns and calculate heteroskedasticity of the model.
+
+.. attention::
+
+   The intercept is calculated by setting one of the independent variables to the constant ``1``, as shown in the example above.
+
+Running this query against the ``regr_example`` table creates the ``regr_example_model`` table containing one row of data:
+
+.. code:: 
+
+   SELECT * FROM regr_example_model;
+
+                               coef                            |         r2        
+    |                          std_err                           |                 
+           t_stats                          |                           p_values   
+                           |    condition_no    | num_rows_processed | num_missing_
+   rows_skipped |                                                                  
+                      variance_covariance                                          
+                                               
+   ------------------------------------------------------------+-------------------
+   -+------------------------------------------------------------+-----------------
+   -----------------------------------------+--------------------------------------
+   ------------------------+--------------------+--------------------+-------------
+   -------------+------------------------------------------------------------------
+   --------------------------------------------------------------------------------
+   --------------------------------------------
+    {0.11111111111112681,1.148148148148149,1.0185185185185155} | 0.9686126804771108
+    | {1.4958791130923574,0.2070433312499029,0.3464497580344945} | {0.0742781352708
+   5907,5.545448584201562,2.93987366103776} | {0.9527997481474364,0.113579771006374
+   09,0.20873079069527753} | 22.650203241881005 |                  4 |             
+              0 | {{2.2376543209859783,-0.2572016460903422,-0.4372427983535821},{-0
+   .2572016460903422,0.042866941015057024,0.034293552812045644},{-0.437242798353582
+   1,0.03429355281204565,0.12002743484215979}}
+   (1 row)
+
+The model saved in the ``regr_example_model`` table can be used with the MADlib linear regression prediction function, ``madlib.linregr_predict()``, to view the residuals:
+
+.. code:: sql
+
+   SELECT regr_example.*, 
+           madlib.linregr_predict ( ARRAY[1, x1, x2], m.coef ) as predict,
+           y - madlib.linregr_predict ( ARRAY[1, x1, x2], m.coef ) as residual
+   FROM regr_example, regr_example_model m;
+
+    id | y  | x1 | x2 |      predict       |      residual       
+   ----+----+----+----+--------------------+---------------------
+     4 |  8 |  3 |  4 |  7.629629629629636 |   0.370370370370364
+     1 |  5 |  2 |  3 |  5.462962962962971 | -0.4629629629629708
+     2 | 10 |  7 |  2 | 10.185185185185201 | -0.1851851851852011
+     3 |  6 |  4 |  1 |  5.722222222222238 |  0.2777777777777617
+   (4 rows)
+
+Scenario 2: Use association rules
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example shows the association rules data mining technique on a transactional data set. Association rule mining is a technique for discovering relationships between variables in a large data set. This example considers items in a store that are commonly purchased together. In addition to market basket analysis, association rules are also used in bioinformatics, web analytics, and other fields.
+
+The example analyzes purchase information for seven transactions that are stored in a table with the MADlib function ``MADlib.assoc_rules``. The function assumes that the data is stored in two columns with a single item and transaction ID per row. Transactions with multiple items consist of multiple rows with one row per item.
+
+1. Create the table.
+
+   .. code:: sql
+
+      DROP TABLE IF EXISTS test_data;
+      CREATE TABLE test_data (
+      trans_id INT,
+      product text
+      );
+
+2. Add the data to the table.
+
+   .. code:: sql
+
+      INSERT INTO test_data VALUES 
+      (1, 'beer'),
+      (1, 'diapers'),
+      (1, 'chips'),
+      (2, 'beer'),
+      (2, 'diapers'),
+      (3, 'beer'),
+      (3, 'diapers'),
+      (4, 'beer'),
+      (4, 'chips'),
+      (5, 'beer'),
+      (6, 'beer'),
+      (6, 'diapers'),
+      (6, 'chips'),
+      (7, 'beer'),
+      (7, 'diapers');
+
+The MADlib function ``madlib.assoc_rules()`` analyzes the data and determines association rules with the following characteristics.
+
+-  A support value of at least ``.40``. Support is the ratio of transactions that contain X to all transactions.
+-  A confidence value of at least ``.75``. Confidence is the ratio of transactions that contain X to transactions that contain Y. You can view this metric as the conditional probability of X given Y.
+
+This ``SELECT`` command determines association rules, creates the table ``assoc_rule``\ s, and adds the statistics to the table.
+
+.. code:: sql
+
+   SELECT * FROM madlib.assoc_rules (
+      .40,          -- Support
+      .75,          -- Confidence
+      'trans_id',   -- Transaction column
+      'product',    -- Product purchased column
+      'test_data',  -- Table name
+      'public',     -- Schema name
+      false);       -- Displays processing details
+
+This is the output of the ``SELECT`` command. There are two rules that fit the characteristics.
+
+.. code:: sql
+
+   output_schema | output_table | total_rules |   total_time    
+   ---------------+--------------+-------------+-----------------
+    public        | assoc_rules  |           2 | 00:00:04.340151
+   (1 row)
+
+To view the association rules, run this ``SELECT`` command.
+
+.. code:: sql
+
+   SELECT pre, post, support FROM assoc_rules
+      ORDER BY support DESC;
+
+This is the output. The ``pre`` and ``post`` columns are the itemsets of left and right hand sides of the association rule respectively.
+
+.. code:: 
+
+   pre    |  post  |       support       
+   -----------+--------+---------------------
+    {diapers} | {beer} |  0.7142857142857143
+    {chips}   | {beer} | 0.42857142857142855
+   (2 rows)
+
+Scenario 3: Perform Naive Bayes classification
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Naive Bayes analysis predicts the likelihood of an outcome of a class variable, or category, based on one or more independent variables, or attributes. The class variable is a non-numeric categorial variable, a variable that can have one of a limited number of values or categories. The class variable is represented with integers, each integer representing a category. For example, if the category can be one of "true", "false", or "unknown," the values can be represented with the integers 1, 2, or 3.
+
+The attributes can be of numeric types and non-numeric, categorical, types. The training function has two signatures – one for the case where all attributes are numeric and another for mixed numeric and categorical types. Additional arguments for the latter identify the attributes that should be handled as numeric values. The attributes are submitted to the training function in an array.
+
+The MADlib Naive Bayes training functions produce a features probabilities table and a class priors table, which can be used with the prediction function to provide the probability of a class for the set of attributes.
+
+Naive Bayes example 1 - Simple all-numeric attributes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In the first example, the ``class`` variable is either ``1`` or ``2`` and there are three integer attributes.
+
+1. Create the input table and load sample data.
+
+   .. code:: sql
+
+      DROP TABLE IF EXISTS class_example CASCADE;
+      CREATE TABLE class_example (
+      id int, class int, attributes int[]);
+      INSERT INTO class_example VALUES
+      (1, 1, '{1, 2, 3}'),
+      (2, 1, '{1, 4, 3}'),
+      (3, 2, '{0, 2, 2}'),
+      (4, 1, '{1, 2, 1}'),
+      (5, 2, '{1, 2, 2}'),
+      (6, 2, '{0, 1, 3}');
+
+   Actual data in production scenarios is more extensive than this example data and yields better results. Accuracy of classification improves significantly with larger training data sets.
+
+2. Train the model with the ``create_nb_prepared_data_tables()`` function.
+
+   .. code:: sql
+
+      SELECT * FROM madlib.create_nb_prepared_data_tables (
+          'class_example',         -- Name of the training table 
+          'class',                 -- Name of the class (dependent) column
+          'attributes',            -- Name of the attributes column
+          3,                       -- The number of attributes
+          'example_feature_probs', -- Name for the feature probabilities output table
+          'example_priors'         -- Name for the class priors output table
+          );
+
+3. Create a table with data to classify using the model.
+
+   .. code:: sql
+
+      DROP TABLE IF EXISTS class_example_topredict;
+
+      CREATE TABLE class_example_topredict ( 
+          id int, attributes int[]);
+
+      INSERT INTO class_example_topredict VALUES
+          (1, '{1, 3, 2}'),
+          (2, '{4, 2, 2}'),
+          (3, '{2, 1, 1}');
+
+4. Create a classification view using the feature probabilities, class priors, and ``class_example_topredict`` tables.
+
+   .. code:: sql
+
+      SELECT madlib.create_nb_probs_view (
+          'example_feature_probs',    -- Feature probabilities output table
+          'example_priors',           -- Class priors output table
+          'class_example_topredict',  -- Table with data to classify
+          'id',                       -- Name of the key column
+          'attributes',               -- Name of the attributes column
+          3,                         -- Number of attributes
+          'example_classified'       -- Name of the view to create
+          );
+
+5. Display the classification results.
+
+   .. code:: sql
+
+      SELECT * FROM example_classified;
+
+      key | class |       nb_prob       
+      -----+-------+---------------------
+      1 |     1 |                 0.4
+      1 |     2 |  0.5999999999999999
+      2 |     1 | 0.24999999999999992
+      2 |     2 |                0.75
+      3 |     1 |                 0.5
+      3 |     2 |                 0.5
+      (6 rows)
+
+Naive Bayes example 2 – Weather and outdoor sports
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This example calculates the probability that the user will play an outdoor sport, such as golf or tennis, based on weather conditions.
+
+The table ``weather_example`` contains the example values.
+
+The identification column for the table is ``day``, an integer type.
+
+The ``play`` column holds the dependent variable and has two classifications:
+
+-  0 - No
+-  1 - Yes
+
+There are four attributes: outlook, temperature, humidity, and wind. These are categorical variables. The MADlib function ``create_nb_classify_view()`` expects the attributes to be provided as an array of ``INTEGER``, ``NUMERIC``, or ``FLOAT8`` values, so the attributes for this example are encoded with integers as follows:
+
+-  ``outlook`` might be ``sunny(1)``, ``overcast(2)``, or ``rain(3)``.
+-  ``temperature`` might be ``hot(1)``, ``mild(2)``, or ``cool(3)``.
+-  ``humidity`` might be ``high(1)``, or ``normal(2)``.
+-  ``wind`` might be ``strong(1)`` or ``weak(2)``.
+
+The following table shows the training data, before encoding the variables.
+
+.. code:: sql
+
+   day | play | outlook  | temperature | humidity | wind
+   -----+------+----------+-------------+----------+--------
+    2   | No   | Sunny    | Hot         | High     | Strong
+    4   | Yes  | Rain     | Mild        | High     | Weak
+    6   | No   | Rain     | Cool        | Normal   | Strong
+    8   | No   | Sunny    | Mild        | High     | Weak
+   10   | Yes  | Rain     | Mild        | Normal   | Weak
+   12   | Yes  | Overcast | Mild        | High     | Strong
+   14   | No   | Rain     | Mild        | High     | Strong
+    1   | No   | Sunny    | Hot         | High     | Weak
+    3   | Yes  | Overcast | Hot         | High     | Weak
+    5   | Yes  | Rain     | Cool        | Normal   | Weak
+    7   | Yes  | Overcast | Cool        | Normal   | Strong
+    9   | Yes  | Sunny    | Cool        | Normal   | Weak
+   11   | Yes  | Sunny    | Mild        | Normal   | Strong
+   13   | Yes  | Overcast | Hot         | Normal   | Weak
+   (14 rows)
+
+1. Create the training table.
+
+   .. code:: sql
+
+      DROP TABLE IF EXISTS weather_example;
+      CREATE TABLE weather_example (
+      day int,
+      play int,
+      attrs int[]
+      );
+      INSERT INTO weather_example VALUES
+      ( 2, 0, '{1,1,1,1}'), -- sunny, hot, high, strong
+      ( 4, 1, '{3,2,1,2}'), -- rain, mild, high, weak
+      ( 6, 0, '{3,3,2,1}'), -- rain, cool, normal, strong
+      ( 8, 0, '{1,2,1,2}'), -- sunny, mild, high, weak
+      (10, 1, '{3,2,2,2}'), -- rain, mild, normal, weak
+      (12, 1, '{2,2,1,1}'), -- and so on.
+      (14, 0, '{3,2,1,1}'),
+      ( 1, 0, '{1,1,1,2}'),
+      ( 3, 1, '{2,1,1,2}'),
+      ( 5, 1, '{3,3,2,2}'),
+      ( 7, 1, '{2,3,2,1}'),
+      ( 9, 1, '{1,3,2,2}'),
+      (11, 1, '{1,2,2,1}'),
+      (13, 1, '{2,1,2,2}');
+
+2. Create the model from the training table.
+
+   .. code:: sql
+
+      SELECT madlib.create_nb_prepared_data_tables ( 
+         'weather_example',  -- Training source table
+         'play',             -- Dependent class column 
+         'attrs',            -- Attributes column
+         4,                  -- Number of attributes
+         'weather_probs',    -- Feature probabilities output table
+         'weather_priors'    -- Class priors
+         );
+
+3. View the feature probabilities:
+
+   .. code:: sql
+
+      SELECT * FROM weather_probs;
+
+      class | attr | value | cnt | attr_cnt 
+      -------+------+-------+-----+----------
+          0 |    3 |     1 |   4 |        2
+          1 |    2 |     3 |   3 |        3
+          0 |    2 |     3 |   1 |        3
+          1 |    1 |     1 |   2 |        3
+          1 |    2 |     1 |   2 |        3
+          1 |    2 |     2 |   4 |        3
+          1 |    4 |     1 |   3 |        2
+          0 |    2 |     1 |   2 |        3
+          0 |    1 |     1 |   3 |        3
+          0 |    2 |     2 |   2 |        3
+          0 |    4 |     1 |   3 |        2
+          1 |    3 |     2 |   6 |        2
+          0 |    3 |     2 |   1 |        2
+          0 |    1 |     2 |   0 |        3
+          1 |    1 |     3 |   3 |        3
+          1 |    4 |     2 |   6 |        2
+          0 |    1 |     3 |   2 |        3
+          1 |    1 |     2 |   4 |        3
+          1 |    3 |     1 |   3 |        2
+          0 |    4 |     2 |   2 |        2
+      (20 rows)
+
+4. To classify a group of records with a model, first load the data into a table. In this example, the table ``t1`` has four rows to classify.
+
+   .. code:: sql
+
+      DROP TABLE IF EXISTS t1;
+      CREATE TABLE t1 (
+          id integer,
+          attributes integer[]);
+          
+      insert into t1 values
+          (1, '{1, 2, 1, 1}'),
+          (2, '{3, 3, 2, 1}'),
+          (3, '{2, 1, 2, 2}'),
+          (4, '{3, 1, 1, 2}');
+
+5. Use the MADlib function ``create_nb_classify_view()`` to classify the rows in the table.
+
+   .. code:: sql
+
+      SELECT madlib.create_nb_classify_view ( 
+         'weather_probs',      -- Feature probabilities table
+         'weather_priors',     -- ClassPriorsName
+         't1',                 -- Table containing values to classify
+         'id',                 -- Key column 
+         'attributes',         -- Attributes column
+         4,                    -- Number of attributes
+         't1_out'              -- Output table name
+      );
+
+   The result is four rows, one for each record in the ``t1`` table.
+
+   .. code:: 
+
+      SELECT * FROM t1_out ORDER BY key;
+      key | nb_classification
+      -----+-------------------
+      1 | {0}
+      2 | {1}
+      3 | {1}
+      4 | {0}
+      (4 rows)

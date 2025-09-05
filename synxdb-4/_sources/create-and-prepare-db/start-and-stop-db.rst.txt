@@ -1,0 +1,145 @@
+.. raw:: latex
+
+   \newpage
+
+Start and Stop Databases
+===========================
+
+In the |product_name| database management system, the database server instances (including the Coordinator and all Segments) are started, stopped, and run on all system hosts, so that the instances can work together to form a unified database management system.
+
+Because a |product_name| system is distributed across multiple machines, the process for starting and stopping the system is different from that of a regular PostgreSQL database system.
+
+The command-line utilities ``gpstart`` and ``gpstop`` are used to start and stop |product_name|, respectively. They are located in the ``$GPHOME/bin`` directory on the coordinator host.
+
+.. tip::
+
+   Do not use the ``kill`` command to terminate Postgres processes, as using ``kill -9`` or ``kill -11`` can corrupt the database and hinder failure analysis. To terminate a Postgres process, use the database function ``pg_cancel_backend()``.
+
+Start |product_name|
+------------------------
+
+To start an initialized |product_name|, execute ``gpstart`` on the coordinator instance.
+
+If the database system has been initialized with ``gpinitsystem`` and stopped with ``gpstop``, you can restart it with ``gpstart``. ``gpstart`` starts all the ``postgres`` instances in the |product_name| cluster, thus completing the startup of the entire database. During startup, ``gpstart`` coordinates and executes all necessary steps in parallel.
+
+Execute ``gpstart`` on the coordinator host to start |product_name|:
+
+.. code:: shell
+
+   $ gpstart
+
+Restart |product_name|
+--------------------------
+
+To restart |product_name|, execute the ``gpstop`` command with the ``-r`` option on the coordinator host:
+
+.. code:: shell
+
+   $ gpstop -r
+
+Reload configuration file changes
+---------------------------------
+
+You can reload changes to the |product_name| configuration files without interrupting the system.
+
+``gpstop`` supports reloading the ``pg_hba.conf`` configuration file and runtime parameters in ``postgresql.conf`` without service interruption. Active sessions will apply the changes in the configuration files when clients reconnect to the database. However, many server configuration parameters only take effect after a full system restart (``gpstop -r``).
+
+Use ``gpstop -u`` to reload configuration file changes without shutting down the |product_name| system:
+
+.. code:: shell
+
+   $ gpstop -u
+
+Start the coordinator in maintenance mode
+-----------------------------------------
+
+If you need to perform maintenance or administrative tasks without affecting the data on the segments, you can start only the coordinator. For example, in maintenance mode, you can connect only to the coordinator instance of the database and edit system catalog settings.
+
+1. Use the ``-m`` option in ``gpstart`` to enter maintenance mode:
+
+   .. code:: shell
+
+      $ gpstart -m
+
+2. Connect to the coordinator in maintenance mode for catalog maintenance. For example:
+
+   .. code:: shell
+
+      $ PGOPTIONS='-c gp_role=utility' psql postgres
+
+3. After completing the maintenance tasks, stop the coordinator in maintenance mode. Then, restart it in production mode.
+
+   .. code:: shell
+
+      $ gpstop -m
+      $ gpstart
+
+.. warning:: It is recommended that this operation be performed by technical support.
+
+Stop |product_name|
+-----------------------
+
+``gpstop`` stops or restarts the |product_name| system on the coordinator host. When executed, ``gpstop`` stops all ``postgres`` processes in the system, including the coordinator and all segment instances. By default, ``gpstop`` uses multiple parallel worker threads to shut down the Postgres instances that make up the |product_name| cluster. To stop |product_name| immediately, use fast mode.
+
+.. tip:: This mode stops all database processes without allowing the database server to complete transactions or clean up any temporary or in-process work files.
+
+-  Stop |product_name|:
+
+   .. code:: shell
+
+      $ gpstop
+
+-  Stop |product_name| in fast mode:
+
+   .. code:: shell
+
+      $ gpstop -M fast
+
+By default, shutting down |product_name| is not allowed if there are client connections to the database. Use the ``-M fast`` option to roll back all in-progress transactions and terminate any connections before shutting down.
+
+Stop client processes
+---------------------
+
+|product_name| starts a new backend process for each client connection. A |product_name| user with ``SUPERUSER`` privileges can cancel and terminate these client backend processes.
+
+Canceling a backend process with the ``pg_cancel_backend()`` function ends a client query that is queued or in progress. Terminating a backend process with the ``pg_terminate_backend()`` function terminates the client connection to the database.
+
+The ``pg_cancel_backend()`` function has two signatures:
+
+-  ``pg_cancel_backend( pid int4 )``
+-  ``pg_cancel_backend( pid int4, msg text )``
+
+The ``pg_terminate_backend()`` function has two similar signatures:
+
+-  ``pg_terminate_backend( pid int4 )``
+-  ``pg_terminate_backend( pid int4, msg text )``
+
+If you provide a ``msg``, |product_name| includes the ``msg`` text in the cancellation message returned to the client. The ``msg`` is limited to 128 bytes, and |product_name| will truncate anything longer.
+
+The ``pg_cancel_backend()`` and ``pg_terminate_backend()`` functions return ``true`` if successful, and ``false`` otherwise.
+
+To cancel or terminate a backend process, you must first obtain its process ID. You can get the process ID from the ``pid`` column of the ``pg_stat_activity`` view. For example, to view the process information for all executing and queued queries:
+
+.. code:: sql
+
+   SELECT usename, pid, state, query, datname
+        FROM pg_stat_activity;
+
+Example of partial query output:
+
+.. code:: sql
+
+   usename |  pid     | state  |         query          | datname
+   -----------+-------------------+--------+------------------------+---------
+     sammy  |   31861  | idle   | SELECT * FROM testtbl; | testdb
+     billy  |   31905  | active | SELECT * FROM topten;  | testdb
+
+You can identify the process ID (pid) of a query or client connection from the query output.
+
+After identifying the process ID for a query, you can cancel the waiting query. For example, to cancel the waiting query identified in the example output above and include ``Admin canceled long-running query.`` as the message returned to the client:
+
+.. code:: sql
+
+   =# SELECT pg_cancel_backend(31905 ,'Admin canceled long-running query.');
+
+   ERROR:  canceling statement due to user request: "Admin canceled lon

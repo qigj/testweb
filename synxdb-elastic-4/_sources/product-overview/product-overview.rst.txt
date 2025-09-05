@@ -1,0 +1,7 @@
+Product Overview
+=================================================
+
+|product_name| is a cloud-native, distributed analytical database that offers enterprises efficient, flexible, and scalable solutions for data management and analysis. Built on Apache Cloudberry and containerized, it separates storage, computing, and metadata to maximize the benefits of cloud-native infrastructure. This enables businesses to integrate their data resources, store and analyze massive datasets, and use data to drive business growth.
+
+To have a quick try of |product_name|, see :ref:`tutorials/quick-start:quick-start guide`.
+

@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create and Manage Materialized Views &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Insert, Update, and Delete Row Data" href="insert-update-delete-row-data.html" />
+    <link rel="prev" title="Create and Manage Views" href="create-and-manage-views.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../operate-with-data-index.html">Operate with Data</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="operate-with-db-objects-index.html">Operate with Database Objects</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="basic-query-syntax.html">Basic Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create-and-manage-warehouses.html">Create and Manage Warehouses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create-and-manage-tables.html">Create and Manage Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create-and-manage-views.html">Create and Manage Views</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Create and Manage Materialized Views</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#create-materialized-views">Create materialized views</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#refresh-or-deactivate-materialized-views">Refresh or deactivate materialized views</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drop-materialized-views">Drop materialized views</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#automatically-use-materialized-views-for-query-optimization">Automatically use materialized views for query optimization</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="insert-update-delete-row-data.html">Insert, Update, and Delete Row Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="use-tagging-for-db-objects.html">Use Tags to Manage Database Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="use-data-branching.html">Data Branching</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../choose-table-storage-models/choose-table-storage-models-index.html">Choose Table Storage Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-queries/sql-queries-index.html">Perform SQL Queries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced-data-analytics/advanced-data-analytics-index.html">Advanced Data Analytics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../work-with-transactions.html">Work with Transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transaction-concurrency-control.html">Control Transactional Concurrency</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../operate-with-data-index.html">Operate with Data</a></li>
+          <li class="breadcrumb-item"><a href="operate-with-db-objects-index.html">Operate with Database Objects</a></li>
+      <li class="breadcrumb-item active">Create and Manage Materialized Views</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="create-and-manage-materialized-views">
+<h1>Create and Manage Materialized Views<a class="headerlink" href="#create-and-manage-materialized-views" title="Link to this heading"></a></h1>
+<p>In SynxDB Elastic, materialized views are similar to views. A materialized view enables you to save a frequently used or complex query and then access the query results in a <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> statement as if they were a table. Materialized views persist the query results in a table-like form.</p>
+<p>Although accessing the data stored in a materialized view can be much faster than accessing the underlying tables directly or through a regular view, the data is not always current. The materialized view data cannot be directly updated. To refresh the materialized view data, use the <code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code> command.</p>
+<p>The query used to create the materialized view is stored in exactly the same way that a view’s query is stored. For example, you can create a materialized view that quickly displays a summary of historical sales data for situations where having incomplete data for the current date is acceptable.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">sales_summary</span><span class="w"> </span><span class="k">AS</span>
+<span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="n">seller_no</span><span class="p">,</span><span class="w"> </span><span class="n">invoice_date</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">invoice_amt</span><span class="p">)::</span><span class="nb">numeric</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">sales_amt</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">invoice</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">invoice_date</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">CURRENT_DATE</span>
+<span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">seller_no</span><span class="p">,</span><span class="w"> </span><span class="n">invoice_date</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The materialized view might be useful for displaying a graph in the dashboard created for salespeople. You can schedule a job to update the summary information each night using the following command:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">REFRESH</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">sales_summary</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The information about a materialized view in the SynxDB Elastic system catalogs is exactly the same as it is for a table or view. A materialized view is a relation, just like a table or a view. When a materialized view is referenced in a query, the data is returned directly from the materialized view, just like from a table. The query in the materialized view definition is only used for populating the materialized view.</p>
+<p>If you can tolerate periodically updating the materialized view data, you can get great performance benefits from the view.</p>
+<p>One use of a materialized view is to allow faster access to data brought in from an external data source, such as an external table or a foreign data wrapper.</p>
+<p>If a subquery is associated with a single query, consider using the <code class="docutils literal notranslate"><span class="pre">WITH</span></code> clause of the <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> command instead of creating a seldom-used materialized view.</p>
+<section id="create-materialized-views">
+<h2>Create materialized views<a class="headerlink" href="#create-materialized-views" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code> command defines a materialized view based on a query.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">us_users</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="k">zone</span><span class="w"> </span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="n">address</span><span class="w"> </span><span class="n">a</span><span class="w"> </span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">country</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;USA&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When a materialized view is created with an <code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span></code> or <code class="docutils literal notranslate"><span class="pre">SORT</span></code> clause, this sorting is applied only at the time of the view’s initial creation. Subsequent refreshes of the materialized view do not maintain this order, because the view is essentially a static snapshot of data and does not dynamically update or preserve the sorting with new data insertions.</p>
+</div>
+<section id="create-asynchronous-materialized-views">
+<h3>Create asynchronous materialized views<a class="headerlink" href="#create-asynchronous-materialized-views" title="Link to this heading"></a></h3>
+<p>To avoid the performance overhead of maintaining incremental materialized views synchronously during high-frequency data writes, SynxDB Elastic allows you to create asynchronous incremental materialized views. The refresh tasks for these views run asynchronously in the background.</p>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">INCREMENTAL</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code> statement with the <code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">DEFERRED</span></code> clause to create an asynchronous incremental materialized view. The syntax is as follows:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">INCREMENTAL</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">view_name</span>
+<span class="p">[</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="k">DEFERRED</span><span class="w"> </span><span class="p">]</span>
+<span class="p">[</span><span class="w"> </span><span class="n">SCHEDULE</span><span class="w"> </span><span class="s1">&#39;interval&#39;</span><span class="w"> </span><span class="p">]</span>
+<span class="k">AS</span><span class="w"> </span><span class="n">query</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">DEFERRED</span></code>: A mandatory clause that enables the asynchronous refresh mode.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SCHEDULE</span> <span class="pre">'interval'</span></code>: An optional clause to specify the refresh interval for the background task, for example, <code class="docutils literal notranslate"><span class="pre">'10</span> <span class="pre">seconds'</span></code>. The interval can be set from 1 to 59 seconds. If not specified, it defaults to refreshing after 30 seconds.</p></li>
+</ul>
+<p>For example, to create an asynchronous incremental materialized view that refreshes automatically every 10 seconds:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">INCREMENTAL</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">mv_ivm_agg</span>
+<span class="n">REFRESH</span><span class="w"> </span><span class="k">DEFERRED</span><span class="w"> </span><span class="n">SCHEDULE</span><span class="w"> </span><span class="s1">&#39;10 seconds&#39;</span>
+<span class="k">AS</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">j</span><span class="p">),</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">mv_base_a</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">10</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>For materialized views that contain aggregate functions (such as <code class="docutils literal notranslate"><span class="pre">SUM</span></code>, <code class="docutils literal notranslate"><span class="pre">COUNT</span></code>, <code class="docutils literal notranslate"><span class="pre">AVG</span></code>, <code class="docutils literal notranslate"><span class="pre">MIN</span></code>, <code class="docutils literal notranslate"><span class="pre">MAX</span></code>), you can also choose to store intermediate aggregate results to optimize refresh performance. This can be achieved using the <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">(partial_agg</span> <span class="pre">=</span> <span class="pre">true)</span></code> parameter.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">INCREMENTAL</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">mv_ivm_agg</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="n">partial_agg</span><span class="o">=</span><span class="k">true</span><span class="p">)</span>
+<span class="n">REFRESH</span><span class="w"> </span><span class="k">DEFERRED</span><span class="w"> </span><span class="n">SCHEDULE</span><span class="w"> </span><span class="s1">&#39;10 seconds&#39;</span>
+<span class="k">AS</span><span class="w"> </span><span class="p">...</span>
+</pre></div>
+</div>
+</section>
+<section id="create-materialized-views-on-partitioned-tables">
+<h3>Create materialized views on partitioned tables<a class="headerlink" href="#create-materialized-views-on-partitioned-tables" title="Link to this heading"></a></h3>
+<p>SynxDB Elastic supports creating materialized views on partitioned tables. When the base table is a partitioned table, the syntax for creating a materialized view is identical to that for a regular table. The database automatically handles interactions with the underlying partitions. This allows you to combine the management benefits of partitioned tables with the query performance advantages of materialized views.</p>
+<p>Here is an example of creating an incremental materialized view on a two-level partitioned table.</p>
+<ol class="arabic">
+<li><p>Create a partitioned table. Create a two-level partitioned table <code class="docutils literal notranslate"><span class="pre">two_level_pt_ivm</span></code> that is range-partitioned by columns <code class="docutils literal notranslate"><span class="pre">b</span></code> and <code class="docutils literal notranslate"><span class="pre">c</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">two_level_pt_ivm</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+<span class="w">    </span><span class="n">b</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+<span class="w">    </span><span class="k">c</span><span class="w"> </span><span class="nb">int</span>
+<span class="p">)</span>
+<span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">RANGE</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="w">    </span><span class="n">SUBPARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">RANGE</span><span class="w"> </span><span class="p">(</span><span class="k">c</span><span class="p">)</span>
+<span class="w">    </span><span class="n">SUBPARTITION</span><span class="w"> </span><span class="k">TEMPLATE</span><span class="w"> </span><span class="p">(</span>
+<span class="w">        </span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="w"> </span><span class="k">END</span><span class="w"> </span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="w"> </span><span class="k">EVERY</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span>
+<span class="w">        </span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">END</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">EVERY</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a materialized view on the partitioned table. Create an asynchronous incremental materialized view <code class="docutils literal notranslate"><span class="pre">mv_ivm35</span></code> based on the partitioned table <code class="docutils literal notranslate"><span class="pre">two_level_pt_ivm</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">INCREMENTAL</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">mv_ivm35</span>
+<span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="n">partial_agg</span><span class="o">=</span><span class="k">true</span><span class="p">)</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="k">DEFERRED</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">two_level_pt_ivm</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Insert data and refresh. Insert data into the base table, then manually refresh the materialized view to update the aggregate results.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">two_level_pt_ivm</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="k">c</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">11</span><span class="p">);</span>
+<span class="n">REFRESH</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">mv_ivm35</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Query the materialized view for fast aggregate results.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">mv_ivm35</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>When dropping the base table, use the <code class="docutils literal notranslate"><span class="pre">CASCADE</span></code> option to automatically drop the dependent materialized view <code class="docutils literal notranslate"><span class="pre">mv_ivm35</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">two_level_pt_ivm</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="refresh-or-deactivate-materialized-views">
+<h2>Refresh or deactivate materialized views<a class="headerlink" href="#refresh-or-deactivate-materialized-views" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code> command updates the materialized view data.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">REFRESH</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">us_users</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">NO</span> <span class="pre">DATA</span></code> clause, the current data is removed, no new data is generated, and the materialized view is left in an unscannable state. An error is returned if a query attempts to access an unscannable materialized view.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">REFRESH</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">us_users</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">NO</span><span class="w"> </span><span class="k">DATA</span><span class="p">;</span>
+</pre></div>
+</div>
+<section id="refresh-incremental-materialized-views">
+<h3>Refresh incremental materialized views<a class="headerlink" href="#refresh-incremental-materialized-views" title="Link to this heading"></a></h3>
+<p>For incremental materialized views, in addition to the standard <code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code> (which performs a full refresh), more fine-grained refresh operations are supported.</p>
+<ul>
+<li><p>Background auto-refresh: For asynchronous materialized views, a background process automatically applies new data using the <code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">INCREMENTAL</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span> <span class="pre">CONCURRENTLY</span></code> command. The <code class="docutils literal notranslate"><span class="pre">CONCURRENTLY</span></code> option ensures that the refresh operation does not block read queries on the materialized view.</p></li>
+<li><p>Manual merge: You can manually execute the following command to merge the intermediate results of an incremental materialized view.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">COMBINE</span><span class="w"> </span><span class="n">INCREMENTAL</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">view_name</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Automatic full refresh trigger: It is important to note that when <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, or <code class="docutils literal notranslate"><span class="pre">TRUNCATE</span></code> operations occur on the base table of an incremental materialized view, the system automatically triggers a full refresh (equivalent to executing <code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code>) to ensure data consistency.</p></li>
+</ul>
+</section>
+</section>
+<section id="drop-materialized-views">
+<h2>Drop materialized views<a class="headerlink" href="#drop-materialized-views" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code> command removes a materialized view definition and data. For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">us_users</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span> <span class="pre">...</span> <span class="pre">CASCADE</span></code> command also removes all dependent objects. For example, if another materialized view depends on the materialized view which is about to be dropped, the other materialized view will be dropped as well. Without the <code class="docutils literal notranslate"><span class="pre">CASCADE</span></code> option, the <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code> command fails.</p>
+</section>
+<section id="automatically-use-materialized-views-for-query-optimization">
+<h2>Automatically use materialized views for query optimization<a class="headerlink" href="#automatically-use-materialized-views-for-query-optimization" title="Link to this heading"></a></h2>
+<p>SynxDB Elastic supports automatically using materialized views during the query planning phase to compute part or all of a query (also known as AQUMV). For more details, see <a class="reference internal" href="../../optimize-performance/optimize-queries/use-auto-mtv-for-query-optimization.html"><span class="std std-doc">Automatically Use Materialized Views for Query Optimization</span></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="insert-update-delete-row-data.html" class="btn btn-neutral float-right" title="Insert, Update, and Delete Row Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="create-and-manage-views.html" class="btn btn-neutral float-left" title="Create and Manage Views" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

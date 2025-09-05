@@ -1,0 +1,313 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>DECLARE - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="declare"><a class="header" href="#declare">DECLARE</a></h1>
+<p>Defines a cursor.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code class="language-{#sql_command_synopsis}">DECLARE &lt;name&gt; [BINARY] [INSENSITIVE] [NO SCROLL] [PARALLEL RETRIEVE] CURSOR 
+     [{WITH | WITHOUT} HOLD] 
+     FOR &lt;query&gt; [FOR READ ONLY]
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p><code>DECLARE</code> allows a user to create a cursor, which can be used to retrieve a small number of rows at a time out of a larger query. Cursors can return data either in text or in binary format using <a href="FETCH.html">FETCH</a>.</p>
+<blockquote>
+<p><strong>Note</strong> This page describes usage of cursors at the SQL command level. If you are trying to use cursors inside a PL/pgSQL function, the rules are different, see <a href="../../analytics/pl_sql.html">PL/pgSQL</a>.</p>
+</blockquote>
+<p>Normal cursors return data in text format, the same as a <code>SELECT</code> would produce. Since data is stored natively in binary format, the system must do a conversion to produce the text format. Once the information comes back in text form, the client application may need to convert it to a binary format to manipulate it. In addition, data in the text format is often larger in size than in the binary format. Binary cursors return the data in a binary representation that may be more easily manipulated. Nevertheless, if you intend to display the data as text anyway, retrieving it in text form will save you some effort on the client side.</p>
+<p>As an example, if a query returns a value of one from an integer column, you would get a string of 1 with a default cursor whereas with a binary cursor you would get a 4-byte field containing the internal representation of the value (in big-endian byte order).</p>
+<p>Binary cursors should be used carefully. Many applications, including psql, are not prepared to handle binary cursors and expect data to come back in the text format.</p>
+<blockquote>
+<p><strong>Note</strong> When the client application uses the ‘extended query’ protocol to issue a <code>FETCH</code> command, the Bind protocol message specifies whether data is to be retrieved in text or binary format. This choice overrides the way that the cursor is defined. The concept of a binary cursor as such is thus obsolete when using extended query protocol — any cursor can be treated as either text or binary.</p>
+</blockquote>
+<p>A cursor can be specified in the <code>WHERE CURRENT OF</code> clause of the <a href="UPDATE.html">UPDATE</a> or <a href="DELETE.html">DELETE</a> statement to update or delete table data. The <code>UPDATE</code> or <code>DELETE</code> statement can only be run on the server, for example in an interactive psql session or a script. Language extensions such as PL/pgSQL do not have support for updatable cursors.</p>
+<p><strong>Parallel Retrieve Cursors</strong></p>
+<p>SynxDB supports a special type of cursor, a parallel retrieve cursor. You can use a parallel retrieve cursor to retrieve query results, in parallel, directly from the SynxDB segments, bypassing the SynxDB master segment.</p>
+<p>Parallel retrieve cursors do not support the <code>WITH HOLD</code> clause. SynxDB ignores the <code>BINARY</code> clause when you declare a parallel retrieve cursor.</p>
+<p>You open a special retrieve session to each parallel retrieve cursor endpoint, and use the <a href="RETRIEVE.html">RETRIEVE</a> command to retrieve the query results from a parallel retrieve cursor.</p>
+<h2 id="parameters"><a class="header" href="#parameters"><a id="section4"></a>Parameters</a></h2>
+<h3 id="name"><a class="header" href="#name">name</a></h3>
+<p>The name of the cursor to be created.</p>
+<h3 id="binary"><a class="header" href="#binary">BINARY</a></h3>
+<p>Causes the cursor to return data in binary rather than in text format.</p>
+<blockquote>
+<p><strong>Note</strong> SynxDB ignores the <code>BINARY</code> clause when you declare a <code>PARALLEL RETRIEVE</code> cursor.</p>
+</blockquote>
+<h3 id="insensitive"><a class="header" href="#insensitive">INSENSITIVE</a></h3>
+<p>Indicates that data retrieved from the cursor should be unaffected by updates to the tables underlying the cursor while the cursor exists. In SynxDB, all cursors are insensitive. This key word currently has no effect and is present for compatibility with the SQL standard.</p>
+<h3 id="no-scroll"><a class="header" href="#no-scroll">NO SCROLL</a></h3>
+<p>A cursor cannot be used to retrieve rows in a nonsequential fashion. This is the default behavior in SynxDB, since scrollable cursors (<code>SCROLL</code>) are not supported.</p>
+<h3 id="parallel-retrieve"><a class="header" href="#parallel-retrieve">PARALLEL RETRIEVE</a></h3>
+<p>Declare a parallel retrieve cursor. A parallel retrieve cursor is a special type of cursor that you can use to retrieve results directly from SynxDB segments, in parallel.</p>
+<p>WITH HOLD</p>
+<h3 id="without-hold"><a class="header" href="#without-hold">WITHOUT HOLD</a></h3>
+<p><code>WITH HOLD</code> specifies that the cursor may continue to be used after the transaction that created it successfully commits. <code>WITHOUT HOLD</code> specifies that the cursor cannot be used outside of the transaction that created it. <code>WITHOUT HOLD</code> is the default.</p>
+<blockquote>
+<p><strong>Note</strong> SynxDB does not support declaring a <code>PARALLEL RETRIEVE</code> cursor with the <code>WITH HOLD</code> clause. <code>WITH HOLD</code> also cannot not be specified when the <code>query</code> includes a <code>FOR UPDATE</code> or <code>FOR SHARE</code> clause.</p>
+</blockquote>
+<h3 id="query"><a class="header" href="#query">query</a></h3>
+<p>A <a href="SELECT.html">SELECT</a> or <a href="VALUES.html">VALUES</a> command which will provide the rows to be returned by the cursor.</p>
+<p>If the cursor is used in the <code>WHERE CURRENT OF</code> clause of the <a href="UPDATE.html">UPDATE</a> or <a href="DELETE.html">DELETE</a> command, the <code>SELECT</code> command must satisfy the following conditions:</p>
+<ul>
+<li>
+<p>Cannot reference a view or external table.</p>
+</li>
+<li>
+<p>References only one table.
+The table must be updatable. For example, the following are not updatable: table functions, set-returning functions, append-only tables, columnar tables.</p>
+</li>
+<li>
+<p>Cannot contain any of the following:</p>
+<ul>
+<li>
+<p>A grouping clause</p>
+</li>
+<li>
+<p>A set operation such as <code>UNION ALL</code> or <code>UNION DISTINCT</code></p>
+</li>
+<li>
+<p>A sorting clause</p>
+</li>
+<li>
+<p>A windowing clause</p>
+</li>
+<li>
+<p>A join or a self-join</p>
+<p>Specifying the <code>FOR UPDATE</code> clause in the <code>SELECT</code> command prevents other sessions from changing the rows between the time they are fetched and the time they are updated. Without the <code>FOR UPDATE</code> clause, a subsequent use of the <code>UPDATE</code> or <code>DELETE</code> command with the <code>WHERE CURRENT OF</code> clause has no effect if the row was changed since the cursor was created.</p>
+<blockquote>
+<p><strong>Note</strong> Specifying the <code>FOR UPDATE</code> clause in the <code>SELECT</code> command locks the entire table, not just the selected rows.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="for-read-only"><a class="header" href="#for-read-only">FOR READ ONLY</a></h3>
+<p><code>FOR READ ONLY</code> indicates that the cursor is used in a read-only mode.</p>
+<h2 id="notes"><a class="header" href="#notes"><a id="section5"></a>Notes</a></h2>
+<p>Unless <code>WITH HOLD</code> is specified, the cursor created by this command can only be used within the current transaction. Thus, <code>DECLARE</code> without <code>WITH HOLD</code> is useless outside a transaction block: the cursor would survive only to the completion of the statement. Therefore SynxDB reports an error if this command is used outside a transaction block. Use <code>BEGIN</code> and <code>COMMIT</code> (or <code>ROLLBACK</code>) to define a transaction block.</p>
+<p>If <code>WITH HOLD</code> is specified and the transaction that created the cursor successfully commits, the cursor can continue to be accessed by subsequent transactions in the same session. (But if the creating transaction ends prematurely, the cursor is removed.) A cursor created with <code>WITH HOLD</code> is closed when an explicit <code>CLOSE</code> command is issued on it, or the session ends. In the current implementation, the rows represented by a held cursor are copied into a temporary file or memory area so that they remain available for subsequent transactions.</p>
+<p>If you create a cursor with the <code>DECLARE</code> command in a transaction, you cannot use the <code>SET</code> command in the transaction until you close the cursor with the <code>CLOSE</code> command.</p>
+<p>Scrollable cursors are not currently supported in SynxDB. You can only use <code>FETCH</code> or <code>RETRIEVE</code> to move the cursor position forward, not backwards.</p>
+<p><code>DECLARE...FOR UPDATE</code> is not supported with append-optimized tables.</p>
+<p>You can see all available cursors by querying the <a href="../system_catalogs/pg_cursors.html">pg_cursors</a> system view.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section6"></a>Examples</a></h2>
+<p>Declare a cursor:</p>
+<pre><code>DECLARE mycursor CURSOR FOR SELECT * FROM mytable;
+</code></pre>
+<p>Declare a parallel retrieve cursor for the same query:</p>
+<pre><code>DECLARE myprcursor PARALLEL RETRIEVE CURSOR FOR SELECT * FROM mytable;
+</code></pre>
+<h2 id="compatibility"><a class="header" href="#compatibility"><a id="section7"></a>Compatibility</a></h2>
+<p>SQL standard allows cursors only in embedded SQL and in modules. SynxDB permits cursors to be used interactively.</p>
+<p>SynxDB does not implement an <code>OPEN</code> statement for cursors. A cursor is considered to be open when it is declared.</p>
+<p>The SQL standard allows cursors to move both forward and backward. All SynxDB cursors are forward moving only (not scrollable).</p>
+<p>Binary cursors are a SynxDB extension.</p>
+<p>The SQL standard makes no provisions for parallel retrieve cursors.</p>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section8"></a>See Also</a></h2>
+<p><a href="CLOSE.html">CLOSE</a>, <a href="DELETE.html">DELETE</a>, <a href="FETCH.html">FETCH</a>, <a href="MOVE.html">MOVE</a>, <a href="RETRIEVE.html">RETRIEVE</a>, <a href="SELECT.html">SELECT</a>, <a href="UPDATE.html">UPDATE</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/sql_commands/DEALLOCATE.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/sql_commands/DELETE.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/sql_commands/DEALLOCATE.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/sql_commands/DELETE.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

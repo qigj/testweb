@@ -1,0 +1,23 @@
+|product_name| Documentation
+###################################
+
+
+.. admonition:: Disclaimer
+   :class: attention
+
+   Greenplum® is a registered trademark of Broadcom Inc. Synx Data Labs and SynxDB are not affiliated with, endorsed by, or sponsored by Broadcom Inc. Any references to Greenplum are for comparative, educational, and interoperability purposes only.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Table of Contents
+
+   product-overview/product-index
+   deploy-guides/deploy-index
+   create-and-prepare-db/create-and-prepare-index
+   load-data/load-data-index
+   operate-with-data/operate-with-data-index
+   optimize-performance/optimize-performance-index
+   manage-system/manage-system-index
+   components/component-index
+   references/references-index
+   develop-guides/develop-guides-index

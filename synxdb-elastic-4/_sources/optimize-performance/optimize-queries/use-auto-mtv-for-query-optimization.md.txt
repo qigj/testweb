@@ -1,0 +1,145 @@
+# Automatically Use Materialized Views for Query Optimization
+
+{{ product_name }} supports automatically using [materialized views](../../operate-with-data/operate-with-db-objects/create-and-manage-materialized-views.md) during the query planning phase to compute part or all of a query (a feature known as AQUMV). This is particularly useful for queries on large tables, significantly improving query processing time. AQUMV utilizes incremental materialized views (IMVs) because they generally stay up-to-date when the underlying tables have write operations.
+
+## Scenarios
+
+- **Large-scale aggregate queries**: For queries that need to aggregate millions of records, AQUMV can significantly reduce query time.
+- **Frequently updated large tables**: In environments with frequent data updates, using IMVs ensures the timeliness and accuracy of query results.
+- **Complex calculation scenarios**: For queries involving complex calculations (like the square root and absolute value calculations in the example below), AQUMV can speed up queries by pre-calculating these values in a materialized view.
+- **High-frequency data write scenarios**: When the base table has very frequent data writes, synchronously updating the materialized view might greatly impact write performance. In this case, you can use asynchronous incremental materialized views to run refresh tasks in the background, reducing the impact on foreground business operations.
+- **Aggregate queries on large partitioned tables**: Partitioned tables are often used to manage large amounts of data. Building materialized views on large partitioned tables allows complex aggregate queries or join operations across multiple partitions to be pre-computed. The AQUMV feature can automatically leverage these materialized views, improving query analysis performance on large partitioned tables and avoiding the significant overhead of full table scans.
+
+## Example
+
+To enable the AQUMV feature, you first need to create a materialized view and set the system parameter `enable_answer_query_using_materialized_views` to `ON`. The following is a comparison of executing the same complex query with and without AQUMV.
+
+1. Disable the GPORCA optimizer and use the Postgres-based planner.
+
+    ```sql
+    SET optimizer TO off;
+    ```
+
+2. Create the table `aqumv_t1`.
+
+    ```sql
+    CREATE TABLE aqumv_t1(c1 INT, c2 INT, c3 INT);
+    ```
+
+3. Insert data into the table and collect statistics on it.
+
+    ```sql
+    INSERT INTO aqumv_t1 SELECT i, i+1, i+2 FROM generate_series(1, 100000000) i;
+    ANALYZE aqumv_t1;
+    ```
+
+4. Execute the query without AQUMV enabled. It takes 7384.329 ms.
+
+    ```sql
+    SELECT SQRT(ABS(ABS(c2) - c1 - 1) + ABS(c2)) FROM aqumv_t1 WHERE c1 > 30 AND c1 < 40 AND SQRT(ABS(c2)) > 5.8;
+
+        sqrt
+    -------------------66.0827625302982196.2449979983983985.9160797830996166.1644140029689766.3245553203367595.830951894845301
+    (7 rows)
+
+    Time: 7384.329 ms (00:07.384)
+    ```
+
+    The query plan is as follows, showing that the optimizer performs a scan on the table (`Seq Scan on aqumv_t1`).
+
+    ```sql
+    EXPLAIN(COSTS OFF) SELECT SQRT(ABS(ABS(c2) - c1 - 1) + ABS(c2)) FROM aqumv_t1 WHERE c1 > 30 AND c1 < 40 AND SQRT(ABS(c2)) > 5.8;
+
+                                                    QUERY PLAN
+
+    -------------------------------------------------------------------------------------------------------------
+    Gather Motion 3:1  (slice1; segments: 3)
+    ->  Seq Scan on aqumv_t1
+            Filter: ((c1 > 30) AND (c1 < 40) AND (sqrt((abs(c2))::double precision) > '5.8'::double pre
+    cision))
+    Optimizer: Postgres query optimizer
+    (4 rows)
+    ```
+
+5. Create a materialized view `mvt1` based on `aqumv_t1` and collect statistics on the view.
+
+    ```sql
+    CREATE INCREMENTAL MATERIALIZED VIEW mvt1 AS SELECT c1 AS mc1, c2 AS mc2, ABS(c2) AS mc3, ABS(ABS(c2) - c1 - 1) AS mc4
+    FROM aqumv_t1 WHERE c1 > 30 AND c1 < 40;
+
+    ANALYZE mvt1;
+    ```
+
+    In the example above, the materialized view `mvt1` is updated synchronously. If data is inserted into the `aqumv_t1` table very frequently, you can change it to asynchronous refresh mode to improve write performance.
+
+    Just add the `REFRESH DEFERRED` and `SCHEDULE` clauses during creation:
+
+    ```sql
+    -- Changes the materialized view to asynchronous refresh with a 10-second interval.
+    CREATE INCREMENTAL MATERIALIZED VIEW mvt1
+    REFRESH DEFERRED SCHEDULE '10 seconds'
+    AS SELECT c1 AS mc1, c2 AS mc2, ABS(c2) AS mc3, ABS(ABS(c2) - c1 - 1) AS mc4
+    FROM aqumv_t1 WHERE c1 > 30 AND c1 < 40;
+    ```
+
+    This way, the data in the materialized view will be periodically updated by a background task, and the query acceleration feature (AQUMV) will still automatically use this up-to-date materialized view.
+
+6. Enable the AQUMV-related configuration parameter:
+
+    ```sql
+    SET enable_answer_query_using_materialized_views = ON;
+    ```
+
+7. Now that AQUMV is enabled, execute the same query again. It takes 45.701 ms.
+
+    ```sql
+    SELECT SQRT(ABS(ABS(c2) - c1 - 1) + ABS(c2)) FROM aqumv_t1 WHERE c1 > 30 AND c1 < 40 AND SQRT(ABS(c2)) > 5.8;
+
+        sqrt
+    -------------------66.0827625302982196.2449979983983985.8309518948453015.9160797830996166.1644140029689766.324555320336759
+    (7 rows)
+
+    Time: 45.701 ms
+    ```
+
+    The query plan is as follows, showing that the optimizer scans the materialized view `mvt1` (`Seq Scan on public.mvt1`) instead of the table `aqumv_t1`.
+
+    ```sql
+    explain(verbose, costs off)select sqrt(abs(abs(c2) - c1 - 1) + abs(c2)) from aqumv_t1 where c1 > 30 and c1 < 40 and sqrt(abs(c2)) > 5.8;
+
+                                    QUERY PLAN
+    --------------------------------------------------------------------------------
+    Gather Motion 3:1  (slice1; segments: 3)
+    Output: (sqrt(((mc4 + mc3))::double precision))
+    ->  Seq Scan on public.mvt1
+            Output: sqrt(((mc4 + mc3))::double precision)
+            Filter: (sqrt((mvt1.mc3)::double precision) > '5.8'::double precision)
+    Settings: enable_answer_query_using_materialized_views = 'on', optimizer = 'off'
+    Optimizer: Postgres query optimizer
+    (7 rows)
+    ```
+
+    In the example above, the query took 7384.329 ms without using a materialized view. After enabling AQUMV, the same query using the materialized view took only 45.701 ms. This demonstrates that the materialized view greatly improves performance by pre-calculating and storing the relevant computation results, containing only the rows that satisfy the specific condition (`c1 > 30 and c1 < 40`).
+
+    Therefore, the table query `select sqrt(abs(abs(c2) - c1 - 1) + abs(c2)) from aqumv_t1 where c1 > 30 and c1 < 40 and sqrt(abs(c2)) > 5.8;` is actually equivalent to the query on the materialized view `select sqrt(mc4 + mc3) from mvt1 where sqrt(mc3) > 5.8;`.
+
+This way, when executing the same query, data can be fetched directly from the materialized view instead of the original table. This allows AQUMV to greatly improve query performance, especially when dealing with large data volumes and complex calculations.
+
+## How it works
+
+AQUMV achieves query optimization by performing an equivalent transformation of the query tree.
+
+{{ product_name }} automatically uses a materialized view for a table query only if the following conditions are met:
+
+- The materialized view must contain all the rows required by the query expression.
+- If the materialized view contains more rows than the query, additional filtering conditions might need to be added.
+- All output expressions must be computable from the view's output.
+- The output expressions can fully or partially match the target list of the materialized view.
+
+When there are multiple valid materialized view candidates, or when the cost of querying from the materialized view is higher than querying directly from the original table, the planner can decide the best choice based on cost estimation.
+
+## Limitations
+
+- Only `SELECT` queries on a single relation are supported, applicable to both the materialized view query and the original query.
+- Currently, the following features are not supported: aggregations (AGG), subqueries, sorting in the original query (ORDER BY), joins (JOIN), sublinks (SUBLINK), grouping (GROUP BY), window functions, Common Table Expressions (CTE), deduplication (DISTINCT ON), `REFRESH MATERIALIZED VIEW`, and `CREATE AS` statements.
+- Incremental materialized views are currently optimized primarily for data append (`INSERT`) scenarios. If `DELETE`, `UPDATE`, or `TRUNCATE` operations occur on its base table, the materialized view will perform a costly full refresh instead of an incremental update.

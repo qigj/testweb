@@ -1,0 +1,511 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Migrating a SynxDB Host from EL 7 to EL 8 or 9 - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="migrating-a-synxdb-host-from-el-7-to-el-8-or-9"><a class="header" href="#migrating-a-synxdb-host-from-el-7-to-el-8-or-9">Migrating a SynxDB Host from EL 7 to EL 8 or 9</a></h1>
+<p>Use this procedure to migrate a SynxDB installation from Enterprise Linux (EL) version 7 to Enterprise Linux 8 or Enterprise Linux 9, while maintaining your existing version of SynxDB.</p>
+<p>Enterprise Linux includes CentOS, Rocky, Redhat (RHEL), and Oracle Linux (OEL) as the variants supported by SynxDB. See <a href="platform-requirements-overview.html">Platform Requirements</a> for a list of the supported operating systems.</p>
+<p>Major version upgrades of Linux operating systems are always a complex task in a SynxDB environment. You must weigh the risks of the different upgrade methods, as well as consider the impact of the required downtime.</p>
+<h2 id="important-upgrade-considerations"><a class="header" href="#important-upgrade-considerations"><a id="glib"></a>Important Upgrade Considerations</a></h2>
+<p>The GNU C Library, commonly known as <code>glibc</code>, is the GNU Project’s implementation of the C standard library. Between EL 7 and 8, the version of <code>glibc</code> changes from 2.17 to 2.28, and between EL 7 and EL 9, the version of <code>glibc</code> changes from 2.17 to 2.34. These are major changes that impact many languages and their collations. The collation of a database specifies how to sort and compare strings of character data. A change in sorting for common languages can have a significant impact on PostgreSQL and SynxDB databases.</p>
+<p>PostgreSQL and SynxDB databases use locale data provided by the operating system’s C library for sorting text. Sorting happens in a variety of contexts, including for user output, merge joins, B-tree indexes, and range partitions. In the latter two cases, sorted data is persisted to disk. If the locale data in the C library changes during the lifetime of a database, the persisted data may become inconsistent with the expected sort order, which could lead to erroneous query results and other incorrect behavior.</p>
+<p>If an index is not sorted in a way that an index scan is expecting it, a query could fail to find data, and an update could insert duplicate data. Similarly, in a partitioned table, a query could look in the wrong partition and an update could write to the wrong partition. It is essential to the correct operation of a database that you are aware of and understand any locale definition changes. Below are examples of the impact from locale changes in an EL 7 to EL 8 or EL 9 upgrade:</p>
+<p><strong>Example 1</strong> A range-partitioned table using default partitions displaying the rows in an incorrect order after an upgrade:</p>
+<pre><code>CREATE TABLE partition_range_test_3(id int, date text) DISTRIBUTED BY (id)
+PARTITION BY RANGE (date)
+      (
+        PARTITION jan START ('01') INCLUSIVE,
+        PARTITION feb START ('"02"') INCLUSIVE,
+        PARTITION mar START ('"03"') INCLUSIVE );
+
+INSERT INTO partition_range_test_3 VALUES (1, '01'), (1, '"01"'), (1, '"02"'), (1, '02'), (1, '03'), (1, '"03"'), (1, '04'), (1, '"04"');
+</code></pre>
+<p>Results for EL 7:</p>
+<pre><code># SELECT * FROM partition_range_test_3 ORDER BY date;
+ id | date
+----+------
+  1 | "01"
+  1 | 01
+  1 | "02"
+  1 | 02
+  1 | "03"
+  1 | 03
+  1 | "04"
+  1 | 04
+(8 rows)
+
+# SELECT * FROM partition_range_test_3_1_prt_jan;
+ id | date
+----+------
+  1 | 01
+  1 | "01"
+  1 | 02
+(3 rows)
+
+# SELECT * FROM partition_range_test_3_1_prt_feb;
+ id | date
+----+------
+  1 | "02"
+  1 | 03
+(2 rows)
+</code></pre>
+<p>After upgrading to EL 8:</p>
+<pre><code># SELECT * FROM partition_range_test_3 WHERE date='03';
+ id | date
+----+------
+(0 rows)
+
+=# EXPLAIN SELECT * FROM partition_range_test_3 WHERE date='03';
+                                           QUERY PLAN
+------------------------------------------------------------------------------------------------
+ Gather Motion 4:1  (slice1; segments: 4)  (cost=0.00..720.00 rows=50 width=36)
+   -&gt;  Append  (cost=0.00..720.00 rows=13 width=36)
+         -&gt;  Seq Scan on partition_range_test_3_1_prt_mar  (cost=0.00..720.00 rows=13 width=36)
+               Filter: (date = '03'::text)
+ Optimizer: Postgres query optimizer
+(5 rows)
+
+# SELECT * FROM partition_range_test_3_1_prt_feb;
+ id | date
+----+------
+  1 | "02"
+  1 | 03
+(2 rows)
+</code></pre>
+<p><strong>Example 2</strong> A range-partitioned table not using a default partition encountering errors after the upgrade.</p>
+<pre><code>CREATE TABLE partition_range_test_2 (id int, date text) DISTRIBUTED BY (id)
+PARTITION BY RANGE (date)
+      (PARTITION Jan START ( '01') INCLUSIVE ,
+      PARTITION Feb START ( '02') INCLUSIVE ,
+      PARTITION Mar START ( '03') INCLUSIVE
+      END ( '04') EXCLUSIVE);
+
+INSERT INTO partition_range_test_2 VALUES (1, '01'), (1, '"01"'), (2, '"02"'), (2, '02'), (3, '03'), (3, '"03"');
+</code></pre>
+<p>Results for EL 7:</p>
+<pre><code># SELECT * FROM partition_range_test_2 ORDER BY date;
+id | date
+----+------
+  1 | 01
+  1 | "01"
+  2 | 02
+  2 | "02"
+  3 | 03
+  3 | "03"
+</code></pre>
+<p>After upgrading to EL 8:</p>
+<pre><code># SELECT * FROM partition_range_test_2 ORDER BY date;
+id | date
+----+------
+  1 | 01
+  2 | "02"
+  2 | 02
+  3 | "03"
+  3 | 03
+(5 rows)
+
+# INSERT INTO partition_range_test_2 VALUES (1, '"01"');
+ERROR:  no partition of relation "partition_range_test_2" found for row  (seg1 10.80.0.2:7003 pid=40499)
+DETAIL:  Partition key of the failing row contains (date) = ("01").
+</code></pre>
+<p>You must take the following into consideration when planning an upgrade from EL 7 to EL 8 or EL 9:</p>
+<ul>
+<li>When using an in-place upgrade method, all indexes involving columns of collatable data type, such as <code>text</code>, <code>varchar</code>, <code>char</code>, and <code>citext</code>, must be reindexed before the database instance is put into production.</li>
+<li>When using an in-place upgrade method, range-partitioned tables using collatable data types in the partition key should be checked to verify that all rows are still in the correct partitions.</li>
+<li>To avoid downtime due to reindexing or repartitioning, consider upgrading using SynxDB Copy or SynxDB Backup and Restore instead of an in-place upgrade.</li>
+<li>When using an in-place upgrade method, databases or table columns using the <code>C</code> or <code>POSIX</code> locales are not affected. All other locales are potentially affected.</li>
+</ul>
+<h2 id="upgrade-methods"><a class="header" href="#upgrade-methods"><a id="methods"></a>Upgrade Methods</a></h2>
+<p>The following methods are the currently supported options to perform a major version upgrade from EL 7 to EL 8 or EL 9 with SynxDB.</p>
+<ul>
+<li>Using SynxDB Copy Utility to copy from SynxDB on EL 7 to a separate SynxDB on EL 8 or EL 9.</li>
+<li>Using SynxDB Backup and Restore to restore a backup taken from SynxDB on EL 7 to a separate SynxDB on EL 8 or EL 9.</li>
+<li>Using operating system vendor supported utilities, such as <code>leapp</code> to perform an in-place, simultaneous upgrade of EL 7 to EL 8 or EL 9 for all SynxDB hosts in a cluster then following the required post upgrade steps.</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> SynxDB does not support a rolling upgrade, such that some SynxDB Segment Hosts are operating with EL 7 and others with EL 8 or EL 9. All Segment Hosts must be upgraded together or otherwise before SynxDB is started and workload continued after an upgrade.</p>
+</blockquote>
+<h3 id="synxdb-copy-utility"><a class="header" href="#synxdb-copy-utility"><a id="cbcopy"></a>SynxDB Copy Utility</a></h3>
+<p>The SynxDB Copy Utility, <code>cbcopy</code>, is a utility for transferring data between databases in different SynxDB systems.</p>
+<p>This utility is compatible with the SynxDB cluster from the source and destination running on different operating systems, including EL 7 to EL 8 or EL 9. The <code>glibc</code> changes are not relevant for this migration method because the data is rewritten on copy to the target cluster, which addresses any locale sorting changes. However, since SynxDB Copy enables the option <code>-parallelize-leaf-partitions</code> by default, which copies the leaf partition tables of a partitioned table in parallel, it may lead to data being copied to an incorrect partition caused by the <code>glibc</code> changes. You must disable this option so that the table is copied as one single table based on the root partition table.</p>
+<p>As part of the overall process of this upgrade method, you:</p>
+<ul>
+<li>Create a new SynxDB cluster using EL 8 or EL 9 with no data.</li>
+<li>Address any <a href="#os_config">Operating System Configuration Differences</a>.</li>
+<li>Use <code>cbcopy</code> to migrate data from the source SynxDB cluster on EL 7 to the destination SynxDB cluster on EL 8 or EL 9. You must disable the option <code>-parallelize-leaf-partitions</code> to ensure that partitioned tables are copied as one single table based on the root partition.</li>
+<li>Remove the source SynxDB cluster from the EL 7 systems.</li>
+</ul>
+<p>The advantages of this method are optimized performance, migration issues not impacting the source cluster, and that it does not require table locks. The disadvantage of this method is that it requires two separate SynxDB clusters during the migration.</p>
+<h3 id="synxdb-backup-and-restore"><a class="header" href="#synxdb-backup-and-restore"><a id="gpbackup"></a>SynxDB Backup and Restore</a></h3>
+<p>[SynxDB supports parallel and non-parallel methods for backing up and restoring databases.</p>
+<p>The utility is compatible with the SynxDB cluster from the source and destination running on different operating systems, including EL 7 to EL 8 or EL 9. The <code>glibc</code> changes are not relevant for this migration method because the data is rewritten on the new cluster, which addresses any locale sorting changes. However, if the backup command includes the option <code>--leaf-partition-data</code>, it creates one data file per leaf partition, instead of one data file for the entire table. In this situation, when you restore the partition data to the upgraded cluster, the utility copies the data directly into the leaf partitions, which may lead to data being copied into an incorrect partition caused by the <code>glibc</code> changes. Therefore, you must ensure that the backup command does not use the option <code>--leaf-partition-data</code> so partitioned tables are copied as a single data file.</p>
+<p>SynxDB Backup and Restore supports many different options for storage locations, including local, public cloud storage such as S3, and Dell EMC Data Domain through the use of the <a href="../admin_guide//managing/backup-plugins.html">gpbackup storage plugins</a>. Any of the supported options for storage locations to perform the data transfer are supported for the EL 7 to EL 8 or EL 9 upgrade.</p>
+<p>As part of the overall process of this upgrade method, you:</p>
+<ul>
+<li>Create a new SynxDB cluster on the EL 8 or EL 9 systems with no data.</li>
+<li>Address any <a href="#os_config">Operating System Configuration Differences</a>.</li>
+<li>Use <code>gpbackup</code> to take a full backup of the source SynxDB cluster on EL 7. Ensure that you are not using the option <code>--leaf-partition-data</code>.</li>
+<li>Restore the backup with <code>gprestore</code> to the destination SynxDB cluster on EL 8 or EL 9.</li>
+<li>Remove the source SynxDB cluster on the EL 7 systems.</li>
+</ul>
+<p>The advantages of this method are different options for storage locations, and migration issues not impacting the source cluster. The disadvantage of this method is that it requires two separate SynxDB clusters during the migration. It is also generally slower than SynxDB Copy, and it requires table locks to perform a full backup.</p>
+<h3 id="simultaneous-in-place-upgrade"><a class="header" href="#simultaneous-in-place-upgrade"><a id="simultaneous"></a>Simultaneous, In-Place Upgrade</a></h3>
+<p>Redhat and Oracle Linux both support options for in-place upgrade of the operating system using the Leapp utility.</p>
+<blockquote>
+<p><strong>Note</strong> In-Place upgrades with the Leapp utility are not supported with Rocky or CentOS Linux. You must use SynxDB Copy or SynxDB Backup and Restore instead.</p>
+</blockquote>
+<p>SynxDB includes the <code>el8_migrate_locale.py</code> utility which helps you identify and address the main challenges associated with an in-place upgrade from EL 7 to 8 or EL 9 caused by the <code>glibc</code> GNU C library changes.</p>
+<p>As part of the overall process of this upgrade method, you:</p>
+<ul>
+<li>Run the <code>el8_migrate_locale.py</code> utility to perform pre-check scripts, these scripts report information on any objects whose data the upgrade might affect.</li>
+<li>Stop the SynxDB cluster and use Leapp to run an in-place upgrade of the operating system.</li>
+<li>Address any required operating system configuration differences and start the SynxDB cluster.</li>
+<li>Follow the required steps given by the <code>el8_migrate_locale.py</code> utility for fixing the data that is impacted by the <code>glibc</code> locale sorting changes.</li>
+</ul>
+<p>The advantage of this method is that it does not require two different SynxDB clusters. The disadvantages are the risk of performing an in-place operating system upgrade, no downgrade options after any issues, the risk of issues that could leave your cluster in a non-operating state, and the requirement of additional steps after the upgrade is complete to address the <code>glibc</code> changes. You must also plan downtime of your SynxDB database for the entire process.</p>
+<p>Continue reading for a detailed list of steps to upgrade your cluster using this method.</p>
+<blockquote>
+<p><strong>Important</strong> We recommend you take a backup of your cluster before proceeding with this method, as you will not be able to recover the database if the upgrade does not complete successfully. You may also be prepared to contact your operating system vendor for any issues encountered with the Leapp utility.</p>
+</blockquote>
+<h4 id="run-the-pre-check-script"><a class="header" href="#run-the-pre-check-script"><a id="precheck"></a>Run the Pre-Check Script</a></h4>
+<p>Before you begin the upgrade, run the following commands:</p>
+<pre><code>python el8_migrate_locale.py precheck-index --out index.out
+python el8_migrate_locale.py precheck-table --pre_upgrade --out table.out
+</code></pre>
+<p>The subcommand <code>precheck-index</code> checks each database for indexes involving columns of type <code>text</code>, <code>varchar</code>, <code>char</code>, and <code>citext</code>, and the subcommand <code>precheck-table</code> checks each database for range-partitioned tables using these types in the partition key. The option <code>--pre_upgrade</code> lists the partition tables with the partition key using built-in collatable types.</p>
+<p>Examine the output files to identify which indexes and range-partitioned tables may be affected by the <code>glibc</code> GNU C library changes. The provided information will help you estimate the amount of work required during the upgrade process before you perform the OS upgrade. In order to address the issues caused to the range-partitioned tables, the utility rebuilds the affected tables at a later step. This can result in additional space requirements for your database, so you must account for the additional database space reported by these commandss.</p>
+<p>Note that the <code>--pre_upgrade</code> option only reports tables based on the metadata available. We recommend that you use the <code>precheck-table</code> subcommand with the <code>--pre_upgrade</code> option before the OS upgrade to get an estimate, and run it again without the <code>--pre_upgrade</code> option after the OS upgrade has completed, in order to verify the exact tables that you need to address, which can be the same or a subset of the tables reported before the upgrade.</p>
+<p>For example, the <code>precheck-table</code> subcommand with the <code>--pre_upgrade</code> option before the OS upgrade reports that there are 2 affected tables:</p>
+<pre><code>$ python el8_migrate_locale.py precheck-table --pre_upgrade --out table_pre_upgrade.out
+2024-03-05 07:48:57,527 - WARNING - There are 2 range partitioning tables with partition key in collate types(like varchar, char, text) in database testupgrade, these tables might be affected due to Glibc upgrade and should be checked when doing OS upgrade from EL7 to EL8.
+2024-03-05 07:48:57,558 - WARNING - no default partition for testupgrade.normal
+---------------------------------------------
+total partition tables size  : 128 KB
+total partition tables       : 2
+total leaf partitions        : 4
+---------------------------------------------
+</code></pre>
+<p>However, after the upgrade, it only reports 1 table, which is the most accurate output.</p>
+<pre><code>$ python el8_migrate_locale.py precheck-table --out table.out
+2024-03-05 07:49:23,940 - WARNING - There are 2 range partitioning tables with partition key in collate types(like varchar, char, text) in database testupgrade, these tables might be affected due to Glibc upgrade and should be checked when doing OS upgrade from EL7 to EL8.
+2024-03-05 07:49:23,941 - INFO - worker[0]: begin:
+2024-03-05 07:49:23,941 - INFO - worker[0]: connect to &lt;testupgrade&gt; ...
+2024-03-05 07:49:23,973 - INFO - start checking table testupgrade.normal_1_prt_1 ...
+2024-03-05 07:49:23,999 - INFO - check table testupgrade.normal_1_prt_1 OK.
+2024-03-05 07:49:24,000 - INFO - Current progress: have 1 remaining, 0.06 seconds passed.
+2024-03-05 07:49:24,007 - INFO - start checking table testupgrade.partition_range_test_1_1_prt_mar ...
+2024-03-05 07:49:24,171 - INFO - check table testupgrade.partition_range_test_1_1_prt_mar error out: ERROR:  trying to insert row into wrong partition  (seg0 10.0.138.21:20000 pid=4204)
+DETAIL:  Expected partition: partition_range_test_1_1_prt_feb, provided partition: partition_range_test_1_1_prt_mar.
+
+2024-03-05 07:49:24,171 - INFO - start checking table testupgrade.partition_range_test_1_1_prt_feb ...
+2024-03-05 07:49:24,338 - INFO - check table testupgrade.partition_range_test_1_1_prt_feb error out: ERROR:  trying to insert row into wrong partition  (seg3 10.0.138.20:20001 pid=4208)
+DETAIL:  Expected partition: partition_range_test_1_1_prt_others, provided partition: partition_range_test_1_1_prt_feb.
+
+2024-03-05 07:49:24,338 - INFO - start checking table testupgrade.partition_range_test_1_1_prt_others ...
+2024-03-05 07:49:24,349 - INFO - check table testupgrade.partition_range_test_1_1_prt_others OK.
+2024-03-05 07:49:24,382 - INFO - Current progress: have 0 remaining, 0.44 seconds passed.
+2024-03-05 07:49:24,383 - INFO - worker[0]: finish.
+---------------------------------------------
+total partition tables size  : 96 KB
+total partition tables       : 1
+total leaf partitions        : 3
+---------------------------------------------
+</code></pre>
+<p>The <code>precheck-index</code> and <code>precheck-table</code> subcommands will effectively execute the following queries on each database within the cluster:</p>
+<pre><code>-- precheck-index
+
+SELECT
+  indexrelid :: regclass :: text, 
+  indrelid :: regclass :: text,
+  coll,
+  collname,
+  pg_get_indexdef(indexrelid)
+FROM
+  (
+    SELECT 
+      indexrelid,
+      indrelid,
+      indcollation[i] coll
+    FROM 
+      pg_index, 
+      generate_subscripts(indcollation, 1) g(i)
+  ) s
+  JOIN pg_collation c ON coll = c.oid
+WHERE
+  collname != 'C'
+  and collname != 'POSIX';
+
+
+-- precheck-table
+
+SELECT
+  poid, -- oid in pg_partition
+  attrelid :: regclass :: text as partitionname,
+  attcollation, -- the defined collation of the column, or zero if the is not of a collatable data type
+  attname,
+  attnum
+FROM
+  (
+    select
+      p.oid as poid,
+      t.attcollation,
+      t.attrelid,
+      t.attname,
+      t.attnum
+    from
+      pg_partition p
+      join pg_attribute t on p.parrelid = t.attrelid
+      and t.attnum = ANY(p.paratts :: smallint[])
+      and p.parkind = 'r' -- filter out the range-partition tables
+      ) s
+  JOIN pg_collation c ON attcollation = c.oid
+WHERE
+  collname NOT IN ('C', 'POSIX');
+</code></pre>
+<h4 id="perform-the-upgrade"><a class="header" href="#perform-the-upgrade"><a id="upgrade"></a>Perform the Upgrade</a></h4>
+<p>Stop the SynxDB cluster and use the Leapp utility to run the in-place upgrade for your operating system. Visit the <a href="https://access.redhat.com/articles/4263361">Redhat Documentation</a> and the <a href="https://docs.oracle.com/en/operating-systems/oracle-linux/8/leapp/">Oracle Documentation</a> (use <a href="https://docs.oracle.com/en/operating-systems/oracle-linux/9/leapp/">this link</a> for version 9) for more information on how to use th utility.</p>
+<p>Once the upgrade is complete, address any <a href="#os_config">Operating System Configuration Differences</a>, and start the SynxDB cluster.</p>
+<h4 id="fix-the-impacted-data"><a class="header" href="#fix-the-impacted-data"><a id="fix"></a>Fix the Impacted Data</a></h4>
+<h5 id="indexes"><a class="header" href="#indexes"><a id="indexes"></a>Indexes</a></h5>
+<p>You must reindex all indexes involving columns of collatable data types (<code>text</code>, <code>varchar</code>, <code>char</code>, and <code>citext</code>) before the database instance is put into production.</p>
+<p>Run the utility with the <code>migrate</code> subcommand to reindex the necessary indexes.</p>
+<pre><code>python el8_migrate_locale.py migrate --input index.out
+</code></pre>
+<h5 id="range-partitioned-tables"><a class="header" href="#range-partitioned-tables"><a id="rangepart"></a>Range-Partitioned Tables</a></h5>
+<p>You must check range-partitioned tables that use collatable data types in the partition key to verify that all rows are still in the correct partitions.</p>
+<p>First, run utility with the <code>precheck-table</code> subcommand in order to verify if the rows are still in the correct partitions after the operating system upgrade.</p>
+<pre><code>python el8_migrate_locale.py precheck-table --out table.out
+</code></pre>
+<p>The utility returns the list of range-partitioned tables whose rows have been affected. Run the utility using the <code>migrate</code> subcommand to rebuild the partitions that have their rows in an incorrect order after the upgrade.</p>
+<pre><code>python el8_migrate_locale.py migrate --input table.out
+</code></pre>
+<h4 id="verify-the-changes"><a class="header" href="#verify-the-changes"><a id="postfix"></a>Verify the Changes</a></h4>
+<p>Run the pre-upgrade scripts again for each database to verify that all required changes in the database have been addressed.</p>
+<pre><code>python el8_migrate_locale.py precheck-index --out index.out
+python el8_migrate_locale.py precheck-table --out table.out
+</code></pre>
+<p>If the utility returns no indexes nor tables, you have successfully addressed all the issues in your SynxDB cluster caused by the <code>glibc</code> GNU C library changes.</p>
+<h2 id="operating-system-configuration-differences"><a class="header" href="#operating-system-configuration-differences"><a id="os_config"></a>Operating System Configuration Differences</a></h2>
+<p>When you prepare your operating system environment for SynxDB software installation, there are different configuration options depending on the version of your operating system. See <a href="prep_os.html">Configuring Your Systems</a> and <a href="../admin_guide/workload_mgmt_resgroups.html#topic71717999">Using Resource Groups</a> for detailed documentation. This section summarizes the main differences to take into consideration when you upgrade from EL 7 to EL 8 or EL 9 regardless of the upgrade method you use.</p>
+<h3 id="xfs-mount-options"><a class="header" href="#xfs-mount-options"><a id="xfs"></a>XFS Mount Options</a></h3>
+<p>XFS is the preferred data storage file system on Linux platforms. Use the mount command with the following recommended XFS mount options. The <code>nobarrier</code> option is not supported on EL 8/9 or Ubuntu systems. Use only the options <code>rw,nodev,noatime,inode64</code>.</p>
+<h3 id="disk-io-settings"><a class="header" href="#disk-io-settings"><a id="diskio"></a>Disk I/O Settings</a></h3>
+<p>The Linux disk scheduler orders the I/O requests submitted to a storage device, controlling the way the kernel commits reads and writes to disk. A typical Linux disk I/O scheduler supports multiple access policies. The optimal policy selection depends on the underlying storage infrastructure. For EL 8/9, use the following recommended scheduler policy:</p>
+<div class="table-wrapper"><table><thead><tr><th>Storage Device Type</th><th>Recommended Scheduler Policy</th></tr></thead><tbody>
+<tr><td>Non-Volatile Memory Express (NVMe)</td><td>none</td></tr>
+<tr><td>Solid-State Drives (SSD)</td><td>none</td></tr>
+<tr><td>Other</td><td>mq-deadline</td></tr>
+</tbody></table>
+</div>
+<p>To specify the I/O scheduler at boot time for EL 8 you must either use TuneD or uDev rules. See the <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/monitoring_and_managing_system_status_and_performance/setting-the-disk-scheduler_monitoring-and-managing-system-status-and-performance">Redhat 8 Documentation</a> or <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/monitoring_and_managing_system_status_and_performance/setting-the-disk-scheduler_monitoring-and-managing-system-status-and-performance">Redhat 9 Documentation</a>]for full details.</p>
+<h3 id="synchronizing-system-clocks"><a class="header" href="#synchronizing-system-clocks"><a id="ntp"></a>Synchronizing System Clocks</a></h3>
+<p>You must use NTP (Network Time Protocol) to synchronize the system clocks on all hosts that comprise your SynxDB system. Accurate time keeping is essential to ensure reliable operations on the database and data integrity. You may either configure the master as the NTP primary source and the other hosts in the cluster connect to it, or configure an external NTP primary source and all hosts in the cluster connect to it. For EL 8/9, use the Chrony service to configure NTP.</p>
+<h3 id="configuring-and-using-resource-groups"><a class="header" href="#configuring-and-using-resource-groups"><a id="resgroups"></a>Configuring and Using Resource Groups</a></h3>
+<p>SynxDB resource groups use Linux Control Groups (cgroups) to manage CPU resources. SynxDB also uses cgroups to manage memory for resource groups for external components. With cgroups, SynxDB isolates the CPU and external component memory usage of your SynxDB processes from other processes on the node. This allows SynxDB to support CPU and external component memory usage restrictions on a per-resource-group basis.</p>
+<p>If you are using Redhat 8.x or 9, make sure that you configured the system to mount the <code>cgroups-v1</code> filesystem by default during system boot. See <a href="../admin_guide/workload_mgmt_resgroups.html#topic71717999">Using Resource Groups</a> for more details.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pxf-migrate/upgrade_pxf_6x.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../install_guide/enable_iptables.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pxf-migrate/upgrade_pxf_6x.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../install_guide/enable_iptables.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

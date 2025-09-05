@@ -1,0 +1,109 @@
+.. raw:: latex
+
+   \newpage
+
+Optimize HashJoin Query Performance
+===================================
+
+When executing queries that join large tables, the SQL optimizer often chooses the HashJoin operator. HashJoin builds a hash table based on the join key to match join keys, which can lead to memory access and disk I/O bottlenecks. RuntimeFilter is an optimization technique that generates filters in real time during HashJoin execution. It can pre-filter data before the HashJoin, leading to faster execution. In some scenarios, RuntimeFilter optimization can double the execution efficiency.
+
+HashJoin is often used for joining a small table with a large table. When executing a HashJoin operation, |product_name| typically builds a hash table based on the smaller of the two tables to be joined. It then iterates through the tuples of the larger table, looking for matching tuples in the hash table to perform the join. The smaller table used to build the hash table is called the inner table, and the other table used for iteration is called the outer table.
+
+The HashJoin operator mainly has the following performance bottlenecks during execution:
+
+-  Memory access: For each tuple in the outer table, it needs to find a matching tuple in the hash table, which involves one or more memory accesses.
+-  Disk I/O: If the inner table is too large to fit entirely in memory, it needs to be processed in batches using the disk, resulting in a large amount of disk I/O.
+
+To address these bottlenecks, when RuntimeFilter optimization is enabled, |product_name| builds a corresponding RuntimeFilter while building the hash table. This filters the tuples of the large table before the HashJoin is executed. During execution, the RuntimeFilter is implemented using a Bloom filter, a data structure that consumes much less memory than a hash table. When it can fit completely within the L3 cache, a Bloom filter can be twice as efficient at filtering as a HashJoin, significantly reducing memory access overhead.
+
+This optimization decides whether to generate a RuntimeFilter operator based on the selectivity of the HashJoin's join condition and the size of the inner table. During actual execution, if |product_name| finds that the actual data volume deviates too much from the estimated result, it will stop using the RuntimeFilter in a timely manner.
+
+Use cases
+---------
+
+Consider using RuntimeFilter optimization for HashJoin operations if your scenario meets all the following conditions:
+
+-  The inner table of the HashJoin has a significant amount of effective data within a single segment.
+-  The number of effective rows in the inner table of the HashJoin within a single segment is less than 16 million.
+-  The selectivity of the original HashJoin join key is less than 60%. This means the size of the result set that satisfies the hash join condition is less than 60% of the outer table, which can also be understood as a filter rate greater than 40%.
+
+In the scenarios described above, the Bloom filter built by |product_name| through RuntimeFilter is within 2 MB in size and can be fully stored in the L3 cache (usually 16 MB). Because the original inner table has a large amount of data, the directly built hash table cannot be fully stored in the L3 cache. Therefore, RuntimeFilter can filter out 40% of the outer table tuples with minimal overhead, resulting in a positive performance gain. In some scenarios, if the selectivity of the HashJoin join key is less than 10%, RuntimeFilter optimization can double the execution efficiency.
+
+Usage restrictions
+------------------
+
+**Currently, RuntimeFilter is only enabled when the estimated number of rows in the inner table is less than 16 million.**
+
+This restriction is to prevent the Bloom filter from consuming too much memory, which could lead to slow execution or low filtering efficiency. Future updates might support using RuntimeFilter with very large inner tables to avoid the disk I/O overhead caused by batch processing.
+
+Usage examples
+--------------
+
+The following is a practical example of how the HashJoin algorithm benefits from RuntimeFilter:
+
+This optimization is effective only in the PostgreSQL optimizer. Therefore, before enabling it, you need to first disable the GPORCA optimizer and manually enable the GUC parameter ``gp_enable_runtime_filter``.
+
+.. code:: sql
+
+   -- Preparations
+   SET optimizer TO off; -- Disable the ORCA optimizer and use the PostgreSQL optimizer
+   SET gp_enable_runtime_filter TO on; -- Enable RuntimeFilter optimization
+
+   -- Creates tables.
+   DROP TABLE IF EXISTS fact, dim;
+   CREATE TABLE fact (fid int, did int, val int);
+   CREATE TABLE dim (did int, proj_id int, filter_val int);
+
+   -- Generates test data, where 80% of fact.did and dim.did overlap.
+   INSERT INTO fact SELECT i, i % 8000 + 1, i FROM generate_series(1, 100000) s(i);
+   INSERT INTO dim SELECT i, i % 10, i FROM generate_series(1, 10000) s(i);
+   ANALYZE fact, dim;
+
+   -- Views the execution plan.
+   EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM fact, dim
+       WHERE fact.did = dim.did AND proj_id < 2;
+                                   QUERY PLAN
+   ---------------------------------------------------------------------------
+    Finalize Aggregate
+      ->  Gather Motion 3:1  (slice1; segments: 3)
+            ->  Partial Aggregate
+                  ->  Hash Join
+                        Hash Cond: (fact.did = dim.did)
+                        ->  RuntimeFilter
+                              ->  Seq Scan on fact
+                        ->  Hash
+                              ->  Broadcast Motion 3:3  (slice2; segments: 3)
+                                    ->  Seq Scan on dim
+                                          Filter: (proj_id < 2)
+    Optimizer: Postgres query optimizer
+   (12 rows)
+
+The execution plan above shows the ``RuntimeFilter`` operator. To print more execution-related information, you can use ``EXPLAIN ANALYZE``:
+
+.. code:: sql
+
+   ->  RuntimeFilter (actual time=0.047..5.976 rows=6682 loops=1)
+          Bloom Bits: 1048576
+          Extra Text: (seg1)   Inner Processed: 2000, Flase Positive Rate: 0.000000
+
+Example of performance improvement
+----------------------------------
+
+Using the tables from the 'Usage examples' section, we join the ``fact`` and ``dim`` tables with ``did`` as the join key and a condition of project ``id`` less than ``2``. The effect of using RuntimeFilter can be seen from the execution time:
+
+.. code:: sql
+
+   -- RuntimeFilter disabled
+   EXPLAIN ANALYZE SELECT COUNT(*) FROM fact, dim
+       WHERE fact.did = dim.did AND proj_id < 2;
+
+   Execution Time: 35956.436 ms
+
+   -- RuntimeFilter enabled
+   SET gp_enable_runtime_filter TO on;
+   EXPLAIN ANALYZE SELECT COUNT(*) FROM fact, dim
+       WHERE fact.did = dim.did AND proj_id < 2;
+
+   Execution Time: 18276.112 ms
+
+The above is a partial result from ``EXPLAIN ANALYZE``. In the full result, the scan on the ``fact`` table yields 100 million tuples. After being processed by RuntimeFilter, 22 million tuples remain. Finally, after the HashJoin, the expected 20 million tuples are left. The pre-filtering effect is significant, and the time consumption is reduced by approximately 50%.

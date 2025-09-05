@@ -1,0 +1,652 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Choosing the Table Storage Model - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="choosing-the-table-storage-model"><a class="header" href="#choosing-the-table-storage-model">Choosing the Table Storage Model</a></h1>
+<p>SynxDB supports several storage models and a mix of storage models. When you create a table, you choose how to store its data. This topic explains the options for table storage and how to choose the best storage model for your workload.</p>
+<ul>
+<li><a href="#topic37">Heap Storage</a></li>
+<li><a href="#topic38">Append-Optimized Storage</a></li>
+<li><a href="#topic39">Choosing Row or Column-Oriented Storage</a></li>
+<li><a href="#topic40">Using Compression (Append-Optimized Tables Only)</a></li>
+<li><a href="#topic41">Checking the Compression and Distribution of an Append-Optimized Table</a></li>
+<li><a href="#topic55">Altering a Table</a></li>
+<li><a href="#topic62">Dropping a Table</a></li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> To simplify the creation of database tables, you can specify the default values for some table storage options with the SynxDB server configuration parameter <code>gp_default_storage_options</code>.</p>
+</blockquote>
+<p>For information about the parameter, see “Server Configuration Parameters” in the <em>SynxDB Reference Guide</em>.</p>
+<h2 id="heap-storage"><a class="header" href="#heap-storage"><a id="topic37"></a>Heap Storage</a></h2>
+<p>By default, SynxDB uses the same heap storage model as PostgreSQL. Heap table storage works best with OLTP-type workloads where the data is often modified after it is initially loaded. <code>UPDATE</code> and <code>DELETE</code> operations require storing row-level versioning information to ensure reliable database transaction processing. Heap tables are best suited for smaller tables, such as dimension tables, that are often updated after they are initially loaded.</p>
+<h2 id="append-optimized-storage"><a class="header" href="#append-optimized-storage"><a id="topic38"></a>Append-Optimized Storage</a></h2>
+<p>Append-optimized table storage works best with denormalized fact tables in a data warehouse environment. Denormalized fact tables are typically the largest tables in the system. Fact tables are usually loaded in batches and accessed by read-only queries. Moving large fact tables to an append-optimized storage model eliminates the storage overhead of the per-row update visibility information, saving about 20 bytes per row. This allows for a leaner and easier-to-optimize page structure. The storage model of append-optimized tables is optimized for bulk data loading. Single row <code>INSERT</code> statements are not recommended.</p>
+<h3 id="to-create-a-heap-table"><a class="header" href="#to-create-a-heap-table"><a id="im168504"></a>To create a heap table</a></h3>
+<p>Row-oriented heap tables are the default storage type.</p>
+<pre><code>=&gt; CREATE TABLE foo (a int, b text) DISTRIBUTED BY (a);
+</code></pre>
+<p>Use the <code>WITH</code> clause of the <code>CREATE TABLE</code> command to declare the table storage options. The default is to create the table as a regular row-oriented heap-storage table. For example, to create an append-optimized table with no compression:</p>
+<pre><code>=&gt; CREATE TABLE bar (a int, b text) 
+    WITH (appendoptimized=true)
+    DISTRIBUTED BY (a);
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> You use the <code>appendoptimized=value</code> syntax to specify the append-optimized table storage type. <code>appendoptimized</code> is a thin alias for the <code>appendonly</code> legacy storage option. SynxDB stores <code>appendonly</code> in the catalog, and displays the same when listing storage options for append-optimized tables.</p>
+</blockquote>
+<p><code>UPDATE</code> and <code>DELETE</code> are not allowed on append-optimized tables in a repeatable read or serizalizable transaction and will cause the transaction to end prematurely. <code>DECLARE...FOR UPDATE</code> and triggers are not supported with append-optimized tables. <code>CLUSTER</code> on append-optimized tables is only supported over B-tree indexes.</p>
+<h2 id="choosing-row-or-column-oriented-storage"><a class="header" href="#choosing-row-or-column-oriented-storage"><a id="topic39"></a>Choosing Row or Column-Oriented Storage</a></h2>
+<p>SynxDB provides a choice of storage orientation models: row, column, or a combination of both. This topic provides general guidelines for choosing the optimum storage orientation for a table. Evaluate performance using your own data and query workloads.</p>
+<ul>
+<li>Row-oriented storage: good for OLTP types of workloads with many iterative transactions and many columns of a single row needed all at once, so retrieving is efficient.</li>
+<li>Column-oriented storage: good for data warehouse workloads with aggregations of data computed over a small number of columns, or for single columns that require regular updates without modifying other column data.</li>
+</ul>
+<p>For most general purpose or mixed workloads, row-oriented storage offers the best combination of flexibility and performance. However, there are use cases where a column-oriented storage model provides more efficient I/O and storage. Consider the following requirements when deciding on the storage orientation model for a table:</p>
+<ul>
+<li>
+<p><strong>Updates of table data.</strong> If you load and update the table data frequently, choose a row-orientedheap table. Column-oriented table storage is only available on append-optimized tables.</p>
+<p>See <a href="#topic37">Heap Storage</a> for more information.</p>
+</li>
+<li>
+<p><strong>Frequent INSERTs.</strong> If rows are frequently inserted into the table, consider a row-oriented model. Column-oriented tables are not optimized for write operations, as column values for a row must be written to different places on disk.</p>
+</li>
+<li>
+<p><strong>Number of columns requested in queries.</strong> If you typically request all or the majority of columns in the <code>SELECT</code> list or <code>WHERE</code> clause of your queries, consider a row-oriented model. Column-oriented tables are best suited to queries that aggregate many values of a single column where the <code>WHERE</code> or <code>HAVING</code> predicate is also on the aggregate column. For example:</p>
+<pre><code>SELECT SUM(salary)...
+</code></pre>
+<pre><code>SELECT AVG(salary)... WHERE salary &gt; 10000
+</code></pre>
+<p>Or where the <code>WHERE</code> predicate is on a single column and returns a relatively small number of rows. For example:</p>
+<pre><code>SELECT salary, dept ... WHERE state='CA'
+</code></pre>
+</li>
+<li>
+<p><strong>Number of columns in the table.</strong> Row-oriented storage is more efficient when many columns are required at the same time, or when the row-size of a table is relatively small. Column-oriented tables can offer better query performance on tables with many columns where you access a small subset of columns in your queries.</p>
+</li>
+<li>
+<p><strong>Compression.</strong> Column data has the same data type, so storage size optimizations are available in column-oriented data that are not available in row-oriented data. For example, many compression schemes use the similarity of adjacent data to compress. However, the greater adjacent compression achieved, the more difficult random access can become, as data must be uncompressed to be read.</p>
+</li>
+</ul>
+<h3 id="to-create-a-column-oriented-table"><a class="header" href="#to-create-a-column-oriented-table"><a id="im169305"></a>To create a column-oriented table</a></h3>
+<p>The <code>WITH</code> clause of the <code>CREATE TABLE</code> command specifies the table’s storage options. The default is a row-orientedheap table. Tables that use column-oriented storage must be append-optimized tables. For example, to create a column-oriented table:</p>
+<pre><code>=&gt; CREATE TABLE bar (a int, b text) 
+    WITH (appendoptimized=true, orientation=column)
+    DISTRIBUTED BY (a);
+
+</code></pre>
+<h2 id="using-compression-append-optimized-tables-only"><a class="header" href="#using-compression-append-optimized-tables-only"><a id="topic40"></a>Using Compression (Append-Optimized Tables Only)</a></h2>
+<p>There are two types of in-database compression available in the SynxDB for append-optimized tables:</p>
+<ul>
+<li>Table-level compression is applied to an entire table.</li>
+<li>Column-level compression is applied to a specific column. You can apply different column-level compression algorithms to different columns.</li>
+</ul>
+<p>The following table summarizes the available compression algorithms.</p>
+<div class="table-wrapper"><table><thead><tr><th>Table Orientation</th><th>Available Compression Types</th><th>Supported Algorithms</th></tr></thead><tbody>
+<tr><td>Row</td><td>Table</td><td><code>ZLIB</code> and <code>ZSTD</code></td></tr>
+<tr><td>Column</td><td>Column and Table</td><td><code>RLE_TYPE</code>, <code>ZLIB</code>, and <code>ZSTD</code></td></tr>
+</tbody></table>
+</div>
+<p>When choosing a compression type and level for append-optimized tables, consider these factors:</p>
+<ul>
+<li>
+<p>CPU usage. Your segment systems must have the available CPU power to compress and uncompress the data.</p>
+</li>
+<li>
+<p>Compression ratio/disk size. Minimizing disk size is one factor, but also consider the time and CPU capacity required to compress and scan data. Find the optimal settings for efficiently compressing data without causing excessively long compression times or slow scan rates.</p>
+</li>
+<li>
+<p>Speed of compression. zlib can provide higher compression ratios at lower speeds.</p>
+<p>Zstandard compression can provide for either good compression ratio or speed, depending on compression level, or a good compromise on both.</p>
+</li>
+<li>
+<p>Speed of decompression/scan rate. Performance with compressed append-optimized tables depends on hardware, query tuning settings, and other factors. Perform comparison testing to determine the actual performance in your environment.</p>
+<blockquote>
+<p><strong>Note</strong> Do not create compressed append-optimized tables on file systems that use compression. If the file system on which your segment data directory resides is a compressed file system, your append-optimized table must not use compression.</p>
+</blockquote>
+</li>
+</ul>
+<p>Performance with compressed append-optimized tables depends on hardware, query tuning settings, and other factors. You should perform comparison testing to determine the actual performance in your environment.</p>
+<blockquote>
+<p><strong>Note</strong> Zstd compression level can be set to values between 1 and 19. The compression level with zlib can be set to values from 1 - 9. Compression level with RLE can be set to values from 1 - 4.</p>
+</blockquote>
+<p>An <code>ENCODING</code> clause specifies compression type and level for individual columns. When an <code>ENCODING</code> clause conflicts with a <code>WITH</code> clause, the <code>ENCODING</code> clause has higher precedence than the <code>WITH</code> clause.</p>
+<h3 id="to-create-a-compressed-table"><a class="header" href="#to-create-a-compressed-table"><a id="im159764"></a>To create a compressed table</a></h3>
+<p>The <code>WITH</code> clause of the <code>CREATE TABLE</code> command declares the table storage options. Tables that use compression must be append-optimized tables. For example, to create an append-optimized table with zlib compression at a compression level of 5:</p>
+<pre><code>=&gt; CREATE TABLE foo (a int, b text) 
+   WITH (appendoptimized=true, compresstype=zlib, compresslevel=5);
+
+</code></pre>
+<h2 id="checking-the-compression-and-distribution-of-an-append-optimized-table"><a class="header" href="#checking-the-compression-and-distribution-of-an-append-optimized-table"><a id="topic41"></a>Checking the Compression and Distribution of an Append-Optimized Table</a></h2>
+<p>SynxDB provides built-in functions to check the compression ratio and the distribution of an append-optimized table. The functions take either the object ID or a table name. You can qualify the table name with a schema name.</p>
+<table class="table" id="topic41__im161827"><caption><span class="table--title-label">Table 2. </span><span class="title">Functions for compressed append-optimized table metadata</span></caption><colgroup><col style="width:183pt"><col style="width:98pt"><col style="width:169pt"></colgroup><thead class="thead">
+            <tr class="row">
+              <th class="entry" id="topic41__im161827__entry__1">Function</th>
+              <th class="entry" id="topic41__im161827__entry__2">Return Type</th>
+              <th class="entry" id="topic41__im161827__entry__3">Description</th>
+            </tr>
+          </thead><tbody class="tbody">
+            <tr class="row">
+              <td class="entry" headers="topic41__im161827__entry__1">get_ao_distribution(name)<p class="p">get_ao_distribution(oid)</p></td>
+              <td class="entry" headers="topic41__im161827__entry__2">Set of (dbid, tuplecount) rows</td>
+              <td class="entry" headers="topic41__im161827__entry__3">Shows the distribution of an append-optimized table's rows
+                across the array. Returns a set of rows, each of which includes a segment
+                  <em class="ph i">dbid</em> and the number of tuples stored on the segment.</td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic41__im161827__entry__1">get_ao_compression_ratio(name)<p class="p">get_ao_compression_ratio(oid)</p></td>
+              <td class="entry" headers="topic41__im161827__entry__2">float8</td>
+              <td class="entry" headers="topic41__im161827__entry__3">Calculates the compression ratio for a compressed
+                append-optimized table. If information is not available, this function returns a
+                value of -1.</td>
+            </tr>
+          </tbody></table>
+<p>The compression ratio is returned as a common ratio. For example, a returned value of <code>3.19</code>, or <code>3.19:1</code>, means that the uncompressed table is slightly larger than three times the size of the compressed table.</p>
+<p>The distribution of the table is returned as a set of rows that indicate how many tuples are stored on each segment. For example, in a system with four primary segments with <em>dbid</em> values ranging from 0 - 3, the function returns four rows similar to the following:</p>
+<pre><code>=# SELECT get_ao_distribution('lineitem_comp');
+ get_ao_distribution
+---------------------
+(0,7500721)
+(1,7501365)
+(2,7499978)
+(3,7497731)
+(4 rows)
+
+</code></pre>
+<h2 id="support-for-run-length-encoding"><a class="header" href="#support-for-run-length-encoding"><a id="topic42"></a>Support for Run-length Encoding</a></h2>
+<p>SynxDB supports Run-length Encoding (RLE) for column-level compression. RLE data compression stores repeated data as a single data value and a count. For example, in a table with two columns, a date and a description, that contains 200,000 entries containing the value <code>date1</code> and 400,000 entries containing the value <code>date2</code>, RLE compression for the date field is similar to <code>date1 200000 date2 400000</code>. RLE is not useful with files that do not have large sets of repeated data as it can greatly increase the file size.</p>
+<p>There are four levels of RLE compression available. The levels progressively increase the compression ratio, but decrease the compression speed.</p>
+<p>SynxDB versions 4.2.1 and later support column-oriented RLE compression. To backup a table with RLE compression that you intend to restore to an earlier version of SynxDB, alter the table to have no compression or a compression type supported in the earlier version (<code>ZLIB</code>) before you start the backup operation.</p>
+<p>SynxDB combines delta compression with RLE compression for data in columns of type <code>BIGINT</code>, <code>INTEGER</code>, <code>DATE</code>, <code>TIME</code>, or <code>TIMESTAMP</code>. The delta compression algorithm is based on the change between consecutive column values and is designed to improve compression when data is loaded in sorted order or when the compression is applied to data in sorted order.</p>
+<h2 id="adding-column-level-compression"><a class="header" href="#adding-column-level-compression"><a id="topic43"></a>Adding Column-level Compression</a></h2>
+<p>You can add the following storage directives to a column for append-optimized tables with column orientation:</p>
+<ul>
+<li>Compression type</li>
+<li>Compression level</li>
+<li>Block size for a column</li>
+</ul>
+<p>Add storage directives using the <code>CREATE TABLE</code>, <code>ALTER TABLE</code>, and <code>CREATE TYPE</code> commands.</p>
+<p>The following table details the types of storage directives and possible values for each.</p>
+<table class="table" id="topic43__im198636"><caption><span class="table--title-label">Table 3. </span><span class="title">Storage Directives for Column-level Compression</span></caption><colgroup><col style="width:87pt"><col style="width:95pt"><col style="width:147pt"><col style="width:167.25pt"></colgroup><thead class="thead">
+            <tr class="row">
+              <th class="entry" id="topic43__im198636__entry__1">Name</th>
+              <th class="entry" id="topic43__im198636__entry__2">Definition</th>
+              <th class="entry" id="topic43__im198636__entry__3">Values</th>
+              <th class="entry" id="topic43__im198636__entry__4">Comment</th>
+            </tr>
+          </thead><tbody class="tbody">
+            <tr class="row">
+              <td class="entry" headers="topic43__im198636__entry__1">
+                <code class="ph codeph">compresstype</code>
+              </td>
+              <td class="entry" headers="topic43__im198636__entry__2">Type of compression.</td>
+              <td class="entry" headers="topic43__im198636__entry__3"><code class="ph codeph">zstd: </code>Zstandard
+                    algorithm<p class="p"><code class="ph codeph">zlib: </code>deflate
+                      algorithm</p><p class="p"><code class="ph codeph">RLE_TYPE</code>: run-length encoding
+                    </p><p class="p"><code class="ph codeph">none</code>: no compression</p></td>
+              <td class="entry" headers="topic43__im198636__entry__4">Values are not case-sensitive.</td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic43__im198636__entry__1" rowspan="4">
+                <code class="ph codeph">compresslevel</code>
+              </td>
+              <td class="entry" headers="topic43__im198636__entry__2" rowspan="4">Compression level.</td>
+              <td class="entry" headers="topic43__im198636__entry__3"><code class="ph codeph">zlib</code> compression:
+                  <code class="ph codeph">1</code>-<code class="ph codeph">9</code></td>
+              <td class="entry" headers="topic43__im198636__entry__4"><code class="ph codeph">1</code> is the fastest method with the least
+                compression. <code class="ph codeph">1</code> is the default.<p class="p"><code class="ph codeph">9</code> is the slowest
+                  method with the most compression.</p></td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic43__im198636__entry__3"><code class="ph codeph">zstd</code> compression:
+                  <code class="ph codeph">1</code>-<code class="ph codeph">19</code></td>
+              <td class="entry" headers="topic43__im198636__entry__4"><code class="ph codeph">1</code> is the fastest method with the least
+                compression. <code class="ph codeph">1</code> is the default.<p class="p"><code class="ph codeph">19</code> is the slowest
+                  method with the most compression.</p></td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic43__im198636__entry__3"><code class="ph codeph">RLE_TYPE</code> compression: <code class="ph codeph">1</code> –
+                  <code class="ph codeph">6</code><p class="p"><code class="ph codeph">1</code> - apply RLE only</p><p class="p"><code class="ph codeph">2</code>
+                  - apply RLE then apply zlib compression level 1</p><p class="p"><code class="ph codeph">3</code> - apply
+                  RLE then apply zlib compression level 5</p><p class="p"><code class="ph codeph">4</code> - apply RLE then
+                  apply zlib compression level 9</p><p class="p"><code class="ph codeph">5</code> - apply RLE then apply zstd compression level 1</p><p class="p"><code class="ph codeph">6</code> - apply RLE then apply zstd compression level 3</p></td>
+              <td class="entry" headers="topic43__im198636__entry__4"><code class="ph codeph">1</code> is the fastest method with the least
+                    compression.<p class="p"><code class="ph codeph">1</code> is the default method. Within each compression sub-type (RLE with zlib or RLE with zstd), higher compression levels yield higher compression ratios at the cost of speed. Since zstd outperforms zlib in terms of compression ratios and speed, we highly recommend using levels 5 and above.</p></td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic43__im198636__entry__1">
+                <code class="ph codeph">blocksize</code>
+              </td>
+              <td class="entry" headers="topic43__im198636__entry__2">The size in bytes for each block in the table</td>
+              <td class="entry" headers="topic43__im198636__entry__3">
+                <code class="ph codeph">8192 – 2097152</code>
+              </td>
+              <td class="entry" headers="topic43__im198636__entry__4">The value must be a multiple of 8192.</td>
+            </tr>
+          </tbody></table>
+<p>The following is the format for adding storage directives.</p>
+<pre><code>[ ENCODING ( &lt;storage_directive&gt; [,…] ) ] 
+</code></pre>
+<p>where the word ENCODING is required and the storage directive has three parts:</p>
+<ul>
+<li>The name of the directive</li>
+<li>An equals sign</li>
+<li>The specification</li>
+</ul>
+<p>Separate multiple storage directives with a comma. Apply a storage directive to a single column or designate it as the default for all columns, as shown in the following <code>CREATE TABLE</code> clauses.</p>
+<p><em>General Usage:</em></p>
+<pre><code>&lt;column_name&gt; &lt;data_type&gt; ENCODING ( &lt;storage_directive&gt; [, … ] ), …  
+
+</code></pre>
+<pre><code>COLUMN &lt;column_name&gt; ENCODING ( &lt;storage_directive&gt; [, … ] ), … 
+
+</code></pre>
+<pre><code>DEFAULT COLUMN ENCODING ( &lt;storage_directive&gt; [, … ] )
+
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code>COLUMN C1 ENCODING (compresstype=zlib, compresslevel=6, blocksize=65536)
+
+</code></pre>
+<pre><code>DEFAULT COLUMN ENCODING (compresstype=zlib)
+
+</code></pre>
+<h3 id="default-compression-values"><a class="header" href="#default-compression-values"><a id="topic44"></a>Default Compression Values</a></h3>
+<p>If the compression type, compression level and block size are not defined, the default is no compression, and the block size is set to the Server Configuration Parameter <code>block_size</code>.</p>
+<h3 id="precedence-of-compression-settings"><a class="header" href="#precedence-of-compression-settings"><a id="topic45"></a>Precedence of Compression Settings</a></h3>
+<p>Column compression settings are inherited from the type level to the table level to the partition level to the subpartition level. The lowest-level settings have priority.</p>
+<ul>
+<li>Column compression settings defined at the table level override any compression settings for the type.</li>
+<li>Column compression settings specified at the table level override any compression settings for the entire table.</li>
+<li>Column compression settings specified for partitions override any compression settings at the column or table levels.</li>
+<li>Column compression settings specified for subpartitions override any compression settings at the partition, column or table levels.</li>
+<li>When an <code>ENCODING</code> clause conflicts with a <code>WITH</code> clause, the <code>ENCODING</code> clause has higher precedence than the <code>WITH</code> clause.</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> The <code>INHERITS</code> clause is not allowed in a table that contains a storage directive or a column reference storage directive.</p>
+</blockquote>
+<p>Tables created using the <code>LIKE</code> clause ignore storage directive and column reference storage directives.</p>
+<h3 id="optimal-location-for-column-compression-settings"><a class="header" href="#optimal-location-for-column-compression-settings"><a id="topic46"></a>Optimal Location for Column Compression Settings</a></h3>
+<p>The best practice is to set the column compression settings at the level where the data resides. See <a href="#topic52">Example 5</a>, which shows a table with a partition depth of 2. <code>RLE_TYPE</code> compression is added to a column at the subpartition level.</p>
+<h3 id="storage-directives-examples"><a class="header" href="#storage-directives-examples"><a id="topic47"></a>Storage Directives Examples</a></h3>
+<p>The following examples show the use of storage directives in <code>CREATE TABLE</code> statements.</p>
+<h4 id="example-1"><a class="header" href="#example-1"><a id="topic48"></a>Example 1</a></h4>
+<p>In this example, column <code>c1</code> is compressed using <code>zstd</code> and uses the block size defined by the system. Column <code>c2</code> is compressed with <code>zlib</code>, and uses a block size of <code>65536</code>. Column <code>c3</code> is not compressed and uses the block size defined by the system.</p>
+<pre><code>CREATE TABLE T1 (c1 int ENCODING (compresstype=zstd),
+                  c2 char ENCODING (compresstype=zlib, blocksize=65536),
+                  c3 char)    WITH (appendoptimized=true, orientation=column);
+</code></pre>
+<h4 id="example-2"><a class="header" href="#example-2"><a id="topic49"></a>Example 2</a></h4>
+<p>In this example, column <code>c1</code> is compressed using <code>zlib</code> and uses the block size defined by the system. Column <code>c2</code> is compressed with <code>zstd</code>, and uses a block size of <code>65536</code>. Column <code>c3</code> is compressed using <code>RLE_TYPE</code> and uses the block size defined by the system.</p>
+<pre><code>CREATE TABLE T2 (c1 int ENCODING (compresstype=zlib),
+                  c2 char ENCODING (compresstype=zstd, blocksize=65536),
+                  c3 char,
+                  COLUMN c3 ENCODING (compresstype=RLE_TYPE)
+                  )
+    WITH (appendoptimized=true, orientation=column);
+</code></pre>
+<h4 id="example-3"><a class="header" href="#example-3"><a id="topic50"></a>Example 3</a></h4>
+<p>In this example, column <code>c1</code> is compressed using <code>zlib</code> and uses the block size defined by the system. Column <code>c2</code> is compressed with <code>zstd</code>, and uses a block size of <code>65536</code>. Column <code>c3</code> is compressed using <code>zlib</code> and uses the block size defined by the system. Note that column <code>c3</code> uses <code>zlib</code> (not <code>RLE_TYPE</code>) in the partitions, because the column storage in the partition clause has precedence over the storage directive in the column definition for the table.</p>
+<pre><code>CREATE TABLE T3 (c1 int ENCODING (compresstype=zlib),
+                  c2 char ENCODING (compresstype=zstd, blocksize=65536),
+                  c3 text, COLUMN c3 ENCODING (compresstype=RLE_TYPE) )
+    WITH (appendoptimized=true, orientation=column)
+    PARTITION BY RANGE (c3) (START ('1900-01-01'::DATE)          
+                             END ('2100-12-31'::DATE),
+                             COLUMN c3 ENCODING (compresstype=zlib));
+</code></pre>
+<h4 id="example-4"><a class="header" href="#example-4"><a id="topic51"></a>Example 4</a></h4>
+<p>In this example, <code>CREATE TABLE</code> assigns the <code>zlib</code> <code>compresstype</code> storage directive to <code>c1</code>. Column <code>c2</code> has no storage directive and inherits the compression type (<code>zstd</code>) and block size (<code>65536</code>) from the <code>DEFAULT COLUMN ENCODING</code> clause.</p>
+<p>Column <code>c3</code>’s <code>ENCODING</code> clause defines its compression type, <code>RLE_TYPE</code>. The <code>ENCODING</code> clause defined for a specific column overrides the <code>DEFAULT ENCODING</code> clause, so column <code>c3</code> uses the default block size, <code>32768</code>.</p>
+<p>Column <code>c4</code> has a compress type of <code>none</code> and uses the default block size.</p>
+<pre><code>CREATE TABLE T4 (c1 int ENCODING (compresstype=zlib),
+                  c2 char,
+                  c3 text,
+                  c4 smallint ENCODING (compresstype=none),
+                  DEFAULT COLUMN ENCODING (compresstype=zstd,
+                                             blocksize=65536),
+                  COLUMN c3 ENCODING (compresstype=RLE_TYPE)
+                  ) 
+   WITH (appendoptimized=true, orientation=column);
+</code></pre>
+<h4 id="example-5"><a class="header" href="#example-5"><a id="topic52"></a>Example 5</a></h4>
+<p>This example creates an append-optimized, column-oriented table, T5. T5 has two partitions, <code>p1</code> and <code>p2</code>, each of which has subpartitions. Each subpartition has <code>ENCODING</code> clauses:</p>
+<ul>
+<li>
+<p>The <code>ENCODING</code> clause for partition <code>p1</code>’s subpartition <code>sp1</code> defines column <code>i</code>’s compression type as <code>zlib</code> and block size as 65536.</p>
+</li>
+<li>
+<p>The <code>ENCODING</code> clauses for partition <code>p2</code>’s subpartition <code>sp1</code> defines column <code>i</code>’s compression type as <code>rle_type</code> and block size is the default value. Column <code>k</code> uses the default compression and its block size is 8192.</p>
+<pre><code>CREATE TABLE T5(i int, j int, k int, l int) 
+    WITH (appendoptimized=true, orientation=column)
+    PARTITION BY range(i) SUBPARTITION BY range(j)
+    (
+       partition p1 start(1) end(2)
+       ( subpartition sp1 start(1) end(2) 
+         column i encoding(compresstype=zlib, blocksize=65536)
+       ), 
+       partition p2 start(2) end(3)
+       ( subpartition sp1 start(1) end(2)
+           column i encoding(compresstype=rle_type)
+           column k encoding(blocksize=8192)
+       )
+    );
+</code></pre>
+</li>
+</ul>
+<p>For an example showing how to add a compressed column to an existing table with the <code>ALTER TABLE</code> command, see <a href="#topic60">Adding a Compressed Column to Table</a>.</p>
+<h3 id="adding-compression-in-a-type-command"><a class="header" href="#adding-compression-in-a-type-command"><a id="topic53"></a>Adding Compression in a TYPE Command</a></h3>
+<p>When you create a new type, you can define default compression attributes for the type. For example, the following <code>CREATE TYPE</code> command defines a type named <code>int33</code> that specifies <code>zlib</code> compression.</p>
+<p>First, you must define the input and output functions for the new type, <code>int33_in</code> and <code>int33_out</code>:</p>
+<pre><code>CREATE FUNCTION int33_in(cstring) RETURNS int33
+  STRICT IMMUTABLE LANGUAGE internal AS 'int4in';
+CREATE FUNCTION int33_out(int33) RETURNS cstring
+  STRICT IMMUTABLE LANGUAGE internal AS 'int4out';
+</code></pre>
+<p>Next, you define the type named <code>int33</code>:</p>
+<pre><code>CREATE TYPE int33 (
+   internallength = 4,
+   input = int33_in,
+   output = int33_out,
+   alignment = int4,
+   default = 123,
+   passedbyvalue,
+   compresstype="zlib",
+   blocksize=65536,
+   compresslevel=1
+   );
+</code></pre>
+<p>When you specify <code>int33</code> as a column type in a <code>CREATE TABLE</code> command, the column is created with the storage directives you specified for the type:</p>
+<pre><code>CREATE TABLE t2 (c1 int33)
+    WITH (appendoptimized=true, orientation=column);
+</code></pre>
+<p>Table- or column- level storage attributes that you specify in a table definition override type-level storage attributes. For information about creating and adding compression attributes to a type, see <a href="../../ref_guide/sql_commands/CREATE_TYPE.html">CREATE TYPE</a>. For information about changing compression specifications in a type, see <a href="../../ref_guide/sql_commands/ALTER_TYPE.html">ALTER TYPE</a>.</p>
+<h4 id="choosing-block-size"><a class="header" href="#choosing-block-size"><a id="topic54"></a>Choosing Block Size</a></h4>
+<p>The blocksize is the size, in bytes, for each block in a table. Block sizes must be between 8192 and 2097152 bytes, and be a multiple of 8192. The default is 32768.</p>
+<p>Specifying large block sizes can consume large amounts of memory. Block size determines buffering in the storage layer. SynxDB maintains a buffer per partition, and per column in column-oriented tables. Tables with many partitions or columns consume large amounts of memory.</p>
+<h2 id="altering-a-table"><a class="header" href="#altering-a-table"><a id="topic55"></a>Altering a Table</a></h2>
+<p>The <code>ALTER TABLE</code>command changes the definition of a table. Use <code>ALTER TABLE</code> to change table attributes such as column definitions, distribution policy, storage model, and partition structure (see also <a href="ddl-partition.html">Maintaining Partitioned Tables</a>). For example, to add a not-null constraint to a table column:</p>
+<pre><code>=&gt; ALTER TABLE address ALTER COLUMN street SET NOT NULL;
+
+</code></pre>
+<h3 id="altering-table-distribution"><a class="header" href="#altering-table-distribution"><a id="topic56"></a>Altering Table Distribution</a></h3>
+<p><code>ALTER TABLE</code> provides options to change a table’s distribution policy. When the table distribution options change, the table data may be redistributed on disk, which can be resource intensive. You can also redistribute table data using the existing distribution policy.</p>
+<h3 id="changing-the-distribution-policy"><a class="header" href="#changing-the-distribution-policy"><a id="topic57"></a>Changing the Distribution Policy</a></h3>
+<p>For partitioned tables, changes to the distribution policy apply recursively to the child partitions. This operation preserves the ownership and all other attributes of the table. For example, the following command redistributes the table sales across all segments using the customer_id column as the distribution key:</p>
+<pre><code>ALTER TABLE sales SET DISTRIBUTED BY (customer_id); 
+
+</code></pre>
+<p>When you change the hash distribution of a table, table data is automatically redistributed. Changing the distribution policy to a random distribution does not cause the data to be redistributed. For example, the following <code>ALTER TABLE</code> command has no immediate effect:</p>
+<pre><code>ALTER TABLE sales SET DISTRIBUTED RANDOMLY;
+
+</code></pre>
+<p>Changing the distribution policy of a table to <code>DISTRIBUTED REPLICATED</code> or from <code>DISTRIBUTED REPLICATED</code> automatically redistributes the table data.</p>
+<h3 id="redistributing-table-data"><a class="header" href="#redistributing-table-data"><a id="topic58"></a>Redistributing Table Data</a></h3>
+<p>To redistribute table data for tables with a random distribution policy (or when the hash distribution policy has not changed) use <code>REORGANIZE=TRUE</code>. Reorganizing data may be necessary to correct a data skew problem, or when segment resources are added to the system. For example, the following command redistributes table data across all segments using the current distribution policy, including random distribution.</p>
+<pre><code>ALTER TABLE sales SET WITH (REORGANIZE=TRUE);
+
+</code></pre>
+<p>Changing the distribution policy of a table to <code>DISTRIBUTED REPLICATED</code> or from <code>DISTRIBUTED REPLICATED</code> always redistributes the table data, even when you use <code>REORGANIZE=FALSE</code>.</p>
+<h3 id="altering-the-table-storage-model"><a class="header" href="#altering-the-table-storage-model"><a id="topic59"></a>Altering the Table Storage Model</a></h3>
+<p>Table storage, compression, and orientation can be declared only at creation. To change the storage model, you must create a table with the correct storage options, load the original table data into the new table, drop the original table, and rename the new table with the original table’s name. You must also re-grant any table permissions. For example:</p>
+<pre><code>CREATE TABLE sales2 (LIKE sales) 
+WITH (appendoptimized=true, compresstype=zlib, 
+      compresslevel=1, orientation=column);
+INSERT INTO sales2 SELECT * FROM sales;
+DROP TABLE sales;
+ALTER TABLE sales2 RENAME TO sales;
+GRANT ALL PRIVILEGES ON sales TO admin;
+GRANT SELECT ON sales TO guest;
+
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> The <code>LIKE</code> clause does not copy over partition structures when creating a new table.</p>
+</blockquote>
+<p>See <a href="ddl-partition.html">Splitting a Partition</a> to learn how to change the storage model of a partitioned table.</p>
+<h4 id="adding-a-compressed-column-to-table"><a class="header" href="#adding-a-compressed-column-to-table"><a id="topic60"></a>Adding a Compressed Column to Table</a></h4>
+<p>Use <code>ALTER TABLE</code> command to add a compressed column to a table. All of the options and constraints for compressed columns described in <a href="#topic43">Adding Column-level Compression</a> apply to columns added with the <code>ALTER TABLE</code> command.</p>
+<p>The following example shows how to add a column with <code>zlib</code> compression to a table, <code>T1</code>.</p>
+<pre><code>ALTER TABLE T1
+      ADD COLUMN c4 int DEFAULT 0
+      ENCODING (compresstype=zlib);
+
+</code></pre>
+<h4 id="inheritance-of-compression-settings"><a class="header" href="#inheritance-of-compression-settings"><a id="topic61"></a>Inheritance of Compression Settings</a></h4>
+<p>A partition added to a table that has subpartitions defined with compression settings inherits the compression settings from the subpartition. The following example shows how to create a table with subpartition encodings, then alter it to add a partition.</p>
+<pre><code>CREATE TABLE ccddl (i int, j int, k int, l int)
+  WITH
+    (appendoptimized = TRUE, orientation=COLUMN)
+  PARTITION BY range(j)
+  SUBPARTITION BY list (k)
+  SUBPARTITION template(
+    SUBPARTITION sp1 values(1, 2, 3, 4, 5),
+    COLUMN i ENCODING(compresstype=ZLIB),
+    COLUMN j ENCODING(compresstype=ZSTD),
+    COLUMN k ENCODING(compresstype=ZLIB),
+    COLUMN l ENCODING(compresstype=ZLIB))
+  (PARTITION p1 START(1) END(10),
+   PARTITION p2 START(10) END(20))
+;
+
+ALTER TABLE ccddl
+  ADD PARTITION p3 START(20) END(30)
+;
+
+</code></pre>
+<p>Running the <code>ALTER TABLE</code> command creates partitions of table <code>ccddl</code> named <code>ccddl_1_prt_p3</code> and <code>ccddl_1_prt_p3_2_prt_sp1</code>. Partition <code>ccddl_1_prt_p3</code> inherits the different compression encodings of subpartition <code>sp1</code>.</p>
+<h2 id="dropping-a-table"><a class="header" href="#dropping-a-table"><a id="topic62"></a>Dropping a Table</a></h2>
+<p>The<code>DROP TABLE</code>command removes tables from the database. For example:</p>
+<pre><code>DROP TABLE mytable;
+
+</code></pre>
+<p>To empty a table of rows without removing the table definition, use <code>DELETE</code> or <code>TRUNCATE</code>. For example:</p>
+<pre><code>DELETE FROM mytable;
+
+TRUNCATE mytable;
+
+</code></pre>
+<p><code>DROP TABLE</code>always removes any indexes, rules, triggers, and constraints that exist for the target table. Specify <code>CASCADE</code>to drop a table that is referenced by a view. <code>CASCADE</code> removes dependent views.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/ddl/ddl-table.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/ddl/ddl-partition.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/ddl/ddl-table.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/ddl/ddl-partition.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

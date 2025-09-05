@@ -1,0 +1,332 @@
+.. raw:: latex
+
+   \newpage
+
+Install Monitoring Console
+===================================================
+
+|monitor_console| is a console tool for monitoring |product_name| clusters and databases. It provides dashboards and metrics to help users diagnose the current state of the cluster and databases.
+
+This document describes how to install and deploy the |monitor_console| console components to enable monitoring for |product_name| clusters.
+
+The |monitor_console| console consists of two main components: |monitor_console| Server and |monitor_console| Agent. The |monitor_console| Server is the dashboard server that receives and displays metrics in a unified view. The |monitor_console| Agent runs on each cluster node, and collects and reports monitoring data.
+
+The |monitor_console| Agent monitors local system and services on each node, and reports data to the |monitor_console| Server via the gRPC port. The |monitor_console| Server is responsible for receiving, processing, and visualizing the operational status and performance metrics of all nodes in the cluster, and presents the results in the monitoring dashboard.
+
+Prerequisites
+---------------
+
+-  A |product_name| database cluster has been installed and configured, and ``gpperfmon`` is enabled on all nodes.
+-  The installation package and dependency packages of the |monitor_console| components are available.
+-  The target servers run Linux and support systemd.
+-  ``root`` or ``sudo`` privileges.
+-  ``curl`` (used for health checks).
+-  ``glibc 2.17`` or later.
+-  Hardware requirements: CPU of at least 1 core, RAM of at least 2 GB.
+
+.. tip::
+
+   ``gpperfmon`` is a performance monitoring component that helps administrators and developers view, analyze, and diagnose various metrics during cluster runtime. In |product_name|, you can enable ``gpperfmon`` following these steps:
+
+   1. Enable the monitoring service:
+
+      .. code-block:: shell
+
+         gpperfmon_install --enable --password <database_password> --port <database_port>
+   
+   2. Restart the database:
+
+      .. code-block:: shell
+
+         gpstop -ar
+
+Step 1: Deploy the Server component
+------------------------------------------
+
+.. tip:: 
+
+   |monitor_console| Server uses the following default administrator credentials:
+
+   -  Username: ``admin``
+   -  Password: ``admin``
+
+   To change these default credentials, edit the ``config/dbcc-server/application.yml`` configuration file in the installation package before running the installation script. Update the following settings:
+
+   .. code-block:: yaml
+
+      spring:
+      security:
+         user:
+            name: admin      # Changes to your preferred username
+            password: admin  # Changes to your preferred password
+
+
+Upload the |monitor_console| Server installation tool to the target server, navigate to the tool directory, and run the following command:
+
+.. code-block:: shell
+
+   sudo ./deploy.sh install
+
+This command performs the following tasks:
+
+1. Creates required directories.
+2. Copies binaries and configuration files.
+3. Adds systemd service files.
+4. Starts the |monitor_console| Server, Prometheus, and AlertManager services.
+
+After deploying the |monitor_console| Server, open a browser and access the control panel at:
+
+.. code-block:: none
+
+   http://<DBCC_SERVER_IP>:8080
+
+``<DBCC_SERVER_IP>`` refers to the IP address of the server where the |monitor_console| Server is installed.
+
+The following table lists the default ports used by the |monitor_console| Server.
+
+Default ports
+~~~~~~~~~~~~~~~~
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table:: 
+   :header-rows: 1
+   :align: left
+   
+   * - Component
+     - Port
+     - Description
+   * - |monitor_console| Server UI
+     - 8080
+     - Web dashboard access port
+   * - |monitor_console| gRPC
+     - 28080
+     - Port used by Agents to report data
+   * - Prometheus
+     - 9090
+     - Prometheus dashboard
+   * - AlertManager
+     - 9093
+     - Alert management dashboard
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+Start and maintain the Server
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example commands:
+
+.. code-block:: shell
+
+   # Starts all services
+   sudo ./deploy.sh start
+
+   # Starts a specific service
+   sudo ./deploy.sh start dbcc-server
+   sudo ./deploy.sh start prometheus
+   sudo ./deploy.sh start alertmanager
+
+   # Stops all services
+   sudo ./deploy.sh stop
+
+   # Stops a specific service
+   sudo ./deploy.sh start prometheus
+
+   # Restarts all services
+   sudo ./deploy.sh restart
+
+   # Restarts a specific service
+   sudo ./deploy.sh restart alertmanager
+
+   # Checks the status of all services
+   sudo ./deploy.sh status
+
+   # Checks the status of a specific service
+   sudo ./deploy.sh status alertmanager
+
+   # Checks the version of the monitoring server package and its components
+   sudo ./deploy.sh version
+
+  # Checks the version of a specific service, for example, alertmanager
+   sudo ./deploy.sh version alertmanager
+
+Configuration file paths
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-  The main configuration file of |monitor_console| Server is located at ``/etc/dbcc/dbcc-server/application.yml``. This file contains important server operation settings.
+
+   .. tip:: 
+
+      You can customize the server logo, icon, and name by adding the following configuration to the ``/etc/dbcc/dbcc-server/application.yml`` file:
+
+      .. code-block:: yaml
+
+         dbcc:
+         title: 'custom name'           # custom display name
+         distribution:
+            distributor: 'distributor'   # only supports SynxDB or BlueBerry
+
+-  Prometheus service configuration files:
+
+   -  Main configuration: ``/etc/dbcc/prometheus/prometheus.yml``
+   -  Alert rules: ``/etc/dbcc/prometheus/alert_rule.yml``
+   -  Scrape targets: ``/etc/dbcc/prometheus/scrape_config.yml``
+
+-  AlertManager service configuration file: ``/etc/dbcc/alertmanager/alertmanager.yml``
+
+Step 2: Deploy the Agent on each node
+----------------------------------------------
+
+Upload the |monitor_console| Agent installation tool to each node in the |product_name| cluster, then go to the tool directory on each node and run:
+
+.. code-block:: shell
+
+   sudo ./deploy.sh install --console-url <DBCC_SERVER_IP>:28080
+
+``<DBCC_SERVER_IP>`` is the gRPC IP address of the |monitor_console| Server. For example:
+
+.. code-block:: shell
+
+   sudo ./deploy.sh install --console-url 192.168.0.1:28080
+
+This command performs the following tasks:
+
+1. Creates necessary directories.
+2. Copies binaries and configuration files.
+3. Sets up systemd service files.
+4. Starts the Agent service.
+
+.. attention:: 
+
+   The ``console-url`` parameter is critical for communication between the Agent and the |monitor_console| Server. This parameter includes the server IP address and the gRPC port (``DBCC_SERVER_GRPC_PORT``, default: ``28080``).
+
+   The format of the ``console-url`` parameter is ``<server_ip>:<grpc_port>``, for example: ``192.168.0.1:28080``.
+
+   The console URL is saved in the Agent configuration file located at ``/etc/dbcc/dbcc-agent/config.yml``, for example:
+
+   .. code-block:: yaml
+
+      # Console configuration
+      console:
+         # Console service address
+         url: "192.168.0.1:28080"
+
+Start and maintain the Agent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example commands:
+
+.. code-block:: shell
+
+   # Starts the Agent service
+   sudo ./deploy.sh start
+
+   # Stops the Agent service
+   sudo ./deploy.sh stop
+
+   # Restarts the Agent service
+   sudo ./deploy.sh restart
+
+   # Checks the service status
+   sudo ./deploy.sh status
+
+   # Checks the version information of the Agent package and its components
+   sudo ./deploy.sh version
+
+Next step
+------------
+
+After deploying |monitor_console|, you can open the dashboard to view the status of each node in the cluster, including performance metrics such as CPU, memory, and disk I/O. For details, see :ref:`manage-system/monitor-system/monitor-console-index:view monitoring data using the web console`.
+
+Troubleshooting
+-------------------
+
+Server service fails to start
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Check the service status:
+
+   .. code-block:: shell
+
+      sudo ./deploy.sh status dbcc-server
+
+2. View detailed logs:
+
+   .. code-block:: shell
+   
+      sudo journalctl -u dbcc-server -f
+
+3. Verify port availability:
+
+   .. code-block:: shell
+
+      sudo netstat -tulpn | grep 8080
+      sudo netstat -tulpn | grep 28080
+
+4. Check for errors in the configuration file:
+
+   .. code-block:: shell
+
+      cat /etc/dbcc/dbcc-server/application.yml
+
+Server health check fails
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If the health check fails:
+
+1. Make sure the service is running.
+2. Check if the ports are accessible.
+3. Check the service logs for errors:
+
+   .. code-block:: shell
+
+      sudo journalctl -u dbcc-server -f
+
+4. Verify the configuration file is correct.
+
+Agent service fails to start
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Check the service status:
+
+   .. code-block:: shell
+
+      sudo ./deploy.sh status
+
+2. View detailed logs:
+
+   .. code-block:: shell
+   
+      sudo journalctl -u dbcc-agent -f
+
+3. Verify the configuration:
+
+   .. code-block:: shell
+
+      cat /etc/dbcc/dbcc-agent/config.yml
+
+4. Check if the console URL is correctly set and the server is reachable:
+
+   .. code-block:: shell
+
+      ping <server_ip>
+      telnet <server_ip> <grpc_port>
+
+Agent health check fails
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If the health check fails:
+
+1. Make sure the service is running.
+2. Check whether the |monitor_console| Server is accessible.
+3. Check the service logs for errors:
+
+   .. code-block:: shell
+
+      sudo journalctl -u dbcc-agent -f
+
+4. Verify that the console URL in the configuration file is correct.

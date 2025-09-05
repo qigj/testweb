@@ -1,0 +1,566 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Configuring for Secure HDFS - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="configuring-for-secure-hdfs"><a class="header" href="#configuring-for-secure-hdfs">Configuring for Secure HDFS</a></h1>
+<p>When Kerberos is activated for your HDFS filesystem, the PXF Service, as an HDFS client, requires a principal and keytab file to authenticate access to HDFS. To read or write files on a secure HDFS, you must create and deploy Kerberos principals and keytabs for PXF, and ensure that Kerberos authentication is activated and functioning.</p>
+<p>PXF accesses a secured Hadoop cluster on behalf of SynxDB end users. Impersonation is a way to present a SynxDB end user identity to a remote system. You can achieve this on a secured Hadoop cluster with PXF by configuring a Hadoop proxy user or using Kerberos constrained delegation.</p>
+<p>The identity with which PXF accesses a Kerberos-secured Hadoop depends on the settings of the following properties:</p>
+<div class="table-wrapper"><table><thead><tr><th>Property</th><th>Description</th><th>Default Value</th></tr></thead><tbody>
+<tr><td>pxf.service.kerberos.principal</td><td>The PXF Kerberos principal name.</td><td>gpadmin/_HOST@EXAMPLE.COM</td></tr>
+<tr><td>pxf.service.user.impersonation</td><td>Activates/deactivates SynxDB user impersonation on the remote system.</td><td><code>true</code></td></tr>
+<tr><td>pxf.service.kerberos.constrained-delegation</td><td>Activates/deactivates usage of Kerberos constrained delegation based on S4U Kerberos extensions. This option allows Hadoop administrators to avoid creating a proxy user configuration in Hadoop, instead requiring them to perform delegation configuration in an Active Directory (AD) or Identity Policy Audit (IPA) server.</td><td><code>false</code></td></tr>
+<tr><td>pxf.service.kerberos.ticket-renew-window</td><td>The minimum elapsed lifespan (as a percentage) after which PXF attempts to renew/refresh a Kerberos ticket. Value range is from 0 (PXF generates a new ticket for all requests) to 1 (PXF renews after full ticket lifespan).</td><td>0.8 (80%)</td></tr>
+<tr><td>pxf.service.user.name</td><td>(Optional) The user name with which PXF connects to a remote Kerberos-secured cluster if user impersonation is deactivated and using the <code>pxf.service.kerberos.principal</code> is not desired.</td><td>None</td></tr>
+</tbody></table>
+</div>
+<p>You configure these setting for a Hadoop PXF server via the <code>pxf-site.xml</code> configuration file. Refer to <a href="cfg_server.html#pxf-site">About the pxf-site.xml Configuration File</a> for more information about the configuration properties in this file.</p>
+<p><strong>Note:</strong> PXF supports simultaneous access to multiple Kerberos-secured Hadoop clusters.</p>
+<h2 id="about-kerberos-constrained-delegation"><a class="header" href="#about-kerberos-constrained-delegation"><a id="kcd"></a>About Kerberos Constrained Delegation</a></h2>
+<p>Kerberos constrained delegation is a feature that allows an administrator to specify trust boundaries that restrict the scope of where an application can act on behalf of a user. You may choose to configure PXF to use Kerberos constrained delegation when you want to manage user impersonation privileges in a directory service without the need to specify a proxy Hadoop user. Refer to the Microsoft <a href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-sfu/bde93b0e-f3c9-4ddf-9f44-e1453be7af5a">Service for User</a> (S4U) Kerberos protocol extension documentation for more information about Kerberos constrained delegation.</p>
+<p>When your AD or IPA server is configured appropriately and you activate Kerberos constrained delegation for PXF, the PXF service requests and obtains a Kerberos ticket on behalf of the user, and uses the ticket to access the HDFS file system. PXF caches the ticket for one day.</p>
+<p>PXF supports Kerberos Constrained Delegation only when you use the <code>hdfs:*</code> or <code>hive:*</code> profiles to access data residing in a Kerberos-secured Hadoop cluster.</p>
+<p>By default, Kerberos constrained delegation is deactivated for PXF. To activate Kerberos constrained delegation for a specific PXF server, you must set <code>pxf.service.kerberos-constrained.delegation</code> to <code>true</code> in the server’s <code>pxf-site.xml</code> configuration file.</p>
+<h2 id="prerequisites"><a class="header" href="#prerequisites"><a id="prereq"></a>Prerequisites</a></h2>
+<p>Before you configure PXF for access to a secure HDFS filesystem, ensure that you have:</p>
+<ul>
+<li>
+<p>Identified whether or not you plan to have PXF use Kerberos constrained delegation to access Hadoop.</p>
+</li>
+<li>
+<p>Configured a PXF server for the Hadoop cluster, and can identify the server configuration name.</p>
+</li>
+<li>
+<p>Configured and started PXF as described in <a href="instcfg_pxf.html">Configuring PXF</a>.</p>
+</li>
+<li>
+<p>Verified that Kerberos is activated for your Hadoop cluster.</p>
+</li>
+<li>
+<p>Verified that the HDFS configuration parameter <code>dfs.block.access.token.enable</code> is set to <code>true</code>. You can find this setting in the <code>hdfs-site.xml</code> configuration file on a host in your Hadoop cluster.</p>
+</li>
+<li>
+<p>Noted the host name or IP address of each SynxDB host (&lt;gphost&gt;) and the Kerberos Key Distribution Center (KDC) &lt;kdc-server&gt; host.</p>
+</li>
+<li>
+<p>Noted the name of the Kerberos &lt;realm&gt; in which your cluster resides.</p>
+</li>
+<li>
+<p>Installed the Kerberos client packages on <strong>each</strong> SynxDB host if they are not already installed. You must have superuser permissions to install operating system packages. For example:</p>
+<pre><code class="language-shell">root@gphost$ rpm -qa | grep krb
+root@gphost$ yum install krb5-libs krb5-workstation
+</code></pre>
+</li>
+</ul>
+<p>Ensure that you meet these additional prerequisites when PXF uses Kerberos constrained delegation:</p>
+<ul>
+<li>
+<p>S4U is activated in the AD or IPA server.</p>
+</li>
+<li>
+<p>The AD or IPA server is configured to allow the PXF Kerberos principal to impersonate end users.</p>
+</li>
+</ul>
+<h2 id="use-cases-and-configuration-scenarios"><a class="header" href="#use-cases-and-configuration-scenarios"><a id="scenarios"></a>Use Cases and Configuration Scenarios</a></h2>
+<p>The following scenarios describe the use cases and configuration required when
+you use PXF to access a Kerberos-secured Hadoop cluster.</p>
+<p><strong>Note</strong>: These scenarios assume that <code>gpadmin</code> is the PXF process owner.</p>
+<h3 id="accessing-hadoop-as-the-synxdb-user"><a class="header" href="#accessing-hadoop-as-the-synxdb-user"><a id="principal_proxy"></a>Accessing Hadoop as the SynxDB User</a></h3>
+<h4 id="proxied-by-the-kerberos-principal"><a class="header" href="#proxied-by-the-kerberos-principal">Proxied by the Kerberos Principal</a></h4>
+<p>In this configuration, PXF accesses Hadoop as the SynxDB user proxied
+by the Kerberos principal. The Kerberos principal is the Hadoop proxy user and
+accesses Hadoop as the SynxDB user.</p>
+<p>This is the default configuration for a Hadoop PXF server.</p>
+<p><img src="graphics/impersonation_cases/impersonation-case-1-kerberos.png" alt="Accessing Hadoop as the SynxDB User Proxied by the Kerberos Principal" title="Accessing Hadoop as the SynxDB User Proxied by the Kerberos Principal" /></p>
+<p>The following table identifies the impersonation and service user settings, and the PXF and Hadoop configuration required for this use case:</p>
+<div class="table-wrapper"><table><thead><tr><th>Impersonation</th><th>Service User</th><th>PXF Configuration</th><th>Hadoop Configuration       </th></tr></thead><tbody>
+<tr><td>true</td><td>SynxDB user</td><td>Perform the <a href="#procedure">Configuration Procedure</a> in this topic.</td><td>Set the Kerberos principal as the Hadoop proxy user as described in <a href="pxfuserimpers.html#hadoop">Configure Hadoop Proxying</a>.</td></tr>
+</tbody></table>
+</div>
+<h4 id="using-kerberos-constrained-delegation"><a class="header" href="#using-kerberos-constrained-delegation">Using Kerberos Constrained Delegation</a></h4>
+<p>In this configuration, PXF uses Kerberos constrained delegation to request and obtain a ticket on behalf of the SynxDB user, and uses the ticket to access Hadoop.</p>
+<p><img src="graphics/impersonation_cases/impersonation-case-kcd.png" alt="Accessing Hadoop using Kerberos Constrained Delegation" title="Accessing Hadoop using Kerberos Constrained Delegation" /></p>
+<p>The following table identifies the impersonation and service user settings, and the PXF and directory service configuration required for this use case; no Hadoop configuration is required:</p>
+<div class="table-wrapper"><table><thead><tr><th>Impersonation</th><th>Service User</th><th>PXF Configuration</th><th>AD/IPA Config      </th></tr></thead><tbody>
+<tr><td>true</td><td>SynxDB user</td><td>Set up the PXF Kerberos principal, keytab files, and related settings in <code>pxf-site.xml</code> as described in the <a href="#procedure">Configuration Procedure</a> in this topic, and <a href="#enable_kcd">Activate Kerberos Constrained Delegation</a>.</td><td>Configure AD or IPA to provide the PXF Kerberos principal with the delegation rights for the SynxDB end users.</td></tr>
+</tbody></table>
+</div>
+<h3 id="accessing-hadoop-as-the-kerberos-principal"><a class="header" href="#accessing-hadoop-as-the-kerberos-principal"><a id="principal_hadoop"></a>Accessing Hadoop as the Kerberos Principal</a></h3>
+<p>In this configuration, PXF accesses Hadoop as the Kerberos principal. A query initiated by
+any SynxDB user appears on the Hadoop side as originating from the Kerberos principal.</p>
+<p><img src="graphics/impersonation_cases/impersonation-case-2-kerberos.png" alt="Accessing Hadoop as the Kerberos Principal" title="Accessing Hadoop as the Kerberos Principal" /></p>
+<p>The following table identifies the impersonation and service user settings, and the PXF and Hadoop configuration required for this use case:</p>
+<div class="table-wrapper"><table><thead><tr><th>Impersonation</th><th>Service User</th><th>PXF Configuration</th><th>Hadoop Configuration       </th></tr></thead><tbody>
+<tr><td>false</td><td>Identity of the Kerberos principal</td><td>Perform the configuration Procedure in this topic, and then turn off user impersonation as described in <a href="pxfuserimpers.html#pxf_cfg_impers">Configure PXF User Impersonation</a>.</td><td>None required.</td></tr>
+</tbody></table>
+</div>
+<h3 id="accessing-hadoop-as-a-custom-user"><a class="header" href="#accessing-hadoop-as-a-custom-user"><a id="custom_hadoop"></a>Accessing Hadoop as a &lt;custom&gt; User</a></h3>
+<h4 id="proxied-by-the-kerberos-principal-1"><a class="header" href="#proxied-by-the-kerberos-principal-1">Proxied by the Kerberos Principal</a></h4>
+<p>In this configuration, PXF accesses Hadoop as a &lt;custom&gt; user (for example, <code>hive</code>).
+The Kerberos principal is the Hadoop proxy user. A query initiated by any SynxDB
+user appears on the Hadoop side as originating from the &lt;custom&gt; user.</p>
+<p><img src="graphics/impersonation_cases/impersonation-case-3-kerberos.png" alt="Accessing Hadoop as a custom User" title="Accessing Hadoop as a custom User" /></p>
+<p>The following table identifies the impersonation and service user settings, and the PXF and Hadoop configuration required for this use case:</p>
+<div class="table-wrapper"><table><thead><tr><th>Impersonation</th><th>Service User</th><th>PXF Configuration</th><th>Hadoop Configuration       </th></tr></thead><tbody>
+<tr><td>false</td><td>&lt;custom&gt;</td><td>Perform the <a href="#procedure">Configuration Procedure</a> in this topic, turn off user impersonation as described in <a href="pxfuserimpers.html#pxf_cfg_impers">Configure PXF User Impersonation</a>, and <a href="pxfuserimpers.html#pxf_cfg_user">Configure the Hadoop User</a> to the &lt;custom&gt; user name.</td><td>Set the Kerberos principal as the Hadoop proxy user as described in <a href="pxfuserimpers.html#hadoop">Configure Hadoop Proxying</a>.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Note:</strong> PXF does not support accessing a Kerberos-secured Hadoop cluster
+with a &lt;custom&gt; user impersonating SynxDB users. PXF requires that you
+impersonate SynxDB users using the Kerberos principal.</p>
+<h4 id="using-kerberos-constrained-delegation-1"><a class="header" href="#using-kerberos-constrained-delegation-1">Using Kerberos Constrained Delegation</a></h4>
+<p>In this configuration, PXF uses Kerberos constrained delegation to request and obtain a ticket on behalf of a &lt;custom&gt; user, and uses the ticket to access Hadoop.</p>
+<p>The following table identifies the impersonation and service user settings, and the PXF and directory service configuration required for this use case; no Hadoop configuration is required:</p>
+<div class="table-wrapper"><table><thead><tr><th>Impersonation</th><th>Service User</th><th>PXF Configuration</th><th>AD/IPA Config      </th></tr></thead><tbody>
+<tr><td>false</td><td>&lt;custom&gt;</td><td>Set up the PXF Kerberos principal, keytab files, and related settings in <code>pxf-site.xml</code> as described in the <a href="#procedure">Configuration Procedure</a> in this topic, deactivate impersonation as described in <a href="pxfuserimpers.html#pxf_cfg_impers">Configure PXF User Impersonation</a>, <a href="#enable_kcd">Activate Kerberos Constrained Delegation</a>, and <a href="pxfuserimpers.html#pxf_cfg_user">Configure the Hadoop User</a> to the &lt;custom&gt; user name.</td><td>Configure AD or IPA to provide the PXF Kerberos principal with the delegation rights for the &lt;custom&gt; user name.</td></tr>
+</tbody></table>
+</div>
+<h2 id="procedures"><a class="header" href="#procedures"><a id="procedure"></a>Procedures</a></h2>
+<p>There are different procedures for configuring PXF for secure HDFS with a <a href="#proc_ad">Microsoft Active Directory KDC Server</a> vs. with an <a href="#proc_mit">MIT Kerberos KDC Server</a>.</p>
+<h3 id="configuring-pxf-with-a-microsoft-active-directory-kerberos-kdc-server"><a class="header" href="#configuring-pxf-with-a-microsoft-active-directory-kerberos-kdc-server"><a id="proc_ad"></a>Configuring PXF with a Microsoft Active Directory Kerberos KDC Server</a></h3>
+<p>When you configure PXF for secure HDFS using an AD Kerberos KDC server, you will perform tasks on both the KDC server host and the SynxDB coordinator host.</p>
+<p><strong>Perform the following steps to configure the Active Directory domain controller</strong>:</p>
+<ol>
+<li>
+<p>Start <strong>Active Directory Users and Computers</strong>.</p>
+</li>
+<li>
+<p>Expand the forest domain and the top-level UNIX organizational unit that describes your SynxDB user domain.</p>
+</li>
+<li>
+<p>Select <strong>Service Accounts</strong>, right-click, then select <strong>New-&gt;User</strong>.</p>
+</li>
+<li>
+<p>Type a name, for example: <code>ServiceSynxDBPROD1</code>, and change the login name to <code>gpadmin</code>. Note that the login name should be in compliance with POSIX standard and match <code>hadoop.proxyuser.&lt;name&gt;.hosts/groups</code> in the Hadoop <code>core-site.xml</code> and the Kerberos principal.</p>
+</li>
+<li>
+<p>Type and confirm the Active Directory service account password. Select the <strong>User cannot change password</strong> and <strong>Password never expires</strong> check boxes, then click <strong>Next</strong>. For security reasons, if you can’t have <strong>Password never expires</strong> checked, you will need to generate new keytab file (step 7) every time you change the password of the service account.</p>
+</li>
+<li>
+<p>Click <strong>Finish</strong> to complete the creation of the new user principal.</p>
+</li>
+<li>
+<p>Open Powershell or a command prompt and run the <code>ktpass</code> command to generate the keytab file. For example:</p>
+<pre><code class="language-shell">powershell#&gt;ktpass -out pxf.service.keytab -princ gpadmin@EXAMPLE.COM -mapUser ServiceSynxDBPROD1 -pass ******* -crypto all -ptype KRB5_NT_PRINCIPAL
+</code></pre>
+<p>With Active Directory, the principal and the keytab file are shared by all SynxDB hosts.</p>
+</li>
+<li>
+<p>Copy the <code>pxf.service.keytab</code> file to the SynxDB coordinator host.</p>
+</li>
+</ol>
+<p><strong>Perform the following procedure on the SynxDB coordinator host</strong>:</p>
+<ol>
+<li>
+<p>Log in to the SynxDB coordinator host. For example:</p>
+<pre><code class="language-shell">$ ssh gpadmin@&lt;coordinator&gt;
+</code></pre>
+</li>
+<li>
+<p>Identify the name of the PXF Hadoop server configuration, and navigate to the server configuration directory. For example, if the server is named <code>hdp3</code>:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cd $PXF_BASE/servers/hdp3
+</code></pre>
+</li>
+<li>
+<p>If the server configuration does not yet include a <code>pxf-site.xml</code> file, copy the template file to the directory. For example:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cp &lt;PXF_INSTALL_DIR&gt;/templates/pxf-site.xml .
+</code></pre>
+</li>
+<li>
+<p>Open the <code>pxf-site.xml</code> file in the editor of your choice, and update the keytab and principal property settings, if required. Specify the location of the keytab file and the Kerberos principal, substituting your realm. For example:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;pxf.service.kerberos.principal&lt;/name&gt;
+    &lt;value&gt;gpadmin@EXAMPLE.COM&lt;/value&gt;
+&lt;/property&gt;
+&lt;property&gt;
+    &lt;name&gt;pxf.service.kerberos.keytab&lt;/name&gt;
+    &lt;value&gt;${pxf.conf}/keytabs/pxf.service.keytab&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+</li>
+<li>
+<p>Save the file and exit the editor.</p>
+</li>
+<li>
+<p>Synchronize the keytabs in <code>$PXF_BASE</code>. You must distribute the keytab file to <code>$PXF_BASE/keytabs/</code>. Locate the keytab file and copy the file to the <code>$PXF_BASE</code> runtime configuration directory. The copy command that you specify differs based on the SynxDB version. For example:</p>
+<p>If your source SynxDB cluster is running version 5.x or 6.x:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ gpscp -f hostfile_all pxf.service.keytab =:$PXF_BASE/keytabs/
+</code></pre>
+<p>If your source SynxDB cluster is running version 7.x:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ gpsync -f hostfile_all pxf.service.keytab =:$PXF_BASE/keytabs/
+</code></pre>
+</li>
+<li>
+<p>Set the required permissions on the keytab file. For example:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ gpssh -f hostfile_all chmod 400 $PXF_BASE/keytabs/pxf.service.keytab
+</code></pre>
+</li>
+<li>
+<p><a href="#proc_complete">Complete the PXF Configuration</a> based on your chosen Hadoop access scenario.</p>
+</li>
+</ol>
+<h3 id="configuring-pxf-with-an-mit-kerberos-kdc-server"><a class="header" href="#configuring-pxf-with-an-mit-kerberos-kdc-server"><a id="proc_mit"></a>Configuring PXF with an MIT Kerberos KDC Server</a></h3>
+<p>When you configure PXF for secure HDFS using an MIT Kerberos KDC server, you will perform tasks on both the KDC server host and the SynxDB coordinator host.</p>
+<p><strong>Perform the following steps on the MIT Kerberos KDC server host</strong>:</p>
+<ol>
+<li>
+<p>Log in to the Kerberos KDC server as the <code>root</code> user.</p>
+<pre><code class="language-shell">$ ssh root@&lt;kdc-server&gt;
+root@kdc-server$ 
+</code></pre>
+</li>
+<li>
+<p>Distribute the <code>/etc/krb5.conf</code> Kerberos configuration file on the KDC server host to <strong>each</strong> host in your SynxDB cluster if not already present. For example:</p>
+<pre><code class="language-shell">root@kdc-server$ scp /etc/krb5.conf &lt;gphost&gt;:/etc/krb5.conf
+</code></pre>
+</li>
+<li>
+<p>Use the <code>kadmin.local</code> command to create a Kerberos PXF Service principal for <strong>each</strong> SynxDB host. The service principal should be of the form <code>gpadmin/&lt;gphost&gt;@&lt;realm&gt;</code> where &lt;gphost&gt; is the DNS resolvable, fully-qualified hostname of the host system (output of the <code>hostname -f</code> command).</p>
+<p>For example, these commands create Kerberos PXF Service principals for the hosts named host1.example.com, host2.example.com, and host3.example.com in the Kerberos realm named <code>EXAMPLE.COM</code>:</p>
+<pre><code class="language-shell">root@kdc-server$ kadmin.local -q "addprinc -randkey -pw changeme gpadmin/host1.example.com@EXAMPLE.COM"
+root@kdc-server$ kadmin.local -q "addprinc -randkey -pw changeme gpadmin/host2.example.com@EXAMPLE.COM"
+root@kdc-server$ kadmin.local -q "addprinc -randkey -pw changeme gpadmin/host3.example.com@EXAMPLE.COM"
+</code></pre>
+</li>
+<li>
+<p>Generate a keytab file for each PXF Service principal that you created in the previous step. Save the keytab files in any convenient location (this example uses the directory <code>/etc/security/keytabs</code>). You will deploy the keytab files to their respective SynxDB host machines in a later step. For example:</p>
+<pre><code class="language-shell">root@kdc-server$ kadmin.local -q "xst -norandkey -k /etc/security/keytabs/pxf-host1.service.keytab gpadmin/host1.example.com@EXAMPLE.COM"
+root@kdc-server$ kadmin.local -q "xst -norandkey -k /etc/security/keytabs/pxf-host2.service.keytab gpadmin/host2.example.com@EXAMPLE.COM"
+root@kdc-server$ kadmin.local -q "xst -norandkey -k /etc/security/keytabs/pxf-host3.service.keytab gpadmin/host3.example.com@EXAMPLE.COM"
+</code></pre>
+<p>Repeat the <code>xst</code> command as necessary to generate a keytab for each PXF Service principal that you created in the previous step.</p>
+</li>
+<li>
+<p>List the principals. For example:</p>
+<pre><code class="language-shell">root@kdc-server$ kadmin.local -q "listprincs"
+</code></pre>
+</li>
+<li>
+<p>Copy the keytab file for each PXF Service principal to its respective host. For example, the following commands copy each principal generated in step 4 to the PXF default keytab directory on the host when <code>PXF_BASE=/usr/local/pxf-gp6</code>:</p>
+<pre><code class="language-shell">root@kdc-server$ scp /etc/security/keytabs/pxf-host1.service.keytab host1.example.com:/usr/local/pxf-gp6/keytabs/pxf.service.keytab
+root@kdc-server$ scp /etc/security/keytabs/pxf-host2.service.keytab host2.example.com:/usr/local/pxf-gp6/keytabs/pxf.service.keytab
+root@kdc-server$ scp /etc/security/keytabs/pxf-host3.service.keytab host3.example.com:/usr/local/pxf-gp6/keytabs/pxf.service.keytab
+</code></pre>
+<p>Note the file system location of the keytab file on each PXF host; you will need this information for a later configuration step.</p>
+</li>
+<li>
+<p>Change the ownership and permissions on the <code>pxf.service.keytab</code> files. The files must be owned and readable by only the <code>gpadmin</code> user. For example:</p>
+<pre><code class="language-shell">root@kdc-server$ ssh host1.example.com chown gpadmin:gpadmin /usr/local/pxf-gp6/keytabs/pxf.service.keytab
+root@kdc-server$ ssh host1.example.com chmod 400 /usr/local/pxf-gp6/keytabs/pxf.service.keytab
+root@kdc-server$ ssh host2.example.com chown gpadmin:gpadmin /usr/local/pxf-gp6/keytabs/pxf.service.keytab
+root@kdc-server$ ssh host2.example.com chmod 400 /usr/local/pxf-gp6/keytabs/pxf.service.keytab
+root@kdc-server$ ssh host3.example.com chown gpadmin:gpadmin /usr/local/pxf-gp6/keytabs/pxf.service.keytab
+root@kdc-server$ ssh host3.example.com chmod 400 /usr/local/pxf-gp6/keytabs/pxf.service.keytab
+</code></pre>
+</li>
+</ol>
+<p><strong>Perform the following steps on the SynxDB coordinator host</strong>:</p>
+<ol>
+<li>
+<p>Log in to the coordinator host. For example:</p>
+<pre><code class="language-shell">$ ssh gpadmin@&lt;coordinator&gt;
+</code></pre>
+</li>
+<li>
+<p>Identify the name of the PXF Hadoop server configuration that requires Kerberos access.</p>
+</li>
+<li>
+<p>Navigate to the server configuration directory. For example, if the server is named <code>hdp3</code>:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cd $PXF_BASE/servers/hdp3
+</code></pre>
+</li>
+<li>
+<p>If the server configuration does not yet include a <code>pxf-site.xml</code> file, copy the template file to the directory. For example:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cp &lt;PXF_INSTALL_DIR&gt;/templates/pxf-site.xml .
+</code></pre>
+</li>
+<li>
+<p>Open the <code>pxf-site.xml</code> file in the editor of your choice, and update the keytab and principal property settings, if required. Specify the location of the keytab file and the Kerberos principal, substituting your realm. <em>The default values for these settings are identified below</em>:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;pxf.service.kerberos.principal&lt;/name&gt;
+    &lt;value&gt;gpadmin/_HOST@EXAMPLE.COM&lt;/value&gt;
+&lt;/property&gt;
+&lt;property&gt;
+    &lt;name&gt;pxf.service.kerberos.keytab&lt;/name&gt;
+    &lt;value&gt;${pxf.conf}/keytabs/pxf.service.keytab&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<p>PXF automatically replaces <code> _HOST</code> with the FQDN of the host.</p>
+</li>
+<li>
+<p><a href="#proc_complete">Complete the PXF Configuration</a> based on your chosen Hadoop access scenario.</p>
+</li>
+</ol>
+<h3 id="completing-the-pxf-configuration"><a class="header" href="#completing-the-pxf-configuration"><a id="proc_complete"></a>Completing the PXF Configuration</a></h3>
+<p>On the SynxDB coordinator host, complete the configuration of the PXF server based on your chosen Hadoop access scenario. Choose one, as <em>these are mutually exclusive</em>:</p>
+<ol>
+<li>
+<p>If you want to access Hadoop as the SynxDB user:</p>
+<ol>
+<li>Activate user impersonation as described in <a href="pxfuserimpers.html#pxf_cfg_impers">Configure PXF User Impersonation</a> (this is the default setting).</li>
+<li><em>If you want to use Kerberos constrained delegation</em>, activate it for the server, and configure AD or IPA to provide the PXF Kerberos principal with the delegation rights for the SynxDB end users.</li>
+<li><em>If you did not activate Kerberos constrained delegation</em>, configure Hadoop proxying for the <em>primary</em> component of the Kerberos principal as described in <a href="pxfuserimpers.html#hadoop">Configure Hadoop Proxying</a>. For example, if your principal is <code>gpadmin/_HOST@EXAMPLE.COM</code>, configure proxying for the Hadoop user <code>gpadmin</code>.</li>
+</ol>
+</li>
+<li>
+<p>If you want to access Hadoop using the identity of the Kerberos principal, deactivate user impersonation as described in <a href="pxfuserimpers.html#pxf_cfg_impers">Configure PXF User Impersonation</a>.</p>
+</li>
+<li>
+<p>If you want to access Hadoop as a custom user:</p>
+<ol>
+<li>Deactivate user impersonation as described in <a href="pxfuserimpers.html#pxf_cfg_impers">Configure PXF User Impersonation</a>.</li>
+<li>Configure the custom user name as described in <a href="pxfuserimpers.html#pxf_cfg_user">Configure the Hadoop User</a>.</li>
+<li><em>If you want to use Kerberos constrained delegation</em>, <a href="#enable_kcd">activate</a> it for the server, and configure AD or IPA to provide the PXF Kerberos principal with the delegation rights for the custom user.</li>
+<li><em>If you did not activate Kerberos constrained delegation</em>, configure Hadoop proxying for the <em>primary</em> component of the Kerberos principal as described in <a href="pxfuserimpers.html#hadoop">Configure Hadoop Proxying</a>. For example, if your principal is <code>gpadmin/_HOST@EXAMPLE.COM</code>, configure proxying for the Hadoop user <code>gpadmin</code>.</li>
+</ol>
+</li>
+<li>
+<p>Synchronize the PXF configuration to your SynxDB cluster:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ pxf cluster sync
+</code></pre>
+</li>
+</ol>
+<h3 id="activating-kerberos-constrained-delegation"><a class="header" href="#activating-kerberos-constrained-delegation"><a id="enable_kcd"></a>Activating Kerberos Constrained Delegation</a></h3>
+<p>By default, Kerberos constrained delegation is deactivated for PXF. Perform the following procedure to configure Kerberos constrained delegation for a PXF server:</p>
+<ol>
+<li>
+<p>Log in to your SynxDB coordinator host as the administrative user:</p>
+<pre><code class="language-shell">$ ssh gpadmin@&lt;coordinator&gt;
+</code></pre>
+</li>
+<li>
+<p>Identify the name of the Hadoop PXF server configuration that you want to update.</p>
+</li>
+<li>
+<p>Navigate to the server configuration directory. For example, if the server is named <code>hdp3</code>:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cd $PXF_BASE/servers/hdp3
+</code></pre>
+</li>
+<li>
+<p>If the server configuration does not yet include a <code>pxf-site.xml</code> file, copy the template file to the directory. For example:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ cp &lt;PXF_INSTALL_DIR&gt;/templates/pxf-site.xml .
+</code></pre>
+</li>
+<li>
+<p>Open the <code>pxf-site.xml</code> file in the editor of your choice, locate the <code>pxf.service.kerberos-constrained.delegation</code> property, and set it as follows:</p>
+<pre><code class="language-xml">&lt;property&gt;
+    &lt;name&gt;pxf.service.kerberos-constrained.delegation&lt;/name&gt;
+    &lt;value&gt;true&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+</li>
+<li>
+<p>Save the <code>pxf-site.xml</code> file and exit the editor.</p>
+</li>
+<li>
+<p>Use the <code>pxf cluster sync</code> command to synchronize the PXF Hadoop server configuration to your SynxDB cluster:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ pxf cluster sync
+</code></pre>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pxf/pxfuserimpers.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pxf/s3_objstore_cfg.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pxf/pxfuserimpers.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pxf/s3_objstore_cfg.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

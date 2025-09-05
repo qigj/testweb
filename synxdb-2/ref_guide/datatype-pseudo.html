@@ -1,0 +1,237 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Pseudo-Types - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="pseudo-types"><a class="header" href="#pseudo-types">Pseudo-Types</a></h1>
+<p>SynxDB supports special-purpose data type entries that are collectively called <em>pseudo-types</em>. A pseudo-type cannot be used as a column data type, but it can be used to declare a function’s argument or result type. Each of the available pseudo-types is useful in situations where a function’s behavior does not correspond to simply taking or returning a value of a specific SQL data type.</p>
+<p>Functions coded in procedural languages can use pseudo-types only as allowed by their implementation languages. The procedural languages all forbid use of a pseudo-type as an argument type, and allow only <em>void</em> and <em>record</em> as a result type.</p>
+<p>A function with the pseudo-type <em>record</em> as a return data type returns an unspecified row type. The <em>record</em> represents an array of possibly-anonymous composite types. Since composite datums carry their own type identification, no extra knowledge is needed at the array level.</p>
+<p>The pseudo-type <em>void</em> indicates that a function returns no value.</p>
+<blockquote>
+<p><strong>Note</strong> SynxDB does not support triggers and the pseudo-type <em>trigger</em>.</p>
+</blockquote>
+<p>The types <em>anyelement</em>, <em>anyarray</em>, <em>anynonarray</em>, and <em>anyenum</em> are pseudo-types called polymorphic types. Some procedural languages also support polymorphic functions using the types <em>anyarray</em>, <em>anyelement</em>, <em>anyenum</em>, and <em>anynonarray</em>.</p>
+<p>The pseudo-type <em>anytable</em> is a SynxDB type that specifies a table expression—an expression that computes a table. SynxDB allows this type only as an argument to a user-defined function. See <a href="#topic_ig2_1pc_qfb">Table Value Expressions</a> for more about the <em>anytable</em> pseudo-type.</p>
+<p>For more information about pseudo-types, see the PostgreSQL documentation about <a href="https://www.postgresql.org/docs/9.4/datatype-pseudo.html">Pseudo-Types</a>.</p>
+<h2 id="polymorphic-types"><a class="header" href="#polymorphic-types"><a id="topic_dbn_bpc_qfb"></a>Polymorphic Types</a></h2>
+<p>Four pseudo-types of special interest are <em>anyelement</em>, <em>anyarray</em>, <em>anynonarray</em>, and <em>anyenum</em>, which are collectively called <em>polymorphic</em> types. Any function declared using these types is said to be a polymorphic function. A polymorphic function can operate on many different data types, with the specific data types being determined by the data types actually passed to it at runtime.</p>
+<p>Polymorphic arguments and results are tied to each other and are resolved to a specific data type when a query calling a polymorphic function is parsed. Each position (either argument or return value) declared as <em>anyelement</em> is allowed to have any specific actual data type, but in any given call they must all be the same actual type. Each position declared as <em>anyarray</em> can have any array data type, but similarly they must all be the same type. If there are positions declared <em>anyarray</em> and others declared <em>anyelement</em>, the actual array type in the <em>anyarray</em> positions must be an array whose elements are the same type appearing in the <em>anyelement</em> positions. <em>anynonarray</em> is treated exactly the same as <em>anyelement</em>, but adds the additional constraint that the actual type must not be an array type. <em>anyenum</em> is treated exactly the same as <em>anyelement</em>, but adds the additional constraint that the actual type must be an <code>enum</code> type.</p>
+<p>When more than one argument position is declared with a polymorphic type, the net effect is that only certain combinations of actual argument types are allowed. For example, a function declared as <code>equal(*anyelement*, *anyelement*)</code> takes any two input values, so long as they are of the same data type.</p>
+<p>When the return value of a function is declared as a polymorphic type, there must be at least one argument position that is also polymorphic, and the actual data type supplied as the argument determines the actual result type for that call. For example, if there were not already an array subscripting mechanism, one could define a function that implements subscripting as <code>subscript(*anyarray*, integer) returns *anyelement*</code>. This declaration constrains the actual first argument to be an array type, and allows the parser to infer the correct result type from the actual first argument’s type. Another example is that a function declared as <code>myfunc(*anyarray*) returns *anyenum*</code> will only accept arrays of <code>enum</code> types.</p>
+<p>Note that <em>anynonarray</em> and <em>anyenum</em> do not represent separate type variables; they are the same type as <em>anyelement</em>, just with an additional constraint. For example, declaring a function as <code>myfunc(*anyelement*, *anyenum*)</code> is equivalent to declaring it as <code>myfunc(*anyenum*, *anyenum*)</code>: both actual arguments must be the same <code>enum</code> type.</p>
+<p>A variadic function (one taking a variable number of arguments) is polymorphic when its last parameter is declared as <code>VARIADIC *anyarray*</code>. For purposes of argument matching and determining the actual result type, such a function behaves the same as if you had declared the appropriate number of <em>anynonarray</em> parameters.</p>
+<p>For more information about polymorphic types, see the PostgreSQL documentation about <a href="https://www.postgresql.org/docs/9.4/xfunc-c.html">Polymorphic Arguments and Return Types</a>.</p>
+<h2 id="table-value-expressions"><a class="header" href="#table-value-expressions"><a id="topic_ig2_1pc_qfb"></a>Table Value Expressions</a></h2>
+<p>The <em>anytable</em> pseudo-type declares a function argument that is a table value expression. The notation for a table value expression is a <code>SELECT</code> statement enclosed in a <code>TABLE()</code> function. You can specify a distribution policy for the table by adding <code>SCATTER RANDOMLY</code>, or a <code>SCATTER BY</code> clause with a column list to specify the distribution key.</p>
+<p>The <code>SELECT</code> statement is run when the function is called and the result rows are distributed to segments so that each segment runs the function with a subset of the result table.</p>
+<p>For example, this table expression selects three columns from a table named <code>customer</code> and sets the distribution key to the first column:</p>
+<pre><code>TABLE(SELECT cust_key, name, address FROM customer SCATTER BY 1)
+</code></pre>
+<p>The <code>SELECT</code> statement may include joins on multiple base tables, <code>WHERE</code> clauses, aggregates, and any other valid query syntax.</p>
+<p>The <em>anytable</em> type is only permitted in functions implemented in the C or C++ languages. The body of the function can access the table using the SynxDB Server Programming Interface (SPI).</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ref_guide/datatype-datetime.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ref_guide/datatype-textsearch.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ref_guide/datatype-datetime.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ref_guide/datatype-textsearch.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

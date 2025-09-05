@@ -1,0 +1,369 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>pg_restore - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="pg_restore"><a class="header" href="#pg_restore">pg_restore</a></h1>
+<p>Restores a database from an archive file created by <code>pg_dump</code>.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code class="language-{#client_util_synopsis}">pg_restore [&lt;connection-option&gt; ...] [&lt;restore_option&gt; ...] &lt;filename&gt;
+
+pg_restore -? | --help
+
+pg_restore -V | --version
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p><code>pg_restore</code> is a utility for restoring a database from an archive created by <a href="pg_dump.html">pg_dump</a> in one of the non-plain-text formats. It will issue the commands necessary to reconstruct the database to the state it was in at the time it was saved. The archive files also allow <code>pg_restore</code> to be selective about what is restored, or even to reorder the items prior to being restored.</p>
+<p><code>pg_restore</code> can operate in two modes. If a database name is specified, the archive is restored directly into the database. Otherwise, a script containing the SQL commands necessary to rebuild the database is created and written to a file or standard output. The script output is equivalent to the plain text output format of <code>pg_dump</code>. Some of the options controlling the output are therefore analogous to <code>pg_dump</code> options.</p>
+<p><code>pg_restore</code> cannot restore information that is not present in the archive file. For instance, if the archive was made using the “dump data as <code>INSERT</code> commands” option, <code>pg_restore</code> will not be able to load the data using <code>COPY</code> statements.</p>
+<h2 id="options"><a class="header" href="#options"><a id="section4"></a>Options</a></h2>
+<h3 id="filename"><a class="header" href="#filename">filename</a></h3>
+<p>Specifies the location of the archive file (or directory, for a directory-format archive) to be restored. If not specified, the standard input is used.</p>
+<h3 id="-a--data-only"><a class="header" href="#-a--data-only">-a | –data-only</a></h3>
+<p>Restore only the data, not the schema (data definitions). Table data and sequence values are restored, if present in the archive.</p>
+<p>This option is similar to, but for historical reasons not identical to, specifying <code>--section=data</code>.</p>
+<h3 id="-c--clean"><a class="header" href="#-c--clean">-c | –clean</a></h3>
+<p>Clean (drop) database objects before recreating them. (This might generate some harmless error messages, if any objects were not present in the destination database.)</p>
+<h3 id="-c--create"><a class="header" href="#-c--create">-C | –create</a></h3>
+<p>Create the database before restoring into it. If <code>--clean</code> is also specified, drop and recreate the target database before connecting to it.</p>
+<p>When this option is used, the database named with <code>-d</code> is used only to issue the initial <code>DROP DATABASE</code> and <code>CREATE DATABASE</code> commands. All data is restored into the database name that appears in the archive.</p>
+<h3 id="-d-dbname--dbnamedbname"><a class="header" href="#-d-dbname--dbnamedbname">-d dbname | –dbname=dbname</a></h3>
+<p>Connect to this database and restore directly into this database. This utility, like most other SynxDB utilities, also uses the environment variables supported by <code>libpq</code>. However it does not read <code>PGDATABASE</code> when a database name is not supplied.</p>
+<h3 id="-e--exit-on-error"><a class="header" href="#-e--exit-on-error">-e | –exit-on-error</a></h3>
+<p>Exit if an error is encountered while sending SQL commands to the database. The default is to continue and to display a count of errors at the end of the restoration.</p>
+<h3 id="-f-outfilename--fileoutfilename"><a class="header" href="#-f-outfilename--fileoutfilename">-f outfilename | –file=outfilename</a></h3>
+<p>Specify output file for generated script, or for the listing when used with <code>-l</code>. Default is the standard output.</p>
+<h3 id="-f-cdt--formatcustom--directory--tar"><a class="header" href="#-f-cdt--formatcustom--directory--tar">-F c|d|t | –format={custom | directory | tar}</a></h3>
+<p>The format of the archive produced by <a href="pg_dump.html">pg_dump</a>. It is not necessary to specify the format, since <code>pg_restore</code> will determine the format automatically. Format can be <code>custom</code>, <code>directory</code>, or <code>tar</code>.</p>
+<h3 id="-i-index--indexindex"><a class="header" href="#-i-index--indexindex">-I index | –index=index</a></h3>
+<p>Restore definition of named index only.</p>
+<h3 id="-j--number-of-jobs--jobsnumber-of-jobs"><a class="header" href="#-j--number-of-jobs--jobsnumber-of-jobs">-j | –number-of-jobs | –jobs=number-of-jobs</a></h3>
+<p>Run the most time-consuming parts of <code>pg_restore</code> — those which load data, create indexes, or create constraints — using multiple concurrent jobs. This option can dramatically reduce the time to restore a large database to a server running on a multiprocessor machine.</p>
+<p>Each job is one process or one thread, depending on the operating system, and uses a separate connection to the server.</p>
+<p>The optimal value for this option depends on the hardware setup of the server, of the client, and of the network. Factors include the number of CPU cores and the disk setup. A good place to start is the number of CPU cores on the server, but values larger than that can also lead to faster restore times in many cases. Of course, values that are too high will lead to decreased performance because of thrashing.</p>
+<p>Only the custom archive format is supported with this option. The input file must be a regular file (not, for example, a pipe). This option is ignored when emitting a script rather than connecting directly to a database server. Also, multiple jobs cannot be used together with the option <code>--single-transaction</code>.</p>
+<h3 id="-l--list"><a class="header" href="#-l--list">-l | –list</a></h3>
+<p>List the contents of the archive. The output of this operation can be used with the <code>-L</code> option to restrict and reorder the items that are restored.</p>
+<h3 id="-l-list-file--use-listlist-file"><a class="header" href="#-l-list-file--use-listlist-file">-L list-file | –use-list=list-file</a></h3>
+<p>Restore elements in the list-file only, and in the order they appear in the file. Note that if filtering switches such as <code>-n</code> or <code>-t</code> are used with <code>-L</code>, they will further restrict the items restored.</p>
+<p>list-file is normally created by editing the output of a previous <code>-l</code> operation. Lines can be moved or removed, and can also be commented out by placing a semicolon (;) at the start of the line. See below for examples.</p>
+<h3 id="-n-schema--schemaschema"><a class="header" href="#-n-schema--schemaschema">-n schema | –schema=schema</a></h3>
+<p>Restore only objects that are in the named schema. This can be combined with the <code>-t</code> option to restore just a specific table.</p>
+<h3 id="-o--no-owner"><a class="header" href="#-o--no-owner">-O | –no-owner</a></h3>
+<p>Do not output commands to set ownership of objects to match the original database. By default, <code>pg_restore</code> issues <code>ALTER OWNER</code> or <code>SET SESSION AUTHORIZATION</code> statements to set ownership of created schema elements. These statements will fail unless the initial connection to the database is made by a superuser (or the same user that owns all of the objects in the script). With <code>-O</code>, any user name can be used for the initial connection, and this user will own all the created objects.</p>
+<h3 id="-p-function-nameargtype----functionfunction-nameargtype--"><a class="header" href="#-p-function-nameargtype----functionfunction-nameargtype--">-P ‘function-name(argtype [, …])’ | –function=‘function-name(argtype [, …])’</a></h3>
+<p>Restore the named function only. The function name must be enclosed in quotes. Be careful to spell the function name and arguments exactly as they appear in the dump file’s table of contents (as shown by the <code>--list</code> option).</p>
+<h3 id="-s--schema-only"><a class="header" href="#-s--schema-only">-s | –schema-only</a></h3>
+<p>Restore only the schema (data definitions), not data, to the extent that schema entries are present in the archive.</p>
+<p>This option is the inverse of <code>--data-only</code>. It is similar to, but for historical reasons not identical to, specifying <code>--section=pre-data --section=post-data</code>.</p>
+<p>(Do not confuse this with the <code>--schema</code> option, which uses the word “schema” in a different meaning.)</p>
+<h3 id="-s-username--superuserusername"><a class="header" href="#-s-username--superuserusername">-S username | –superuser=username</a></h3>
+<p>Specify the superuser user name to use when deactivating triggers. This is only relevant if <code>--disable-triggers</code> is used.</p>
+<blockquote>
+<p><strong>Note</strong> SynxDB does not support user-defined triggers.</p>
+</blockquote>
+<h3 id="-t-table--tabletable"><a class="header" href="#-t-table--tabletable">-t table | –table=table</a></h3>
+<p>Restore definition and/or data of named table only. Multiple tables may be specified with multiple <code>-t</code> switches. This can be combined with the <code>-n</code> option to specify a schema.</p>
+<h3 id="-t-trigger--triggertrigger"><a class="header" href="#-t-trigger--triggertrigger">-T trigger | –trigger=trigger</a></h3>
+<p>Restore named trigger only.</p>
+<blockquote>
+<p><strong>Note</strong> SynxDB does not support user-defined triggers.</p>
+</blockquote>
+<h3 id="-v--verbose"><a class="header" href="#-v--verbose">-v | –verbose</a></h3>
+<p>Specifies verbose mode.</p>
+<h3 id="-v--version"><a class="header" href="#-v--version">-V | –version</a></h3>
+<p>Print the <code>pg_restore</code> version and exit.</p>
+<h3 id="-x--no-privileges--no-acl"><a class="header" href="#-x--no-privileges--no-acl">-x | –no-privileges | –no-acl</a></h3>
+<p>Prevent restoration of access privileges (<code>GRANT/REVOKE</code> commands).</p>
+<h3 id="-1--single-transaction"><a class="header" href="#-1--single-transaction">-1 | –single-transaction</a></h3>
+<p>Run the restore as a single transaction. This ensures that either all the commands complete successfully, or no changes are applied.</p>
+<h3 id="disable-triggers"><a class="header" href="#disable-triggers">–disable-triggers</a></h3>
+<p>This option is relevant only when performing a data-only restore. It instructs <code>pg_restore</code> to run commands to temporarily deactivate triggers on the target tables while the data is reloaded. Use this if you have triggers on the tables that you do not want to invoke during data reload. The commands emitted for <code>--disable-triggers</code> must be done as superuser. So you should also specify a superuser name with <code>-S</code> or, preferably, run <code>pg_restore</code> as a superuser.</p>
+<blockquote>
+<p><strong>Note</strong> SynxDB does not support user-defined triggers.</p>
+</blockquote>
+<h3 id="no-data-for-failed-tables"><a class="header" href="#no-data-for-failed-tables">–no-data-for-failed-tables</a></h3>
+<p>By default, table data is restored even if the creation command for the table failed (e.g., because it already exists). With this option, data for such a table is skipped. This behavior is useful when the target database may already contain the desired table contents. Specifying this option prevents duplicate or obsolete data from being loaded. This option is effective only when restoring directly into a database, not when producing SQL script output.</p>
+<h3 id="no-security-labels"><a class="header" href="#no-security-labels">–no-security-labels</a></h3>
+<p>Do not output commands to restore security labels, even if the archive contains them.</p>
+<h3 id="no-tablespaces"><a class="header" href="#no-tablespaces">–no-tablespaces</a></h3>
+<p>Do not output commands to select tablespaces. With this option, all objects will be created in whichever tablespace is the default during restore.</p>
+<h3 id="sectionsectionname"><a class="header" href="#sectionsectionname">–section=sectionname</a></h3>
+<p>Only restore the named section. The section name can be <code>pre-data</code>, <code>data</code>, or <code>post-data</code>. This option can be specified more than once to select multiple sections.</p>
+<p>The default is to restore all sections.</p>
+<h3 id="use-set-session-authorization"><a class="header" href="#use-set-session-authorization">–use-set-session-authorization</a></h3>
+<p>Output SQL-standard <code>SET SESSION AUTHORIZATION</code> commands instead of <code>ALTER OWNER</code> commands to determine object ownership. This makes the dump more standards-compatible, but depending on the history of the objects in the dump, it might not restore properly.</p>
+<h3 id="---help"><a class="header" href="#---help">-? | –help</a></h3>
+<p>Show help about <code>pg_restore</code> command line arguments, and exit.</p>
+<p><strong>Connection Options</strong></p>
+<h3 id="-h-host--host-host"><a class="header" href="#-h-host--host-host">-h host | –host host</a></h3>
+<p>The host name of the machine on which the SynxDB master database server is running. If not specified, reads from the environment variable <code>PGHOST</code> or defaults to localhost.</p>
+<h3 id="-p-port--port-port"><a class="header" href="#-p-port--port-port">-p port | –port port</a></h3>
+<p>The TCP port on which the SynxDB master database server is listening for connections. If not specified, reads from the environment variable <code>PGPORT</code> or defaults to 5432.</p>
+<h3 id="-u-username--username-username"><a class="header" href="#-u-username--username-username">-U username | –username username</a></h3>
+<p>The database role name to connect as. If not specified, reads from the environment variable <code>PGUSER</code> or defaults to the current system role name.</p>
+<h3 id="-w--no-password"><a class="header" href="#-w--no-password">-w | –no-password</a></h3>
+<p>Never issue a password prompt. If the server requires password authentication and a password is not available by other means such as a <code>.pgpass</code> file the connection attempt will fail. This option can be useful in batch jobs and scripts where no user is present to enter a password.</p>
+<h3 id="-w--password"><a class="header" href="#-w--password">-W | –password</a></h3>
+<p>Force a password prompt.</p>
+<h3 id="rolerolename"><a class="header" href="#rolerolename">–role=rolename</a></h3>
+<p>Specifies a role name to be used to perform the restore. This option causes <code>pg_restore</code> to issue a <code>SET ROLE rolename</code> command after connecting to the database. It is useful when the authenticated user (specified by <code>-U</code>) lacks privileges needed by <code>pg_restore</code>, but can switch to a role with the required rights. Some installations have a policy against logging in directly as a superuser, and use of this option allows restores to be performed without violating the policy.</p>
+<h2 id="notes"><a class="header" href="#notes"><a id="section6"></a>Notes</a></h2>
+<p>If your installation has any local additions to the <code>template1</code> database, be careful to load the output of <code>pg_restore</code> into a truly empty database; otherwise you are likely to get errors due to duplicate definitions of the added objects. To make an empty database without any local additions, copy from <code>template0</code> not <code>template1</code>, for example:</p>
+<pre><code>CREATE DATABASE foo WITH TEMPLATE template0;
+</code></pre>
+<p>When restoring data to a pre-existing table and the option <code>--disable-triggers</code> is used, <code>pg_restore</code> emits commands to deactivate triggers on user tables before inserting the data, then emits commands to re-enable them after the data has been inserted. If the restore is stopped in the middle, the system catalogs may be left in the wrong state.</p>
+<p>See also the <code>pg_dump</code> documentation for details on limitations of <code>pg_dump</code>.</p>
+<p>Once restored, it is wise to run <code>ANALYZE</code> on each restored table so the query planner has useful statistics.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section7"></a>Examples</a></h2>
+<p>Assume we have dumped a database called <code>mydb</code> into a custom-format dump file:</p>
+<pre><code>pg_dump -Fc mydb &gt; db.dump
+</code></pre>
+<p>To drop the database and recreate it from the dump:</p>
+<pre><code>dropdb mydb
+pg_restore -C -d template1 db.dump
+</code></pre>
+<p>To reload the dump into a new database called <code>newdb</code>. Notice there is no <code>-C</code>, we instead connect directly to the database to be restored into. Also note that we clone the new database from <code>template0</code> not <code>template1</code>, to ensure it is initially empty:</p>
+<pre><code>createdb -T template0 newdb
+pg_restore -d newdb db.dump
+</code></pre>
+<p>To reorder database items, it is first necessary to dump the table of contents of the archive:</p>
+<pre><code>pg_restore -l db.dump &gt; db.list
+</code></pre>
+<p>The listing file consists of a header and one line for each item, for example,</p>
+<pre><code>; Archive created at Mon Sep 14 13:55:39 2009
+;     dbname: DBDEMOS
+;     TOC Entries: 81
+;     Compression: 9
+;     Dump Version: 1.10-0
+;     Format: CUSTOM
+;     Integer: 4 bytes
+;     Offset: 8 bytes
+;     Dumped from database version: 9.4.24
+;     Dumped by pg_dump version: 9.4.24
+;
+; Selected TOC Entries:
+;
+3; 2615 2200 SCHEMA - public pasha
+1861; 0 0 COMMENT - SCHEMA public pasha
+1862; 0 0 ACL - public pasha
+317; 1247 17715 TYPE public composite pasha
+319; 1247 25899 DOMAIN public domain0 pasha2
+</code></pre>
+<p>Semicolons start a comment, and the numbers at the start of lines refer to the internal archive ID assigned to each item. Lines in the file can be commented out, deleted, and reordered. For example:</p>
+<pre><code>10; 145433 TABLE map_resolutions postgres
+;2; 145344 TABLE species postgres
+;4; 145359 TABLE nt_header postgres
+6; 145402 TABLE species_records postgres
+;8; 145416 TABLE ss_old postgres
+</code></pre>
+<p>Could be used as input to <code>pg_restore</code> and would only restore items 10 and 6, in that order:</p>
+<pre><code>pg_restore -L db.list db.dump
+</code></pre>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section8"></a>See Also</a></h2>
+<p><a href="pg_dump.html">pg_dump</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../utility_guide/ref/pg_dumpall.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../utility_guide/ref/pgbouncer.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../utility_guide/ref/pg_dumpall.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../utility_guide/ref/pgbouncer.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

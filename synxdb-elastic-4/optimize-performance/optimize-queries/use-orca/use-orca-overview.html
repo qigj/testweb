@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPORCA Overview &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="GPORCA Features and Enhancements" href="orca-features.html" />
+    <link rel="prev" title="Use GPORCA Optimizer" href="use-orca-index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../optimize-performance-index.html">Optimize Performance</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../optimize-queries-index.html">Optimize Query Performance</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../optimize-query-performance-overview.html">Query Performance Overview</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="use-orca-index.html">Use GPORCA Optimizer</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">GPORCA Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orca-features.html">GPORCA Features and Enhancements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="whats-new-in-orca.html">What’s New in GPORCA Optimizer</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../update-statistics.html">Update Statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../query-hints.html">Query Hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../use-auto-mtv-for-query-optimization.html">Automatically Use Materialized Views for Query Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../push-down-agg-operators.html">Push Down Aggregation Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../execute-queries-in-parallel.html">Execute Queries in Parallel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../auto-clustering.html">Auto-Clustering Tables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../optimize-performance-index.html">Optimize Performance</a></li>
+          <li class="breadcrumb-item"><a href="../optimize-queries-index.html">Optimize Query Performance</a></li>
+          <li class="breadcrumb-item"><a href="use-orca-index.html">Use GPORCA Optimizer</a></li>
+      <li class="breadcrumb-item active">GPORCA Overview</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gporca-overview">
+<h1>GPORCA Overview<a class="headerlink" href="#gporca-overview" title="Link to this heading"></a></h1>
+<p>GPORCA is an enhanced optimizer built upon the Postgres query optimizer, augmenting query planning and optimization capabilities. It is highly extensible and achieves more efficient optimization, especially in multi-core architectures. By default, SynxDB Elastic uses GPORCA to generate query execution plans in supported scenarios.</p>
+<p>GPORCA significantly enhances the query performance of SynxDB Elastic in the following areas:</p>
+<ul class="simple">
+<li><p>Queries on partitioned tables</p></li>
+<li><p>Queries with Common Table Expressions (CTEs)</p></li>
+<li><p>Queries with subqueries</p></li>
+</ul>
+<p>In SynxDB Elastic, GPORCA coexists with the Postgres-based optimizer. By default, the system first attempts to use GPORCA. When a query is not supported by GPORCA, the system automatically falls back to using the Postgres optimizer.</p>
+<p>The following diagram illustrates the position of GPORCA in the overall query planning architecture:</p>
+<p><img alt="Query Architecture" src="../../../_images/orca-architecture.png" /></p>
+<p>Note that all server parameters used to configure the behavior of the Postgres optimizer are ignored when GPORCA is active. These parameters only affect query plan generation when the system falls back to the Postgres optimizer.</p>
+<section id="enable-or-disable-gporca">
+<h2>Enable or disable GPORCA<a class="headerlink" href="#enable-or-disable-gporca" title="Link to this heading"></a></h2>
+<p>You can enable or disable GPORCA using the <code class="docutils literal notranslate"><span class="pre">optimizer</span></code> server configuration parameter.</p>
+<p>Although GPORCA is enabled by default, you can flexibly configure the <code class="docutils literal notranslate"><span class="pre">optimizer</span></code> parameter at the system, database, session, or query level to control whether GPORCA is used.</p>
+<section id="enable-gporca-for-a-database">
+<h3>Enable GPORCA for a database<a class="headerlink" href="#enable-gporca-for-a-database" title="Link to this heading"></a></h3>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">DATABASE</span></code> command to enable GPORCA for a specific database. The following example enables GPORCA for the <code class="docutils literal notranslate"><span class="pre">test_db</span></code> database:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">test_db</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">optimizer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">on</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="enable-gporca-for-a-session-or-query">
+<h3>Enable GPORCA for a session or query<a class="headerlink" href="#enable-gporca-for-a-session-or-query" title="Link to this heading"></a></h3>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">SET</span></code> command to enable GPORCA in the current session. For example, execute the following command after connecting to SynxDB Elastic via <code class="docutils literal notranslate"><span class="pre">psql</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">optimizer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">on</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>To enable GPORCA for a single query, run the above <code class="docutils literal notranslate"><span class="pre">SET</span></code> command before executing the query.</p>
+</section>
+</section>
+<section id="determine-which-query-optimizer-is-used">
+<h2>Determine which query optimizer is used<a class="headerlink" href="#determine-which-query-optimizer-is-used" title="Link to this heading"></a></h2>
+<p>When GPORCA is enabled (the default configuration), you can determine whether SynxDB Elastic is actually using GPORCA or has fallen back to the Postgres-based optimizer in several ways.</p>
+<p>The most direct method is to examine the <code class="docutils literal notranslate"><span class="pre">EXPLAIN</span></code> plan of the query:</p>
+<ul>
+<li><p>The optimizer used is indicated at the end of the query plan. For example:</p>
+<ul>
+<li><p>If generated by GPORCA, the end shows:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">Optimizer</span><span class="p">:</span><span class="w"> </span><span class="n">GPORCA</span>
+</pre></div>
+</div>
+</li>
+<li><p>If generated by the Postgres optimizer, the end shows:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">Optimizer</span><span class="p">:</span><span class="w"> </span><span class="n">Postgres</span><span class="o">-</span><span class="n">based</span><span class="w"> </span><span class="n">planner</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>If the query plan includes nodes of type <code class="docutils literal notranslate"><span class="pre">Dynamic</span> <span class="pre">&lt;any&gt;</span> <span class="pre">Scan</span></code> (such as dynamic assertion, dynamic sequence scan, etc.), the plan was generated by GPORCA. The Postgres optimizer does not generate these nodes.</p></li>
+<li><p>For queries on partitioned tables, GPORCA’s <code class="docutils literal notranslate"><span class="pre">EXPLAIN</span></code> output shows only the number of partitions after pruning, without listing the specific partitions. The Postgres optimizer, on the other hand, lists each partition that is scanned.</p></li>
+</ul>
+<p>In addition to the <code class="docutils literal notranslate"><span class="pre">EXPLAIN</span></code> output, the optimizer type used is also recorded in the logs. If a query is not supported by GPORCA for some reason, the system automatically falls back and outputs relevant information at the <code class="docutils literal notranslate"><span class="pre">NOTICE</span></code> level in the log, explaining the reason for the fallback.</p>
+<p>You can also enable the <code class="docutils literal notranslate"><span class="pre">optimizer_trace_fallback</span></code> configuration parameter to display the detailed reasons for GPORCA fallback directly in <code class="docutils literal notranslate"><span class="pre">psql</span></code>.</p>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h3>
+<p>The following examples demonstrate the effect of executing queries on a partitioned table when GPORCA is enabled.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> statement below creates a table that is range-partitioned by date:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">sales</span><span class="w"> </span><span class="p">(</span><span class="n">trans_id</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span><span class="w"> </span><span class="nb">date</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="n">amount</span><span class="w"> </span><span class="nb">decimal</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="n">region</span><span class="w"> </span><span class="nb">text</span><span class="p">)</span>
+<span class="w">   </span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">RANGE</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">START</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2016-01-01&#39;</span><span class="p">)</span><span class="w"> </span>
+<span class="w">       </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="k">END</span><span class="w"> </span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2017-01-01&#39;</span><span class="p">)</span><span class="w"> </span>
+<span class="w">       </span><span class="k">EXCLUSIVE</span><span class="w"> </span><span class="k">EVERY</span><span class="w"> </span><span class="p">(</span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;1 month&#39;</span><span class="p">),</span>
+<span class="w">   </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">outlying_dates</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The plan generated by GPORCA only shows the number of selected partitions, without listing their names:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Partition</span><span class="w"> </span><span class="n">Selector</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">sales</span><span class="w"> </span><span class="p">(</span><span class="k">dynamic</span><span class="w"> </span><span class="n">scan</span><span class="w"> </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">10</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">100</span><span class="p">.</span><span class="mi">00</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">50</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">      </span><span class="n">Partitions</span><span class="w"> </span><span class="n">selected</span><span class="p">:</span><span class="w">  </span><span class="mi">13</span><span class="w"> </span><span class="p">(</span><span class="k">out</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="mi">13</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If a query on a partitioned table is not supported by GPORCA, the system automatically switches to the Postgres optimizer. The <code class="docutils literal notranslate"><span class="pre">EXPLAIN</span></code> generated by Postgres lists all accessed partitions, as shown below:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Append</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">26</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">53</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">sales2_1_prt_7_2_prt_usa</span><span class="w"> </span><span class="n">sales2</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">53</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">sales2_1_prt_7_2_prt_asia</span><span class="w"> </span><span class="n">sales2</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">53</span><span class="p">)</span>
+<span class="w">   </span><span class="p">...</span>
+</pre></div>
+</div>
+<p>The following example shows the log output when a query falls back to the Postgres optimizer:</p>
+<p>Execute the following query:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">EXPLAIN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_class</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The system will use the Postgres optimizer and output a <code class="docutils literal notranslate"><span class="pre">NOTICE</span></code> message in the log, explaining why GPORCA did not handle the query.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">INFO</span><span class="p">:</span><span class="w">  </span><span class="n">GPORCA</span><span class="w"> </span><span class="n">failed</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">produce</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">plan</span><span class="p">,</span><span class="w"> </span><span class="n">falling</span><span class="w"> </span><span class="n">back</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">Postgres</span><span class="o">-</span><span class="n">based</span><span class="w"> </span><span class="n">planner</span>
+<span class="n">DETAIL</span><span class="p">:</span><span class="w">  </span><span class="n">Falling</span><span class="w"> </span><span class="n">back</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">Postgres</span><span class="o">-</span><span class="n">based</span><span class="w"> </span><span class="n">planner</span><span class="w"> </span><span class="n">because</span><span class="w"> </span><span class="n">GPORCA</span><span class="w"> </span><span class="n">does</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">support</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">following</span><span class="w"> </span><span class="n">feature</span><span class="p">:</span><span class="w"> </span><span class="n">Non</span><span class="o">-</span><span class="k">default</span><span class="w"> </span><span class="k">collation</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="orca-features.html" class="btn btn-neutral float-right" title="GPORCA Features and Enhancements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="use-orca-index.html" class="btn btn-neutral float-left" title="Use GPORCA Optimizer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

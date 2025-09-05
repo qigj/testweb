@@ -1,0 +1,131 @@
+
+Use Oracle Compatibility SQL via Orafce
+===========================================
+
+.. Doc testcase on Feishu: https://synxdb.feishu.cn/docx/KoO7dS170oWT7hxdNeIcDxo2nZg
+
+|product_name| supports Orafce version 4.9.
+
+The ``orafce`` module provides Oracle Compatibility SQL functions in |product_name|. These functions target PostgreSQL but can also be used in |product_name|.
+
+The |product_name| database ``orafce`` module is a modified version of the `open source Orafce PostgreSQL module extension <https://github.com/orafce/orafce>`_.
+
+Install and remove Orafce
+---------------------------
+
+The ``orafce`` module is installed when you install |product_name|. Before you can use any of the functions defined in the module, you must register the ``orafce`` extension in each database in which you want to use the functions.
+
+.. note:: 
+
+   Always use the Oracle Compatibility Functions module included with your |product_name| version. Before upgrading to a new |product_name| version, uninstall the compatibility functions from each of your databases, and then, when the upgrade is complete, reinstall the compatibility functions from the new |product_name| release.
+
+To register the  module in the database named `testdb`, use the following command:
+
+.. code:: sql
+
+   psql -d testdb -c 'CREATE EXTENSION orafce;' -- Install
+
+You can remove it from a database using the following command:
+
+.. code:: 
+
+   psql -d testdb -c 'DROP EXTENSION orafce;' -- Remove
+
+
+|product_name| considerations
+-------------------------------------
+
+There are some restrictions and limitations when you use the module in |product_name|.
+
+The following functions are available by default in |product_name| and do not require installing the Oracle Compatibility Functions:
+
+- ``sinh()``
+- ``tanh()``
+- ``cosh()``
+- ``decode()``
+
+|product_name| implementation differences
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are differences in the implementation of the compatibility functions in |product_name| from the original PostgreSQL ``orafce`` module extension implementation. Some of the differences are as follows:
+
+- The original ``orafce`` module implementation performs a decimal round off, the |product_name| implementation does not:
+
+  - 2.00 becomes 2 in the original module implementation
+
+  - 2.00 remains 2.00 in the |product_name| implementation
+
+- The provided Oracle compatibility functions handle implicit type conversions differently. For example, using the ``decode`` function:
+
+   .. code::
+
+      decode(<expression>, <value>, <return> [,<value>, <return>]...
+                  [, default])
+
+
+   The original ``orafce`` module implementation automatically converts expression and each value to the data type of the first value before comparing. It automatically converts return to the same data type as the first result.
+
+   The |product_name| implementation restricts return and ``default`` to be of the same data type. The expression and value can be different types if the data type of value can be converted into the data type of the expression. This is done implicitly. Otherwise, ``decode`` fails with an ``invalid input syntax`` error. For example:
+
+   .. code::
+
+      SELECT decode('a','M',true,false);
+      
+      CASE
+      ------
+      f
+      (1 row)
+
+      SELECT decode(1,'M',true,false);
+
+      ERROR: Invalid input syntax for integer:*"M" 
+      *LINE 1: SELECT decode(1,'M',true,false);
+
+- Numbers in ``bigint`` format are displayed in scientific notation in the original ``orafce`` module implementation but not in the |product_name| implementation:
+
+  - 9223372036854775 displays as 9.2234E+15 in the original implementation
+
+  - 9223372036854775 remains 9223372036854775 in the |product_name| implementation
+
+- The default date and timestamp format in the original ``orafce`` module implementation is different than the default format in the |product_name| implementation. If the following code is run:
+
+   .. code:: 
+      
+      CREATE TABLE TEST(date1 date, time1 timestamp, time2
+                        timestamp with time zone);
+
+      INSERT INTO TEST VALUES ('2001-11-11','2001-12-13
+                     01:51:15','2001-12-13 01:51:15 -08:00');
+
+      SELECT DECODE(date1, '2001-11-11', '2001-01-01') FROM TEST;
+
+   The |product_name| implementation returns the row, but the original implementation returns no rows.
+
+   .. note::
+
+      The correct syntax when using the original `orafce` implementation to return the row is:
+
+      .. code:: 
+
+         SELECT DECODE(to_char(date1, 'YYYY-MM-DD'), '2001-11-11', '2001-01-01') FROM TEST
+
+- The functions in the Oracle Compatibility Functions ``dbms_alert`` package are not implemented for |product_name|.
+
+- The ``decode()`` function is removed from the |product_name| Oracle Compatibility Functions. The |product_name| parser internally converts a ``decode()`` function call to a ``CASE`` statement.
+
+Using Orafce
+----------------
+
+Some Oracle Compatibility Functions reside in the ``oracle`` schema. To access them, set the search path for the database to include the ``oracle`` schema name. For example, this command sets the default search path for a database to include the ``oracle`` schema:
+
+.. code:: 
+
+   ALTER DATABASE <db_name> SET <search_path> = "$user", public, oracle;
+
+Note the following differences when using the Oracle Compatibility Functions with PostgreSQL vs. using them with |product_name|:
+
+- If you use validation scripts, the output may not be exactly the same as with the original ``orafce`` module implementation.
+
+- The functions in the Oracle Compatibility Functions ``dbms_pipe`` package run only on the |product_name| coordinator host.
+
+- The upgrade scripts in the Orafce project do not work with |product_name|.

@@ -1,0 +1,794 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Use pgcrypto for Data Encryption &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Log Auditing pgAudit" href="use-pgaudit.html" />
+    <link rel="prev" title="Set Password Profile" href="set-password-profile.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="set-security-and-permission-index.html">Configure Security and Permissions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="set-password-profile.html">Set Password Profile</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Use pgcrypto for Data Encryption</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#notes-on-openssl-related-algorithm-support">Notes on OpenSSL-related algorithm support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#general-hashing-functions">General hashing functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#digest"><code class="docutils literal notranslate"><span class="pre">digest()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hmac"><code class="docutils literal notranslate"><span class="pre">hmac()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#password-hashing-functions">Password hashing functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#crypt"><code class="docutils literal notranslate"><span class="pre">crypt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gen-salt"><code class="docutils literal notranslate"><span class="pre">gen_salt()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pgp-encryption-functions">PGP encryption functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pgp-sym-encrypt"><code class="docutils literal notranslate"><span class="pre">pgp_sym_encrypt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgp-sym-decrypt"><code class="docutils literal notranslate"><span class="pre">pgp_sym_decrypt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgp-pub-encrypt"><code class="docutils literal notranslate"><span class="pre">pgp_pub_encrypt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgp-pub-decrypt"><code class="docutils literal notranslate"><span class="pre">pgp_pub_decrypt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgp-key-id"><code class="docutils literal notranslate"><span class="pre">pgp_key_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#armor-dearmor"><code class="docutils literal notranslate"><span class="pre">armor()</span></code>, <code class="docutils literal notranslate"><span class="pre">dearmor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgp-armor-headers"><code class="docutils literal notranslate"><span class="pre">pgp_armor_headers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#options-for-pgp-functions">Options for PGP functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate-pgp-keys-with-gnupg">Generate PGP keys with GnuPG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#limitations-of-pgp-code">Limitations of PGP code</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#raw-encryption-functions">Raw encryption functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#random-data-functions">Random data functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#null-handling">NULL handling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#security-limitations">Security limitations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="use-pgaudit.html">Log Auditing pgAudit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manage-users.html">Manage Roles and Privileges</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-tde-to-encrypt-data.html">Transparent Data Encryption</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-anon.html">Data Anonymization Using Anon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configure-row-column-security.html">Configure Row-Level and Column-Level Permissions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+      <li class="breadcrumb-item active">Use pgcrypto for Data Encryption</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="use-pgcrypto-for-data-encryption">
+<h1>Use pgcrypto for Data Encryption<a class="headerlink" href="#use-pgcrypto-for-data-encryption" title="Link to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> is an encryption module for SynxDB Elastic that provides cryptographic functions.</p>
+<p>This module is “trusted,” meaning that non-superusers with <code class="docutils literal notranslate"><span class="pre">CREATE</span></code> privileges in the current database can install the <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> module.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="n">pgcrypto</span><span class="p">;</span>
+</pre></div>
+</div>
+<section id="notes-on-openssl-related-algorithm-support">
+<h2>Notes on OpenSSL-related algorithm support<a class="headerlink" href="#notes-on-openssl-related-algorithm-support" title="Link to this heading"></a></h2>
+<p>When building <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code>, you can optionally include OpenSSL (minimum version 1.0.1) using the <code class="docutils literal notranslate"><span class="pre">--with-openssl</span></code> option. The cryptographic algorithms supported by SynxDB Elastic differ depending on whether OpenSSL is included.</p>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> built with the <code class="docutils literal notranslate"><span class="pre">--with-openssl</span></code> option supports DES/3DES/CAST5 algorithms but does not support SM3/SM4 algorithms. Conversely, <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> built without the <code class="docutils literal notranslate"><span class="pre">--with-openssl</span></code> option supports SM3/SM4 algorithms but not DES/3DES/CAST5. The detailed algorithm support is shown in the table below:</p>
+<table class="docutils align-left">
+<thead>
+<tr class="row-odd"><th class="head stub"><p>Encryption Algorithm</p></th>
+<th class="head"><p>Without OpenSSL</p></th>
+<th class="head"><p>With OpenSSL</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><th class="stub"><p>MD5</p></th>
+<td><p>Supported</p></td>
+<td><p>Supported</p></td>
+</tr>
+<tr class="row-odd"><th class="stub"><p>SHA1</p></th>
+<td><p>Supported</p></td>
+<td><p>Supported</p></td>
+</tr>
+<tr class="row-even"><th class="stub"><p>SHA224/256/384/512</p></th>
+<td><p>Supported</p></td>
+<td><p>Supported</p></td>
+</tr>
+<tr class="row-odd"><th class="stub"><p>Other Digest Algorithms</p></th>
+<td><p>Not Supported</p></td>
+<td><p>Supported</p></td>
+</tr>
+<tr class="row-even"><th class="stub"><p>Blowfish</p></th>
+<td><p>Supported</p></td>
+<td><p>Supported</p></td>
+</tr>
+<tr class="row-odd"><th class="stub"><p>AES</p></th>
+<td><p>Supported</p></td>
+<td><p>Supported</p></td>
+</tr>
+<tr class="row-even"><th class="stub"><p>DES/3DES/CAST5</p></th>
+<td><p>Not Supported</p></td>
+<td><p>Supported</p></td>
+</tr>
+<tr class="row-odd"><th class="stub"><p>Row Encryption</p></th>
+<td><p>Supported</p></td>
+<td><p>Supported</p></td>
+</tr>
+<tr class="row-even"><th class="stub"><p>PGP Symmetric Encryption</p></th>
+<td><p>Supported</p></td>
+<td><p>Supported</p></td>
+</tr>
+<tr class="row-odd"><th class="stub"><p>PGP Public-Key Encryption</p></th>
+<td><p>Supported</p></td>
+<td><p>Supported</p></td>
+</tr>
+<tr class="row-even"><th class="stub"><p>SM3</p></th>
+<td><p>Supported</p></td>
+<td><p>Not Supported</p></td>
+</tr>
+<tr class="row-odd"><th class="stub"><p>SM4</p></th>
+<td><p>Supported</p></td>
+<td><p>Not Supported</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="general-hashing-functions">
+<h2>General hashing functions<a class="headerlink" href="#general-hashing-functions" title="Link to this heading"></a></h2>
+<section id="digest">
+<h3><code class="docutils literal notranslate"><span class="pre">digest()</span></code><a class="headerlink" href="#digest" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">digest</span><span class="p">(</span><span class="n">data</span> <span class="n">text</span><span class="p">,</span> <span class="nb">type</span> <span class="n">text</span><span class="p">)</span> <span class="n">returns</span> <span class="n">bytea</span>
+<span class="n">digest</span><span class="p">(</span><span class="n">data</span> <span class="n">bytea</span><span class="p">,</span> <span class="nb">type</span> <span class="n">text</span><span class="p">)</span> <span class="n">returns</span> <span class="n">bytea</span>
+</pre></div>
+</div>
+<p>This function computes and returns the binary hash value of <code class="docutils literal notranslate"><span class="pre">data</span></code>. <code class="docutils literal notranslate"><span class="pre">type</span></code> specifies the algorithm to use. Standard algorithms include <code class="docutils literal notranslate"><span class="pre">md5</span></code>, <code class="docutils literal notranslate"><span class="pre">sha1</span></code>, <code class="docutils literal notranslate"><span class="pre">sha224</span></code>, <code class="docutils literal notranslate"><span class="pre">sha256</span></code>, <code class="docutils literal notranslate"><span class="pre">sha384</span></code>, and <code class="docutils literal notranslate"><span class="pre">sha512</span></code>. Additionally, any digest algorithm supported by OpenSSL will be available.</p>
+<p>If you are using a non-OpenSSL version of <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code>, the <code class="docutils literal notranslate"><span class="pre">type</span></code> parameter will also support <code class="docutils literal notranslate"><span class="pre">sm3</span></code>.</p>
+<p>To return the result as a hexadecimal string, use <code class="docutils literal notranslate"><span class="pre">encode()</span></code>. For example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CREATE OR REPLACE FUNCTION sha1(bytea) returns text AS $$
+    SELECT encode(digest($1, &#39;sha1&#39;), &#39;hex&#39;)
+$$ LANGUAGE SQL STRICT IMMUTABLE;
+</pre></div>
+</div>
+</section>
+<section id="hmac">
+<h3><code class="docutils literal notranslate"><span class="pre">hmac()</span></code><a class="headerlink" href="#hmac" title="Link to this heading"></a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">hmac</span><span class="p">(</span><span class="k">data</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nb">text</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">bytea</span>
+<span class="n">hmac</span><span class="p">(</span><span class="k">data</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nb">text</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">bytea</span>
+</pre></div>
+</div>
+<p>This function computes the MAC value of <code class="docutils literal notranslate"><span class="pre">data</span></code> using the <code class="docutils literal notranslate"><span class="pre">key</span></code>. The <code class="docutils literal notranslate"><span class="pre">type</span></code> parameter uses the same standard algorithms as <code class="docutils literal notranslate"><span class="pre">digest()</span></code>.</p>
+<p>Similar to <code class="docutils literal notranslate"><span class="pre">digest()</span></code>, this function allows hash value recalculation only if you know the key. This prevents someone from modifying the data and the hash value to match the key.</p>
+<p>If the key is larger than the hash block size, it will be hashed first, and the resulting hash value will be used as the key.</p>
+</section>
+</section>
+<section id="password-hashing-functions">
+<h2>Password hashing functions<a class="headerlink" href="#password-hashing-functions" title="Link to this heading"></a></h2>
+<p>The functions <code class="docutils literal notranslate"><span class="pre">crypt()</span></code> and <code class="docutils literal notranslate"><span class="pre">gen_salt()</span></code> are specifically designed for hashing passwords. <code class="docutils literal notranslate"><span class="pre">crypt()</span></code> performs the hashing, while <code class="docutils literal notranslate"><span class="pre">gen_salt()</span></code> prepares the algorithm parameters for it.</p>
+<p>The algorithms in <code class="docutils literal notranslate"><span class="pre">crypt()</span></code> differ from typical MD5 or SHA1 hashing algorithms in the following ways:</p>
+<ul class="simple">
+<li><p>The algorithms in <code class="docutils literal notranslate"><span class="pre">crypt()</span></code> are intentionally slow. This is the only way to make brute-force password cracking difficult, given the small amount of data processed in batches.</p></li>
+<li><p>The algorithms in <code class="docutils literal notranslate"><span class="pre">crypt()</span></code> use a random value called “salt,” so users with the same password will have different hashed passwords. This also provides additional defense against collision attacks.</p></li>
+<li><p>The algorithms in <code class="docutils literal notranslate"><span class="pre">crypt()</span></code> include the algorithm type in the result, allowing passwords hashed with different algorithms to coexist.</p></li>
+<li><p>Some algorithms in <code class="docutils literal notranslate"><span class="pre">crypt()</span></code> are adaptive. This means that as computers get faster, you can make the algorithm slower without introducing incompatibilities with existing passwords.</p></li>
+</ul>
+<p>The table below lists the algorithms supported by the <code class="docutils literal notranslate"><span class="pre">crypt()</span></code> function:</p>
+<table class="docutils align-left">
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Max password length</p></th>
+<th class="head"><p>Adaptive</p></th>
+<th class="head"><p>Salt bits</p></th>
+<th class="head"><p>Output length</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>bf</p></td>
+<td><p>72</p></td>
+<td><p>yes</p></td>
+<td><p>128</p></td>
+<td><p>60</p></td>
+<td><p>Based on Blowfish, 2a variant</p></td>
+</tr>
+<tr class="row-odd"><td><p>md5</p></td>
+<td><p>Unlimited</p></td>
+<td><p>no</p></td>
+<td><p>48</p></td>
+<td><p>34</p></td>
+<td><p>MD5-based encryption</p></td>
+</tr>
+<tr class="row-even"><td><p>xdes</p></td>
+<td><p>8</p></td>
+<td><p>yes</p></td>
+<td><p>24</p></td>
+<td><p>20</p></td>
+<td><p>Extended DES</p></td>
+</tr>
+<tr class="row-odd"><td><p>des</p></td>
+<td><p>8</p></td>
+<td><p>no</p></td>
+<td><p>12</p></td>
+<td><p>13</p></td>
+<td><p>Original UNIX encryption algorithm</p></td>
+</tr>
+</tbody>
+</table>
+<section id="crypt">
+<h3><code class="docutils literal notranslate"><span class="pre">crypt()</span></code><a class="headerlink" href="#crypt" title="Link to this heading"></a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">crypt</span><span class="p">(</span><span class="n">password</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="n">salt</span><span class="w"> </span><span class="nb">text</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="nb">text</span>
+</pre></div>
+</div>
+<p>This function computes the crypt(3)-style hash of the <code class="docutils literal notranslate"><span class="pre">password</span></code>. When storing a new password, you need to generate a new <code class="docutils literal notranslate"><span class="pre">salt</span></code> value using <code class="docutils literal notranslate"><span class="pre">gen_salt()</span></code>. To check a password, pass the stored hash as the <code class="docutils literal notranslate"><span class="pre">salt</span></code> and test if the result matches the stored value.</p>
+<p>Example of setting a new password:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">UPDATE</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">pswhash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">crypt</span><span class="p">(</span><span class="s1">&#39;new password&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">gen_salt</span><span class="p">(</span><span class="s1">&#39;md5&#39;</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Example of authentication:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="n">pswhash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">crypt</span><span class="p">(</span><span class="s1">&#39;entered password&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">pswhash</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">pswmatch</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This returns <code class="docutils literal notranslate"><span class="pre">true</span></code> if the entered password is correct.</p>
+</section>
+<section id="gen-salt">
+<h3><code class="docutils literal notranslate"><span class="pre">gen_salt()</span></code><a class="headerlink" href="#gen-salt" title="Link to this heading"></a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">gen_salt</span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="n">iter_count</span><span class="w"> </span><span class="nb">integer</span><span class="w"> </span><span class="p">])</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="nb">text</span>
+</pre></div>
+</div>
+<p>This function generates a new random salt value for use with <code class="docutils literal notranslate"><span class="pre">crypt()</span></code>, specifying which hashing algorithm to use.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">type</span></code> parameter determines the hashing algorithm. Supported types include <code class="docutils literal notranslate"><span class="pre">des</span></code>, <code class="docutils literal notranslate"><span class="pre">xdes</span></code>, <code class="docutils literal notranslate"><span class="pre">md5</span></code>, and <code class="docutils literal notranslate"><span class="pre">bf</span></code>.</p>
+<p>For algorithms supporting an iteration count (e.g., <code class="docutils literal notranslate"><span class="pre">bf</span></code>), the <code class="docutils literal notranslate"><span class="pre">iter_count</span></code> parameter sets the number of iterations. A higher count increases the time required to hash and crack the password. If omitted, a default value is used. Allowed values depend on the algorithm:</p>
+<table class="docutils align-left">
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Min</p></th>
+<th class="head"><p>Max</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>xdes</p></td>
+<td><p>725</p></td>
+<td><p>1</p></td>
+<td><p>16777215</p></td>
+</tr>
+<tr class="row-odd"><td><p>bf</p></td>
+<td><p>6</p></td>
+<td><p>4</p></td>
+<td><p>31</p></td>
+</tr>
+</tbody>
+</table>
+<p>For <code class="docutils literal notranslate"><span class="pre">xdes</span></code>, the iteration count must be odd.</p>
+<p>When choosing an iteration count, consider that the original DES crypt aimed for 4 hashes per second on contemporary hardware. Below 4 hashes per second may degrade usability, while above 100 hashes per second may be too fast.</p>
+<p>The table below shows the relative slowness of different hashing algorithms, assuming an 8-character input with lowercase letters or a mix of uppercase, lowercase, and digits. The <code class="docutils literal notranslate"><span class="pre">crypt-bf</span></code> entries include the <code class="docutils literal notranslate"><span class="pre">iter_count</span></code> parameter after the slash.</p>
+<table class="docutils align-left">
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Hashes/Second</p></th>
+<th class="head"><p>Lowercase letters <code class="docutils literal notranslate"><span class="pre">[a-z]</span></code></p></th>
+<th class="head"><p>Uppercase, lowercase, and digits <code class="docutils literal notranslate"><span class="pre">[A-Za-z0-9]</span></code></p></th>
+<th class="head"><p>Factor relative to MD5 hash speed</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">crypt-bf/8</span></code></p></td>
+<td><p>1792</p></td>
+<td><p>4 years</p></td>
+<td><p>3927 years</p></td>
+<td><p>100k</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">crypt-bf/7</span></code></p></td>
+<td><p>3648</p></td>
+<td><p>2 years</p></td>
+<td><p>1929 years</p></td>
+<td><p>50k</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">crypt-bf/6</span></code></p></td>
+<td><p>7168</p></td>
+<td><p>1 year</p></td>
+<td><p>982 years</p></td>
+<td><p>25k</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">crypt-bf/5</span></code></p></td>
+<td><p>13504</p></td>
+<td><p>188 years</p></td>
+<td><p>521 years</p></td>
+<td><p>12.5k</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">crypt-md5</span></code></p></td>
+<td><p>171584</p></td>
+<td><p>15 days</p></td>
+<td><p>41 years</p></td>
+<td><p>1k</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">crypt-des</span></code></p></td>
+<td><p>23221568</p></td>
+<td><p>157.5 minutes</p></td>
+<td><p>108 days</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sha1</span></code></p></td>
+<td><p>37774272</p></td>
+<td><p>90 minutes</p></td>
+<td><p>68 days</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">md5</span> <span class="pre">(hash)</span></code></p></td>
+<td><p>150085504</p></td>
+<td><p>22.5 minutes</p></td>
+<td><p>17 days</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<ul class="simple">
+<li><p>Tests were conducted on an Intel Mobile Core i3 processor.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">crypt-des</span></code> and <code class="docutils literal notranslate"><span class="pre">crypt-md5</span></code> numbers are from John the Ripper v1.6.38 <code class="docutils literal notranslate"><span class="pre">-test</span></code> output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">md5</span></code> hash numbers are from mdcrack 1.2.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sha1</span></code> numbers are from lcrack-20031130-beta.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">crypt-bf</span></code> numbers were measured using a simple program looping over 1000 8-character passwords.</p></li>
+</ul>
+</div>
+<p>Note: “Trying all combinations” is impractical. Password cracking typically uses dictionaries containing common words and specific character sets. Thus, passwords resembling words may be cracked faster than shown above, while non-word passwords might be uncrackable—or not.</p>
+</section>
+</section>
+<section id="pgp-encryption-functions">
+<h2>PGP encryption functions<a class="headerlink" href="#pgp-encryption-functions" title="Link to this heading"></a></h2>
+<p>The PGP encryption functions implement the encryption part of the OpenPGP standard (<a class="reference external" href="https://tools.ietf.org/html/rfc4880">RFC4880</a>). These functions support both symmetric-key and public-key encryption.</p>
+<p>Encrypted PGP messages consist of two parts or “packets”:</p>
+<ul class="simple">
+<li><p>A packet containing the session key—encrypted using either a symmetric key or a public key.</p></li>
+<li><p>A packet containing the data encrypted with the session key.</p></li>
+</ul>
+<p>When using symmetric-key (that is, password-based) encryption:</p>
+<ul class="simple">
+<li><p>The provided password is hashed using the <code class="docutils literal notranslate"><span class="pre">String2Key</span></code> (S2K) algorithm, which is similar to the <code class="docutils literal notranslate"><span class="pre">crypt()</span></code> algorithm (intentionally slow and salted) but generates a full-length binary key.</p></li>
+<li><p>If a separate session key is requested, a new random key is generated. Otherwise, the S2K key is used directly as the session key.</p></li>
+<li><p>If the S2K key is used directly, only the S2K settings are included in the session key packet. Otherwise, the session key is encrypted with the S2K key and placed in the session key packet.</p></li>
+</ul>
+<p>When using public-key encryption:</p>
+<ul class="simple">
+<li><p>A new random session key is generated.</p></li>
+<li><p>The session key is encrypted using the public key and placed in the session key packet.</p></li>
+</ul>
+<p>In either case, the data to be encrypted is processed as follows:</p>
+<ul class="simple">
+<li><p>Optional data manipulation: compression, conversion to UTF-8, and/or newline conversion.</p></li>
+<li><p>The data is prefixed with a block of random bytes, equivalent to using a random IV.</p></li>
+<li><p>An SHA1 hash is appended as a random prefix.</p></li>
+<li><p>All data encrypted with the session key is wrapped in a packet.</p></li>
+</ul>
+<section id="pgp-sym-encrypt">
+<h3><code class="docutils literal notranslate"><span class="pre">pgp_sym_encrypt()</span></code><a class="headerlink" href="#pgp-sym-encrypt" title="Link to this heading"></a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">pgp_sym_encrypt</span><span class="p">(</span><span class="k">data</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="n">psw</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="k">options</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">])</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">bytea</span>
+<span class="n">pgp_sym_encrypt_bytea</span><span class="p">(</span><span class="k">data</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="n">psw</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="k">options</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">])</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">bytea</span>
+</pre></div>
+</div>
+<p>Encrypts <code class="docutils literal notranslate"><span class="pre">data</span></code> using the symmetric PGP key <code class="docutils literal notranslate"><span class="pre">psw</span></code>. The <code class="docutils literal notranslate"><span class="pre">options</span></code> parameter can include settings as described below.</p>
+</section>
+<section id="pgp-sym-decrypt">
+<h3><code class="docutils literal notranslate"><span class="pre">pgp_sym_decrypt()</span></code><a class="headerlink" href="#pgp-sym-decrypt" title="Link to this heading"></a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">pgp_sym_decrypt</span><span class="p">(</span><span class="n">msg</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="n">psw</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="k">options</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">])</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="nb">text</span>
+<span class="n">pgp_sym_decrypt_bytea</span><span class="p">(</span><span class="n">msg</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="n">psw</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="k">options</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">])</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">bytea</span>
+</pre></div>
+</div>
+<p>Decrypts a PGP message encrypted with a symmetric key. To avoid outputting invalid character data, use <code class="docutils literal notranslate"><span class="pre">pgp_sym_decrypt_bytea</span></code> to decrypt raw text data.</p>
+</section>
+<section id="pgp-pub-encrypt">
+<h3><code class="docutils literal notranslate"><span class="pre">pgp_pub_encrypt()</span></code><a class="headerlink" href="#pgp-pub-encrypt" title="Link to this heading"></a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">pgp_pub_encrypt</span><span class="p">(</span><span class="k">data</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="n">bytea</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="k">options</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">])</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">bytea</span>
+<span class="n">pgp_pub_encrypt_bytea</span><span class="p">(</span><span class="k">data</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="n">bytea</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="k">options</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">])</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">bytea</span>
+</pre></div>
+</div>
+<p>Encrypts <code class="docutils literal notranslate"><span class="pre">data</span></code> using the public PGP key <code class="docutils literal notranslate"><span class="pre">key</span></code>. Providing a private key to this function will result in an error.</p>
+</section>
+<section id="pgp-pub-decrypt">
+<h3><code class="docutils literal notranslate"><span class="pre">pgp_pub_decrypt()</span></code><a class="headerlink" href="#pgp-pub-decrypt" title="Link to this heading"></a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">pgp_pub_decrypt</span><span class="p">(</span><span class="n">msg</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="n">bytea</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="n">psw</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="k">options</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">]])</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="nb">text</span>
+<span class="n">pgp_pub_decrypt_bytea</span><span class="p">(</span><span class="n">msg</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="n">bytea</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="n">psw</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="k">options</span><span class="w"> </span><span class="nb">text</span><span class="w"> </span><span class="p">]])</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">bytea</span>
+</pre></div>
+</div>
+<p>Decrypts a message encrypted with a public key. The <code class="docutils literal notranslate"><span class="pre">key</span></code> must be the private key corresponding to the public key used for encryption. If the key is password-protected, the password must be provided via <code class="docutils literal notranslate"><span class="pre">psw</span></code>. If there is no password, provide an empty password as a placeholder. To avoid outputting invalid character data, use <code class="docutils literal notranslate"><span class="pre">pgp_pub_decrypt_bytea</span></code> to decrypt raw text data.</p>
+</section>
+<section id="pgp-key-id">
+<h3><code class="docutils literal notranslate"><span class="pre">pgp_key_id()</span></code><a class="headerlink" href="#pgp-key-id" title="Link to this heading"></a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">pgp_key_id</span><span class="p">(</span><span class="n">bytea</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="nb">text</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">pgp_key_id</span></code> function extracts the key ID from a PGP public or private key. If given an encrypted message, it returns the key ID used for encryption.</p>
+<p>This function can return two special key IDs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SYMKEY</span></code>: The message is encrypted with a symmetric key.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ANYKEY</span></code>: The message is encrypted with a public key, but the key ID has been removed. To decrypt it, you need to try all available keys. Note that <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> does not generate such messages.</p></li>
+</ul>
+<p>Different keys may share the same ID, though this is rare. In such cases, client applications should attempt decryption with each key to determine which one works, similar to handling <code class="docutils literal notranslate"><span class="pre">ANYKEY</span></code>.</p>
+</section>
+<section id="armor-dearmor">
+<h3><code class="docutils literal notranslate"><span class="pre">armor()</span></code>, <code class="docutils literal notranslate"><span class="pre">dearmor()</span></code><a class="headerlink" href="#armor-dearmor" title="Link to this heading"></a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">armor</span><span class="p">(</span><span class="k">data</span><span class="w"> </span><span class="n">bytea</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">keys</span><span class="w"> </span><span class="nb">text</span><span class="p">[],</span><span class="w"> </span><span class="k">values</span><span class="w"> </span><span class="nb">text</span><span class="p">[]</span><span class="w"> </span><span class="p">])</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="nb">text</span>
+<span class="n">dearmor</span><span class="p">(</span><span class="k">data</span><span class="w"> </span><span class="nb">text</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">bytea</span>
+</pre></div>
+</div>
+<p>These functions convert binary data to/from the PGP ASCII-armor format, which is essentially Base64 with CRC and additional formatting.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">keys</span></code> and <code class="docutils literal notranslate"><span class="pre">values</span></code> arrays are specified, an armor header is added for each key/value pair. Both arrays must be one-dimensional and of the same length, and must not contain non-ASCII characters.</p>
+</section>
+<section id="pgp-armor-headers">
+<h3><code class="docutils literal notranslate"><span class="pre">pgp_armor_headers</span></code><a class="headerlink" href="#pgp-armor-headers" title="Link to this heading"></a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">pgp_armor_headers</span><span class="p">(</span><span class="k">data</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="nb">text</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="k">setof</span><span class="w"> </span><span class="n">record</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">pgp_armor_headers</span></code> function extracts armor headers from the given data. The return value is a set of rows with two columns: <code class="docutils literal notranslate"><span class="pre">key</span></code> and <code class="docutils literal notranslate"><span class="pre">value</span></code>. Non-ASCII characters in keys or values are treated as UTF-8.</p>
+</section>
+<section id="options-for-pgp-functions">
+<h3>Options for PGP functions<a class="headerlink" href="#options-for-pgp-functions" title="Link to this heading"></a></h3>
+<p>PGP function options are similar to those in GnuPG. Values are specified after an equals sign, with multiple options separated by commas. For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">pgp_sym_encrypt</span><span class="p">(</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">psw</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;compress-algo=1, cipher-algo=aes256&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Most options apply only to encryption functions, as decryption functions obtain parameters directly from the PGP data. Key options include <code class="docutils literal notranslate"><span class="pre">compress-algo</span></code> and <code class="docutils literal notranslate"><span class="pre">unicode-mode</span></code>, while others have sensible defaults.</p>
+<p>Here are the available options:</p>
+<section id="cipher-algo">
+<h4><code class="docutils literal notranslate"><span class="pre">cipher-algo</span></code><a class="headerlink" href="#cipher-algo" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Specifies the cipher algorithm to use.</p></li>
+<li><p>Possible values: bf, aes128, aes192, aes256, 3des, cast5</p></li>
+<li><p>Default value: aes128</p></li>
+<li><p>Applies to: <code class="docutils literal notranslate"><span class="pre">pgp_sym_encrypt</span></code>, <code class="docutils literal notranslate"><span class="pre">pgp_pub_encrypt</span></code></p></li>
+</ul>
+</section>
+<section id="compress-algo">
+<h4><code class="docutils literal notranslate"><span class="pre">compress-algo</span></code><a class="headerlink" href="#compress-algo" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Specifies the compression algorithm. Requires SynxDB Elastic to be built with zlib.</p></li>
+<li><p>Possible values:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: No compression</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: ZIP compression</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: ZLIB compression (ZIP with metadata and block CRC)</p></li>
+</ul>
+</li>
+<li><p>Default value: 0</p></li>
+<li><p>Applies to: <code class="docutils literal notranslate"><span class="pre">pgp_sym_encrypt</span></code>, <code class="docutils literal notranslate"><span class="pre">pgp_pub_encrypt</span></code></p></li>
+</ul>
+</section>
+<section id="compress-level">
+<h4><code class="docutils literal notranslate"><span class="pre">compress-level</span></code><a class="headerlink" href="#compress-level" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Specifies the compression level. Higher levels improve compression but slow down processing. <code class="docutils literal notranslate"><span class="pre">0</span></code> disables compression.</p></li>
+<li><p>Possible values: <code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>-<code class="docutils literal notranslate"><span class="pre">9</span></code></p></li>
+<li><p>Default value: 6</p></li>
+<li><p>Applies to: <code class="docutils literal notranslate"><span class="pre">pgp_sym_encrypt</span></code>, <code class="docutils literal notranslate"><span class="pre">pgp_pub_encrypt</span></code></p></li>
+</ul>
+</section>
+<section id="convert-crlf">
+<h4><code class="docutils literal notranslate"><span class="pre">convert-crlf</span></code><a class="headerlink" href="#convert-crlf" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Converts <code class="docutils literal notranslate"><span class="pre">\n</span></code> to <code class="docutils literal notranslate"><span class="pre">\r\n</span></code> during encryption and <code class="docutils literal notranslate"><span class="pre">\r\n</span></code> to <code class="docutils literal notranslate"><span class="pre">\n</span></code> during decryption. Use this option for full RFC4880 compliance, as text data should use <code class="docutils literal notranslate"><span class="pre">\r\n</span></code> line endings.</p></li>
+<li><p>Possible values: <code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code></p></li>
+<li><p>Default value: <code class="docutils literal notranslate"><span class="pre">0</span></code></p></li>
+<li><p>Applies to: <code class="docutils literal notranslate"><span class="pre">pgp_sym_encrypt</span></code>, <code class="docutils literal notranslate"><span class="pre">pgp_pub_encrypt</span></code>, <code class="docutils literal notranslate"><span class="pre">pgp_sym_decrypt</span></code>, <code class="docutils literal notranslate"><span class="pre">pgp_pub_decrypt</span></code></p></li>
+</ul>
+</section>
+<section id="disable-mdc">
+<h4><code class="docutils literal notranslate"><span class="pre">disable-mdc</span></code><a class="headerlink" href="#disable-mdc" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Disables SHA-1 protection for data. Use this option only for compatibility with older PGP products that do not support SHA-1 protection packets (added in RFC 4880). Modern software like gnupg.org and pgp.com supports this feature.</p></li>
+<li><p>Possible values: <code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code></p></li>
+<li><p>Default value: 0</p></li>
+<li><p>Applies to: <code class="docutils literal notranslate"><span class="pre">pgp_sym_encrypt</span></code>, <code class="docutils literal notranslate"><span class="pre">pgp_pub_encrypt</span></code></p></li>
+</ul>
+</section>
+<section id="sess-key">
+<h4><code class="docutils literal notranslate"><span class="pre">sess-key</span></code><a class="headerlink" href="#sess-key" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Use a separate session key for symmetric-key encryption. Public-key encryption always uses a separate session key. This option defaults to directly using the S2K key.</p></li>
+<li><p>Values: 0, 1</p></li>
+<li><p>Default: 0</p></li>
+<li><p>Applies to: pgp_sym_encrypt</p></li>
+</ul>
+</section>
+<section id="s2k-mode">
+<h4><code class="docutils literal notranslate"><span class="pre">s2k-mode</span></code><a class="headerlink" href="#s2k-mode" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Specifies which S2K algorithm to use.</p></li>
+<li><p>Optional values:</p>
+<ul>
+<li><p>0: No salt (dangerous, use with caution).</p></li>
+<li><p>1: Salt with a fixed iteration count.</p></li>
+<li><p>3: Salt with a variable iteration count.</p></li>
+</ul>
+</li>
+<li><p>Default: 3</p></li>
+<li><p>Applies to: pgp_sym_encrypt</p></li>
+</ul>
+</section>
+<section id="s2k-count">
+<h4><code class="docutils literal notranslate"><span class="pre">s2k-count</span></code><a class="headerlink" href="#s2k-count" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>The iteration count for the S2K algorithm, which must be between <code class="docutils literal notranslate"><span class="pre">1024</span></code> and <code class="docutils literal notranslate"><span class="pre">65011712</span></code>.</p></li>
+<li><p>Default: A random value between <code class="docutils literal notranslate"><span class="pre">65536</span></code> and <code class="docutils literal notranslate"><span class="pre">253952</span></code>.</p></li>
+<li><p>Applies to: pgp_sym_encrypt (only if s2k-mode=3)</p></li>
+</ul>
+</section>
+<section id="s2k-digest-algo">
+<h4><code class="docutils literal notranslate"><span class="pre">s2k-digest-algo</span></code><a class="headerlink" href="#s2k-digest-algo" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Specifies which digest algorithm to use in S2K calculations.</p></li>
+<li><p>Optional values: md5, sha1</p></li>
+<li><p>Default: sha1</p></li>
+<li><p>Applies to: pgp_sym_encrypt</p></li>
+</ul>
+</section>
+<section id="s2k-cipher-algo">
+<h4><code class="docutils literal notranslate"><span class="pre">s2k-cipher-algo</span></code><a class="headerlink" href="#s2k-cipher-algo" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Specifies which cipher to use for encrypting the separate session key.</p></li>
+<li><p>Optional values: bf, aes, aes128, aes192, aes256</p></li>
+<li><p>Default: The cipher algorithm used</p></li>
+<li><p>Applies to: pgp_sym_encrypt</p></li>
+</ul>
+</section>
+<section id="unicode-mode">
+<h4><code class="docutils literal notranslate"><span class="pre">unicode-mode</span></code><a class="headerlink" href="#unicode-mode" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Whether to convert text data from the internal database encoding to UTF-8 and back. If your database is already in UTF-8, no conversion will occur, but the message will be marked as UTF-8. Without this option, no conversion is performed.</p></li>
+<li><p>Optional values: 0, 1</p></li>
+<li><p>Default: 0</p></li>
+<li><p>Applies to: pgp_sym_encrypt, pgp_pub_encrypt</p></li>
+</ul>
+</section>
+</section>
+<section id="generate-pgp-keys-with-gnupg">
+<h3>Generate PGP keys with GnuPG<a class="headerlink" href="#generate-pgp-keys-with-gnupg" title="Link to this heading"></a></h3>
+<ul>
+<li><p>Generate a new key:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span><span class="w"> </span><span class="c1">--gen-key</span>
+</pre></div>
+</div>
+<p>The preferred key type is “DSA” and “Elgamal”. For RSA encryption, you must create a DSA or RSA signing key as the master key, then add an RSA encryption subkey using <code class="docutils literal notranslate"><span class="pre">gpg</span> <span class="pre">--edit-key</span></code>.</p>
+</li>
+<li><p>List keys:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span><span class="w"> </span><span class="c1">--list-secret-keys</span>
+</pre></div>
+</div>
+</li>
+<li><p>Export the public key in ASCII armor format:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span><span class="w"> </span><span class="o">-</span><span class="n">a</span><span class="w"> </span><span class="c1">--export KEYID &gt; public.key</span>
+</pre></div>
+</div>
+</li>
+<li><p>Export the key in ASCII armor format:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span><span class="w"> </span><span class="o">-</span><span class="n">a</span><span class="w"> </span><span class="c1">--export-secret-keys KEYID &gt; secret.key</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Before passing these keys to PGP functions, you need to use <code class="docutils literal notranslate"><span class="pre">dearmor()</span></code> on them. Alternatively, if you can handle binary data, you can remove the <code class="docutils literal notranslate"><span class="pre">-a</span></code> from the command.</p>
+<p>For more details, refer to <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">gpg</span></code>, the <a class="reference external" href="https://www.gnupg.org/gph/en/manual.html">GNU Privacy Handbook</a>, and other <a class="reference external" href="https://www.gnupg.org/">GnuPG documentation</a>.</p>
+</section>
+<section id="limitations-of-pgp-code">
+<h3>Limitations of PGP code<a class="headerlink" href="#limitations-of-pgp-code" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Multiple subkeys are not supported. This may seem like an issue since subkeys are a common practice. On the other hand, you should not use regular GPG or PGP keys with <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code>. Instead, create new keys, as the use cases are quite different.</p></li>
+</ul>
+</section>
+</section>
+<section id="raw-encryption-functions">
+<h2>Raw encryption functions<a class="headerlink" href="#raw-encryption-functions" title="Link to this heading"></a></h2>
+<p>These functions apply the cipher directly to the data and do not include any of the advanced features of PGP encryption. Therefore, the main issues are:</p>
+<ul class="simple">
+<li><p>The user’s key is used directly as the cipher key.</p></li>
+<li><p>No integrity checks are provided; you cannot tell if the encrypted data has been tampered with.</p></li>
+<li><p>The user must manage all encryption parameters, including the IV, themselves.</p></li>
+<li><p>Text handling is not supported.</p></li>
+</ul>
+<p>Given the introduction of PGP encryption, the use of raw encryption functions is discouraged.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">encrypt</span><span class="p">(</span><span class="k">data</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nb">text</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">bytea</span>
+<span class="n">decrypt</span><span class="p">(</span><span class="k">data</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nb">text</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">bytea</span>
+
+<span class="n">encrypt_iv</span><span class="p">(</span><span class="k">data</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="n">iv</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nb">text</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">bytea</span>
+<span class="n">decrypt_iv</span><span class="p">(</span><span class="k">data</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="n">iv</span><span class="w"> </span><span class="n">bytea</span><span class="p">,</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nb">text</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">bytea</span>
+</pre></div>
+</div>
+<p>Encrypt or decrypt data using the cipher method specified by <code class="docutils literal notranslate"><span class="pre">type</span></code>. The syntax for the <code class="docutils literal notranslate"><span class="pre">type</span></code> string is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">**</span><span class="n">algorithm</span><span class="o">**</span> <span class="p">[</span> <span class="o">-</span> <span class="o">**</span><span class="n">mode</span><span class="o">**</span> <span class="p">]</span> <span class="p">[</span> <span class="o">/</span><span class="n">pad</span><span class="p">:</span> <span class="o">**</span><span class="n">padding</span><span class="o">**</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>Where <strong>algorithm</strong> is one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">BF</span></code> - Blowfish</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AES</span></code> - AES (Rijndael-128, -192, or -256)</p>
+<ul>
+<li><p>If you are using a non-OpenSSL version of <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code>, <code class="docutils literal notranslate"><span class="pre">sm4</span></code> will be an optional value.</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>mode</strong> is one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CBC</span></code> - Each block depends on the previous one (default).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ECB</span></code> - Each block is encrypted separately (not secure and not recommended).</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">padding</span></code> is one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pkcs</span></code> - Data can be of any length (default).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">none</span></code> - Data must be a multiple of the cipher block size.</p></li>
+</ul>
+<p>For example, these are equivalent:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">encrypt</span><span class="p">(</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;fooz&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;bf&#39;</span><span class="p">)</span>
+<span class="n">encrypt</span><span class="p">(</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;fooz&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;bf-cbc/pad:pkcs&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">encrypt_iv</span></code> and <code class="docutils literal notranslate"><span class="pre">decrypt_iv</span></code>, the <code class="docutils literal notranslate"><span class="pre">iv</span></code> parameter is the initial value for CBC mode; it is ignored for ECB. If not a full block size, it will be clipped or padded with zeros. In functions without this parameter, it defaults to all zeros.</p>
+</section>
+<section id="random-data-functions">
+<h2>Random data functions<a class="headerlink" href="#random-data-functions" title="Link to this heading"></a></h2>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">gen_random_bytes</span><span class="p">(</span><span class="k">count</span><span class="w"> </span><span class="nb">integer</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">bytea</span>
+</pre></div>
+</div>
+<p>Returns <code class="docutils literal notranslate"><span class="pre">count</span></code> cryptographically strong random bytes. Up to 1024 bytes can be extracted at once to avoid depleting the random generator pool.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">gen_random_uuid</span><span class="p">()</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">uuid</span>
+</pre></div>
+</div>
+<p>Returns a version 4 (random) UUID. (Deprecated; this function internally calls the <a class="reference external" href="https://www.postgresql.org/docs/current/functions-uuid.html">core function</a> of the same name.)</p>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> configures itself based on the discoveries of the main SynxDB Elastic <code class="docutils literal notranslate"><span class="pre">configure</span></code> script. The options that affect it are <code class="docutils literal notranslate"><span class="pre">--with-zlib</span></code> and <code class="docutils literal notranslate"><span class="pre">--with-openssl</span></code>.</p>
+<p>When compiled with zlib, the PGP encryption functions can compress data before encryption.</p>
+<p>When compiled against OpenSSL 3.0.0 or higher, the legacy provider must be activated in the <code class="docutils literal notranslate"><span class="pre">openssl.cnf</span></code> configuration file to use older encryption methods like DES or Blowfish.</p>
+</section>
+<section id="null-handling">
+<h3>NULL handling<a class="headerlink" href="#null-handling" title="Link to this heading"></a></h3>
+<p>In accordance with the SQL standard, all functions return NULL if any argument is NULL. This can pose a security risk if not used carefully.</p>
+</section>
+<section id="security-limitations">
+<h3>Security limitations<a class="headerlink" href="#security-limitations" title="Link to this heading"></a></h3>
+<p>All <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> functions run inside the database server. This means that all data and passwords are transmitted in plain text between <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> and the client application. Therefore, you should:</p>
+<ol class="arabic simple">
+<li><p>Use local connections or SSL connections.</p></li>
+<li><p>Trust the system and database administrators.</p></li>
+</ol>
+<p>If this is not possible, it is better to perform encryption in the client application.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> is not resistant to side-channel attacks. For example, the time taken by the <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> decryption function varies depending on the size of the ciphertext.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="use-pgaudit.html" class="btn btn-neutral float-right" title="Log Auditing pgAudit" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="set-password-profile.html" class="btn btn-neutral float-left" title="Set Password Profile" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

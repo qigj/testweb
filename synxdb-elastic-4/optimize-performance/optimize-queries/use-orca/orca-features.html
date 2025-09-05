@@ -1,0 +1,368 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPORCA Features and Enhancements &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="What’s New in GPORCA Optimizer" href="whats-new-in-orca.html" />
+    <link rel="prev" title="GPORCA Overview" href="use-orca-overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../optimize-performance-index.html">Optimize Performance</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../optimize-queries-index.html">Optimize Query Performance</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../optimize-query-performance-overview.html">Query Performance Overview</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="use-orca-index.html">Use GPORCA Optimizer</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="use-orca-overview.html">GPORCA Overview</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">GPORCA Features and Enhancements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="whats-new-in-orca.html">What’s New in GPORCA Optimizer</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../update-statistics.html">Update Statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../query-hints.html">Query Hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../use-auto-mtv-for-query-optimization.html">Automatically Use Materialized Views for Query Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../push-down-agg-operators.html">Push Down Aggregation Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../execute-queries-in-parallel.html">Execute Queries in Parallel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../auto-clustering.html">Auto-Clustering Tables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../optimize-performance-index.html">Optimize Performance</a></li>
+          <li class="breadcrumb-item"><a href="../optimize-queries-index.html">Optimize Query Performance</a></li>
+          <li class="breadcrumb-item"><a href="use-orca-index.html">Use GPORCA Optimizer</a></li>
+      <li class="breadcrumb-item active">GPORCA Features and Enhancements</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gporca-features-and-enhancements">
+<h1>GPORCA Features and Enhancements<a class="headerlink" href="#gporca-features-and-enhancements" title="Link to this heading"></a></h1>
+<p>GPORCA provides enhanced support for certain types of queries and operations:</p>
+<ul class="simple">
+<li><p>Queries on partitioned tables</p></li>
+<li><p>Queries with subqueries</p></li>
+<li><p>Queries with Common Table Expressions (CTEs)</p></li>
+<li><p>DML operation optimization</p></li>
+</ul>
+<section id="enhancements-for-partitioned-table-queries">
+<h2>Enhancements for partitioned table queries<a class="headerlink" href="#enhancements-for-partitioned-table-queries" title="Link to this heading"></a></h2>
+<p>GPORCA introduces the following optimizations for handling queries on partitioned tables:</p>
+<ul>
+<li><p>Improved partition pruning capabilities.</p></li>
+<li><p>The query plan can include the Partition Selector operator.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">EXPLAIN</span></code> plan no longer enumerates all partitions.</p>
+<p>For queries with static partition pruning (i.e., comparing the partition key with a constant), GPORCA displays the Partition Selector operator in the <code class="docutils literal notranslate"><span class="pre">EXPLAIN</span></code> output, indicating the filter condition and the number of selected partitions. Here is an example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">Partition</span><span class="w"> </span><span class="n">Selector</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Part_Table</span><span class="w"> </span><span class="p">(</span><span class="k">dynamic</span><span class="w"> </span><span class="n">scan</span><span class="w"> </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span>
+<span class="w">        </span><span class="n">Filter</span><span class="p">:</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">        </span><span class="n">Partitions</span><span class="w"> </span><span class="n">selected</span><span class="p">:</span><span class="w">  </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="k">out</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For queries with dynamic partition pruning (i.e., comparing the partition key with a variable), partition selection is determined during execution, and the <code class="docutils literal notranslate"><span class="pre">EXPLAIN</span></code> output does not list the selected partitions.</p>
+</li>
+<li><p>The size of the query plan does not grow with the number of partitions.</p></li>
+<li><p>Significantly reduces the risk of out-of-memory errors caused by a large number of partitions.</p></li>
+</ul>
+<p>The following <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> example creates a range-partitioned table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">sales</span><span class="p">(</span><span class="n">order_id</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span><span class="w"> </span><span class="n">item_id</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="nb">numeric</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="w"> </span>
+<span class="w">      </span><span class="nb">date</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span><span class="w"> </span><span class="n">yr_qtr</span><span class="w"> </span><span class="nb">int</span><span class="p">)</span>
+<span class="w">   </span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">RANGE</span><span class="w"> </span><span class="p">(</span><span class="n">yr_qtr</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">start</span><span class="w"> </span><span class="p">(</span><span class="mi">201501</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="p">(</span><span class="mi">201504</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="p">,</span><span class="w"> </span>
+<span class="w">   </span><span class="k">start</span><span class="w"> </span><span class="p">(</span><span class="mi">201601</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="p">(</span><span class="mi">201604</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="p">,</span>
+<span class="w">   </span><span class="k">start</span><span class="w"> </span><span class="p">(</span><span class="mi">201701</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="p">(</span><span class="mi">201704</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="p">,</span><span class="w">     </span>
+<span class="w">   </span><span class="k">start</span><span class="w"> </span><span class="p">(</span><span class="mi">201801</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="p">(</span><span class="mi">201804</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="p">,</span>
+<span class="w">   </span><span class="k">start</span><span class="w"> </span><span class="p">(</span><span class="mi">201901</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="p">(</span><span class="mi">201904</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="p">,</span>
+<span class="w">   </span><span class="k">start</span><span class="w"> </span><span class="p">(</span><span class="mi">202001</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="p">(</span><span class="mi">202004</span><span class="p">)</span><span class="w"> </span><span class="n">INCLUSIVE</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>GPORCA optimizes the following types of queries on partitioned tables:</p>
+<ul>
+<li><p>Full table scan: Partitions are not enumerated in the plan.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sales</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Queries with constant filter conditions: Partition pruning can be performed.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sales</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">yr_qtr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">201501</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Range queries: Also trigger partition pruning.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sales</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">yr_qtr</span><span class="w"> </span><span class="k">BETWEEN</span><span class="w"> </span><span class="mi">201601</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="mi">201704</span><span class="w"> </span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Join queries on partitioned tables: The following example joins the dimension table <code class="docutils literal notranslate"><span class="pre">date_dim</span></code> with the fact table <code class="docutils literal notranslate"><span class="pre">catalog_sales</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">catalog_sales</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">date_id</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">date_dim</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">month</span><span class="o">=</span><span class="mi">12</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="subquery-optimization">
+<h2>Subquery optimization<a class="headerlink" href="#subquery-optimization" title="Link to this heading"></a></h2>
+<p>GPORCA handles subqueries more efficiently. A subquery is a query nested within an outer query block, such as the <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> in the <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> clause of the following statement:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">part</span>
+<span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">avg</span><span class="p">(</span><span class="n">price</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">part</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>GPORCA also optimizes correlated subqueries (CSQs), which are subqueries that reference columns from the outer query. For example, in the following statement, both the inner and outer queries use the <code class="docutils literal notranslate"><span class="pre">price</span></code> column:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">avg</span><span class="p">(</span><span class="n">price</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">brand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">brand</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>GPORCA can generate more optimal execution plans for the following types of subqueries:</p>
+<ul>
+<li><p>Correlated subqueries in the SELECT list:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="p">,</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">min</span><span class="p">(</span><span class="n">price</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">brand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">brand</span><span class="p">)</span>
+<span class="k">AS</span><span class="w"> </span><span class="n">foo</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">p1</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Correlated subqueries in an OR condition:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p_size</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">40</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span>
+<span class="w">    </span><span class="n">p_retailprice</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">avg</span><span class="p">(</span><span class="n">p_retailprice</span><span class="p">)</span><span class="w"> </span>
+<span class="w">        </span><span class="k">FROM</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span>
+<span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">p_brand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">p_brand</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Nested subqueries with skip-level correlations:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">p_partkey</span><span class="w"> </span>
+<span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">p_partkey</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">p_retailprice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">min</span><span class="p">(</span><span class="n">p_retailprice</span><span class="p">)</span>
+<span class="w">        </span><span class="k">FROM</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">p3</span><span class="w"> </span>
+<span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p3</span><span class="p">.</span><span class="n">p_brand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">p_brand</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Correlated subqueries with aggregations and inequalities:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">p_retailprice</span><span class="w"> </span><span class="o">=</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">min</span><span class="p">(</span><span class="n">p_retailprice</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">p_brand</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">p_brand</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Correlated subqueries that must return a single row:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">p_partkey</span><span class="p">,</span><span class="w"> </span>
+<span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">p_retailprice</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">p_brand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">p_brand</span><span class="w"> </span><span class="p">)</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">p1</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="common-table-expression-cte-optimization">
+<h2>Common Table Expression (CTE) optimization<a class="headerlink" href="#common-table-expression-cte-optimization" title="Link to this heading"></a></h2>
+<p>GPORCA efficiently handles queries with <code class="docutils literal notranslate"><span class="pre">WITH</span></code> clauses. A <code class="docutils literal notranslate"><span class="pre">WITH</span></code> clause, also known as a Common Table Expression (CTE), defines a temporary logical table for use within a query. Here is an example of a query containing a CTE:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">WITH</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="k">c</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w">  </span><span class="n">v</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="p">,</span><span class="w">  </span><span class="n">v</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">v2</span>
+<span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="n">v1</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">v2</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">v1</span><span class="p">.</span><span class="n">s</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">v2</span><span class="p">.</span><span class="n">s</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>As part of query optimization, GPORCA supports pushing predicates down into the CTE. For example, in the following query, the equality predicate is pushed down into the CTE:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">WITH</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">v1</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">v2</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">v3</span>
+<span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="n">v1</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">v2</span><span class="p">.</span><span class="n">a</span>
+<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">v1</span><span class="p">.</span><span class="n">s</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">v3</span><span class="p">.</span><span class="n">s</span>
+<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">v1</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">v2</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
+<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">v3</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>GPORCA supports the following types of CTEs:</p>
+<ul>
+<li><p>CTEs that define multiple logical tables simultaneously. In the following example, the CTE defines two logical tables:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">WITH</span><span class="w"> </span><span class="n">cte1</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">T</span><span class="w"> </span>
+<span class="w">                </span><span class="k">where</span><span class="w"> </span><span class="k">c</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">a</span><span class="p">),</span>
+<span class="w">    </span><span class="n">cte2</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">cte1</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">cte1</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">v1</span><span class="p">,</span><span class="w"> </span><span class="n">cte2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">v2</span><span class="p">,</span><span class="w"> </span><span class="n">cte2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">v3</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">v1</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">v2</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">v1</span><span class="p">.</span><span class="n">s</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">v3</span><span class="p">.</span><span class="n">s</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="dml-operation-optimization">
+<h2>DML operation optimization<a class="headerlink" href="#dml-operation-optimization" title="Link to this heading"></a></h2>
+<p>GPORCA also enhances DML operations such as <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, and <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>:</p>
+<ul>
+<li><p>DML operations appear as regular operator nodes in the execution plan.</p>
+<ul class="simple">
+<li><p>They can appear anywhere in the plan (currently limited to the top-level slice).</p></li>
+<li><p>They can have downstream nodes (consumers).</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> operations are implemented using the Split operator, which supports the following features:</p>
+<ul class="simple">
+<li><p>Supports updating distribution key columns.</p></li>
+<li><p>Supports updating partition key columns. The following example shows a plan that includes a Split operator:</p></li>
+</ul>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">QUERY</span><span class="w"> </span><span class="n">PLAN</span>
+<span class="c1">--------------------------------------------------------------</span>
+<span class="k">Update</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">5</span><span class="p">.</span><span class="mi">46</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Redistribute</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="w">  </span><span class="p">(</span><span class="n">slice1</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">         </span><span class="n">Hash</span><span class="w"> </span><span class="k">Key</span><span class="p">:</span><span class="w"> </span><span class="n">a</span>
+<span class="w">         </span><span class="o">-&gt;</span><span class="w">  </span><span class="k">Result</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">3</span><span class="p">.</span><span class="mi">23</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">48</span><span class="p">)</span>
+<span class="w">               </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Split</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">2</span><span class="p">.</span><span class="mi">13</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="w">                     </span><span class="o">-&gt;</span><span class="w">  </span><span class="k">Result</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">1</span><span class="p">.</span><span class="mi">05</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="w">                           </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">dmltest</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="other-optimization-capabilities">
+<h2>Other optimization capabilities<a class="headerlink" href="#other-optimization-capabilities" title="Link to this heading"></a></h2>
+<p>GPORCA also includes the following optimization capabilities:</p>
+<ul class="simple">
+<li><p>Better join ordering choices.</p></li>
+<li><p>Support for reordering of joins and aggregate operations.</p></li>
+<li><p>Sort order optimization.</p></li>
+<li><p>Consideration of data skew estimates during optimization.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="whats-new-in-orca.html" class="btn btn-neutral float-right" title="What’s New in GPORCA Optimizer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="use-orca-overview.html" class="btn btn-neutral float-left" title="GPORCA Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

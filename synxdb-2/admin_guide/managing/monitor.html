@@ -1,0 +1,757 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Monitoring a SynxDB System - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="monitoring-a-synxdb-system"><a class="header" href="#monitoring-a-synxdb-system">Monitoring a SynxDB System</a></h1>
+<p>You can monitor a SynxDB system using a variety of tools included with the system or available as add-ons.</p>
+<p>Observing the SynxDB system day-to-day performance helps administrators understand the system behavior, plan workflow, and troubleshoot problems. This chapter discusses tools for monitoring database performance and activity.</p>
+<p>Also, be sure to review <a href="../monitoring/monitoring.html">Recommended Monitoring and Maintenance Tasks</a> for monitoring activities you can script to quickly detect problems in the system.</p>
+<h2 id="monitoring-database-activity-and-performance"><a class="header" href="#monitoring-database-activity-and-performance"><a id="topic2"></a>Monitoring Database Activity and Performance</a></h2>
+<h2 id="monitoring-system-state"><a class="header" href="#monitoring-system-state"><a id="topic3"></a>Monitoring System State</a></h2>
+<p>As a SynxDB administrator, you must monitor the system for problem events such as a segment going down or running out of disk space on a segment host. The following topics describe how to monitor the health of a SynxDB system and examine certain state information for a SynxDB system.</p>
+<ul>
+<li><a href="#topic12">Checking System State</a></li>
+<li><a href="#topic15">Checking Disk Space Usage</a></li>
+<li><a href="#topic20">Checking for Data Distribution Skew</a></li>
+<li><a href="#overflowed_backends">Checking for and Terminating Overflowed Backends</a></li>
+<li><a href="#topic24">Viewing Metadata Information about Database Objects</a></li>
+<li><a href="#topic_slt_ddv_1q">Viewing Session Memory Usage Information</a></li>
+<li><a href="#topic27">Viewing Query Workfile Usage Information</a></li>
+</ul>
+<h2 id="checking-system-state"><a class="header" href="#checking-system-state"><a id="topic12"></a>Checking System State</a></h2>
+<p>A SynxDB system is comprised of multiple PostgreSQL instances (the master and segments) spanning multiple machines. To monitor a SynxDB system, you need to know information about the system as a whole, as well as status information of the individual instances. The <code>gpstate</code> utility provides status information about a SynxDB system.</p>
+<h3 id="viewing-master-and-segment-status-and-configuration"><a class="header" href="#viewing-master-and-segment-status-and-configuration"><a id="topic13"></a>Viewing Master and Segment Status and Configuration</a></h3>
+<p>The default <code>gpstate</code> action is to check segment instances and show a brief status of the valid and failed segments. For example, to see a quick status of your SynxDB system:</p>
+<pre><code>$ gpstate
+
+</code></pre>
+<p>To see more detailed information about your SynxDB array configuration, use <code>gpstate</code> with the <code>-s</code> option:</p>
+<pre><code>$ gpstate -s
+
+</code></pre>
+<h3 id="viewing-your-mirroring-configuration-and-status"><a class="header" href="#viewing-your-mirroring-configuration-and-status"><a id="topic14"></a>Viewing Your Mirroring Configuration and Status</a></h3>
+<p>If you are using mirroring for data redundancy, you may want to see the list of mirror segment instances in the system, their current synchronization status, and the mirror to primary mapping. For example, to see the mirror segments in the system and their status:</p>
+<pre><code>$ gpstate -m 
+
+</code></pre>
+<p>To see the primary to mirror segment mappings:</p>
+<pre><code>$ gpstate -c
+
+</code></pre>
+<p>To see the status of the standby master mirror:</p>
+<pre><code>$ gpstate -f
+
+</code></pre>
+<h2 id="checking-disk-space-usage"><a class="header" href="#checking-disk-space-usage"><a id="topic15"></a>Checking Disk Space Usage</a></h2>
+<p>A database administrator’s most important monitoring task is to make sure the file systems where the master and segment data directories reside do not grow to more than 70 percent full. A filled data disk will not result in data corruption, but it may prevent normal database activity from continuing. If the disk grows too full, it can cause the database server to shut down.</p>
+<p>You can use the <code>gp_disk_free</code> external table in the <code>gp_toolkit</code> administrative schema to check for remaining free space (in kilobytes) on the segment host file systems. For example:</p>
+<pre><code>=# SELECT * FROM gp_toolkit.gp_disk_free 
+   ORDER BY dfsegment;
+
+</code></pre>
+<h3 id="checking-sizing-of-distributed-databases-and-tables"><a class="header" href="#checking-sizing-of-distributed-databases-and-tables"><a id="topic16"></a>Checking Sizing of Distributed Databases and Tables</a></h3>
+<p>The <code>gp_toolkit</code> administrative schema contains several views that you can use to determine the disk space usage for a distributed SynxDB database, schema, table, or index.</p>
+<p>For a list of the available sizing views for checking database object sizes and disk space, see the <em>SynxDB Reference Guide</em>.</p>
+<h4 id="viewing-disk-space-usage-for-a-database"><a class="header" href="#viewing-disk-space-usage-for-a-database"><a id="topic17"></a>Viewing Disk Space Usage for a Database</a></h4>
+<p>To see the total size of a database (in bytes), use the <em>gp_size_of_database</em> view in the <em>gp_toolkit</em> administrative schema. For example:</p>
+<pre><code>=&gt; SELECT * FROM gp_toolkit.gp_size_of_database 
+   ORDER BY sodddatname;
+
+</code></pre>
+<h4 id="viewing-disk-space-usage-for-a-table"><a class="header" href="#viewing-disk-space-usage-for-a-table"><a id="topic18"></a>Viewing Disk Space Usage for a Table</a></h4>
+<p>The <em>gp_toolkit</em> administrative schema contains several views for checking the size of a table. The table sizing views list the table by object ID (not by name). To check the size of a table by name, you must look up the relation name (<code>relname</code>) in the <em>pg_class</em> table. For example:</p>
+<pre><code>=&gt; SELECT relname AS name, sotdsize AS size, sotdtoastsize 
+   AS toast, sotdadditionalsize AS other 
+   FROM gp_toolkit.gp_size_of_table_disk as sotd, pg_class 
+   WHERE sotd.sotdoid=pg_class.oid ORDER BY relname;
+
+</code></pre>
+<p>For a list of the available table sizing views, see the <em>SynxDB Reference Guide</em>.</p>
+<h4 id="viewing-disk-space-usage-for-indexes"><a class="header" href="#viewing-disk-space-usage-for-indexes"><a id="topic19"></a>Viewing Disk Space Usage for Indexes</a></h4>
+<p>The <em>gp_toolkit</em> administrative schema contains a number of views for checking index sizes. To see the total size of all index(es) on a table, use the <em>gp_size_of_all_table_indexes</em> view. To see the size of a particular index, use the <em>gp_size_of_index</em> view. The index sizing views list tables and indexes by object ID (not by name). To check the size of an index by name, you must look up the relation name (<code>relname</code>) in the <em>pg_class</em> table. For example:</p>
+<pre><code>=&gt; SELECT soisize, relname as indexname
+   FROM pg_class, gp_toolkit.gp_size_of_index
+   WHERE pg_class.oid=gp_size_of_index.soioid 
+   AND pg_class.relkind='i';
+
+</code></pre>
+<h2 id="checking-for-data-distribution-skew"><a class="header" href="#checking-for-data-distribution-skew"><a id="topic20"></a>Checking for Data Distribution Skew</a></h2>
+<p>All tables in SynxDB are distributed, meaning their data is divided across all of the segments in the system. Unevenly distributed data may diminish query processing performance. A table’s distribution policy, set at table creation time, determines how the table’s rows are distributed. For information about choosing the table distribution policy, see the following topics:</p>
+<ul>
+<li><a href="#topic21">Viewing a Table’s Distribution Key</a></li>
+<li><a href="#topic22">Viewing Data Distribution</a></li>
+<li><a href="#topic23">Checking for Query Processing Skew</a></li>
+</ul>
+<p>The <em>gp_toolkit</em> administrative schema also contains a number of views for checking data distribution skew on a table. For information about how to check for uneven data distribution, see the <em>SynxDB Reference Guide</em>.</p>
+<h3 id="viewing-a-tables-distribution-key"><a class="header" href="#viewing-a-tables-distribution-key"><a id="topic21"></a>Viewing a Table’s Distribution Key</a></h3>
+<p>To see the columns used as the data distribution key for a table, you can use the <code>\d+</code> meta-command in <code>psql</code> to examine the definition of a table. For example:</p>
+<pre><code>=# `\d+ sales
+`                Table "retail.sales"
+ Column      |     Type     | Modifiers | Description
+-------------+--------------+-----------+-------------
+ sale_id     | integer      |           |
+ amt         | float        |           |
+ date        | date         |           |
+Has OIDs: no
+Distributed by: (sale_id)
+
+</code></pre>
+<p>When you create a <em>replicated</em> table, SynxDB stores all rows in the table on every segment. Replicated tables have no distribution key. Where the <code>\d+</code> meta-command reports the distribution key for a normally distributed table, it shows <code>Distributed Replicated</code> for a replicated table.</p>
+<h3 id="viewing-data-distribution"><a class="header" href="#viewing-data-distribution"><a id="topic22"></a>Viewing Data Distribution</a></h3>
+<p>To see the data distribution of a table’s rows (the number of rows on each segment), you can run a query such as:</p>
+<pre><code>=# SELECT gp_segment_id, count(*) 
+   FROM &lt;table_name&gt; GROUP BY gp_segment_id;
+
+</code></pre>
+<p>A table is considered to have a balanced distribution if all segments have roughly the same number of rows.</p>
+<blockquote>
+<p><strong>Note</strong> If you run this query on a replicated table, it fails because SynxDB does not permit user queries to reference the system column <code>gp_segment_id</code> (or the system columns <code>ctid</code>, <code>cmin</code>, <code>cmax</code>, <code>xmin</code>, and <code>xmax</code>) in replicated tables. Because every segment has all of the tables’ rows, replicated tables are evenly distributed by definition.</p>
+</blockquote>
+<h3 id="checking-for-query-processing-skew"><a class="header" href="#checking-for-query-processing-skew"><a id="topic23"></a>Checking for Query Processing Skew</a></h3>
+<p>When a query is being processed, all segments should have equal workloads to ensure the best possible performance. If you identify a poorly-performing query, you may need to investigate further using the <code>EXPLAIN</code> command. For information about using the <code>EXPLAIN</code> command and query profiling, see <a href="../query/topics/query-profiling.html">Query Profiling</a>.</p>
+<p>Query processing workload can be skewed if the table’s data distribution policy and the query predicates are not well matched. To check for processing skew, you can run a query such as:</p>
+<pre><code>=# SELECT gp_segment_id, count(*) FROM &lt;table_name&gt;
+   WHERE &lt;column&gt;='&lt;value&gt;' GROUP BY gp_segment_id;
+
+</code></pre>
+<p>This will show the number of rows returned by segment for the given <code>WHERE</code> predicate.</p>
+<p>As noted in <a href="#topic22">Viewing Data Distribution</a>, this query will fail if you run it on a replicated table because you cannot reference the <code>gp_segment_id</code> system column in a query on a replicated table.</p>
+<h4 id="avoiding-an-extreme-skew-warning"><a class="header" href="#avoiding-an-extreme-skew-warning"><a id="avoidskew"></a>Avoiding an Extreme Skew Warning</a></h4>
+<p>You may receive the following warning message while running a query that performs a hash join operation:</p>
+<p><code>Extreme skew in the innerside of Hashjoin</code></p>
+<p>This occurs when the input to a hash join operator is skewed. It does not prevent the query from completing successfully. You can follow these steps to avoid skew in the plan:</p>
+<ol>
+<li>Ensure that all fact tables are analyzed.</li>
+<li>Verify that any populated temporary table used by the query is analyzed.</li>
+<li>View the <code>EXPLAIN ANALYZE</code> plan for the query and look for the following:
+<ul>
+<li>If there are scans with multi-column filters that are producing more rows than estimated, then set the <code>gp_selectivity_damping_factor</code> server configuration parameter to 2 or higher and retest the query.</li>
+<li>If the skew occurs while joining a single fact table that is relatively small (less than 5000 rows), set the <code>gp_segments_for_planner</code> server configuration parameter to 1 and retest the query.</li>
+</ul>
+</li>
+<li>Check whether the filters applied in the query match distribution keys of the base tables. If the filters and distribution keys are the same, consider redistributing some of the base tables with different distribution keys.</li>
+<li>Check the cardinality of the join keys. If they have low cardinality, try to rewrite the query with different joining columns or additional filters on the tables to reduce the number of rows. These changes could change the query semantics.</li>
+</ol>
+<h2 id="checking-for-and-terminating-overflowed-backends"><a class="header" href="#checking-for-and-terminating-overflowed-backends"><a id="overflowed_backends"></a>Checking for and Terminating Overflowed Backends</a></h2>
+<p>Subtransaction overflow arises when a SynxDB backend creates more than 64 subtransactions, resulting in a high lookup cost for visibility checks. This slows query performance, but even more so when it occurs in combination with long-running transactions, which result in still more lookups. Terminating suboverflowed backends and/or backends with long-running transactions can help prevent and alleviate performance problems.</p>
+<p>SynxDB includes an extension – <code>gp_subtransaction_overflow</code> – and a view – <code>gp_suboverflowed_backend</code> – that is run over a user-defined function to help users query for suboverflowed backends. Users can use segment id and process id information reported in the view to terminate the offending backends, thereby preventing degradation of performance.</p>
+<p>Follow these steps to identify and terminate overflowed backends.</p>
+<ol>
+<li>
+<p>Create the extension:</p>
+<pre><code>CREATE EXTENSION gp_subtransaction_overflow;
+</code></pre>
+</li>
+<li>
+<p>Select all from the view the extension created:</p>
+<pre><code>select * from gp_suboverflowed_backend`;
+</code></pre>
+<p>This returns output similar to the following:</p>
+<pre><code>segid |   pids    
+-------+-----------
+-1 | 
+ 0 | {1731513}
+ 1 | {1731514}
+ 2 | {1731515}
+(4 rows)
+</code></pre>
+</li>
+<li>
+<p>Connect to the database in utility mode and query <code>pg_stat_activity</code> to return the session id for the process id in the output for a segment. For example:</p>
+<pre><code>select sess_id from pg_stat_activity where pid=1731513;
+</code></pre>
+<pre><code>sess_id 
+---------
+  10
+(1 row)
+</code></pre>
+</li>
+<li>
+<p>Terminate the session, which will terminate all associated backends on all segments:</p>
+<pre><code>select pg_terminate_backend(pid) from pg_stat_activity where sess_id=10;
+</code></pre>
+</li>
+<li>
+<p>Verify that there are no more suboverflowed backends:</p>
+<pre><code>select * from gp_suboverflowed_backend`;
+</code></pre>
+<pre><code>segid |   pids    
+-------+-----------
+-1 | 
+ 0 |
+ 1 | 
+ 2 | 
+(4 rows)
+</code></pre>
+</li>
+</ol>
+<h3 id="logging-statements-that-cause-overflowed-subtransactions"><a class="header" href="#logging-statements-that-cause-overflowed-subtransactions">Logging Statements that Cause Overflowed Subtransactions</a></h3>
+<p>You can optionally set a SynxDB configuration parameter, <code>gp_log_suboverflow_statement</code>, to record SQL statements that cause overflowed subtransactions. When this parameter is active, statements that cause overflow are recorded in server logs on the master host and segment hosts with the text: <code>Statement caused suboverflow: &lt;statement&gt;</code>.</p>
+<p>One way to find these statements is to query the <code>gp_toolkit.gp_log_system</code> table. For example, after activating the setting:</p>
+<pre><code>SET set gp_log_suboverflow_statement = ON;
+</code></pre>
+<p>you can find statements that caused overflow with a query such as:</p>
+<pre><code>SELECT DISTINCT logsegment, logmessage FROM gp_toolkit.gp_log_system
+	WHERE logmessage LIKE 'Statement caused suboverflow%';
+</code></pre>
+<pre><code> logsegment |                          logmessage                          
+------------+--------------------------------------------------------------
+ seg0       | Statement caused suboverflow: INSERT INTO t_1352_1 VALUES(i)
+ seg1       | Statement caused suboverflow: INSERT INTO t_1352_1 VALUES(i)
+ seg2       | Statement caused suboverflow: INSERT INTO t_1352_1 VALUES(i)
+(3 rows)
+</code></pre>
+<h2 id="viewing-metadata-information-about-database-objects"><a class="header" href="#viewing-metadata-information-about-database-objects"><a id="topic24"></a>Viewing Metadata Information about Database Objects</a></h2>
+<p>SynxDB tracks various metadata information in its system catalogs about the objects stored in a database, such as tables, views, indexes and so on, as well as global objects such as roles and tablespaces.</p>
+<h3 id="viewing-the-last-operation-performed"><a class="header" href="#viewing-the-last-operation-performed"><a id="topic25"></a>Viewing the Last Operation Performed</a></h3>
+<p>You can use the system views <em>pg_stat_operations</em> and <em>pg_stat_partition_operations</em> to look up actions performed on an object, such as a table. For example, to see the actions performed on a table, such as when it was created and when it was last vacuumed and analyzed:</p>
+<pre><code>=&gt; SELECT schemaname as schema, objname as table, 
+   usename as role, actionname as action, 
+   subtype as type, statime as time 
+   FROM pg_stat_operations 
+   WHERE objname='cust';
+ schema | table | role | action  | type  | time
+--------+-------+------+---------+-------+--------------------------
+  sales | cust  | main | CREATE  | TABLE | 2016-02-09 18:10:07.867977-08
+  sales | cust  | main | VACUUM  |       | 2016-02-10 13:32:39.068219-08
+  sales | cust  | main | ANALYZE |       | 2016-02-25 16:07:01.157168-08
+(3 rows)
+
+</code></pre>
+<h3 id="viewing-the-definition-of-an-object"><a class="header" href="#viewing-the-definition-of-an-object"><a id="topic26"></a>Viewing the Definition of an Object</a></h3>
+<p>To see the definition of an object, such as a table or view, you can use the <code>\d+</code> meta-command when working in <code>psql</code>. For example, to see the definition of a table:</p>
+<pre><code>=&gt; \d+ &lt;mytable&gt;
+
+</code></pre>
+<h2 id="viewing-session-memory-usage-information"><a class="header" href="#viewing-session-memory-usage-information"><a id="topic_slt_ddv_1q"></a>Viewing Session Memory Usage Information</a></h2>
+<p>You can create and use the <em>session_level_memory_consumption</em> view that provides information about the current memory utilization for sessions that are running queries on SynxDB. The view contains session information and information such as the database that the session is connected to, the query that the session is currently running, and memory consumed by the session processes.</p>
+<ul>
+<li><a href="#topic_nby_j1b_dq">Creating the session_level_memory_consumption View</a></li>
+<li><a href="#topic7">The session_level_memory_consumption View</a></li>
+</ul>
+<h3 id="creating-the-session_level_memory_consumption-view"><a class="header" href="#creating-the-session_level_memory_consumption-view"><a id="topic_nby_j1b_dq"></a>Creating the session_level_memory_consumption View</a></h3>
+<p>To create the <em>session_state.session_level_memory_consumption</em> view in a SynxDB, run the script <code>CREATE EXTENSION gp_internal_tools;</code> once for each database. For example, to install the view in the database <code>testdb</code>, use this command:</p>
+<pre><code>$ psql -d testdb -c "CREATE EXTENSION gp_internal_tools;"
+</code></pre>
+<h3 id="the-session_level_memory_consumption-view"><a class="header" href="#the-session_level_memory_consumption-view"><a id="topic7"></a>The session_level_memory_consumption View</a></h3>
+<p>The <em>session_state.session_level_memory_consumption</em> view provides information about memory consumption and idle time for sessions that are running SQL queries.</p>
+<p>When resource queue-based resource management is active, the column <code>is_runaway</code> indicates whether SynxDB considers the session a runaway session based on the vmem memory consumption of the session’s queries. Under the resource queue-based resource management scheme, SynxDB considers the session a runaway when the queries consume an excessive amount of memory. The SynxDB server configuration parameter <code>runaway_detector_activation_percent</code> governs the conditions under which SynxDB considers a session a runaway session.</p>
+<p>The <code>is_runaway</code>, <code>runaway_vmem_mb</code>, and <code>runaway_command_cnt</code> columns are not applicable when resource group-based resource management is active.</p>
+<div class="table-wrapper"><table><thead><tr><th>column</th><th>type</th><th>references</th><th>description</th></tr></thead><tbody>
+<tr><td><code>datname</code></td><td>name</td><td> </td><td>Name of the database that the session is connected to.</td></tr>
+<tr><td><code>sess_id</code></td><td>integer</td><td> </td><td>Session ID.</td></tr>
+<tr><td><code>usename</code></td><td>name</td><td> </td><td>Name of the session user.</td></tr>
+<tr><td><code>query</code></td><td>text</td><td> </td><td>Current SQL query that the session is running.</td></tr>
+<tr><td><code>segid</code></td><td>integer</td><td> </td><td>Segment ID.</td></tr>
+<tr><td><code>vmem_mb</code></td><td>integer</td><td> </td><td>Total vmem memory usage for the session in MB.</td></tr>
+<tr><td><code>is_runaway</code></td><td>boolean</td><td> </td><td>Session is marked as runaway on the segment.</td></tr>
+<tr><td><code>qe_count</code></td><td>integer</td><td> </td><td>Number of query processes for the session.</td></tr>
+<tr><td><code>active_qe_count</code></td><td>integer</td><td> </td><td>Number of active query processes for the session.</td></tr>
+<tr><td><code>dirty_qe_count</code></td><td>integer</td><td> </td><td>Number of query processes that have not yet released their memory. The value is <code>-1</code> for sessions that are not running.</td></tr>
+<tr><td><code>runaway_vmem_mb</code></td><td>integer</td><td> </td><td>Amount of vmem memory that the session was consuming when it was marked as a runaway session.</td></tr>
+<tr><td><code>runaway_command_cnt</code></td><td>integer</td><td> </td><td>Command count for the session when it was marked as a runaway session.</td></tr>
+<tr><td><code>idle_start</code></td><td>timestamptz</td><td> </td><td>The last time a query process in this session became idle.</td></tr>
+</tbody></table>
+</div>
+<h2 id="viewing-query-workfile-usage-information"><a class="header" href="#viewing-query-workfile-usage-information"><a id="topic27"></a>Viewing Query Workfile Usage Information</a></h2>
+<p>The SynxDB administrative schema <em>gp_toolkit</em> contains views that display information about SynxDB workfiles. SynxDB creates workfiles on disk if it does not have sufficient memory to run the query in memory. This information can be used for troubleshooting and tuning queries. The information in the views can also be used to specify the values for the SynxDB configuration parameters <code>gp_workfile_limit_per_query</code> and <code>gp_workfile_limit_per_segment</code>.</p>
+<p>These are the views in the schema <em>gp_toolkit</em>:</p>
+<ul>
+<li>The gp_workfile_entries view contains one row for each operator using disk space for workfiles on a segment at the current time.</li>
+<li>The gp_workfile_usage_per_query view contains one row for each query using disk space for workfiles on a segment at the current time.</li>
+<li>The gp_workfile_usage_per_segment view contains one row for each segment. Each row displays the total amount of disk space used for workfiles on the segment at the current time.</li>
+</ul>
+<p>For information about using <em>gp_toolkit</em>, see <a href="#topic31">Using gp_toolkit</a>.</p>
+<h2 id="viewing-the-database-server-log-files"><a class="header" href="#viewing-the-database-server-log-files"><a id="topic28"></a>Viewing the Database Server Log Files</a></h2>
+<p>Every database instance in SynxDB (master and segments) runs a PostgreSQL database server with its own server log file. Log files are created in the <code>log</code> directory of the master and each segment data directory.</p>
+<h3 id="log-file-format"><a class="header" href="#log-file-format"><a id="topic29"></a>Log File Format</a></h3>
+<p>The server log files are written in comma-separated values (CSV) format. Some log entries will not have values for all log fields. For example, only log entries associated with a query worker process will have the <code>slice_id</code> populated. You can identify related log entries of a particular query by the query’s session identifier (<code>gp_session_id</code>) and command identifier (<code>gp_command_count</code>).</p>
+<p>The following fields are written to the log:</p>
+<div class="table-wrapper"><table><thead><tr><th>Number</th><th>Field Name</th><th>Data Type</th><th>Description</th></tr></thead><tbody>
+<tr><td>1</td><td>event_time</td><td>timestamp with time zone</td><td>Time that the log entry was written to the log</td></tr>
+<tr><td>2</td><td>user_name</td><td>varchar(100)</td><td>The database user name</td></tr>
+<tr><td>3</td><td>database_name</td><td>varchar(100)</td><td>The database name</td></tr>
+<tr><td>4</td><td>process_id</td><td>varchar(10)</td><td>The system process ID (prefixed with “p”)</td></tr>
+<tr><td>5</td><td>thread_id</td><td>varchar(50)</td><td>The thread count (prefixed with “th”)</td></tr>
+<tr><td>6</td><td>remote_host</td><td>varchar(100)</td><td>On the master, the hostname/address of the client machine. On the segment, the hostname/address of the master.</td></tr>
+<tr><td>7</td><td>remote_port</td><td>varchar(10)</td><td>The segment or master port number</td></tr>
+<tr><td>8</td><td>session_start_time</td><td>timestamp with time zone</td><td>Time session connection was opened</td></tr>
+<tr><td>9</td><td>transaction_id</td><td>int</td><td>Top-level transaction ID on the master. This ID is the parent of any subtransactions.</td></tr>
+<tr><td>10</td><td>gp_session_id</td><td>text</td><td>Session identifier number (prefixed with “con”)</td></tr>
+<tr><td>11</td><td>gp_command_count</td><td>text</td><td>The command number within a session (prefixed with “cmd”)</td></tr>
+<tr><td>12</td><td>gp_segment</td><td>text</td><td>The segment content identifier (prefixed with “seg” for primaries or “mir” for mirrors). The master always has a content ID of -1.</td></tr>
+<tr><td>13</td><td>slice_id</td><td>text</td><td>The slice ID (portion of the query plan being executed)</td></tr>
+<tr><td>14</td><td>distr_tranx_id</td><td>text</td><td>Distributed transaction ID</td></tr>
+<tr><td>15</td><td>local_tranx_id</td><td>text</td><td>Local transaction ID</td></tr>
+<tr><td>16</td><td>sub_tranx_id</td><td>text</td><td>Subtransaction ID</td></tr>
+<tr><td>17</td><td>event_severity</td><td>varchar(10)</td><td>Values include: LOG, ERROR, FATAL, PANIC, DEBUG1, DEBUG2</td></tr>
+<tr><td>18</td><td>sql_state_code</td><td>varchar(10)</td><td>SQL state code associated with the log message</td></tr>
+<tr><td>19</td><td>event_message</td><td>text</td><td>Log or error message text</td></tr>
+<tr><td>20</td><td>event_detail</td><td>text</td><td>Detail message text associated with an error or warning message</td></tr>
+<tr><td>21</td><td>event_hint</td><td>text</td><td>Hint message text associated with an error or warning message</td></tr>
+<tr><td>22</td><td>internal_query</td><td>text</td><td>The internally-generated query text</td></tr>
+<tr><td>23</td><td>internal_query_pos</td><td>int</td><td>The cursor index into the internally-generated query text</td></tr>
+<tr><td>24</td><td>event_context</td><td>text</td><td>The context in which this message gets generated</td></tr>
+<tr><td>25</td><td>debug_query_string</td><td>text</td><td>User-supplied query string with full detail for debugging. This string can be modified for internal use.</td></tr>
+<tr><td>26</td><td>error_cursor_pos</td><td>int</td><td>The cursor index into the query string</td></tr>
+<tr><td>27</td><td>func_name</td><td>text</td><td>The function in which this message is generated</td></tr>
+<tr><td>28</td><td>file_name</td><td>text</td><td>The internal code file where the message originated</td></tr>
+<tr><td>29</td><td>file_line</td><td>int</td><td>The line of the code file where the message originated</td></tr>
+<tr><td>30</td><td>stack_trace</td><td>text</td><td>Stack trace text associated with this message</td></tr>
+</tbody></table>
+</div>
+<h3 id="searching-the-synxdb-server-log-files"><a class="header" href="#searching-the-synxdb-server-log-files"><a id="topic30"></a>Searching the SynxDB Server Log Files</a></h3>
+<p>SynxDB provides a utility called <code>gplogfilter</code> can search through a SynxDB log file for entries matching the specified criteria. By default, this utility searches through the SynxDB master log file in the default logging location. For example, to display the last three lines of each of the log files under the master directory:</p>
+<pre><code>$ gplogfilter -n 3
+
+</code></pre>
+<p>To search through all segment log files simultaneously, run <code>gplogfilter</code> through the <code>gpssh</code> utility. For example, to display the last three lines of each segment log file:</p>
+<pre><code>$ gpssh -f seg_host_file
+
+</code></pre>
+<pre><code>=&gt; source /usr/local/synxdb/synxdb_path.sh
+=&gt; gplogfilter -n 3 /gpdata/gp*/log/gpdb*.log
+</code></pre>
+<h2 id="using-gp_toolkit"><a class="header" href="#using-gp_toolkit"><a id="topic31"></a>Using gp_toolkit</a></h2>
+<p>Use the SynxDB administrative schema <em>gp_toolkit</em> to query the system catalogs, log files, and operating environment for system status information. The <code>gp_toolkit</code> schema contains several views you can access using SQL commands. The <em>gp_toolkit</em> schema is accessible to all database users. Some objects require superuser permissions. Use a command similar to the following to add the <em>gp_toolkit</em> schema to your schema search path:</p>
+<pre><code>=&gt; ALTER ROLE myrole SET search_path TO myschema,gp_toolkit;
+</code></pre>
+<p>For a description of the available administrative schema views and their usages, see the <em>SynxDB Reference Guide</em>.</p>
+<h2 id="sql-standard-error-codes"><a class="header" href="#sql-standard-error-codes"><a id="topic_pyh_sqg_kp"></a>SQL Standard Error Codes</a></h2>
+<p>The following table lists all the defined error codes. Some are not used, but are defined by the SQL standard. The error classes are also shown. For each error class there is a standard error code having the last three characters 000. This code is used only for error conditions that fall within the class but do not have any more-specific code assigned.</p>
+<p>The PL/pgSQL condition name for each error code is the same as the phrase shown in the table, with underscores substituted for spaces. For example, code 22012, DIVISION BY ZERO, has condition name DIVISION_BY_ZERO. Condition names can be written in either upper or lower case.</p>
+<blockquote>
+<p><strong>Note</strong> PL/pgSQL does not recognize warning, as opposed to error, condition names; those are classes 00, 01, and 02.</p>
+</blockquote>
+<div class="table-wrapper"><table><thead><tr><th>Error Code</th><th>Meaning</th><th>Constant</th></tr></thead><tbody>
+<tr><td><strong>Class 00</strong>— Successful Completion</td><td></td><td></td></tr>
+<tr><td>00000</td><td>SUCCESSFUL COMPLETION</td><td>successful_completion</td></tr>
+<tr><td>Class 01 — Warning</td><td></td><td></td></tr>
+<tr><td>01000</td><td>WARNING</td><td>warning</td></tr>
+<tr><td>0100C</td><td>DYNAMIC RESULT SETS RETURNED</td><td>dynamic_result_sets_returned</td></tr>
+<tr><td>01008</td><td>IMPLICIT ZERO BIT PADDING</td><td>implicit_zero_bit_padding</td></tr>
+<tr><td>01003</td><td>NULL VALUE ELIMINATED IN SET FUNCTION</td><td>null_value_eliminated_in_set_function</td></tr>
+<tr><td>01007</td><td>PRIVILEGE NOT GRANTED</td><td>privilege_not_granted</td></tr>
+<tr><td>01006</td><td>PRIVILEGE NOT REVOKED</td><td>privilege_not_revoked</td></tr>
+<tr><td>01004</td><td>STRING DATA RIGHT TRUNCATION</td><td>string_data_right_truncation</td></tr>
+<tr><td>01P01</td><td>DEPRECATED FEATURE</td><td>deprecated_feature</td></tr>
+<tr><td><strong>Class 02</strong> — No Data (this is also a warning class per the SQL standard)</td><td></td><td></td></tr>
+<tr><td>02000</td><td>NO DATA</td><td>no_data</td></tr>
+<tr><td>02001</td><td>NO ADDITIONAL DYNAMIC RESULT SETS RETURNED</td><td>no_additional_dynamic_result_sets_returned</td></tr>
+<tr><td><strong>Class 03</strong> — SQL Statement Not Yet Complete</td><td></td><td></td></tr>
+<tr><td>03000</td><td>SQL STATEMENT NOT YET COMPLETE</td><td>sql_statement_not_yet_complete</td></tr>
+<tr><td><strong>Class 08</strong> — Connection Exception</td><td></td><td></td></tr>
+<tr><td>08000</td><td>CONNECTION EXCEPTION</td><td>connection_exception</td></tr>
+<tr><td>08003</td><td>CONNECTION DOES NOT EXIST</td><td>connection_does_not_exist</td></tr>
+<tr><td>08006</td><td>CONNECTION FAILURE</td><td>connection_failure</td></tr>
+<tr><td>08001</td><td>SQLCLIENT UNABLE TO ESTABLISH SQLCONNECTION</td><td>sqlclient_unable_to_establish_sqlconnection</td></tr>
+<tr><td>08004</td><td>SQLSERVER REJECTED ESTABLISHMENT OF SQLCONNECTION</td><td>sqlserver_rejected_establishment_of_sqlconnection</td></tr>
+<tr><td>08007</td><td>TRANSACTION RESOLUTION UNKNOWN</td><td>transaction_resolution_unknown</td></tr>
+<tr><td>08P01</td><td>PROTOCOL VIOLATION</td><td>protocol_violation</td></tr>
+<tr><td><strong>Class 09</strong> — Triggered Action Exception</td><td></td><td></td></tr>
+<tr><td>09000</td><td>TRIGGERED ACTION EXCEPTION</td><td>triggered_action_exception</td></tr>
+<tr><td><strong>Class 0A</strong> — Feature Not Supported</td><td></td><td></td></tr>
+<tr><td>0A000</td><td>FEATURE NOT SUPPORTED</td><td>feature_not_supported</td></tr>
+<tr><td><strong>Class 0B</strong> — Invalid Transaction Initiation</td><td></td><td></td></tr>
+<tr><td>0B000</td><td>INVALID TRANSACTION INITIATION</td><td>invalid_transaction_initiation</td></tr>
+<tr><td><strong>Class 0F</strong> — Locator Exception</td><td></td><td></td></tr>
+<tr><td>0F000</td><td>LOCATOR EXCEPTION</td><td>locator_exception</td></tr>
+<tr><td>0F001</td><td>INVALID LOCATOR SPECIFICATION</td><td>invalid_locator_specification</td></tr>
+<tr><td><strong>Class 0L</strong> — Invalid Grantor</td><td></td><td></td></tr>
+<tr><td>0L000</td><td>INVALID GRANTOR</td><td>invalid_grantor</td></tr>
+<tr><td>0LP01</td><td>INVALID GRANT OPERATION</td><td>invalid_grant_operation</td></tr>
+<tr><td><strong>Class 0P</strong> — Invalid Role Specification</td><td></td><td></td></tr>
+<tr><td>0P000</td><td>INVALID ROLE SPECIFICATION</td><td>invalid_role_specification</td></tr>
+<tr><td><strong>Class 21</strong> — Cardinality Violation</td><td></td><td></td></tr>
+<tr><td>21000</td><td>CARDINALITY VIOLATION</td><td>cardinality_violation</td></tr>
+<tr><td><strong>Class 22</strong> — Data Exception</td><td></td><td></td></tr>
+<tr><td>22000</td><td>DATA EXCEPTION</td><td>data_exception</td></tr>
+<tr><td>2202E</td><td>ARRAY SUBSCRIPT ERROR</td><td>array_subscript_error</td></tr>
+<tr><td>22021</td><td>CHARACTER NOT IN REPERTOIRE</td><td>character_not_in_repertoire</td></tr>
+<tr><td>22008</td><td>DATETIME FIELD OVERFLOW</td><td>datetime_field_overflow</td></tr>
+<tr><td>22012</td><td>DIVISION BY ZERO</td><td>division_by_zero</td></tr>
+<tr><td>22005</td><td>ERROR IN ASSIGNMENT</td><td>error_in_assignment</td></tr>
+<tr><td>2200B</td><td>ESCAPE CHARACTER CONFLICT</td><td>escape_character_conflict</td></tr>
+<tr><td>22022</td><td>INDICATOR OVERFLOW</td><td>indicator_overflow</td></tr>
+<tr><td>22015</td><td>INTERVAL FIELD OVERFLOW</td><td>interval_field_overflow</td></tr>
+<tr><td>2201E</td><td>INVALID ARGUMENT FOR LOGARITHM</td><td>invalid_argument_for_logarithm</td></tr>
+<tr><td>2201F</td><td>INVALID ARGUMENT FOR POWER FUNCTION</td><td>invalid_argument_for_power_function</td></tr>
+<tr><td>2201G</td><td>INVALID ARGUMENT FOR WIDTH BUCKET FUNCTION</td><td>invalid_argument_for_width_bucket_function</td></tr>
+<tr><td>22018</td><td>INVALID CHARACTER VALUE FOR CAST</td><td>invalid_character_value_for_cast</td></tr>
+<tr><td>22007</td><td>INVALID DATETIME FORMAT</td><td>invalid_datetime_format</td></tr>
+<tr><td>22019</td><td>INVALID ESCAPE CHARACTER</td><td>invalid_escape_character</td></tr>
+<tr><td>2200D</td><td>INVALID ESCAPE OCTET</td><td>invalid_escape_octet</td></tr>
+<tr><td>22025</td><td>INVALID ESCAPE SEQUENCE</td><td>invalid_escape_sequence</td></tr>
+<tr><td>22P06</td><td>NONSTANDARD USE OF ESCAPE CHARACTER</td><td>nonstandard_use_of_escape_character</td></tr>
+<tr><td>22010</td><td>INVALID INDICATOR PARAMETER VALUE</td><td>invalid_indicator_parameter_value</td></tr>
+<tr><td>22020</td><td>INVALID LIMIT VALUE</td><td>invalid_limit_value</td></tr>
+<tr><td>22023</td><td>INVALID PARAMETER VALUE</td><td>invalid_parameter_value</td></tr>
+<tr><td>2201B</td><td>INVALID REGULAR EXPRESSION</td><td>invalid_regular_expression</td></tr>
+<tr><td>22009</td><td>INVALID TIME ZONE DISPLACEMENT VALUE</td><td>invalid_time_zone_displacement_value</td></tr>
+<tr><td>2200C</td><td>INVALID USE OF ESCAPE CHARACTER</td><td>invalid_use_of_escape_character</td></tr>
+<tr><td>2200G</td><td>MOST SPECIFIC TYPE MISMATCH</td><td>most_specific_type_mismatch</td></tr>
+<tr><td>22004</td><td>NULL VALUE NOT ALLOWED</td><td>null_value_not_allowed</td></tr>
+<tr><td>22002</td><td>NULL VALUE NO INDICATOR PARAMETER</td><td>null_value_no_indicator_parameter</td></tr>
+<tr><td>22003</td><td>NUMERIC VALUE OUT OF RANGE</td><td>numeric_value_out_of_range</td></tr>
+<tr><td>22026</td><td>STRING DATA LENGTH MISMATCH</td><td>string_data_length_mismatch</td></tr>
+<tr><td>22001</td><td>STRING DATA RIGHT TRUNCATION</td><td>string_data_right_truncation</td></tr>
+<tr><td>22011</td><td>SUBSTRING ERROR</td><td>substring_error</td></tr>
+<tr><td>22027</td><td>TRIM ERROR</td><td>trim_error</td></tr>
+<tr><td>22024</td><td>UNTERMINATED C STRING</td><td>unterminated_c_string</td></tr>
+<tr><td>2200F</td><td>ZERO LENGTH CHARACTER STRING</td><td>zero_length_character_string</td></tr>
+<tr><td>22P01</td><td>FLOATING POINT EXCEPTION</td><td>floating_point_exception</td></tr>
+<tr><td>22P02</td><td>INVALID TEXT REPRESENTATION</td><td>invalid_text_representation</td></tr>
+<tr><td>22P03</td><td>INVALID BINARY REPRESENTATION</td><td>invalid_binary_representation</td></tr>
+<tr><td>22P04</td><td>BAD COPY FILE FORMAT</td><td>bad_copy_file_format</td></tr>
+<tr><td>22P05</td><td>UNTRANSLATABLE CHARACTER</td><td>untranslatable_character</td></tr>
+<tr><td><strong>Class 23</strong> — Integrity Constraint Violation</td><td></td><td></td></tr>
+<tr><td>23000</td><td>INTEGRITY CONSTRAINT VIOLATION</td><td>integrity_constraint_violation</td></tr>
+<tr><td>23001</td><td>RESTRICT VIOLATION</td><td>restrict_violation</td></tr>
+<tr><td>23502</td><td>NOT NULL VIOLATION</td><td>not_null_violation</td></tr>
+<tr><td>23503</td><td>FOREIGN KEY VIOLATION</td><td>foreign_key_violation</td></tr>
+<tr><td>23505</td><td>UNIQUE VIOLATION</td><td>unique_violation</td></tr>
+<tr><td>23514</td><td>CHECK VIOLATION</td><td>check_violation</td></tr>
+<tr><td><strong>Class 24</strong> — Invalid Cursor State</td><td></td><td></td></tr>
+<tr><td>24000</td><td>INVALID CURSOR STATE</td><td>invalid_cursor_state</td></tr>
+<tr><td><strong>Class 25</strong> — Invalid Transaction State</td><td></td><td></td></tr>
+<tr><td>25000</td><td>INVALID TRANSACTION STATE</td><td>invalid_transaction_state</td></tr>
+<tr><td>25001</td><td>ACTIVE SQL TRANSACTION</td><td>active_sql_transaction</td></tr>
+<tr><td>25002</td><td>BRANCH TRANSACTION ALREADY ACTIVE</td><td>branch_transaction_already_active</td></tr>
+<tr><td>25008</td><td>HELD CURSOR REQUIRES SAME ISOLATION LEVEL</td><td>held_cursor_requires_same_isolation_level</td></tr>
+<tr><td>25003</td><td>INAPPROPRIATE ACCESS MODE FOR BRANCH TRANSACTION</td><td>inappropriate_access_mode_for_branch_transaction</td></tr>
+<tr><td>25004</td><td>INAPPROPRIATE ISOLATION LEVEL FOR BRANCH TRANSACTION</td><td>inappropriate_isolation_level_for_branch_transaction</td></tr>
+<tr><td>25005</td><td>NO ACTIVE SQL TRANSACTION FOR BRANCH TRANSACTION</td><td>no_active_sql_transaction_for_branch_transaction</td></tr>
+<tr><td>25006</td><td>READ ONLY SQL TRANSACTION</td><td>read_only_sql_transaction</td></tr>
+<tr><td>25007</td><td>SCHEMA AND DATA STATEMENT MIXING NOT SUPPORTED</td><td>schema_and_data_statement_mixing_not_supported</td></tr>
+<tr><td>25P01</td><td>NO ACTIVE SQL TRANSACTION</td><td>no_active_sql_transaction</td></tr>
+<tr><td>25P02</td><td>IN FAILED SQL TRANSACTION</td><td>in_failed_sql_transaction</td></tr>
+<tr><td><strong>Class 26</strong> — Invalid SQL Statement Name</td><td></td><td></td></tr>
+<tr><td>26000</td><td>INVALID SQL STATEMENT NAME</td><td>invalid_sql_statement_name</td></tr>
+<tr><td><strong>Class 27</strong> — Triggered Data Change Violation</td><td></td><td></td></tr>
+<tr><td>27000</td><td>TRIGGERED DATA CHANGE VIOLATION</td><td>triggered_data_change_violation</td></tr>
+<tr><td><strong>Class 28</strong> — Invalid Authorization Specification</td><td></td><td></td></tr>
+<tr><td>28000</td><td>INVALID AUTHORIZATION SPECIFICATION</td><td>invalid_authorization_specification</td></tr>
+<tr><td><strong>Class 2B</strong> — Dependent Privilege Descriptors Still Exist</td><td></td><td></td></tr>
+<tr><td>2B000</td><td>DEPENDENT PRIVILEGE DESCRIPTORS STILL EXIST</td><td>dependent_privilege_descriptors_still_exist</td></tr>
+<tr><td>2BP01</td><td>DEPENDENT OBJECTS STILL EXIST</td><td>dependent_objects_still_exist</td></tr>
+<tr><td><strong>Class 2D</strong> — Invalid Transaction Termination</td><td></td><td></td></tr>
+<tr><td>2D000</td><td>INVALID TRANSACTION TERMINATION</td><td>invalid_transaction_termination</td></tr>
+<tr><td><strong>Class 2F</strong> — SQL Routine Exception</td><td></td><td></td></tr>
+<tr><td>2F000</td><td>SQL ROUTINE EXCEPTION</td><td>sql_routine_exception</td></tr>
+<tr><td>2F005</td><td>FUNCTION EXECUTED NO RETURN STATEMENT</td><td>function_executed_no_return_statement</td></tr>
+<tr><td>2F002</td><td>MODIFYING SQL DATA NOT PERMITTED</td><td>modifying_sql_data_not_permitted</td></tr>
+<tr><td>2F003</td><td>PROHIBITED SQL STATEMENT ATTEMPTED</td><td>prohibited_sql_statement_attempted</td></tr>
+<tr><td>2F004</td><td>READING SQL DATA NOT PERMITTED</td><td>reading_sql_data_not_permitted</td></tr>
+<tr><td><strong>Class 34</strong> — Invalid Cursor Name</td><td></td><td></td></tr>
+<tr><td>34000</td><td>INVALID CURSOR NAME</td><td>invalid_cursor_name</td></tr>
+<tr><td><strong>Class 38</strong> — External Routine Exception</td><td></td><td></td></tr>
+<tr><td>38000</td><td>EXTERNAL ROUTINE EXCEPTION</td><td>external_routine_exception</td></tr>
+<tr><td>38001</td><td>CONTAINING SQL NOT PERMITTED</td><td>containing_sql_not_permitted</td></tr>
+<tr><td>38002</td><td>MODIFYING SQL DATA NOT PERMITTED</td><td>modifying_sql_data_not_permitted</td></tr>
+<tr><td>38003</td><td>PROHIBITED SQL STATEMENT ATTEMPTED</td><td>prohibited_sql_statement_attempted</td></tr>
+<tr><td>38004</td><td>READING SQL DATA NOT PERMITTED</td><td>reading_sql_data_not_permitted</td></tr>
+<tr><td><strong>Class 39</strong> — External Routine Invocation Exception</td><td></td><td></td></tr>
+<tr><td>39000</td><td>EXTERNAL ROUTINE INVOCATION EXCEPTION</td><td>external_routine_invocation_exception</td></tr>
+<tr><td>39001</td><td>INVALID SQLSTATE RETURNED</td><td>invalid_sqlstate_returned</td></tr>
+<tr><td>39004</td><td>NULL VALUE NOT ALLOWED</td><td>null_value_not_allowed</td></tr>
+<tr><td>39P01</td><td>TRIGGER PROTOCOL VIOLATED</td><td>trigger_protocol_violated</td></tr>
+<tr><td>39P02</td><td>SRF PROTOCOL VIOLATED</td><td>srf_protocol_violated</td></tr>
+<tr><td><strong>Class 3B</strong> — Savepoint Exception</td><td></td><td></td></tr>
+<tr><td>3B000</td><td>SAVEPOINT EXCEPTION</td><td>savepoint_exception</td></tr>
+<tr><td>3B001</td><td>INVALID SAVEPOINT SPECIFICATION</td><td>invalid_savepoint_specification</td></tr>
+<tr><td><strong>Class 3D</strong> — Invalid Catalog Name</td><td></td><td></td></tr>
+<tr><td>3D000</td><td>INVALID CATALOG NAME</td><td>invalid_catalog_name</td></tr>
+<tr><td><strong>Class 3F</strong> — Invalid Schema Name</td><td></td><td></td></tr>
+<tr><td>3F000</td><td>INVALID SCHEMA NAME</td><td>invalid_schema_name</td></tr>
+<tr><td><strong>Class 40</strong> — Transaction Rollback</td><td></td><td></td></tr>
+<tr><td>40000</td><td>TRANSACTION ROLLBACK</td><td>transaction_rollback</td></tr>
+<tr><td>40002</td><td>TRANSACTION INTEGRITY CONSTRAINT VIOLATION</td><td>transaction_integrity_constraint_violation</td></tr>
+<tr><td>40001</td><td>SERIALIZATION FAILURE</td><td>serialization_failure</td></tr>
+<tr><td>40003</td><td>STATEMENT COMPLETION UNKNOWN</td><td>statement_completion_unknown</td></tr>
+<tr><td>40P01</td><td>DEADLOCK DETECTED</td><td>deadlock_detected</td></tr>
+<tr><td><strong>Class 42</strong> — Syntax Error or Access Rule Violation</td><td></td><td></td></tr>
+<tr><td>42000</td><td>SYNTAX ERROR OR ACCESS RULE VIOLATION</td><td>syntax_error_or_access_rule_violation</td></tr>
+<tr><td>42601</td><td>SYNTAX ERROR</td><td>syntax_error</td></tr>
+<tr><td>42501</td><td>INSUFFICIENT PRIVILEGE</td><td>insufficient_privilege</td></tr>
+<tr><td>42846</td><td>CANNOT COERCE</td><td>cannot_coerce</td></tr>
+<tr><td>42803</td><td>GROUPING ERROR</td><td>grouping_error</td></tr>
+<tr><td>42830</td><td>INVALID FOREIGN KEY</td><td>invalid_foreign_key</td></tr>
+<tr><td>42602</td><td>INVALID NAME</td><td>invalid_name</td></tr>
+<tr><td>42622</td><td>NAME TOO LONG</td><td>name_too_long</td></tr>
+<tr><td>42939</td><td>RESERVED NAME</td><td>reserved_name</td></tr>
+<tr><td>42804</td><td>DATATYPE MISMATCH</td><td>datatype_mismatch</td></tr>
+<tr><td>42P18</td><td>INDETERMINATE DATATYPE</td><td>indeterminate_datatype</td></tr>
+<tr><td>42809</td><td>WRONG OBJECT TYPE</td><td>wrong_object_type</td></tr>
+<tr><td>42703</td><td>UNDEFINED COLUMN</td><td>undefined_column</td></tr>
+<tr><td>42883</td><td>UNDEFINED FUNCTION</td><td>undefined_function</td></tr>
+<tr><td>42P01</td><td>UNDEFINED TABLE</td><td>undefined_table</td></tr>
+<tr><td>42P02</td><td>UNDEFINED PARAMETER</td><td>undefined_parameter</td></tr>
+<tr><td>42704</td><td>UNDEFINED OBJECT</td><td>undefined_object</td></tr>
+<tr><td>42701</td><td>DUPLICATE COLUMN</td><td>duplicate_column</td></tr>
+<tr><td>42P03</td><td>DUPLICATE CURSOR</td><td>duplicate_cursor</td></tr>
+<tr><td>42P04</td><td>DUPLICATE DATABASE</td><td>duplicate_database</td></tr>
+<tr><td>42723</td><td>DUPLICATE FUNCTION</td><td>duplicate_function</td></tr>
+<tr><td>42P05</td><td>DUPLICATE PREPARED STATEMENT</td><td>duplicate_prepared_statement</td></tr>
+<tr><td>42P06</td><td>DUPLICATE SCHEMA</td><td>duplicate_schema</td></tr>
+<tr><td>42P07</td><td>DUPLICATE TABLE</td><td>duplicate_table</td></tr>
+<tr><td>42712</td><td>DUPLICATE ALIAS</td><td>duplicate_alias</td></tr>
+<tr><td>42710</td><td>DUPLICATE OBJECT</td><td>duplicate_object</td></tr>
+<tr><td>42702</td><td>AMBIGUOUS COLUMN</td><td>ambiguous_column</td></tr>
+<tr><td>42725</td><td>AMBIGUOUS FUNCTION</td><td>ambiguous_function</td></tr>
+<tr><td>42P08</td><td>AMBIGUOUS PARAMETER</td><td>ambiguous_parameter</td></tr>
+<tr><td>42P09</td><td>AMBIGUOUS ALIAS</td><td>ambiguous_alias</td></tr>
+<tr><td>42P10</td><td>INVALID COLUMN REFERENCE</td><td>invalid_column_reference</td></tr>
+<tr><td>42611</td><td>INVALID COLUMN DEFINITION</td><td>invalid_column_definition</td></tr>
+<tr><td>42P11</td><td>INVALID CURSOR DEFINITION</td><td>invalid_cursor_definition</td></tr>
+<tr><td>42P12</td><td>INVALID DATABASE DEFINITION</td><td>invalid_database_definition</td></tr>
+<tr><td>42P13</td><td>INVALID FUNCTION DEFINITION</td><td>invalid_function_definition</td></tr>
+<tr><td>42P14</td><td>INVALID PREPARED STATEMENT DEFINITION</td><td>invalid_prepared_statement_definition</td></tr>
+<tr><td>42P15</td><td>INVALID SCHEMA DEFINITION</td><td>invalid_schema_definition</td></tr>
+<tr><td>42P16</td><td>INVALID TABLE DEFINITION</td><td>invalid_table_definition</td></tr>
+<tr><td>42P17</td><td>INVALID OBJECT DEFINITION</td><td>invalid_object_definition</td></tr>
+<tr><td><strong>Class 44</strong> — WITH CHECK OPTION Violation</td><td></td><td></td></tr>
+<tr><td>44000</td><td>WITH CHECK OPTION VIOLATION</td><td>with_check_option_violation</td></tr>
+<tr><td><strong>Class 53</strong> — Insufficient Resources</td><td></td><td></td></tr>
+<tr><td>53000</td><td>INSUFFICIENT RESOURCES</td><td>insufficient_resources</td></tr>
+<tr><td>53100</td><td>DISK FULL</td><td>disk_full</td></tr>
+<tr><td>53200</td><td>OUT OF MEMORY</td><td>out_of_memory</td></tr>
+<tr><td>53300</td><td>TOO MANY CONNECTIONS</td><td>too_many_connections</td></tr>
+<tr><td><strong>Class 54</strong> — Program Limit Exceeded</td><td></td><td></td></tr>
+<tr><td>54000</td><td>PROGRAM LIMIT EXCEEDED</td><td>program_limit_exceeded</td></tr>
+<tr><td>54001</td><td>STATEMENT TOO COMPLEX</td><td>statement_too_complex</td></tr>
+<tr><td>54011</td><td>TOO MANY COLUMNS</td><td>too_many_columns</td></tr>
+<tr><td>54023</td><td>TOO MANY ARGUMENTS</td><td>too_many_arguments</td></tr>
+<tr><td><strong>Class 55</strong> — Object Not In Prerequisite State</td><td></td><td></td></tr>
+<tr><td>55000</td><td>OBJECT NOT IN PREREQUISITE STATE</td><td>object_not_in_prerequisite_state</td></tr>
+<tr><td>55006</td><td>OBJECT IN USE</td><td>object_in_use</td></tr>
+<tr><td>55P02</td><td>CANT CHANGE RUNTIME PARAM</td><td>cant_change_runtime_param</td></tr>
+<tr><td>55P03</td><td>LOCK NOT AVAILABLE</td><td>lock_not_available</td></tr>
+<tr><td><strong>Class 57</strong> — Operator Intervention</td><td></td><td></td></tr>
+<tr><td>57000</td><td>OPERATOR INTERVENTION</td><td>operator_intervention</td></tr>
+<tr><td>57014</td><td>QUERY CANCELED</td><td>query_canceled</td></tr>
+<tr><td>57P01</td><td>ADMIN SHUTDOWN</td><td>admin_shutdown</td></tr>
+<tr><td>57P02</td><td>CRASH SHUTDOWN</td><td>crash_shutdown</td></tr>
+<tr><td>57P03</td><td>CANNOT CONNECT NOW</td><td>cannot_connect_now</td></tr>
+<tr><td><strong>Class 58</strong> — System Error (errors external to SynxDB )</td><td></td><td></td></tr>
+<tr><td>58030</td><td>IO ERROR</td><td>io_error</td></tr>
+<tr><td>58P01</td><td>UNDEFINED FILE</td><td>undefined_file</td></tr>
+<tr><td>58P02</td><td>DUPLICATE FILE</td><td>duplicate_file</td></tr>
+<tr><td>Class F0 — Configuration File Error</td><td></td><td></td></tr>
+<tr><td>F0000</td><td>CONFIG FILE ERROR</td><td>config_file_error</td></tr>
+<tr><td>F0001</td><td>LOCK FILE EXISTS</td><td>lock_file_exists</td></tr>
+<tr><td><strong>Class P0</strong> — PL/pgSQL Error</td><td></td><td></td></tr>
+<tr><td>P0000</td><td>PLPGSQL ERROR</td><td>plpgsql_error</td></tr>
+<tr><td>P0001</td><td>RAISE EXCEPTION</td><td>raise_exception</td></tr>
+<tr><td>P0002</td><td>NO DATA FOUND</td><td>no_data_found</td></tr>
+<tr><td>P0003</td><td>TOO MANY ROWS</td><td>too_many_rows</td></tr>
+<tr><td><strong>Class XX</strong> — Internal Error</td><td></td><td></td></tr>
+<tr><td>XX000</td><td>INTERNAL ERROR</td><td>internal_error</td></tr>
+<tr><td>XX001</td><td>DATA CORRUPTED</td><td>data_corrupted</td></tr>
+<tr><td>XX002</td><td>INDEX CORRUPTED</td><td>index_corrupted</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/managing/cbcopy-migrate.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/managing/maintain.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/managing/cbcopy-migrate.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/managing/maintain.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

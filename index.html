@@ -1,439 +1,339 @@
 <!DOCTYPE html>
-<html class="wide wow-animation" lang="en">
-<base href="https://qh.synx.fun/"> 
-
-
-<!-- Mirrored from www.tontian.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 24 Jun 2025 02:47:48 GMT -->
+<html lang="en">
 <head>
-  <title>北京企⽲科技有限公司</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="keywords" content="北京企⽲科技有限公司" />
-  <meta name="description"
-    content="北京企⽲科技有限公司是⼀家专注于为企业提供中⽴、安全、可信赖的数字化解决⽅案的服务商。我们不⽣产云，但我们深度了解每⼀家云，帮您选择最合适的云服务。为政企单位提供⼀站式解决⽅案、深耕云计算⾏业10年+、已为100+客户提供⾼可⽤、⾼性价⽐的数字化落地⽅案" />
-  <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="css/bootstrap.css">
-  <link rel="stylesheet" href="css/fonts.css">
-  <link rel="stylesheet" href="css/style.css">
-  <style>
-    .ie-panel {
-      display: none;
-      background: #212121;
-      padding: 10px 0;
-      box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, .3);
-      clear: both;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SynxDB Documentation - Version Selector</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ===== ENTERPRISE PROFESSIONAL THEME ===== */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --text-muted: #6c757d;
+            --accent: #343a40;
+            --accent-hover: #495057;
+            --border: #dee2e6;
+            --border-light: #e9ecef;
+            --link: #0056b3;
+            --link-hover: #004494;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
 
-    html.ie-10 .ie-panel,
-    html.lt-ie-10 .ie-panel {
-      display: block;
-    }
-  </style>
+        /* ===== GLOBAL STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 0;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: color 0.2s ease;
+        }
+
+        .logo:hover {
+            color: var(--accent-hover);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .version-info {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+        }
+
+        .version-selector {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .version-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .version-card {
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .version-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .version-card.current {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        }
+
+        .version-card.current::before {
+            content: "CURRENT";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent);
+            color: var(--bg-primary);
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 0 12px 0 12px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .version-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .version-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .version-link {
+            display: inline-block;
+            background-color: var(--accent);
+            color: var(--bg-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid var(--accent);
+        }
+
+        .version-link:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+
+        .coming-soon {
+            background-color: var(--bg-secondary);
+            color: var(--text-muted);
+            border-color: var(--border);
+            cursor: not-allowed;
+        }
+
+        .coming-soon:hover {
+            background-color: var(--bg-secondary);
+            transform: none;
+            box-shadow: none;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 0;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-section p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .tagline {
+                font-size: 1rem;
+            }
+
+            .main-content {
+                padding: 2rem 1rem;
+            }
+
+            .version-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .version-card {
+                padding: 1.5rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+                padding: 0 1rem;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .version-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .version-card:nth-child(1) { animation-delay: 0.1s; }
+        .version-card:nth-child(2) { animation-delay: 0.2s; }
+        .version-card:nth-child(3) { animation-delay: 0.3s; }
+    </style>
 </head>
-
 <body>
-  <div class="ie-panel"><a href="../windows.microsoft.com/en-US/internet-explorer/index.html"><img
-        src="images/ie8-panel/warning_bar_0000_us.jpg" height="42" width="820"
-        alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a>
-  </div>
-  <div class="preloader">
-    <div class="preloader-body">
-      <div class="loader">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-      <p>Loading...</p>
-    </div>
-  </div>
-  <div class="page">
-    <header class="section page-header rd-navbar-transparent-wrap">
-      <!--RD Navbar-->
-      <div class="rd-navbar-wrap">
-        <nav class="rd-navbar rd-navbar-transparent" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed"
-          data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static"
-          data-lg-device-layout="rd-navbar-static" data-xl-layout="rd-navbar-static"
-          data-xl-device-layout="rd-navbar-static" data-lg-stick-up-offset="20px" data-xl-stick-up-offset="20px"
-          data-xxl-stick-up-offset="20px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
-          <div class="rd-navbar-collapse-toggle rd-navbar-fixed-element-1" data-rd-navbar-toggle=".rd-navbar-collapse">
-            <span></span>
-          </div>
-          <div class="rd-navbar-aside-outer rd-navbar-collapse">
-            <div class="rd-navbar-aside">
-              <div class="rd-navbar-info">
-              </div>
-            </div>
-          </div>
-          <div class="rd-navbar-main-outer">
-            <div class="rd-navbar-main-inner">
-              <div class="rd-navbar-main">
-                <!--RD Navbar Panel-->
-                <div class="rd-navbar-panel">
-                  <!--RD Navbar Toggle-->
-                  <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
-                  <!--RD Navbar Brand-->
-                  <div class="rd-navbar-brand">
-                    <!--Brand-->
-                    <a class="brand" href="index.html">
-                      <img class="brand-logo-dark" src="images/logo-default-293x44.png" alt="" width="146"
-                        height="22" />
-                      <img class="brand-logo-light" src="images/logo-inverse-310x44.png"
-                        style="max-width: 100%;max-height: 100%;" />
-                    </a>
-                  </div>
-                </div>
-                <div class="rd-navbar-main-element">
-                  <div class="rd-navbar-nav-wrap">
-                    <ul class="rd-navbar-nav">
-                      <li class="rd-nav-item active"><a class="rd-nav-link" href="index.html">首页</a></li>
-                      <li class="rd-nav-item"><a class="rd-nav-link" href="about.html">关于我们</a></li>
-                      <li class="rd-nav-item"><a class="rd-nav-link" href="solution.html">解决方案</a></li>
-                      <li class="rd-nav-item"><a class="rd-nav-link" href="finance_tax.html">客户案例</a></li>
-                      <li class="rd-nav-item"><a class="rd-nav-link" href="contacts.html">联系我们</a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
-      </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">SynxDB</a>
+            <p class="tagline">Modern Postgres Analytics at Scale</p>
+            <!-- <p class="version-info">Modern Postgres Analytics at Scale</p> -->
+        </div>
     </header>
-    <!--Swiper-->
-    <section class="section swiper-container swiper-slider swiper-slider-1 context-dark" data-loop="true"
-      data-autoplay="5000" data-simulate-touch="false">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide" data-slide-bg="images/index-1-slider-4-1920x768.jpg">
-          <div class="swiper-slide-caption section-lg">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-9 col-lg-7 offset-md-1 offset-xxl-0">
-                  <h1><span class="d-block" data-caption-animate="fadeInUp"
-                      data-caption-delay="100">解决方案</span><span class="d-block text-light"
-                      data-caption-animate="fadeInUp" data-caption-delay="200">&
-                      IT服务管理解决方案</span></h1>
-                  <p class="lead" data-caption-animate="fadeInUp" data-caption-delay="350">网络信息安全解决方案 应用服务迁移解决方案
-                  </p>
-                  <div class="button-wrap-default" data-caption-animate="fadeInUp" data-caption-delay="450"><a
-                      class="button button-secondary-text" href="solution.html">了解更多</a></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="version-selector">
+            <h1 class="section-title">Documentation</h1>
+            <p class="section-subtitle">Choose the version that matches your SynxDB installation</p>
+            
+            <div class="version-grid">
+                <!-- Current Version -->
+                <div class="version-card current">
+                    <h3 class="version-title">SynxDB 4.0</h3>
+                    <p class="version-description">
+                        Latest stable release documentation with the most up-to-date features, enterprise capabilities, and enhanced performance optimizations.
+                    </p>
+                    <a href="synxdb-4/index.html" class="version-link">View Documentation</a>
                 </div>
-              </div>
+
+                <!-- Future Version Placeholder -->
+                <div class="version-card">
+                    <h3 class="version-title">SynxDB Elastic 4.0 </h3>
+                    <p class="version-description">
+                        (Coming Soon) Modern cloud-native enterprise data warehouse with decoupled storage, compute and metadata, based on the Apache Cloudberry 2.0 kernel, deployed via containers.
+                    </p>
+                    <a href="synxdb-elastic-4/index.html" class="version-link">Documentation Preview</a>
+                </div>
+
+                <!-- Legacy Version Placeholder -->
+                <div class="version-card">
+                    <h3 class="version-title">SynxDB 2.0</h3>
+                    <p class="version-description">
+                        Enterprise-grade database with a scalable architecture, and can act as a drop-in replacement for Greenplum 6 to seamless migration without change your existing workloads.
+                    </p>
+                    <a href="synxdb-2/index.html" class="version-link">View Documentation</a>
             </div>
-          </div>
         </div>
-        <!-- <div class="swiper-slide" data-slide-bg="images/index-1-slider-1-1920x768.jpg">
-          <div class="swiper-slide-caption section-lg">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-9 col-lg-7 offset-md-1 offset-xxl-0">
-                  <h1><span class="d-block" data-caption-animate="fadeInUp" data-caption-delay="100">灵活用工</span><span
-                      class="d-block text-light" data-caption-animate="fadeInUp" data-caption-delay="200">& 薪酬结算</span>
-                  </h1>
-                  <p class="lead" data-caption-animate="fadeInUp" data-caption-delay="350">企业灵活用工实现费用结算和规划，提供效率</p>
-                  <div class="button-wrap-default" data-caption-animate="fadeInUp" data-caption-delay="450"><a
-                      class="button button-secondary-text" href="finance_tax.html">了解更多</a></div>
-                </div>
-              </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <p>&copy; 2025, Synx Data Labs. All rights reserved.</p>
             </div>
-          </div>
-        </div> -->
-        <div class="swiper-slide" data-slide-bg="images/index-1-slider-2-1920x768.jpg">
-          <div class="swiper-slide-caption section-lg">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-9 col-lg-7 offset-md-1 offset-xxl-0">
-                  <h1><span class="d-block" data-caption-animate="fadeInUp" data-caption-delay="100">客户案例</span><span
-                      class="d-block text-light" data-caption-animate="fadeInUp"
-                      data-caption-delay="200">上云痛点/服务架构</span></h1>
-                  <p class="lead" data-caption-animate="fadeInUp" data-caption-delay="350">成为数字化IT服务的领跑者</p>
-                  <div class="button-wrap-default" data-caption-animate="fadeInUp" data-caption-delay="450"><a
-                      class="button button-secondary-text" href="finance_tax.html">了解更多</a></div>
-                </div>
-              </div>
+            <div class="footer-section">
+                <p>SynxDB Documentation</p>
             </div>
-          </div>
         </div>
-        <!-- <div class="swiper-slide" data-slide-bg="images/index-1-slider-3-1920x768.jpg">
-          <div class="swiper-slide-caption section-lg">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-9 col-lg-7 offset-md-1 offset-xxl-0">
-                  <h1><span class="d-block" data-caption-animate="fadeInUp" data-caption-delay="100">企业咨询</span><span
-                      class="d-block text-light" data-caption-animate="fadeInUp" data-caption-delay="200">专家一对一</span>
-                  </h1>
-                  <p class="lead" data-caption-animate="fadeInUp" data-caption-delay="350">帮助企业改善经营管理，增产增效</p>
-                  <div class="button-wrap-default" data-caption-animate="fadeInUp" data-caption-delay="450"><a
-                      class="button button-secondary-text" href="finance_tax.html">了解更多</a></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
-      </div>
-      <!--Swiper Pagination-->
-      <div class="swiper-pagination-wrap">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-9 col-lg-7 offset-md-1 offset-xxl-0">
-              <div class="swiper-pagination"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!--Icon List 2-->
-    <section class="section section-sm section-sm-bottom-100 bg-primary">
-      <div class="container">
-        <div class="row row-30">
-          <div class="col-md-4 wow fadeInUp">
-            <div class="box-icon-2">
-              <div class="icon novi-icon mercury-icon-calc"></div>
-              <h5 class="title">IT服务管理解决方案</h5>
-            </div>
-          </div>
-          <div class="col-md-4 wow fadeInUp" data-wow-delay="0.2s">
-            <div class="box-icon-2">
-              <div class="icon novi-icon mercury-icon-chart"></div>
-              <h5 class="title">网络信息安全解决方案</h5>
-            </div>
-          </div>
-          <div class="col-md-4 wow fadeInUp" data-wow-delay="0.4s">
-            <div class="box-icon-2">
-              <div class="icon novi-icon mercury-icon-time-sand"></div>
-              <h5 class="title">应用服务迁移解决方案</h5>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Download Our Tax Guide App-->
-    <section class="section bg-gray-100 box-image-left">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 wow fadeInLeft">
-            <div class="section-lg section-lg-top-100">
-              <h2 class="title-icon title-icon-2"><span>关于我们<br><span class="text-light"
-                    style="font-size: .8em;">北京企⽲科技有限公司</span></span></h2>
-              <p class="big">
-                北京企⽲科技有限公司是⼀家专注于为企业提供中⽴、安全、可信赖的数字化解决⽅案的服务商。我们不⽣产云，但我们深度了解每⼀家云，帮您选择最合适的云服务。<br />
-                - 专注: 为政企单位提供⼀站式解决⽅案<br />
-                - 从业经验: 深耕云计算⾏业10年+<br />
-                - 服务客户: 已为100+客户提供⾼可⽤、⾼性价⽐的数字化落地⽅案
-              </p>
-              <div class="group-sm group-wrap-2">
-                <a class="button button-primary button-icon button-icon-right" href="about.html"><span></span>了解更多<span
-                    class="icon fa fa-caret-right"></span></a>
-                <a class="button button-icon button-icon-right button-secondary"
-                  href="contacts.html"><span>联系我们</span><span class="icon fa fa-caret-right"></span></a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- <div class="box-image-item box-image-video novi-background bg-image" style="background-image: url(images/index-874x534.jpg)"><a class="icon novi-icon fa fa-caret-right" href="//www.youtube.com/embed/KFVUxSynSXc" data-lightgallery="item"></a></div> -->
-      <div class="box-image-item novi-background bg-image" style="background-image: url(images/index-874x534.png)"><a
-          class="icon novi-icon fa fa-caret-right" href="../www.youtube.com/embed/KFVUxSynSXc"
-          data-lightgallery="item"></a></div>
-    </section>
-    <!-- Our Mission-->
-    <section class="section bg-default section-md">
-      <div class="container">
-        <div class="row row-30">
-          <div class="col-md-6">
-            <h2 class="title-icon"><span class="icon icon-default mercury-icon-target-2"></span><span>我们的<span
-                  class="text-light">使命</span></span></h2>
-            <p class="big">
-              公司秉承“成为数字化IT服务的领跑者”的愿景，以提供优质、创新的制造业、服务业数字化智能IT服务为己任，围绕“物联网”、“系统与集成”“云服务业务”“信息安全”等四大业务板块，持续打造自主研发、自主实施、自主运维的能力，发挥自身优势，将与内外部合作伙伴一起，携手共创汽车行业数字化转型的样板方案，助力企业实现“智慧”发展，赋能新发展理念。
-            </p>
-            <ul class="list-marked-2">
-              <li>IT服务管理解决方案</li>
-              <li>网络信息安全解决方案</li>
-              <li>应用服务迁移解决方案</li>
-            </ul><a class="button button-primary" href="solution.html">了解更多</a>
-          </div>
-          <div class="col-md-6">
-            <div class="row">
-              <div class="col-6">
-                <!--Box counter-->
-                <div class="box-counter">
-                  <div class="box-counter-main">
-                    <div class="counter">750</div><span>+</span>
-                  </div>
-                  <p class="box-counter-title">满意的客户</p>
-                </div>
-              </div>
-              <div class="col-6">
-                <!--Box counter-->
-                <div class="box-counter">
-                  <div class="box-counter-main">
-                    <div class="counter">30</div><span>+</span>
-                  </div>
-                  <p class="box-counter-title">团队成员</p>
-                </div>
-              </div>
-              <div class="col-6">
-                <!--Box counter-->
-                <div class="box-counter">
-                  <div class="box-counter-main">
-                    <div class="counter">243</div><span>+</span>
-                  </div>
-                  <p class="box-counter-title">成功案例</p>
-                </div>
-              </div>
-              <div class="col-6">
-                <!--Box counter-->
-                <div class="box-counter">
-                  <div class="box-counter-main">
-                    <div class="counter">99</div><span>%</span>
-                  </div>
-                  <p class="box-counter-title">满意度</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="parallax-container" data-parallax-img="images/parallax-1-1920x1026.jpg">
-      <div class="parallax-content section-xl context-dark text-center">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-md-10 col-xl-9">
-              <h2>服务 <span class="text-light">天数</span></h2>
-              <!-- <div class="heading-5 font-weight-normal">新人薪税，满足企业丰富的灵活用工、税收筹划场景需求，持续为您服务中...</div> -->
-              <!--TimeCircles-->
-              <div class="countdown" data-countdown data-to="2019-12-31">
-                <div class="countdown-block countdown-block-days">
-                  <svg class="countdown-circle" x="0" y="0" width="200" height="200" viewbox="0 0 200 200"
-                    data-progress-days="">
-                    <circle class="countdown-circle-bg" cx="100" cy="100" r="90"></circle>
-                    <circle class="countdown-circle-fg clipped" cx="100" cy="100" r="90"></circle>
-                  </svg>
-                  <div class="countdown-wrap">
-                    <div class="countdown-counter" data-counter-days="">00</div>
-                    <div class="countdown-title">天</div>
-                  </div>
-                </div>
-                <div class="countdown-block countdown-block-hours">
-                  <svg class="countdown-circle" x="0" y="0" width="200" height="200" viewbox="0 0 200 200"
-                    data-progress-hours="">
-                    <circle class="countdown-circle-bg" cx="100" cy="100" r="90"></circle>
-                    <circle class="countdown-circle-fg clipped" cx="100" cy="100" r="90"></circle>
-                  </svg>
-                  <div class="countdown-wrap">
-                    <div class="countdown-counter" data-counter-hours="">00</div>
-                    <div class="countdown-title">时</div>
-                  </div>
-                </div>
-                <div class="countdown-block countdown-block-minutes">
-                  <svg class="countdown-circle" x="0" y="0" width="200" height="200" viewbox="0 0 200 200"
-                    data-progress-minutes="">
-                    <circle class="countdown-circle-bg" cx="100" cy="100" r="90"></circle>
-                    <circle class="countdown-circle-fg clipped" cx="100" cy="100" r="90"></circle>
-                  </svg>
-                  <div class="countdown-wrap">
-                    <div class="countdown-counter" data-counter-minutes="">00</div>
-                    <div class="countdown-title">分</div>
-                  </div>
-                </div>
-                <div class="countdown-block countdown-block-seconds">
-                  <svg class="countdown-circle" x="0" y="0" width="200" height="200" viewbox="0 0 200 200"
-                    data-progress-seconds="">
-                    <circle class="countdown-circle-bg" cx="100" cy="100" r="90"></circle>
-                    <circle class="countdown-circle-fg clipped" cx="100" cy="100" r="90"></circle>
-                  </svg>
-                  <div class="countdown-wrap">
-                    <div class="countdown-counter" data-counter-seconds="">00</div>
-                    <div class="countdown-title">秒</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Latest Articles-->
-    <!-- <section class="section bg-default section-md">
-      <div class="container">
-        <h2 class="title-icon"><span class="icon icon-default mercury-icon-news"></span><span>最新 <span
-              class="text-light">文章</span></span></h2>
-        <div class="box-image-small box-image-small-left">
-          <div class="item-image bg-image novi-nackground" style="background-image: url(images/index-1-2-586x334.jpg)">
-          </div>
-          <div class="item-body wow fadeInRight">
-            <p>2021-08-16</p>
-            <h4><a href="https://www.bilibili.com/read/cv12690260">什么是税务筹划，和灵活用工有什么关系？</a></h4>
-            <p class="big">
-              税务筹划，是指在纳税行为发生之前，在不违反法律、法规（税法及其他相关法律、法规）的前提下，通过对纳税主体（法人或自然人）的经营活动或投资行为等涉税事项做出事先安排，以达到少缴税或递延纳税目标的一系列谋划活动...
-            </p>
-          </div>
-        </div>
-        <div class="box-image-small box-image-small-right">
-          <div class="item-image bg-image novi-nackground" style="background-image: url(images/index-1-3-580x334.jpg)">
-          </div>
-          <div class="item-body wow fadeInLeft">
-            <p>2022-08-07</p>
-            <h4><a href="http://www.360doc.com/content/22/0807/13/47871812_1042885830.shtml">灵活用工平台财税风险和筹划</a></h4>
-            <p class="big">一、引言：透过稽查案例看灵活用工平台</p>
-            <p class="big">二、灵活用工平台概述：灵活用工平台是什么？以及灵活用工平台产生的原因和背景？</p>
-            <p class="big">三、实务中常见的灵活用工模式：灵活用工主要适用于那些场景？实务中主要的模式都有那些？这些模式都是怎么运用的？</p>
-            <p class="big">四、灵活用工方式存在的风险及建议：灵活用工平台是选用会有那些隐性或者显性的风险？实务中我们该如何合理化解和防范？</p>
-          </div>
-        </div>
-      </div>
-    </section> -->
-    <footer class="section footer-classic">
-      <div class="footer-inner-1">
-        <div class="container">
-          <div class="row row-40">
-            <div class="col-md-5 col-lg-4">
-              <h5>联系我们</h5>
-              <ul class="contact-list font-weight-bold">
-                <li>
-                  <div class="unit unit-spacing-xs">
-                    <div class="unit-left">
-                      <div class="icon icon-sm icon-primary novi-icon mdi mdi-map-marker"></div>
-                    </div>
-                    <div class="unit-body"><a href="javascript:void(0);">北京市昌平区东小口镇中东路121号院一区1号楼3层1028</a></div>
-                  </div>
-                </li>
-                <li>
-                  <div class="unit unit-spacing-xs">
-                    <div class="unit-left">
-                      <div class="icon icon-sm icon-primary novi-icon mdi mdi-phone"></div>
-                    </div>
-                    <div class="unit-body"><a href="tel:17326865815">17326865815</a></div>
-                  </div>
-                </li>
-              </ul><a class="d-inline-block big" href="mailto:xucuicui@qihekeji.cn">xucuicui@qihekeji.cn</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="footer-inner-2">
-        <div class="container">
-          <p class="rights">
-            版权所有 &nbsp;Copyright © 2019-2022 北京企⽲科技有限公司
-            <a href="../beian.miit.gov.cn/index.html">&nbsp;&nbsp;京ICP备2022029337号-1</a>
-          </p>
-        </div>
-      </div>
     </footer>
-  </div>
-  <div class="snackbars" id="form-output-global"></div>
-  <script src="js/core.min.js"></script>
-  <script src="js/script.js"></script>
-  <!--coded by Starlight-->
 </body>
 </html>

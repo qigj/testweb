@@ -1,0 +1,150 @@
+# Cluster Failover
+
+{{ product_name }} v4 features fast failover. When a data warehouse node or other service in the cluster fails, the cluster can quickly detect the failure and automatically recover the failed node and its stored data, ensuring a rapid restoration to the state before the failure.
+
+## Failover mechanism
+
+{{ product_name }} is deployed in a containerized environment based on [Kubernetes](https://kubernetes.io/) (K8s). Components and services that form the database cluster are deployed in different pods and are managed and scheduled by the K8s cluster.
+
+When a data warehouse node (Segment), data warehouse proxy service, or cluster-level control service in a {{ product_name }} cluster fails, K8s can automatically restart the corresponding Pod and re-associate its Persistent Volume in a short time. Data from before the failure is completely preserved and restored. The restarted Pod has the same network configuration as before the failure. Once the failed Pod restarts and enters the `Running` state, the database can resume normal operation.
+
+**Note**: Before the failed Pod enters the `Running` state, the database cluster or the data warehouse corresponding to the Pod will not function normally.
+
+## Failover scenarios
+
+This section lists the following failover scenarios and provides corresponding examples.
+
+- Failover for cluster metadata proxy service (example Pod: `cloudberry-proxy-0`)
+- Failover for cluster metadata `safekeeper` service (example Pod: `safekeeper-0`)
+- Failover for cluster metadata `pageserver` service (example Pod: `pageserver-0`)
+- Failover for data warehouse proxy service in the cluster (example Pod: `cloudberry-proxy-0`)
+- Failover for data warehouse node in the cluster (example Pod: `wh9527-0`)
+
+The following examples simulate a failure by deleting the Pod of the corresponding service in the K8s cluster. After deleting the Pod, the success of the failover is determined by observing the Pod restart process and testing the functionality of the corresponding module in the database.
+
+### Prerequisites
+
+Before proceeding with the following tests, ensure the following prerequisites are met:
+
+1. An example {{ product_name }} cluster has been created and is accessible.
+2. The Kubernetes command-line tool `kubectl` and the `k9s` console are installed locally.
+
+### Cluster metadata proxy service failover
+
+This example simulates the failover of the {{ product_name }} cluster metadata proxy service after a failure.
+
+1. Access the `k9s` console and locate the `cloudberry-proxy-0` Pod in the `synxdb-system` namespace.
+
+    ![dr1](../../images/dr/dr1.png)
+
+2. Set a local forwarding port for `cloudberry-proxy-0`. Use `shift + f` to open the port forwarding settings, enter the container port (default is `5432`) and the local port to forward to. The address can be the default `localhost`.
+
+    **Note**: Avoid setting the local port to `5432` to prevent conflicts with a local PostgreSQL installation.
+
+    ![dr2](../../images/dr/dr2.png)
+
+3. Log in to the cluster using the forwarding port and address set in the previous step: `psql -h localhost -p 15432 -U gpadmin -d postgres`.
+4. Enter the `cloudmeta` database and verify that data can be accessed:
+
+    ```sql
+    --Enter the cloudmeta database
+    \c cloudmeta
+    --List tables in the current database
+    \dt
+    ```
+
+5. In the `k9s` cluster, switch to the Persistent Volume Claim (PVC) view: `:pvc`. Find the corresponding storage claim and delete it using `CTRL+D`.
+
+    ![dr3](../../images/dr/dr3.png)
+
+6. In the Pod list, delete `cloudberry-proxy-0`.
+
+    ![dr4](../../images/dr/dr4.png)
+
+    After the Pod is deleted, k8s will restart it. The metadata cluster will be temporarily inaccessible until the Pod's status returns to `Running`.
+
+7. Wait for the Pod to restart. Once its status is `Running`, set up local port forwarding again and access the `cloudmeta` database. The database should now be accessible.
+
+    ![dr5](../../images/dr/dr5.png)
+
+### Cluster metadata `safekeeper` service failover
+
+This example simulates the failover of the {{ product_name }} cluster metadata `safekeeper-0` service after a failure. For specific screenshots and commands, refer to the cluster metadata proxy service failover example.
+
+1. Access the `k9s` console and locate the `safekeeper-0` Pod in the `synxdb-system` namespace.
+
+2. Switch to the PVC view, find the corresponding storage claim, and delete it.
+
+3. Delete the `safekeeper-0` Pod. k8s will automatically restart it. The database remains accessible during this period.
+
+4. The `safekeeper-0` Pod's status returns to `Running`, and the failover is complete.
+
+### Cluster metadata `pageserver` service failover
+
+This example simulates the failover of the {{ product_name }} cluster metadata `pageserver` service after a failure. For specific screenshots and commands, refer to the cluster metadata proxy service failover example.
+
+1. Access the `k9s` console and locate the `pageserver-0` Pod in the `synxdb-system` namespace.
+
+2. Switch to the PVC view, find the corresponding storage claim, and delete it.
+
+3. Delete the `pageserver-0` Pod. k8s will automatically restart it. The database remains accessible during this period.
+
+4. The `pageserver-0` Pod's status returns to `Running`, and the failover is complete.
+
+### Data warehouse proxy service failover
+
+This example simulates the failover of the {{ product_name }} data warehouse cluster proxy service after a failure.
+
+1. In `k9s`, go to the data warehouse namespace (e.g., `cloud007-513d75d5-3033-4649-b913-07f6115ec41a+`) and locate the proxy service Pod `cloudberry-proxy-0`.
+
+2. Set a local forwarding port for `cloudberry-proxy-0`. Use `shift + f` to open the port forwarding settings, enter the container port (default is `5432`) and the local port to forward to. The address can be the default `localhost`.
+
+3. Log in to the cluster locally using the forwarding port and address set in the previous step: `psql -h localhost -p 15432 -U gpadmin -d postgres`
+
+4. Create a test database and insert test data:
+
+    ```sql
+    --Creates the database.
+    CREATE DATABASE test_db;
+
+    --Enters the database.
+    \c test_db;
+
+    --Creates a table and inserts data.
+    CREATE TABLE projects (
+        project_id SERIAL PRIMARY KEY,
+        project_name TEXT,
+        project_manager TEXT,
+        department TEXT
+    ) USING heap;
+
+    INSERT INTO projects (project_name, project_manager, department) VALUES
+    ('Project Alpha', 'Alice', 'Engineering'),
+    ('Project Beta', 'Bob', 'HR'),
+    ('Project Gamma', 'Charlie', 'Sales');
+    ```
+
+5. Delete the `cloudberry-proxy-0` Pod and its corresponding PVC. At this point, `test_db` will be temporarily inaccessible.
+
+    ![dr6](../../images/dr/dr6.png)
+
+    ![dr7](../../images/dr/dr7.png)
+
+6. When the Pod's status automatically changes to `Running`, `test_db` becomes accessible again.
+
+    ![dr8](../../images/dr/dr8.png)
+
+### Data warehouse node failover
+
+This example simulates the failover of a {{ product_name }} cluster data node after a failure.
+
+1. In `k9s`, go to the data warehouse namespace (e.g., `cloud007-513d75d5-3033-4649-b913-07f6115ec41a+`) and locate the data node Pod (e.g., `wh9527-0`).
+2. Go to the PVC list, locate the corresponding PVC, and delete it.
+
+    ![dr9](../../images/dr/dr9.png)
+
+3. Delete the Pod `wh9527-0`. At this point, `test_db` will be briefly inaccessible.
+
+    ![dr10](../../images/dr/dr10.png)
+
+4. The deleted Pod is automatically restarted. When its status changes to `Running`, database access is restored.

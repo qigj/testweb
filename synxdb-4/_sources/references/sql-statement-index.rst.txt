@@ -1,0 +1,34 @@
+SQL Statements
+******************
+
+.. toctree:: 
+   :titlesonly: 
+
+   sql-statements/abort
+   sql-statements/alter-database
+   sql-statements/alter-rule
+   sql-statements/alter-tablespace
+   sql-statements/create-database
+   sql-statements/create-index
+   sql-statements/create-tablespace
+   sql-statements/drop-database
+   sql-statements/drop-extension
+   sql-statements/drop-external-table
+   sql-statements/drop-index
+   sql-statements/drop-materialized-view
+   sql-statements/drop-role
+   sql-statements/drop-rule
+   sql-statements/drop-schema
+   sql-statements/drop-table
+   sql-statements/drop-tablespace
+   sql-statements/drop-type
+   sql-statements/drop-user
+   sql-statements/drop-view
+   sql-statements/end
+   sql-statements/rollback-to-savepoint
+   sql-statements/rollback
+   sql-statements/savepoint
+   sql-statements/set-role
+   sql-statements/set-transaction
+   sql-statements/start-transaction
+   sql-statements/truncate

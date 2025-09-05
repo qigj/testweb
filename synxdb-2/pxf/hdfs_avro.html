@@ -1,0 +1,537 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Reading and Writing Avro Data - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="reading-and-writing-hdfs-avro-data"><a class="header" href="#reading-and-writing-hdfs-avro-data">Reading and Writing HDFS Avro Data</a></h1>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<p>Use the PXF HDFS Connector to read and write Avro-format data. This section describes how to use PXF to read and write Avro data in HDFS, including how to create, query, and insert into an external table that references an Avro file in the HDFS data store.</p>
+<p>PXF supports reading or writing Avro files compressed with these codecs: <code>bzip2</code>, <code>xz</code>, <code>snappy</code>, and <code>deflate</code>.</p>
+<h2 id="prerequisites"><a class="header" href="#prerequisites"><a id="prereq"></a>Prerequisites</a></h2>
+<p>Ensure that you have met the PXF Hadoop <a href="access_hdfs.html#hadoop_prereq">Prerequisites</a> before you attempt to read data from HDFS.</p>
+<h2 id="working-with-avro-data"><a class="header" href="#working-with-avro-data"><a id="avro_work"></a>Working with Avro Data</a></h2>
+<p>Apache Avro is a data serialization framework where the data is serialized in a compact binary format. Avro specifies that data types be defined in JSON. Avro format data has an independent schema, also defined in JSON. An Avro schema, together with its data, is fully self-describing.</p>
+<h3 id="data-type-mapping"><a class="header" href="#data-type-mapping"><a id="profile_hdfsavrodatamap"></a>Data Type Mapping</a></h3>
+<p>The Avro specification defines <a href="https://avro.apache.org/docs/++version++/specification/#primitive-types">primitive</a>, <a href="https://avro.apache.org/docs/++version++/specification/#complex-types">complex</a>, and <a href="https://avro.apache.org/docs/++version++/specification/#logical-types">logical</a> types.</p>
+<p>To represent Avro primitive data types and Avro arrays of primitive types in SynxDB, map data values to SynxDB columns of the same type.</p>
+<p>Avro supports other complex data types including arrays of non-primitive types, maps, records, enumerations, and fixed types. Map top-level fields of these complex data types to the SynxDB <code>text</code> type. While PXF does not natively support reading these types, you can create SynxDB functions or application code to extract or further process subcomponents of these complex data types.</p>
+<p>Avro supports logical data types including date, decimal, duration, time, timestamp, and uuid types.</p>
+<h3 id="read-mapping"><a class="header" href="#read-mapping"><a id="datatype_map_read "></a>Read Mapping</a></h3>
+<p><a id="a2g_type_mapping_table"></a></p>
+<p>PXF uses the following data type mapping when reading Avro data:</p>
+<div class="table-wrapper"><table><thead><tr><th>Avro Data Type</th><th>PXF/SynxDB Data Type</th></tr></thead><tbody>
+<tr><td>boolean</td><td>boolean</td></tr>
+<tr><td>bytes</td><td>bytea</td></tr>
+<tr><td>double</td><td>double</td></tr>
+<tr><td>float</td><td>real</td></tr>
+<tr><td>int</td><td>int</td></tr>
+<tr><td>long</td><td>bigint</td></tr>
+<tr><td>string</td><td>text</td></tr>
+<tr><td>Complex type: Array (any dimension) of type: boolean, bytes, double, float, int, long, string</td><td>array (any dimension) of type: boolean, bytea, double, real, bigint, text</td></tr>
+<tr><td>Complex type: Array of other types<br>(<em>Avro schema is provided</em>)</td><td>text[]</td></tr>
+<tr><td>Complex type: Map, Record, or Enum</td><td>text, with delimiters inserted between collection items, mapped key-value pairs, and record data.</td></tr>
+<tr><td>Complex type: Fixed</td><td>bytea (supported for read operations only).</td></tr>
+<tr><td>Union</td><td>Follows the above conventions for primitive or complex data types, depending on the union; must contain 2 elements, one of which must be null.</td></tr>
+<tr><td>Logical type: Date</td><td>date</td></tr>
+<tr><td>Logical type: Decimal</td><td>decimal or numeric</td></tr>
+<tr><td>Logical type: duration</td><td>bytea</td></tr>
+<tr><td>Logical type: Time (millisecond precision)</td><td>time (time without time zone)</td></tr>
+<tr><td>Logical type: Time (microsecond precision)</td><td>time (time without time zone)</td></tr>
+<tr><td>Logical type: Timestamp (millisecond precision)</td><td>timestamp (with or without time zone)</td></tr>
+<tr><td>Logical type: Timestamp (microsecond precision)</td><td>timestamp (with or without time zone)</td></tr>
+<tr><td>Logical type: Local Timestamp (millisecond precision)</td><td>timestamp (with or without time zone)</td></tr>
+<tr><td>Logical type: Local Timestamp (microsecond precision)</td><td>timestamp (with or without time zone)</td></tr>
+<tr><td>Logical type: UUID</td><td>UUID</td></tr>
+</tbody></table>
+</div>
+<h3 id="write-mapping"><a class="header" href="#write-mapping"><a id="datatype_map_Write"></a>Write Mapping</a></h3>
+<p>PXF supports writing Avro primitive types and arrays of Avro primitive types. PXF supports writing other complex types to Avro as string.</p>
+<p>PXF uses the following data type mapping when writing Avro data:</p>
+<p><a id="g2_type_mapping_table"></a></p>
+<div class="table-wrapper"><table><thead><tr><th>PXF/SynxDB Data Type</th><th>Avro Data Type</th></tr></thead><tbody>
+<tr><td>bigint</td><td>long</td></tr>
+<tr><td>boolean</td><td>boolean</td></tr>
+<tr><td>bytea</td><td>bytes</td></tr>
+<tr><td>double</td><td>double</td></tr>
+<tr><td>char<sup>1</sup></td><td>string</td></tr>
+<tr><td>enum</td><td>string</td></tr>
+<tr><td>int</td><td>int</td></tr>
+<tr><td>real</td><td>float</td></tr>
+<tr><td>smallint<sup>2</sup></td><td>int</td></tr>
+<tr><td>text</td><td>string</td></tr>
+<tr><td>varchar</td><td>string</td></tr>
+<tr><td>numeric, date, time, timestamp, timestamptz<br>(<em>no Avro schema is provided</em>)</td><td>string</td></tr>
+<tr><td>array (any dimension) of type: bigint, boolean, bytea, double, int, real, text <br>(<em>Avro schema is provided</em>)</td><td>Array (any dimension) of type: long, boolean, bytes, double, int, float, string</td></tr>
+<tr><td>bigint[], boolean[], bytea[], double[], int[], real[], text[] <br>(<em>no Avro schema is provided</em>)</td><td>long[], boolean[], bytes[], double[], int[], float[], string[] (one-dimensional array)</td></tr>
+<tr><td>numeric[], date[], time[], timestamp[], timestamptz[] <br> (<em>Avro is schema is provided</em>)</td><td>string[]</td></tr>
+<tr><td>enum, record</td><td>string</td></tr>
+</tbody></table>
+</div>
+<p></br><sup>1</sup> PXF right-pads <code>char[<i>n</i>]</code> types to length <code><i>n</i></code>, if required, with white space.
+</br><sup>2</sup> PXF converts SynxDB <code>smallint</code> types to <code>int</code> before it writes the Avro data. Be sure to read the field into an <code>int</code>.</p>
+<h3 id="avro-schemas-and-data"><a class="header" href="#avro-schemas-and-data"><a id="topic_tr3_dpg_ts__section_m2p_ztg_ts"></a>Avro Schemas and Data</a></h3>
+<p>Avro schemas are defined using JSON, and composed of the same primitive and complex types identified in the data type mapping section above. Avro schema files typically have a <code>.avsc</code> suffix.</p>
+<p>Fields in an Avro schema file are defined via an array of objects, each of which is specified by a name and a type.</p>
+<p>An Avro data file contains the schema and a compact binary representation of the data. Avro data files typically have the <code>.avro</code> suffix.</p>
+<p>You can specify an Avro schema on both read and write operations to HDFS. You can provide either a binary <code>*.avro</code> file or a JSON-format <code>*.avsc</code> file for the schema file:</p>
+<div class="table-wrapper"><table><thead><tr><th>External Table Type</th><th>Schema Specified?</th><th>Description</th></tr></thead><tbody>
+<tr><td>readable</td><td>yes</td><td>PXF uses the specified schema; this overrides the schema embedded in the Avro data file.</td></tr>
+<tr><td>readable</td><td>no</td><td>PXF uses the schema embedded in the Avro data file.</td></tr>
+<tr><td>writable</td><td>yes</td><td>PXF uses the specified schema.</td></tr>
+<tr><td>writable</td><td>no</td><td>PXF creates the Avro schema based on the external table definition.</td></tr>
+</tbody></table>
+</div>
+<p>When you provide the Avro schema file to PXF, the file must reside in the same location on each SynxDB host <strong>or</strong> the file may reside on the Hadoop file system. PXF first searches for an absolute file path on the SynxDB hosts. If PXF does not find the schema file there, it searches for the file relative to the PXF classpath. If PXF cannot find the schema file locally, it searches for the file on HDFS.</p>
+<p>The <code>$PXF_BASE/conf</code> directory is in the PXF classpath. PXF can locate an Avro schema file that you add to this directory on every SynxDB host.</p>
+<p>See <a href="#topic_avro_writedata">Writing Avro Data</a> for additional schema considerations when writing Avro data to HDFS.</p>
+<h2 id="creating-the-external-table"><a class="header" href="#creating-the-external-table"><a id="profile_cet"></a>Creating the External Table</a></h2>
+<p>Use the <code>hdfs:avro</code> profile to read or write Avro-format data in HDFS. The following syntax creates a SynxDB readable external table that references such a file:</p>
+<pre><code class="language-sql">CREATE [WRITABLE] EXTERNAL TABLE &lt;table_name&gt;
+    ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table&gt; )
+LOCATION ('pxf://&lt;path-to-hdfs-file&gt;?PROFILE=hdfs:avro[&amp;SERVER=&lt;server_name&gt;][&amp;&lt;custom-option&gt;=&lt;value&gt;[...]]')
+FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import'|'pxfwritable_export');
+[DISTRIBUTED BY (&lt;column_name&gt; [, ... ] ) | DISTRIBUTED RANDOMLY];
+</code></pre>
+<p>The specific keywords and values used in the SynxDB <a href="../ref_guide/sql_commands/CREATE_EXTERNAL_TABLE.html">CREATE EXTERNAL TABLE</a> command are described in the table below.</p>
+<div class="table-wrapper"><table><thead><tr><th>Keyword</th><th>Value</th></tr></thead><tbody>
+<tr><td>&lt;path‑to‑hdfs‑file&gt;</td><td>The path to the directory or file in the HDFS data store. When the <code>&lt;server_name&gt;</code> configuration includes a <a href="cfg_server.html#pxf-fs-basepath"><code>pxf.fs.basePath</code></a> property setting, PXF considers &lt;path‑to‑hdfs‑file&gt; to be relative to the base path specified. Otherwise, PXF considers it to be an absolute path. &lt;path‑to‑hdfs‑file&gt; must not specify a relative path nor include the dollar sign (<code>$</code>) character.</td></tr>
+<tr><td>PROFILE</td><td>The <code>PROFILE</code> keyword must specify <code>hdfs:avro</code>.</td></tr>
+<tr><td>SERVER=&lt;server_name&gt;</td><td>The named server configuration that PXF uses to access the data. PXF uses the <code>default</code> server if not specified.</td></tr>
+<tr><td>&lt;custom‑option&gt;</td><td>&lt;custom-option&gt;s are discussed below.</td></tr>
+<tr><td>FORMAT ‘CUSTOM’</td><td>Use <code>FORMAT</code> ‘<code>CUSTOM</code>’ with <code>(FORMATTER='pxfwritable_export')</code> (write) or <code>(FORMATTER='pxfwritable_import')</code> (read).</td></tr>
+<tr><td>DISTRIBUTED BY</td><td>If you want to load data from an existing SynxDB table into the writable external table, consider specifying the same distribution policy or <code>&lt;column_name&gt;</code> on both tables. Doing so will avoid extra motion of data between segments on the load operation.</td></tr>
+</tbody></table>
+</div>
+<p><a id="customopts"></a></p>
+<p>For complex types, the PXF <code>hdfs:avro</code> profile inserts default delimiters between collection items and values before display. You can use non-default delimiter characters by identifying values for specific <code>hdfs:avro</code> custom options in the <code>CREATE EXTERNAL TABLE</code> command.</p>
+<p>The <code>hdfs:avro</code> profile supports the following &lt;custom-option&gt;s:</p>
+<div class="table-wrapper"><table><thead><tr><th>Option Keyword</th><th>Description</th></tr></thead><tbody>
+<tr><td>COLLECTION_DELIM</td><td>The delimiter character(s) placed between entries in a top-level array, map, or record field when PXF maps an Avro complex data type to a text column. The default is the comma (<code>,</code>) character. (Read)</td></tr>
+<tr><td>MAPKEY_DELIM</td><td>The delimiter character(s) placed between the key and value of a map entry when PXF maps an Avro complex data type to a text column. The default is the colon <code>:</code> character. (Read)</td></tr>
+<tr><td>RECORDKEY_DELIM</td><td>The delimiter character(s) placed between the field name and value of a record entry when PXF maps an Avro complex data type to a text column. The default is the colon <code>:</code> character. (Read)</td></tr>
+<tr><td>SCHEMA</td><td>The absolute path to the Avro schema file on the SynxDB host or on HDFS, or the relative path to the schema file on the host. (Read and Write)</td></tr>
+<tr><td>IGNORE_MISSING_PATH</td><td>A Boolean value that specifies the action to take when &lt;path-to-hdfs-file&gt; is missing or invalid. The default value is <code>false</code>, PXF returns an error in this situation. When the value is <code>true</code>, PXF ignores missing path errors and returns an empty fragment. (Read)</td></tr>
+</tbody></table>
+</div>
+<p>The PXF <code>hdfs:avro</code> profile supports encoding- and compression-related write options. You specify these write options in the <code>CREATE WRITABLE EXTERNAL TABLE</code> <code>LOCATION</code> clause. The <code>hdfs:avro</code> profile supports the following custom write options:</p>
+<div class="table-wrapper"><table><thead><tr><th>Write Option</th><th>Value Description</th></tr></thead><tbody>
+<tr><td>COMPRESSION_CODEC</td><td>The compression codec alias. Supported compression codecs for writing Avro data include: <code>bzip2</code>, <code>xz</code>, <code>snappy</code>, <code>deflate</code>, and <code>uncompressed</code> . If this option is not provided, PXF compresses the data using <code>deflate</code> compression.</td></tr>
+<tr><td>CODEC_LEVEL</td><td>The compression level (applicable to the <code>deflate</code> and <code>xz</code> codecs only). This level controls the trade-off between speed and compression. Valid values are 1 (fastest) to 9 (most compressed). The default compression level is 6.</td></tr>
+</tbody></table>
+</div>
+<h2 id="example-reading-avro-data"><a class="header" href="#example-reading-avro-data"><a id="avro_example"></a>Example: Reading Avro Data</a></h2>
+<p>The examples in this section will operate on Avro data with the following field name and data type record schema:</p>
+<ul>
+<li>id - long</li>
+<li>username - string</li>
+<li>followers - array of string (string[])</li>
+<li>fmap - map of long</li>
+<li>relationship - enumerated type</li>
+<li>address - record comprised of street number (int), street name (string), and city (string)</li>
+</ul>
+<p>You create an Avro schema and data file, and then create a readable external table to read the data.</p>
+<h3 id="create-schema"><a class="header" href="#create-schema"><a id="topic_tr3_dpg_ts__section_m2p_ztg_ts_99"></a>Create Schema</a></h3>
+<p>Perform the following operations to create an Avro schema to represent the example schema described above.</p>
+<ol>
+<li>
+<p>Create a file named <code>avro_schema.avsc</code>:</p>
+<pre><code class="language-shell">$ vi /tmp/avro_schema.avsc
+</code></pre>
+</li>
+<li>
+<p>Copy and paste the following text into <code>avro_schema.avsc</code>:</p>
+<pre><code class="language-json">{
+"type" : "record",
+  "name" : "example_schema",
+  "namespace" : "com.example",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "long",
+    "doc" : "Id of the user account"
+  }, {
+    "name" : "username",
+    "type" : "string",
+    "doc" : "Name of the user account"
+  }, {
+    "name" : "followers",
+    "type" : {"type": "array", "items": "string"},
+    "doc" : "Users followers"
+  }, {
+    "name": "fmap",
+    "type": {"type": "map", "values": "long"}
+  }, {
+    "name": "relationship",
+    "type": {
+        "type": "enum",
+        "name": "relationshipEnum",
+        "symbols": ["MARRIED","LOVE","FRIEND","COLLEAGUE","STRANGER","ENEMY"]
+    }
+  }, {
+    "name": "address",
+    "type": {
+        "type": "record",
+        "name": "addressRecord",
+        "fields": [
+            {"name":"number", "type":"int"},
+            {"name":"street", "type":"string"},
+            {"name":"city", "type":"string"}]
+    }
+  } ],
+  "doc:" : "A basic schema for storing messages"
+}
+</code></pre>
+</li>
+</ol>
+<h3 id="create-avro-data-file-json"><a class="header" href="#create-avro-data-file-json"><a id="topic_tr3_dpgspk_15g_tsdata"></a>Create Avro Data File (JSON)</a></h3>
+<p>Perform the following steps to create a sample Avro data file conforming to the above schema.</p>
+<ol>
+<li>
+<p>Create a text file named <code>pxf_avro.txt</code>:</p>
+<pre><code class="language-shell">$ vi /tmp/pxf_avro.txt
+</code></pre>
+</li>
+<li>
+<p>Enter the following data into <code>pxf_avro.txt</code>:</p>
+<pre><code class="language-pre">{"id":1, "username":"john","followers":["kate", "santosh"], "relationship": "FRIEND", "fmap": {"kate":10,"santosh":4}, "address":{"number":1, "street":"renaissance drive", "city":"san jose"}}
+
+{"id":2, "username":"jim","followers":["john", "pam"], "relationship": "COLLEAGUE", "fmap": {"john":3,"pam":3}, "address":{"number":9, "street":"deer creek", "city":"palo alto"}}
+</code></pre>
+<p>The sample data uses a comma (<code>,</code>) to separate top level records and a colon <code>:</code> to separate map/key values and record field name/values.</p>
+</li>
+<li>
+<p>Convert the text file to Avro format. There are various ways to perform the conversion, both programmatically and via the command line. In this example, we use the Java Avro tools.</p>
+<ol>
+<li>
+<p>Download the most recent version of the Avro tools jar from http://avro.apache.org/releases.html to the current working directory.</p>
+</li>
+<li>
+<p>Convert the file:</p>
+<pre><code class="language-shell">$ java -jar ./avro-tools-1.11.0.jar fromjson --schema-file /tmp/avro_schema.avsc /tmp/pxf_avro.txt &gt; /tmp/pxf_avro.avro
+</code></pre>
+<p>The generated Avro binary data file is written to <code>/tmp/pxf_avro.avro</code>.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Copy the generated Avro file to HDFS:</p>
+<pre><code class="language-shell">$ hdfs dfs -put /tmp/pxf_avro.avro /data/pxf_examples/
+</code></pre>
+</li>
+</ol>
+<h3 id="reading-avro-data"><a class="header" href="#reading-avro-data"><a id="topic_avro_querydata"></a>Reading Avro Data</a></h3>
+<p>Perform the following operations to create and query an external table that references the <code>pxf_avro.avro</code> file that you added to HDFS in the previous section. When creating the table:</p>
+<ul>
+<li>Use the PXF default server.</li>
+<li>Map the top-level primitive fields, <code>id</code> (type long) and <code>username</code> (type string), to their equivalent SynxDB types (bigint and text).</li>
+<li>Map the <code>followers</code> field to a text array (text[]).</li>
+<li>Map the remaining complex fields to type text.</li>
+<li>Explicitly set the record, map, and collection delimiters using the <code>hdfs:avro</code> profile custom options.</li>
+</ul>
+<ol>
+<li>
+<p>Use the <code>hdfs:avro</code> profile to create a queryable external table from the <code>pxf_avro.avro</code> file:</p>
+<pre><code class="language-sql">postgres=# CREATE EXTERNAL TABLE pxf_hdfs_avro(id bigint, username text, followers text[], fmap text, relationship text, address text)
+            LOCATION ('pxf://data/pxf_examples/pxf_avro.avro?PROFILE=hdfs:avro&amp;COLLECTION_DELIM=,&amp;MAPKEY_DELIM=:&amp;RECORDKEY_DELIM=:')
+          FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import');
+</code></pre>
+</li>
+<li>
+<p>Perform a simple query of the <code>pxf_hdfs_avro</code> table:</p>
+<pre><code class="language-sql">postgres=# SELECT * FROM pxf_hdfs_avro;
+</code></pre>
+<pre><code class="language-pre"> id | username |   followers    |        fmap         | relationship |                      address                      
+----+----------+----------------+--------------------+--------------+---------------------------------------------------
+  1 | john     | {kate,santosh} | {kate:10,santosh:4} | FRIEND       | {number:1,street:renaissance drive,city:san jose}
+  2 | jim      | {john,pam}     | {pam:3,john:3}      | COLLEAGUE    | {number:9,street:deer creek,city:palo alto}
+(2 rows)
+</code></pre>
+<p>The simple query of the external table shows the components of the complex type data separated with the delimiters specified in the <code>CREATE EXTERNAL TABLE</code> call.</p>
+</li>
+<li>
+<p>Query the table, displaying the <code>id</code> and the first element of the <code>followers</code> text array:</p>
+<pre><code class="language-sql">postgres=# SELECT id, followers[1] FROM pxf_hdfs_avro;
+ id | followers 
+----+-----------
+  1 | kate
+  2 | john
+</code></pre>
+</li>
+</ol>
+<h2 id="writing-avro-data"><a class="header" href="#writing-avro-data"><a id="topic_avro_writedata"></a>Writing Avro Data</a></h2>
+<p>The PXF HDFS connector <code>hdfs:avro</code> profile supports writing Avro data to HDFS. When you create a writable external table to write Avro data, you specify the name of a directory on HDFS. When you insert records into the writable external table, the block(s) of data that you insert are written to one or more files in the directory that you specify.</p>
+<p>When you create a writable external table to write data to an Avro file, each table row is an Avro record and each table column is an Avro field.</p>
+<p>If you do not specify a <code>SCHEMA</code> file, PXF generates a schema for the Avro file based on the SynxDB external table definition. PXF assigns the name of the external table column to the Avro field name. Because Avro has a <code>null</code> type and SynxDB external tables do not support the <code>NOT NULL</code> column qualifier, PXF wraps each data type in an Avro <code>union</code> of the mapped type and <code>null</code>. For example, for a writable external table column that you define with the SynxDB <code>text</code> data type, PXF generates the following schema element:</p>
+<pre><code class="language-pre">["string", "null"]
+</code></pre>
+<p>PXF returns an error if you provide a schema that does not include a <code>union</code> of the field data type with <code>null</code>, and PXF encounters a NULL data field.</p>
+<p>PXF supports writing only Avro primitive data types and Avro Arrays of the types identified in <a href="#datatype_map_Write">Data Type Write Mapping</a>. PXF does not support writing complex types to Avro:</p>
+<ul>
+<li>When you specify a <code>SCHEMA</code> file in the <code>LOCATION</code>, the schema must include only primitive data types.</li>
+<li>When PXF generates the schema, it writes any complex type that you specify in the writable external table column definition to the Avro file as a single Avro <code>string</code> type. For example, if you write an array of the SynxDB <code>numeric</code> type, PXF converts the array to a <code>string</code>, and you must read this data with a SynxDB <code>text</code>-type column.</li>
+</ul>
+<h3 id="example-writing-avro-data"><a class="header" href="#example-writing-avro-data"><a id="topic_avrowrite_example"></a>Example: Writing Avro Data</a></h3>
+<p>In this example, you create an external table that writes to an Avro file on HDFS, letting PXF generate the Avro schema. After you insert some data into the file, you create a readable external table to query the Avro data.</p>
+<p>The Avro file that you create and read in this example includes the following fields:</p>
+<ul>
+<li>id:  <code>int</code></li>
+<li>username:  <code>text</code></li>
+<li>followers:  <code>text[]</code></li>
+</ul>
+<p>Example procedure:</p>
+<ol>
+<li>
+<p>Create the writable external table:</p>
+<pre><code class="language-sql">postgres=# CREATE WRITABLE EXTERNAL TABLE pxf_avrowrite(id int, username text, followers text[])
+            LOCATION ('pxf://data/pxf_examples/pxfwrite.avro?PROFILE=hdfs:avro')
+          FORMAT 'CUSTOM' (FORMATTER='pxfwritable_export');
+
+</code></pre>
+</li>
+<li>
+<p>Insert some data into the <code>pxf_avrowrite</code> table:</p>
+<pre><code class="language-sql">postgres=# INSERT INTO pxf_avrowrite VALUES (33, 'oliver', ARRAY['alex','frank']);
+postgres=# INSERT INTO pxf_avrowrite VALUES (77, 'lisa', ARRAY['tom','mary']);
+</code></pre>
+<p>PXF uses the external table definition to generate the Avro schema.</p>
+</li>
+<li>
+<p>Create an external table to read the Avro data that you just inserted into the table:</p>
+<pre><code class="language-sql">postgres=# CREATE EXTERNAL TABLE read_pxfwrite(id int, username text, followers text[])
+            LOCATION ('pxf://data/pxf_examples/pxfwrite.avro?PROFILE=hdfs:avro')
+          FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import');
+</code></pre>
+</li>
+<li>
+<p>Read the Avro data by querying the <code>read_pxfwrite</code> table:</p>
+<pre><code class="language-sql">postgres=# SELECT id, followers, followers[1], followers[2] FROM read_pxfwrite ORDER BY id;
+</code></pre>
+<pre><code class="language-pre"> id |  followers   | followers | followers 
+----+--------------+-----------+-----------
+ 33 | {alex,frank} | alex      | frank
+ 77 | {tom,mary}   | tom       | mary
+(2 rows)
+</code></pre>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pxf/hdfs_fixedwidth.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pxf/hdfs_json.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pxf/hdfs_fixedwidth.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pxf/hdfs_json.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

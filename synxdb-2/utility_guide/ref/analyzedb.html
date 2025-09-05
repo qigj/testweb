@@ -1,0 +1,343 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>analyzedb - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="analyzedb"><a class="header" href="#analyzedb">analyzedb</a></h1>
+<p>A utility that performs <code>ANALYZE</code> operations on tables incrementally and concurrently. For append optimized tables, analyzedb updates statistics only if the statistics are not current.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="syn"></a>Synopsis</a></h2>
+<pre><code>analyzedb -d &lt;dbname&gt;
+   { -s &lt;schema&gt;  | 
+   { -t &lt;schema&gt;.&lt;table&gt; 
+     [ -i &lt;col1&gt;[,&lt;col2&gt;, ...] | 
+       -x &lt;col1&gt;[,&lt;col2&gt;, ...] ] } |
+     { -f | --file} &lt;config-file&gt; }
+   [ -l | --list ]
+   [ --gen_profile_only ]   
+   [ -p &lt;parallel-level&gt; ]
+   [ --full ]
+   [ --skip_root_stats ]
+   [ --skip_orca_root_stats ]
+   [ -v | --verbose ]
+   [ -a ]
+
+analyzedb { --clean_last | --clean_all }
+analyzedb --version
+analyzedb { -? | -h | --help }
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="desc"></a>Description</a></h2>
+<p>The analyzedb utility updates statistics on table data for the specified tables in a SynxDB database incrementally and concurrently.</p>
+<p>While performing <a href="../../ref_guide/sql_commands/ANALYZE.html">ANALYZE</a> operations, analyzedb creates a snapshot of the table metadata and stores it on disk on the master host. An <code>ANALYZE</code> operation is performed only if the table has been modified. If a table or partition has not been modified since the last time it was analyzed, analyzedb automatically skips the table or partition because it already contains up-to-date statistics.</p>
+<ul>
+<li>For append optimized tables, analyzedb updates statistics incrementally, if the statistics are not current. For example, if table data is changed after statistics were collected for the table. If there are no statistics for the table, statistics are collected.</li>
+<li>For heap tables, statistics are always updated.</li>
+</ul>
+<p>Specify the <code>--full</code> option to update append-optimized table statistics even if the table statistics are current.</p>
+<p>By default, analyzedb creates a maximum of 5 concurrent sessions to analyze tables in parallel. For each session, analyzedb issues an ANALYZE command to the database and specifies different table names. The <code>-p</code> option controls the maximum number of concurrent sessions.</p>
+<p><strong>Partitioned Append-Optimized Tables</strong></p>
+<p>For a partitioned, append-optimized table, analyzedb checks the partitioned table root partition and leaf partitions. If needed, the utility updates statistics for non-current partitions and the root partition. For information about how statistics are collected for partitioned tables, see <a href="../../ref_guide/sql_commands/ANALYZE.html">ANALYZE</a>.</p>
+<p><code>analyzedb</code> must sample additional partitions within a partitioned table when it encounters a stale partition, even when statistics are already collected. Consider it a best practice to run <code>analyzedb</code> on the root partition any time that you add a new partition(s) to a partitioned table. This operation both analyzes the child leaf partitions in parallel and merges any updated statistics into the root partition.</p>
+<h2 id="notes"><a class="header" href="#notes"><a id="notes"></a>Notes</a></h2>
+<p>The analyzedb utility updates append optimized table statistics if the table has been modified by DML or DDL commands, including INSERT, DELETE, UPDATE, CREATE TABLE, ALTER TABLE and TRUNCATE. The utility determines if a table has been modified by comparing catalog metadata of tables with the previous snapshot of metadata taken during a previous analyzedb operation. The snapshots of table metadata are stored as state files in the directory <code>db_analyze/&lt;db_name&gt;/&lt;timestamp&gt;</code> in the SynxDB master data directory.</p>
+<p>The utility preserves old snapshot information from the past 8 days, and the 3 most recent state directories regardless of age, while all other directories are automatically removed. You can also specify the <code>--clean_last</code> or <code>--clean_all</code> option to remove state files generated by analyzedb.</p>
+<p>If you do not specify a table, set of tables, or schema, the analyzedb utility collects the statistics as needed on all system catalog tables and user-defined tables in the database.</p>
+<p>External tables are not affected by analyzedb.</p>
+<p>Table names that contain spaces are not supported.</p>
+<p>Running the <code>ANALYZE</code> command on a table, not using the <code>analyzedb</code> utility, does not update the table metadata that the <code>analyzedb</code> utility uses to determine whether table statistics are up to date.</p>
+<h2 id="options"><a class="header" href="#options"><a id="opts"></a>Options</a></h2>
+<h3 id="clean_last"><a class="header" href="#clean_last">–clean_last</a></h3>
+<p>Remove the state files generated by last analyzedb operation. All other options except -d are ignored.</p>
+<h3 id="clean_all"><a class="header" href="#clean_all">–clean_all</a></h3>
+<p>Remove all the state files generated by analyzedb. All other options except -d are ignored.</p>
+<h3 id="-d-dbname"><a class="header" href="#-d-dbname">-d dbname</a></h3>
+<p>Specifies the name of the database that contains the tables to be analyzed. If this option is not specified, the database name is read from the environment variable <code>PGDATABASE</code>. If <code>PGDATABASE</code> is not set, the user name specified for the connection is used.</p>
+<h3 id="-f-config-file--file-config-file"><a class="header" href="#-f-config-file--file-config-file">-f config-file | –file config-file</a></h3>
+<p>Text file that contains a list of tables to be analyzed. A relative file path from current directory can be specified.</p>
+<p>The file lists one table per line. Table names must be qualified with a schema name. Optionally, a list of columns can be specified using the -i or -x. No other options are allowed in the file. Other options such as <code>--full</code> must be specified on the command line.</p>
+<p>Only one of the options can be used to specify the files to be analyzed: <code>-f</code> or <code>--file</code>, <code>-t</code> , or <code>-s</code>.</p>
+<p>When performing ANALYZE operations on multiple tables, analyzedb creates concurrent sessions to analyze tables in parallel. The <code>-p</code> option controls the maximum number of concurrent sessions.</p>
+<p>In the following example, the first line performs an ANALYZE operation on the table <code>public.nation</code>, the second line performs an ANALYZE operation only on the columns <code>l_shipdate</code> and <code>l_receiptdate</code> in the table <code>public.lineitem</code>.
+<code>    public.nation     public.lineitem -i l_shipdate,l_receiptdate     </code></p>
+<h3 id="full"><a class="header" href="#full">–full</a></h3>
+<p>Perform an ANALYZE operation on all the specified tables. The operation is performed even if the statistics are up to date.</p>
+<h3 id="gen_profile_only"><a class="header" href="#gen_profile_only">–gen_profile_only</a></h3>
+<p>Update the <code>analyzedb</code> snapshot of table statistics information without performing any <code>ANALYZE</code> operations. If other options specify tables or a schema, the utility updates the snapshot information only for the specified tables.</p>
+<p>Specify this option if the <code>ANALYZE</code> command was run on database tables and you want to update the <code>analyzedb</code> snapshot for the tables.</p>
+<h3 id="-i-col1col2-"><a class="header" href="#-i-col1col2-">-i col1,col2, …</a></h3>
+<p>Optional. Must be specified with the -t option. For the table specified with the -t option, collect statistics only for the specified columns.</p>
+<p>Only -i, or -x can be specified. Both options cannot be specified.</p>
+<h3 id="-l--list"><a class="header" href="#-l--list">-l | –list</a></h3>
+<p>Lists the tables that would have been analyzed with the specified options. The ANALYZE operations are not performed.</p>
+<h3 id="-p-parallel-level"><a class="header" href="#-p-parallel-level">-p parallel-level</a></h3>
+<p>The number of tables that are analyzed in parallel. parallel level can be an integer between 1 and 10, inclusive. Default value is 5.</p>
+<h3 id="skip_root_stats"><a class="header" href="#skip_root_stats">–skip_root_stats</a></h3>
+<p>This option is no longer used, you may remove it from your scripts.</p>
+<h3 id="--skip_orca_root_stats"><a class="header" href="#--skip_orca_root_stats"><code>--skip_orca_root_stats</code></a></h3>
+<blockquote>
+<p><strong>Note</strong> Do not use this option if GPORCA is enabled.</p>
+</blockquote>
+<p>Use this option if you find that <code>ANALYZE ROOTPARTITION</code> commands take a very long time to complete.</p>
+<blockquote>
+<p><strong>Caution</strong> After you run <code>analyzedb</code> with this option, subsequent <code>analyzedb</code> executions will not update root partition statistics except when changes have been made to the table.</p>
+</blockquote>
+<h3 id="-s-schema"><a class="header" href="#-s-schema">-s schema</a></h3>
+<p>Specify a schema to analyze. All tables in the schema will be analyzed. Only a single schema name can be specified on the command line.</p>
+<p>Only one of the options can be used to specify the files to be analyzed: <code>-f</code> or <code>--file</code>, <code>-t</code> , or <code>-s</code>.</p>
+<h3 id="-t-schematable"><a class="header" href="#-t-schematable">-t schema.table</a></h3>
+<p>Collect statistics only on schema.table. The table name must be qualified with a schema name. Only a single table name can be specified on the command line. You can specify the <code>-f</code> option to specify multiple tables in a file or the <code>-s</code> option to specify all the tables in a schema.</p>
+<p>Only one of these options can be used to specify the files to be analyzed: <code>-f</code> or <code>--file</code>, <code>-t</code> , or <code>-s</code>.</p>
+<h3 id="-x-col1col2-"><a class="header" href="#-x-col1col2-">-x col1,col2, …</a></h3>
+<p>Optional. Must be specified with the -t option. For the table specified with the -t option, exclude statistics collection for the specified columns. Statistics are collected only on the columns that are not listed.</p>
+<p>Only -i, or -x can be specified. Both options cannot be specified.</p>
+<h3 id="-a"><a class="header" href="#-a">-a</a></h3>
+<p>Quiet mode. Do not prompt for user confirmation.</p>
+<h3 id="-h-----help"><a class="header" href="#-h-----help">-h | -? | –help</a></h3>
+<p>Displays the online help.</p>
+<h3 id="-v--verbose"><a class="header" href="#-v--verbose">-v | –verbose</a></h3>
+<p>If specified, sets the logging level to verbose to write additional information the log file and to the command line during command execution. The information includes a list of all the tables to be analyzed (including child leaf partitions of partitioned tables). Output also includes the duration of each <code>ANALYZE</code> operation.</p>
+<h3 id="version"><a class="header" href="#version">–version</a></h3>
+<p>Displays the version of this utility.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="exs"></a>Examples</a></h2>
+<p>An example that collects statistics only on a set of table columns. In the database <code>mytest</code>, collect statistics on the columns <code>shipdate</code> and <code>receiptdate</code> in the table <code>public.orders</code>:</p>
+<pre><code>analyzedb -d mytest -t public.orders -i shipdate,receiptdate
+</code></pre>
+<p>An example that collects statistics on a table and exclude a set of columns. In the database <code>mytest</code>, collect statistics on the table <code>public.foo</code>, and do not collect statistics on the columns <code>bar</code> and <code>test2</code>.</p>
+<pre><code>analyzedb -d mytest -t public.foo -x bar,test2
+</code></pre>
+<p>An example that specifies a file that contains a list of tables. This command collect statistics on the tables listed in the file <code>analyze-tables</code> in the database named <code>mytest</code>.</p>
+<pre><code>analyzedb -d mytest -f analyze-tables
+</code></pre>
+<p>If you do not specify a table, set of tables, or schema, the analyzedb utility collects the statistics as needed on all catalog tables and user-defined tables in the specified database. This command refreshes table statistics on the system catalog tables and user-defined tables in the database <code>mytest</code>.</p>
+<pre><code>analyzedb -d mytest
+</code></pre>
+<p>You can create a PL/Python function to run the <code>analyzedb</code> utility as a SynxDB function. This example <code>CREATE FUNCTION</code> command creates a user defined PL/Python function that runs the <code>analyzedb</code> utility and displays output on the command line. Specify <code>analyzedb</code> options as the function parameter.</p>
+<pre><code>CREATE OR REPLACE FUNCTION analyzedb(params TEXT)
+  RETURNS VOID AS
+$BODY$
+    import subprocess
+    cmd = ['analyzedb', '-a' ] + params.split()
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+    # verbose output of process
+    for line in iter(p.stdout.readline, ''):
+        plpy.info(line);
+
+    p.wait()
+$BODY$
+LANGUAGE plpythonu VOLATILE;
+</code></pre>
+<p>When this <code>SELECT</code> command is run by the gpadmin user, the <code>analyzedb</code> utility performs an analyze operation on the table <code>public.mytable</code> that is in the database <code>mytest</code>.</p>
+<pre><code>SELECT analyzedb('-d mytest -t public.mytable') ;
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> To create a PL/Python function, the PL/Python procedural language must be registered as a language in the database. For example, this <code>CREATE LANGUAGE</code> command run as gpadmin registers PL/Python as an untrusted language:</p>
+</blockquote>
+<pre><code>CREATE LANGUAGE plpythonu;
+</code></pre>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="seealso"></a>See Also</a></h2>
+<p><a href="../../ref_guide/sql_commands/ANALYZE.html">ANALYZE</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../utility_guide/utility-programs.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../utility_guide/ref/clusterdb.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../utility_guide/utility-programs.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../utility_guide/ref/clusterdb.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

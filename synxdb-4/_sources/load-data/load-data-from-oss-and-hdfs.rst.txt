@@ -1,0 +1,724 @@
+.. raw:: latex
+
+   \newpage
+
+Load Data from Object Storage and HDFS
+============================================
+
+You can use the ``datalake_fdw`` extension to load data from an object storage (such as Amazon S3, QingCloud, Alibaba Cloud, Huawei Cloud, and Tencent Cloud), HDFS, and ORC tables in Hive into |product_name| for data query and access.
+
+Currently, supported data formats are CSV, TEXT, ORC, and PARQUET.
+
+.. note::
+
+   ``datalake_fdw`` does not support loading data in parallel.
+
+
+For information on how to load tables from Hive into |product_name|, see :ref:`load-data/load-data-from-hive:load data from hive data warehouse`.
+
+Install the extension
+--------------------------
+
+To install the ``datalake_fdw`` extension to the database, execute the SQL statement ``CREATE EXTENSION data_fdw;``.
+
+.. code:: sql
+
+   CREATE EXTENSION datalake_fdw;
+
+Instructions
+--------------
+
+This section explains how to use ``datalake_fdw`` to load data from object storage and HDFS into |product_name|.
+
+To load data using ``datalake_fdw``, you need to create a foreign data wrapper (FDW) first. This includes creating an FDW server and user mapping.
+
+Load data from object storage
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can load data from Amazon S3, QingCloud, Alibaba Cloud, Tencent Cloud, and other object storages into |product_name|. Follow these steps:
+
+1. Create a foreign table wrapper ``FOREIGN DATA WRAPPER``. Note that there are no options in the SQL statement below, and you need to execute it exactly as provided.
+
+   .. code:: sql
+
+      CREATE FOREIGN DATA WRAPPER datalake_fdw
+      HANDLER datalake_fdw_handler
+      VALIDATOR datalake_fdw_validator 
+      OPTIONS ( mpp_execute 'all segments' );
+
+2. Create an external server ``foreign_server``.
+
+   .. code:: sql
+
+      CREATE SERVER foreign_server
+      FOREIGN DATA WRAPPER datalake_fdw
+      OPTIONS (host 'xxx', protocol 's3b', isvirtual 'false', ishttps 'false');
+
+   The options in the above SQL statement are explained as follows:
+
+   .. raw:: latex
+      
+       \begin{mytable-small}
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 6 11 16
+      :class: longtable
+
+      * - Option name
+        - Description
+        - Details
+      * - ``host``
+        - Sets the host information for accessing the object storage.
+        - Required: Must be set
+
+          Example:
+
+          - Host for QingCloud public cloud: ``pek3b.qingstor.com``
+          - Host for private cloud: ``192.168.1.1:9000``
+      * - ``protocol``
+        - Specifies the cloud platform for the object storage.
+        - Required: Must be set
+
+          Options:
+
+          - ``s3b``: Amazon Cloud (uses v2 signature)
+          - ``s3``: Amazon Cloud (uses v4 signature)
+          - ``ali``: Alibaba Cloud object storage
+          - ``qs``: QingCloud object storage
+          - ``cos``: Tencent object storage
+          - ``huawei``: Huawei object storage
+          - ``ks3``: Kingstor object storage
+      * - ``isvirtual``
+        - Use **virtual-host-style** or **path-host-style** to parse the host of the object storage.
+        - Required: Optional
+
+          Options:
+
+          - ``true``: Uses **virtual-host-style**.
+          - ``false``: Uses **path-host-style**.
+
+          Default value: ``false``
+      * - ``ishttps``
+        - Whether to use HTTPS to access the object storage.
+        - Required: Optional
+
+          Options:
+
+          - ``true``: Uses HTTPS.
+          - ``false``: Does not use HTTPS.
+
+          Default value: ``false``
+
+   .. raw:: latex
+      
+       \end{mytable-small}
+
+3. Create a user mapping.
+
+   .. code:: sql
+
+      CREATE USER MAPPING FOR gpadmin SERVER foreign_server 
+      OPTIONS (user 'gpadmin', accesskey 'xxx', secretkey 'xxx');
+
+   The options in the above SQL statement are explained as follows:
+
+   .. raw:: latex
+
+       \begin{mytable-small}
+
+   .. list-table:: 
+      :header-rows: 1
+      :align: left
+      :widths: auto
+      :class: longtable
+
+      * - Option name
+        - Description
+        - Required
+      * - ``user``
+        - Creates the specific user specified by ``foreign_server``.
+        - Yes
+      * - ``accesskey``
+        - The key needed to access the object storage.
+        - Yes
+      * - ``secretkey``
+        - The secret key needed to access the object storage.
+        - Yes
+
+   .. raw:: latex
+
+       \end{mytable-small}
+
+4. Create a foreign table ``example``. After creating it, the data on the object storage is loaded into |product_name|, and you can query this table.
+
+   .. code:: sql
+
+      CREATE FOREIGN TABLE example(
+      a text,
+      b text
+      )
+      SERVER foreign_server 
+      OPTIONS (filePath '/test/parquet/', compression 'none', enableCache 'false', format 'parquet');
+
+   The options in the SQL statement above are explained as follows:
+
+   .. raw:: latex
+
+       \begin{mytable-small}
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 6 11 16
+      :class: longtable
+
+      * - Option name
+        - Description
+        - Details
+      * - ``filePath``
+        - Sets the specific path for the target foreign table.
+        - 
+          - Required: Must be set
+          - Path format should be ``/bucket/prefix``.
+
+          - Example:
+  
+            - If the bucket name is ``test-bucket`` and the path is ``bucket/test/orc_file_folder/``, and there are files like ``0000_0``, ``0001_1``, ``0002_2``, then to access file ``0000_0``, set ``filePath`` to ``filePath '/test-bucket/test/orc_file_folder/0000_0'``.
+            - To access all files in ``test/orc_file_folder/``, set ``filePath`` to ``filePath '/test-bucket/test/orc_file_folder/'``.
+
+          - Note: ``filePath`` is parsed in the format ``/bucket/prefix/``. Incorrect formats might lead to errors, such as:
+
+            - ``filePath 'test-bucket/test/orc_file_folder/'``
+            - ``filePath '/test-bucket/test/orc_file_folder/0000_0'``
+
+      * - ``compression``
+        - Sets the write compression format. Currently supports gzip, zstd, lz4.
+        - 
+          - Required: Optional
+
+          - Options:
+
+            - ``none``: Supports CSV, ORC, TEXT, PARQUET.
+            - ``gzip``: Supports CSV, TEXT, PARQUET.
+            - ``zstd``: Supports PARQUET.
+            - ``lz4``: Supports PARQUET.
+            
+          - Default value: ``none``, which means no compression. Not setting this value means no compression.
+
+      * - ``enableCache``
+        - Specifies whether to use Gopher caching.
+        - 
+          - Required: Optional
+          - Options:
+
+            - ``true``: Enables Gopher caching.
+            - ``false``: Disables Gopher caching.
+
+          - Default value: ``false``
+          - Deleting the foreign table does not automatically clear its cache. To clear the cache, you need to manually run a specific SQL function, such as: ``select gp_toolkit._gopher_cache_free_relation_name(text);``
+      * - ``format``
+        - The file format supported by FDW.
+        - 
+          - Required: Must be set
+
+          - Options:
+  
+            - ``csv``: Read, Write
+            - ``text``: Read, Write
+            - ``orc``: Read, Write
+            - ``parquet``: Read, Write
+
+   .. raw:: latex
+
+       \end{mytable-small}
+
+Load data from HDFS
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can load data from HDFS into |product_name|. The following sections explain how to load data from an HDFS cluster without authentication and how to load data from an HDFS cluster with Kerberos authentication. |product_name| also supports loading data from an HDFS HA (High Availability) cluster, which is also explained below.
+
+Load HDFS data without authentication
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Load data from HDFS in the simple mode, which is the basic HDFS mode without using complex security authentication. For details, see the Hadoop documentation: `Hadoop in Secure Mode <https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SecureMode.html>`__. The steps are as follows:
+
+1. Create an external table wrapper ``FOREIGN DATA WRAPPER``. Note that there are no options in the SQL statement below, and you need to execute the statement exactly as provided.
+
+   .. code:: sql
+
+      CREATE FOREIGN DATA WRAPPER datalake_fdw
+      HANDLER datalake_fdw_handler
+      VALIDATOR datalake_fdw_validator 
+      OPTIONS ( mpp_execute 'all segments' );
+
+2. Create an external server. In this step, you can create an external server for a single-node HDFS or for HA (High Availability) HDFS.
+
+   -  Create an external server ``foreign_server`` for a single-node HDFS:
+
+      .. code:: sql
+
+         CREATE SERVER foreign_server FOREIGN DATA WRAPPER datalake_fdw
+         OPTIONS (
+             protocol 'hdfs',
+             hdfs_namenodes '[192.168.178.95](http://192.168.178.95)',
+             hdfs_port '9000',
+             hdfs_auth_method 'simple', 
+             hadoop_rpc_protection 'authentication');
+
+      The options in the above SQL statement are explained as follows:
+
+      .. raw:: latex
+
+          \begin{mytable-small}
+
+      .. list-table::
+         :header-rows: 1
+         :widths: 14 10 30
+         :class: longtable
+
+         * - Option name
+           - Description
+           - Details
+         * - ``protocol``
+           - Specifies the Hadoop platform.
+           - 
+             - Required: Must be set
+             - Setting: Fixed as ``hdfs``, which means Hadoop platform, cannot be changed.
+             - Default value: ``hdfs``
+         * - ``hdfs_namenodes``
+           - Specifies the namenode host for accessing HDFS.
+           - 
+             - Required: Must be set
+             - Example: For example, ``hdfs_namenodes '192.168.178.95:9000'``
+         * - ``hdfs_auth_method``
+           - Specifies the authentication mode for accessing HDFS.
+           - 
+             - Required: Must be set
+             - Options:
+
+               - ``simple``: Uses Simple authentication to access HDFS.
+               - ``kerberos``: Uses Kerberos authentication to access HDFS.
+             - Note: To access in Simple mode, set the value to ``simple``, for example, ``hdfs_auth_method 'simple'``.
+         * - ``hadoop_rpc_protection``
+           - Configures the authentication mechanism for setting up a SASL connection.
+           - 
+             - Required: Must be set
+             - Options: Three values are available: ``authentication``, ``integrity``, and ``privacy``.
+             - Note: This option must match the ``hadoop.rpc.protection`` setting in the HDFS configuration file ``core-site.xml``. For more details, see the Hadoop documentation `Explanation of core-site.xml <https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/core-site.xml>`__.
+
+      .. raw:: latex
+
+          \end{mytable-small}
+
+   -  Create an external server for a multi-node HA cluster. The HA cluster supports node failover. For more information about HDFS high availability, see the Hadoop documentation `HDFS High Availability Using the Quorum Journal Manager <https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSHighAvailabilityWithQJM.html>`__.
+
+      To load an HDFS HA cluster, you can create an external server using the following template:
+
+      .. code:: sql
+
+         CREATE SERVER foreign_server
+                 FOREIGN DATA WRAPPER datalake_fdw
+                 OPTIONS (
+                 protocol 'hdfs',
+                 hdfs_namenodes 'mycluster',
+                 hdfs_auth_method 'simple',
+                 hadoop_rpc_protection 'authentication',
+                 is_ha_supported 'true',
+                 dfs_nameservices 'mycluster',
+                 dfs_ha_namenodes 'nn1,nn2,nn3',
+                 dfs_namenode_rpc_address '192.168.178.95:9000,192.168.178.160:9000,192.168.178.186:9000',
+                 dfs_client_failover_proxy_provider 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider');
+
+      In the above SQL statement, ``protocol``, ``hdfs_namenodes``, ``hdfs_auth_method``, and ``hadoop_rpc_protection`` are the same as in the single-node example. The HA-specific options are explained as follows:
+
+      .. raw:: latex
+
+          \begin{mytable-small}
+
+      .. list-table::
+         :header-rows: 1
+         :widths: 18 15 30
+         :class: longtable
+
+         * - Option name
+           - Description
+           - Details
+         * - ``is_ha_supported``
+           - Specifies whether to access the HDFS HA service (high availability).
+           - 
+             - Required: Must be set
+             - Setting: Set to ``true``.
+             - Default value: /
+         * - ``dfs_nameservices``
+           - When ``is_ha_supported`` is ``true``, specify the name of the HDFS HA service to access.
+           - 
+             - Required: If using an HDFS HA cluster, must be set.
+             - Matches the ``dfs.ha.namenodes.mycluster`` item in the HDFS config file ``hdfs-site.xml``.
+             - Note: For example, if ``dfs.ha.namenodes.mycluster`` is ``cluster``, set this option as ``dfs_nameservices 'mycluster'``.
+         * - ``dfs_ha_namenodes``
+           - When ``is_ha_supported`` is ``true``, specify the accessible nodes for HDFS HA.
+           - 
+             - Required: If using an HDFS HA cluster, must be set.
+             - Setting: Matches the value of the ``dfs.ha.namenodes.mycluster`` item in the HDFS config file ``hdfs-site.xml``.
+             - Note: For example, ``dfs_ha_namenodes 'nn1,nn2,nn3'``.
+         * - ``dfs_namenode_rpc_address``
+           - When ``is_ha_supported`` is ``true``, specifies the IP addresses of the high availability nodes in HDFS HA.
+           - 
+             - Required: If using an HDFS HA cluster, must be set.
+             - Setting: Refer to the ``dfs.ha_namenodes`` configuration in the HDFS ``hdfs-site.xml`` file. The node address matches the ``namenode`` address in the configuration.
+             - Note: For example, if ``dfs.ha.namenodes.mycluster`` has three namenodes named ``nn1``, ``nn2``, ``nn3``, find their addresses from the HDFS configuration file and enter them into this field.
+
+               .. code:: 
+
+                  dfs_namenode_rpc_address '192.168.178.95:9000,192.168.178.160:9000,192.168.178.186:9000'
+         * - ``dfs_client_failover_proxy``
+           - Specifies whether HDFS HA has failover enabled.
+           - 
+             - Required: If using an HDFS HA cluster, must be set.
+             - Setting: Set to the default value: ``dfs_client_failover_proxy_provider 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'``.
+             - Default value: /
+
+      .. raw:: latex
+
+          \end{mytable-small}
+
+   .. note::
+
+      When Kerberos authentication is enabled, you need to renew the Kerberos ticket periodically. If the ticket is not renewed, database performance will gradually degrade until the database eventually crashes and becomes unavailable. Add a renewal command to an operating-system scheduler (such as ``crontab``) or to your orchestration platform, for example:
+
+      .. code-block:: shell
+
+         kinit -kt /yourpath/greenplum.keytab bdms_greerplum/dev@BDMS.COM
+
+      In the command above, ``/yourpath/greenplum.keytab`` is the path to your keytab file. The principal ``bdms_greerplum/dev@BDMS.COM`` is an example, where ``bdms_greerplum`` is the user, ``dev`` is the instance, and ``BDMS.COM`` is the ``REALM``. Replace these with your actual values.
+
+      It is recommended to add a renewal script to monitoring to ensure that the ticket remains valid. For more examples of ticket-renewal configuration, see the Greenplum documentation: <https://techdocs.broadcom.com/us/en/vmware-tanzu/data-solutions/tanzu-greenplum-platform-extension-framework/6-7/gp-pxf/pxf_kerbhdfs.html>.
+
+3. Create a user mapping.
+
+   .. code:: sql
+
+      CREATE USER MAPPING FOR gpadmin SERVER foreign_server 
+      OPTIONS (user 'gpadmin');
+
+   In the above statement, the ``user`` option specifies the specific user for ``foreign_server`` and must be set.
+
+4. Create the foreign table ``example``. After creating it, the data from object storage is already loaded into |product_name|, and you can query this table.
+
+   .. code:: sql
+
+      CREATE FOREIGN TABLE example(
+      a text,
+      b text
+      )
+      SERVER foreign_server 
+      OPTIONS (filePath '/test/parquet/', compression 'none', enableCache 'false', format 'parquet');
+
+   The options in the above SQL statement are explained as follows:
+
+   .. raw:: latex
+
+       \begin{mytable-small}
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 8 9 35
+      :class: longtable
+
+      * - Option name
+        - Description
+        - Details
+      * - ``filePath``
+        - Sets the specific path of the target foreign table.
+        - 
+          - Required: Must be set
+          - Setting: The path format should be ``/hdfs_prefix`.
+
+            Example: If the ``hdfs_prefix`` to be accessed is named ``test-example``, the access path is ``/test-example/``. If there are multiple files in the path (for example, ``0000_0``, ``0001_1``, ``0002_2``), you can set the ``filePath`` of ``0000_0`` file as ``filePath '/test-example/0000_0'``. To access all the files in ``/test-example/``, you can set the ``filePath`` as ``filePath '/test_example/'``.
+
+          - Note: ``filePath`` should follow the ``/hdfs_prefix/`` format. Incorrect formats might lead to errors, such as:
+
+            - ``filePath 'test/test/orc_file_folder/'``
+            - ``filePath '/test/test/orc_file_folder/0000_0'``
+      * - ``compression``
+        - Sets the compression format for writing. Currently supports gzip, zstd, lz4 formats.
+        - 
+          - Required: Optional
+          - Setting:
+  
+            - ``none``: Supports CSV, ORC, TEXT, PARQUET formats.
+            - ``gzip``: Supports CSV, TEXT, PARQUET formats.
+            - ``zstd``: Supports PARQUET format.
+            - ``lz4``: Supports PARQUET format.
+          - Default value: ``none``, which means no compression. Not setting this value also means no compression.
+      * - ``enableCache``
+        - Specifies whether to use the Gopher cache.
+        - 
+          - Required: Optional
+          - Setting:
+
+            - ``true``: Enables Gopher cache.
+            - ``false``: Disables Gopher cache.
+          - Default: ``false``
+          - Note: Deleting a foreign table does not automatically clear the cache. To clear the cache for this table, you need to manually run a specific SQL function, for example:
+
+            .. code::
+
+               select gp_toolkit._gopher_cache_free_relation_name(text);
+      * - ``format``
+        - The file format currently supported by FDW.
+        - 
+          - Required: Must be set
+          - Setting:
+
+            - ``csv``: Readable, writable
+            - ``text``: Readable, writable
+            - ``orc``: Readable, writable
+            - ``parquet``: Readable, writable
+
+   .. raw:: latex
+
+       \end{mytable-small}
+
+Load HDFS data with Kerberos authentication
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If the target HDFS cluster uses Kerberos for authentication, you can follow these steps to load data from HDFS to |product_name|.
+
+1. Create a foreign data wrapper ``FOREIGN DATA WRAPPER``. Note that there are no options in the following SQL statement, and you need to execute it exactly as provided.
+
+   .. code:: sql
+
+      CREATE FOREIGN DATA WRAPPER datalake_fdw
+      HANDLER datalake_fdw_handler
+      VALIDATOR datalake_fdw_validator 
+      OPTIONS ( mpp_execute 'all segments' );
+
+2. Create an external server. In this step, you can create an external server for a single-node HDFS or for an HA (High Availability) HDFS.
+
+   -  Create an external server ``foreign_server`` for a single-node HDFS:
+
+      .. code:: sql
+
+         DROP SERVER foreign_server;
+
+         CREATE SERVER foreign_server
+                 FOREIGN DATA WRAPPER datalake_fdw
+                 OPTIONS (hdfs_namenodes '192.168.3.32',
+                 hdfs_port '9000',
+                 protocol 'hdfs',
+                 hdfs_auth_method 'kerberos', 
+                 krb_principal 'gpadmin/hdw-68212a9a-master0@GPADMINCLUSTER2.COM',
+                 krb_principal_keytab '/home/gpadmin/hadoop.keytab',
+                 hadoop_rpc_protection 'privacy'
+                 );
+
+      The options in the above SQL statement are explained as follows:
+
+      .. raw:: latex
+
+          \begin{mytable-small}
+
+      .. list-table::
+         :header-rows: 1
+         :widths: 14 10 35
+         :class: longtable
+
+         * - Option name
+           - Description
+           - Details
+         * - ``hdfs_namenodes``
+           - Specifies the namenode host for accessing HDFS.
+           - 
+             - Required: Must be set
+             - Setting: /
+             - Example: For example, ``hdfs_namenodes '192.168.178.95:9000'``
+         * - ``protocol``
+           - Specifies the Hadoop platform.
+           - 
+             - Required: Must be set
+             - Setting: Fixed to ``hdfs``, meaning the Hadoop platform. Cannot be changed.
+             - Default: ``hdfs``
+         * - ``hdfs_auth_method``
+           - Specifies the authentication method for accessing HDFS, which is Kerberos.
+           - 
+             - Required: Must be set
+             - Setting: ``kerberos``, to access HDFS using Kerberos authentication.
+         * - ``krb_principal``
+           - Specifies the primary user set in the HDFS keytab.
+           - 
+             - Required: Must be set
+             - Setting: Must match the user information in the keytab. You need to check the relevant user information and set this value accordingly.
+         * - ``krb_principal_keytab``
+           - Specifies the path to the HDFS keytab.
+           - 
+             - Required: Must be set
+             - Setting: The value must match the actual path of the keytab in HDFS.
+         * - ``hadoop_rpc_protection``
+           - Configures the authentication mechanism for establishing a SASL connection.
+           - 
+             - Required: Must be set
+             - Setting: Three options are available: ``authentication``, ``integrity``, and ``privacy``.
+             - Note: This option must match the ``hadoop.rpc.protection`` setting in the HDFS configuration file ``core-site.xml``. For more details, see the Hadoop `core-site.xml documentation <https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/core-site.xml>`__.
+
+      .. raw:: latex
+
+          \end{mytable-small}
+
+   -  Create an external server for a multi-node HA cluster. The HA cluster supports failover. For more information about HDFS high availability, see the Hadoop documentation `HDFS High Availability Using the Quorum Journal Manager <https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSHighAvailabilityWithQJM.html>`__.
+
+      To load an HDFS HA cluster, you can use the following template to create an external server:
+
+      .. code:: sql
+
+         CREATE SERVER foreign_server
+                 FOREIGN DATA WRAPPER datalake_fdw
+                 OPTIONS (hdfs_namenodes 'mycluster',
+                 protocol 'hdfs', 
+                 hdfs_auth_method 'kerberos', 
+                 krb_principal 'gpadmin/hdw-68212a9a-master0@GPADMINCLUSTER2.COM',
+                 krb_principal_keytab '/home/gpadmin/hadoop.keytab', 
+                 hadoop_rpc_protection 'privacy',
+                 is_ha_supported 'true',
+                 dfs_nameservices 'mycluster',
+                 dfs_ha_namenodes 'nn1,nn2,nn3',
+                 dfs_namenode_rpc_address '192.168.178.95:9000,192.168.178.160:9000,192.168.178.186:9000',
+                 dfs_client_failover_proxy_provider 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'
+                 );
+
+      In the above SQL statement, the explanations for ``hdfs_namenodes``, ``protocol``, ``hdfs_auth_method``, ``krb_principal``, ``krb_principal_keytab``, and ``hadoop_rpc_protection`` are the same as for the single-node example. The HA-specific options are explained as follows:
+
+      .. raw:: latex
+
+          \begin{mytable-small}
+
+      .. list-table::
+         :header-rows: 1
+         :widths: 18 15 35
+         :class: longtable
+
+         * - Option name
+           - Description
+           - Details
+         * - ``is_ha_supported``
+           - Specifies whether to access the HDFS HA service, which means high availability.
+           - 
+             - Required: Must be set
+             - Setting: Set to ``true``.
+         * - ``dfs_nameservices``
+           - When ``is_ha_supported`` is ``true``, specifies the name of the HDFS HA service to access.
+           - 
+             - Required: Must be set if using an HDFS HA cluster.
+             - Setting: Should match the ``dfs.ha.namenodes.mycluster`` item in the HDFS configuration file ``hdfs-site.xml``.
+             - Note: For example, if ``dfs.ha.namenodes.mycluster`` is ``cluster``, set this parameter to ``dfs_nameservices 'mycluster'``.
+         * - ``dfs_ha_namenodes``
+           - When ``is_ha_supported`` is ``true``, specifies the accessible nodes for HDFS HA.
+           - 
+             - Required: Must be set if using an HDFS HA cluster.
+             - Setting: Should match the value of the ``dfs.ha.namenodes.mycluster`` item in the HDFS configuration file ``hdfs-site.xml``.
+             - Note: For example, ``dfs_ha_namenodes 'nn1,nn2,nn3'``
+         * - ``dfs_namenode_rpc_address``
+           - When ``is_ha_supported`` is ``true``, specifies the IP addresses of the high availability nodes in HDFS HA.
+           - 
+             - Required: Must be set if using an HDFS HA cluster.
+             - Setting: Refer to the ``dfs.ha_namenodes`` configuration in the HDFS ``hdfs-site.xml`` file. The node address should match the namenode address in the configuration.
+             - Example: If ``dfs.ha.namenodes.mycluster`` has three namenodes ``nn1``, ``nn2``, ``nn3``, you can find the addresses like ``dfs.namenode.rpc-address.mycluster.nn1`` in the HDFS config and fill them in.
+
+               .. code::
+
+                  dfs_namenode_rpc_address '192.168.178.95:9000,192.168.178.160:9000,192.168.178.186:9000'
+         * - ``dfs_client_failover_proxy_provider``
+           - Specifies whether HDFS HA has failover enabled.
+           - 
+             - Required: Must be set if using an HDFS HA cluster.
+             - Setting: Set to the default value ``dfs_client_failover_proxy_provider 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'``.
+
+      .. raw:: latex
+
+          \end{mytable-small}
+
+3. Create a user mapping.
+
+   .. code:: sql
+
+      CREATE USER MAPPING FOR gpadmin SERVER foreign_server 
+      OPTIONS (user 'gpadmin');
+
+   In the above statement, the ``user`` option specifies the specific user for ``foreign_server`` and must be set.
+
+4. Create the foreign table ``example``. After creating it, the data from object storage is already loaded into |product_name|, and you can query this table.
+
+   .. code:: sql
+
+      CREATE FOREIGN TABLE example(
+      a text,
+      b text
+      )
+      SERVER foreign_server 
+      OPTIONS (filePath '/test/parquet/', compression 'none', enableCache 'false', format 'parquet');
+
+   The options in the above SQL statement are explained as follows:
+
+   .. raw:: latex
+
+       \begin{mytable-small}
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 8 9 35
+      :class: longtable
+
+      * - Option name
+        - Description
+        - Details
+      * - ``filePath``
+        - Sets the specific path of the target foreign table.
+        - 
+          - Required: Must be set
+          - Setting: The path format should be ``/hdfs_prefix`.
+
+            Example: If the ``hdfs_prefix`` to be accessed is named ``test-example``, the access path is ``/test-example/``. If there are multiple files in the path (for example, ``0000_0``, ``0001_1``, ``0002_2``), you can set the ``filePath`` of ``0000_0`` file as ``filePath '/test-example/0000_0'``. To access all the files in ``/test-example/``, you can set the ``filePath`` as ``filePath '/test_example/'``.
+
+          - Note: ``filePath`` should follow the ``/hdfs_prefix/`` format. Incorrect formats might lead to errors, such as:
+
+            - ``filePath 'test/test/orc_file_folder/'``
+            - ``filePath '/test/test/orc_file_folder/0000_0'``
+      * - ``compression``
+        - Sets the compression format for writing, supports gzip, zstd, lz4 formats.
+        - 
+          - Required: Optional
+          - Setting:
+  
+            - ``none``: Supports CSV, ORC, TEXT, PARQUET formats.
+            - ``gzip``: Supports CSV, TEXT, PARQUET formats.
+            - ``zstd``: Supports PARQUET format.
+            - ``lz4``: Supports PARQUET format.
+          - Default: ``none``, which means no compression. Not setting this value also means no compression.
+      * - ``enableCache``
+        - Specifies whether to use the Gopher cache.
+        - 
+          - Required: Optional
+          - Setting:
+
+            - ``true``: Enables Gopher cache.
+            - ``false``: Disables Gopher cache.
+          - Default: ``false``
+          - Note: Deleting a foreign table does not automatically clear the cache. To clear the cache, you need to manually run an SQL function, for example:
+            
+            .. code::
+
+               select gp_toolkit.__gopher_cache_free_relation_name(text);
+      * - ``format``
+        - The file format currently supported by FDW.
+        - 
+          - Required: Must be set
+          - Setting:
+
+            - ``csv``: Readable, writable
+            - ``text``: Readable, writable
+            - ``orc``: Readable, writable
+            - ``parquet``: Readable, writable
+
+   .. raw:: latex
+
+       \end{mytable-small}

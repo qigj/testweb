@@ -1,0 +1,136 @@
+# Query Hints
+
+{{ product_name }} uses two query optimizers: the Postgres-based optimizer and GPORCA. Each optimizer is tailored for specific types of workloads:
+
+- The Postgres-based optimizer: Suitable for transactional workloads.
+- GPORCA: Suitable for analytical and hybrid transactional-analytical workloads.
+
+When processing a query, the optimizer explores a vast search space of equivalent execution plans. It uses table statistics and cardinality estimation models to predict the number of rows processed by each operation. The optimizer then assigns a cost to each plan using a cost model and selects the one with the lowest cost as the final execution plan.
+
+Query hints are directives given by the user to the optimizer to influence the query's execution strategy. Hints allow users to override the optimizer's default behavior to address issues like inaccurate row count estimates, suboptimal scan methods, inappropriate join type selection, or inefficient join orders. This article introduces the different types of query hints and their use cases.
+
+:::{info}
+{{ product_name }} does not currently support hints to control Motion operators.
+:::
+
+## Quick example
+
+:::{info}
+To enable the query hints feature, you must first load the relevant module in your psql session:
+
+```sql
+LOAD 'pg_hint_plan';
+```
+
+Alternatively, you can configure it to load automatically at the database or user level:
+
+```sql
+ALTER DATABASE a_database SET session_preload_libraries='pg_hint_plan';
+ALTER USER a_user SET session_preload_libraries='pg_hint_plan';
+```
+:::
+
+```sql
+CREATE TABLE foo(a int);
+INSERT INTO foo SELECT i FROM generate_series(1, 100000)i;
+
+LOAD 'pg_hint_plan';
+SHOW pg_hint_plan.enable_hint;
+pg_hint_plan.enable_hint
+--------------------------
+on
+(1 row)
+
+EXPLAIN SELECT count(*) FROM foo WHERE a > 6;
+                                    QUERY PLAN
+--------------------------------------------------------------------------------------
+Finalize Aggregate  (cost=537.05..537.06 rows=1 width=8)
+   ->  Gather Motion 3:1  (slice1; segments: 3)  (cost=536.99..537.04 rows=3 width=8)
+         ->  Partial Aggregate  (cost=536.99..537.00 rows=1 width=8)
+               ->  Seq Scan on foo  (cost=0.00..453.67 rows=33330 width=0)
+                     Filter: (a > 6)
+Optimizer: Postgres-based planner
+(6 rows)
+```
+
+You can also specify multiple hints at once, for example, to control the scan method and row count estimation:
+
+```sql
+SELECT * FROM t1 JOIN t2 ON t1.a = t2.a WHERE t1.a < 100;
+```
+
+## Cardinality hints
+
+When the optimizer's row count estimation for a join operation is inaccurate, it might choose a less efficient plan, such as using Broadcast Motion instead of Redistribute Motion, or incorrectly favoring a Merge Join over a Hash Join. Cardinality hints can be used to adjust the row count estimate for a specific operation, which is particularly useful when statistics are missing or outdated.
+
+Example:
+
+```sql
+/*+ Rows(t1 t2 t3 #42) */ SELECT * FROM t1, t2, t3;  -- Sets the estimated rows to 42
+/*+ Rows(t1 t2 t3 +42) */ SELECT * FROM t1, t2, t3; -- Adds 42 to the original estimate
+/*+ Rows(t1 t2 t3 -42) */ SELECT * FROM t1, t2, t3; -- Subtracts 42 from the original estimate
+/*+ Rows(t1 t2 t3 *42) */ SELECT * FROM t1, t2, t3; -- Multiplies the original estimate by 42
+```
+
+:::info Note
+Cardinality hints currently only take effect in the ORCA optimizer. The Postgres optimizer does not recognize these hints.
+:::
+
+## Join type hints
+
+When using a Hash Join, some intermediate results might be written to disk, affecting performance. If a user knows that a specific query is better suited for a Nested Loop Join, they can specify the join method and the order of the inner and outer tables using hints.
+
+Example:
+
+```sql
+/*+ HashJoin(t1 t2) */ SELECT * FROM t1, t2;
+/*+ NestLoop(t1 t2) */ SELECT * FROM t1, t2;
+/*+ MergeJoin(t1 t2) */ SELECT * FROM t1 FULL JOIN t2 ON t1.a = t2.a;
+```
+
+## Join order hints
+
+When the optimizer chooses an inefficient join order due to insufficient statistics or estimation biases, you can use the `Leading(...)` hint to specify the join order between tables.
+
+Example:
+
+```sql
+/*+ Leading(t1 t2 t3) */ SELECT * FROM t1, t2, t3;
+/*+ Leading(t1 (t3 t2)) */ SELECT * FROM t1, t2, t3;
+```
+
+In queries involving `LEFT OUTER JOIN` or `RIGHT OUTER JOIN`, you can also use `Leading(...)` to specify the join order. Note the following restrictions when using it:
+
+- The hint order must be consistent with the join structure in the original SQL. For example:
+
+    ```sql
+    SELECT * FROM t1 LEFT JOIN t2 ON t1.a = t2.a;
+    ```
+
+    Using `/*+ Leading((t1 t2)) */` preserves the left join, while `/*+ Leading((t2 t1)) */` converts it to a right join (semantically equivalent, but a different plan).
+
+- For multi-level nested outer joins, the hint must be specified in the semantic nesting order.
+
+- Adjusting the join direction is not supported for non-equi-join conditions (e.g., `t1.a > t2.a`), as this would alter the query's semantics.
+
+    Example: The following hint instructs the optimizer to prioritize joining `t3` with the `t2-t1` combination:
+
+    ```sql
+    /*+ Leading((t3 (t2 t1))) */
+    SELECT * FROM t1 LEFT JOIN t2 ON t1.a = t2.a LEFT JOIN t3 ON t2.b = t3.b;
+    ```
+
+## Scope and limitations of hints
+
+- The query hints feature depends on the `pg_hint_plan` extension module, which must be explicitly loaded.
+- Hints for controlling data redistribution strategies are not currently supported.
+
+## Best practices for query hints
+
+It is recommended to follow these practices when using hints:
+
+- Focus on solving specific problems: such as inaccurate cardinality estimates, poor scan methods, or suboptimal join types or orders.
+- Test thoroughly before deploying to production: Ensure the hint genuinely improves query performance and reduces resource consumption.
+- Use as a temporary measure: Hints should be used for short-term optimization and reviewed periodically as data changes.
+- Avoid conflicts with GUCs: If a GUC setting conflicts with a hint, the hint will be ignored. Ensure global configurations are consistent with your hints.
+

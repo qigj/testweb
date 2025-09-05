@@ -1,0 +1,209 @@
+# GPORCA Features and Enhancements
+
+GPORCA provides enhanced support for certain types of queries and operations:
+
+- Queries on partitioned tables
+- Queries with subqueries
+- Queries with Common Table Expressions (CTEs)
+- DML operation optimization
+
+## Enhancements for partitioned table queries
+
+GPORCA introduces the following optimizations for handling queries on partitioned tables:
+
+- Improved partition pruning capabilities.
+
+- The query plan can include the Partition Selector operator.
+
+- The `EXPLAIN` plan no longer enumerates all partitions.
+
+    For queries with static partition pruning (i.e., comparing the partition key with a constant), GPORCA displays the Partition Selector operator in the `EXPLAIN` output, indicating the filter condition and the number of selected partitions. Here is an example:
+
+    ```sql
+    Partition Selector for Part_Table (dynamic scan id: 1) 
+            Filter: a > 10
+            Partitions selected:  1 (out of 3)
+    ```
+
+    For queries with dynamic partition pruning (i.e., comparing the partition key with a variable), partition selection is determined during execution, and the `EXPLAIN` output does not list the selected partitions.
+
+- The size of the query plan does not grow with the number of partitions.
+
+- Significantly reduces the risk of out-of-memory errors caused by a large number of partitions.
+
+The following `CREATE TABLE` example creates a range-partitioned table:
+
+```sql
+CREATE TABLE sales(order_id int, item_id int, amount numeric(15,2), 
+      date date, yr_qtr int)
+   PARTITION BY RANGE (yr_qtr) (start (201501) INCLUSIVE end (201504) INCLUSIVE, 
+   start (201601) INCLUSIVE end (201604) INCLUSIVE,
+   start (201701) INCLUSIVE end (201704) INCLUSIVE,     
+   start (201801) INCLUSIVE end (201804) INCLUSIVE,
+   start (201901) INCLUSIVE end (201904) INCLUSIVE,
+   start (202001) INCLUSIVE end (202004) INCLUSIVE);
+```
+
+GPORCA optimizes the following types of queries on partitioned tables:
+
+- Full table scan: Partitions are not enumerated in the plan.
+
+    ```sql
+    SELECT * FROM sales;
+    ```
+
+- Queries with constant filter conditions: Partition pruning can be performed.
+
+    ```sql
+    SELECT * FROM sales WHERE yr_qtr = 201501;
+    ```
+
+- Range queries: Also trigger partition pruning.
+
+    ```sql
+    SELECT * FROM sales WHERE yr_qtr BETWEEN 201601 AND 201704 ;
+    ```
+
+- Join queries on partitioned tables: The following example joins the dimension table `date_dim` with the fact table `catalog_sales`.
+
+    ```sql
+    SELECT * FROM catalog_sales
+        WHERE date_id IN (SELECT id FROM date_dim WHERE month=12);
+    ```
+
+## Subquery optimization
+
+GPORCA handles subqueries more efficiently. A subquery is a query nested within an outer query block, such as the `SELECT` in the `WHERE` clause of the following statement:
+
+```sql
+SELECT * FROM part
+  WHERE price > (SELECT avg(price) FROM part);
+```
+
+GPORCA also optimizes correlated subqueries (CSQs), which are subqueries that reference columns from the outer query. For example, in the following statement, both the inner and outer queries use the `price` column:
+
+```sql
+SELECT * FROM part p1 WHERE price > (SELECT avg(price) FROM part p2 WHERE p2.brand = p1.brand);
+```
+
+GPORCA can generate more optimal execution plans for the following types of subqueries:
+
+- Correlated subqueries in the SELECT list:
+
+    ```sql
+    SELECT *,
+    (SELECT min(price) FROM part p2 WHERE p1.brand = p2.brand)
+    AS foo
+    FROM part p1;
+    ```
+
+- Correlated subqueries in an OR condition:
+
+    ```sql
+    SELECT FROM part p1 WHERE p_size > 40 OR 
+        p_retailprice > 
+        (SELECT avg(p_retailprice) 
+            FROM part p2 
+            WHERE p2.p_brand = p1.p_brand)
+    ```
+
+- Nested subqueries with skip-level correlations:
+
+    ```sql
+    SELECT * FROM part p1 WHERE p1.p_partkey 
+    IN (SELECT p_partkey FROM part p2 WHERE p2.p_retailprice = 
+        (SELECT min(p_retailprice)
+            FROM part p3 
+            WHERE p3.p_brand = p1.p_brand)
+    );
+    ```
+
+    :::{info}
+    The Postgres-based query planner does not support nested correlated subqueries with skip-level correlations.
+    :::
+
+- Correlated subqueries with aggregations and inequalities:
+
+    ```sql
+    SELECT * FROM part p1 WHERE p1.p_retailprice =
+    (SELECT min(p_retailprice) FROM part p2 WHERE p2.p_brand <> p1.p_brand);
+    ```
+
+- Correlated subqueries that must return a single row:
+
+    ```sql
+    SELECT p_partkey, 
+    (SELECT p_retailprice FROM part p2 WHERE p2.p_brand = p1.p_brand )
+    FROM part p1;
+    ```
+
+## Common Table Expression (CTE) optimization
+
+GPORCA efficiently handles queries with `WITH` clauses. A `WITH` clause, also known as a Common Table Expression (CTE), defines a temporary logical table for use within a query. Here is an example of a query containing a CTE:
+
+```sql
+WITH v AS (SELECT a, sum(b) as s FROM T where c < 10 GROUP BY a)
+  SELECT * FROM  v AS v1 ,  v AS v2
+  WHERE v1.a <> v2.a AND v1.s < v2.s;
+```
+
+As part of query optimization, GPORCA supports pushing predicates down into the CTE. For example, in the following query, the equality predicate is pushed down into the CTE:
+
+```sql
+WITH v AS (SELECT a, sum(b) as s FROM T GROUP BY a)
+  SELECT *
+  FROM v as v1, v as v2, v as v3
+  WHERE v1.a < v2.a
+    AND v1.s < v3.s
+    AND v1.a = 10
+    AND v2.a = 20
+    AND v3.a = 30;
+```
+
+GPORCA supports the following types of CTEs:
+
+- CTEs that define multiple logical tables simultaneously. In the following example, the CTE defines two logical tables:
+
+    ```sql
+    WITH cte1 AS (SELECT a, sum(b) as s FROM T 
+                    where c < 10 GROUP BY a),
+        cte2 AS (SELECT a, s FROM cte1 where s > 1000)
+    SELECT *
+    FROM cte1 as v1, cte2 as v2, cte2 as v3
+    WHERE v1.a < v2.a AND v1.s < v3.s;
+    ```
+
+## DML operation optimization
+
+GPORCA also enhances DML operations such as `INSERT`, `UPDATE`, and `DELETE`:
+
+- DML operations appear as regular operator nodes in the execution plan.
+
+    - They can appear anywhere in the plan (currently limited to the top-level slice).
+    - They can have downstream nodes (consumers).
+
+- `UPDATE` operations are implemented using the Split operator, which supports the following features:
+
+    - Supports updating distribution key columns.
+    - Supports updating partition key columns. The following example shows a plan that includes a Split operator:
+   
+    ```sql
+    QUERY PLAN
+    --------------------------------------------------------------
+    Update  (cost=0.00..5.46 rows=1 width=1)
+       ->  Redistribute Motion 2:2  (slice1; segments: 2)
+             Hash Key: a
+             ->  Result  (cost=0.00..3.23 rows=1 width=48)
+                   ->  Split  (cost=0.00..2.13 rows=1 width=40)
+                         ->  Result  (cost=0.00..1.05 rows=1 width=40)
+                               ->  Seq Scan on dmltest
+    ```
+
+## Other optimization capabilities
+
+GPORCA also includes the following optimization capabilities:
+
+- Better join ordering choices.
+- Support for reordering of joins and aggregate operations.
+- Sort order optimization.
+- Consideration of data skew estimates during optimization.

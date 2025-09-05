@@ -1,0 +1,13 @@
+.preview-banner {
+    background-color: #fbf3d9;
+    color: #333;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 15px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    /* Use negative margins to span the full width of the content area */
+    margin: -1.618em -3.236em 1.618em;
+} 

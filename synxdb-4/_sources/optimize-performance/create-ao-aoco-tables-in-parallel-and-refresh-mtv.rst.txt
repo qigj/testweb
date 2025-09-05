@@ -1,0 +1,131 @@
+Create AO/AOCO Tables in Parallel and Refresh Materialized Views
+==================================================================
+
+|product_name| supports using the ``CREATE TABLE AS`` statement to create Append-Optimized (AO) tables and Append-Optimized Column Oriented (AOCO) tables in parallel, and also supports parallel refreshing of materialized views based on such tables, thereby accelerating table creation and materialized view refreshing.
+
+To use this parallel functionality, you need to set the system parameter ``enable_parallel`` to ``ON`` first.
+
+Usage examples
+--------------
+
+Create AO/AOCO tables in parallel
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Create the base table ``t_p2``, using ``WITH`` in the table creation statement to specify the number of parallel workers.
+
+   .. code:: sql
+
+      CREATE TABLE t_p2(c1 INT, c2 INT) WITH (parallel_workers=2) DISTRIBUTED BY (c1);
+
+2. Insert data into the table and collect statistics on table ``t_p2``.
+
+   .. code:: sql
+
+      INSERT INTO t_p2 SELECT i, i+1 FROM generate_series(1, 10000000) i;
+      ANALYZE t_p2;
+
+3. Enable parallel processing and disable the GPORCA optimizer.
+
+   .. code:: sql
+
+      SET enable_parallel = ON;
+      SET optimizer = OFF;
+
+4. Use ``CREATE TABLE AS`` to create a table based on ``t_p2``. Parallel operators appear in the execution plan, indicating that the table is created in parallel.
+
+   -  Create an AO table:
+
+      .. code:: sql
+
+         EXPLAIN(COSTS OFF) CREATE TABLE ctas_ao USING ao_row AS SELECT SUM(a.c2) AS c2, AVG(b.c1) AS c1 FROM t_p2 a JOIN t_p2 b ON a.c1 = b.c1 DISTRIBUTED BY (c2);
+
+                                 QUERY PLAN                            
+         -----------------------------------------------------------------
+         Redistribute Motion 1:3  (slice1; segments: 1)
+         Hash Key: (sum(a.c2))
+         ->  Finalize Aggregate
+                 ->  Gather Motion 6:1  (slice2; segments: 6)
+                     ->  Partial Aggregate
+                             ->  Parallel Hash Join
+                                 Hash Cond: (a.c1 = b.c1)
+                                 ->  Parallel Seq Scan on t_p2 a
+                                 ->  Parallel Hash
+                                         ->  Parallel Seq Scan on t_p2 b
+         Optimizer: Postgres query optimizer
+         (11 rows)
+
+   -  Create an AOCO table:
+
+      .. code:: sql
+
+         EXPLAIN(COSTS OFF) CREATE TABLE ctas_aoco USING ao_column AS SELECT SUM(a.c2) AS c2, AVG(b.c1) AS c1 FROM t_p2 a JOIN t_p2 b ON a.c1 = b.c1 DISTRIBUTED BY (c2);
+
+                                 QUERY PLAN                            
+         -----------------------------------------------------------------
+         Redistribute Motion 1:3  (slice1; segments: 1)
+         Hash Key: (sum(a.c2))
+         ->  Finalize Aggregate
+                 ->  Gather Motion 6:1  (slice2; segments: 6)
+                     ->  Partial Aggregate
+                             ->  Parallel Hash Join
+                                 Hash Cond: (a.c1 = b.c1)
+                                 ->  Parallel Seq Scan on t_p2 a
+                                 ->  Parallel Hash
+                                         ->  Parallel Seq Scan on t_p2 b
+         Optimizer: Postgres query optimizer
+         (11 rows)
+
+Refresh materialized views in parallel
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Create the base table ``t_p``, using ``WITH`` in the table creation statement to specify the number of parallel workers.
+
+   .. code:: sql
+
+      CREATE TABLE t_p(c1 INT, c2 INT) WITH (parallel_workers=8) DISTRIBUTED BY (c1);
+
+2. Insert data into the table and collect statistics on table ``t_p``.
+
+   .. code:: sql
+
+      INSERT INTO t_p SELECT i, i+1 FROM generate_series(1, 10000000) i;
+      ANALYZE t_p;
+
+3. Create a materialized view ``matv`` that uses row storage (AO Row) or column storage (AO Column) based on the parameter ``ao_row``. The materialized view content is an aggregated query result derived from table ``t_p``.
+
+   .. code:: sql
+
+      CREATE MATERIALIZED VIEW matv USING ao_row AS SELECT SUM(a.c2) AS c2, AVG(b.c1) AS c1 FROM t_p a JOIN t_p b ON a.c1 = b.c1 WITH NO DATA DISTRIBUTED BY (c2);
+
+   .. code:: sql
+
+      CREATE MATERIALIZED VIEW matv USING ao_column AS SELECT SUM(a.c2) AS c2, AVG(b.c1) AS c1 FROM t_p a JOIN t_p b ON a.c1 = b.c1 WITH NO DATA DISTRIBUTED BY (c2);
+
+4. Enable parallel processing and disable the GPORCA optimizer.
+
+   .. code:: sql
+
+      SET enable_parallel = ON;
+      SET optimizer = OFF;
+
+5. Refresh the materialized view.
+
+   .. code:: sql
+
+      REFRESH MATERIALIZED VIEW matv;
+
+You can use tools such as recording refresh duration to compare the time difference for refreshing materialized views between disabled and enabled parallel modes. You will see the acceleration achieved by parallel materialized view refresh.
+
+Performance improvement demonstration
+----------------------------------------
+
++-------------+-------------+-------------+-------------+-------------+
+| Parallel    | Refresh AO  | Refresh     | CTAS Create | CTAS Create |
+| enabled     | table       | AOCO table  | AO table    | AOCO table  |
+|             | materialized| materialized| time        | time        |
+|             | view time   | view time   |             |             |
++=============+=============+=============+=============+=============+
+| Non-parallel| 6.18 ms     | 5.91 ms     | 6.56 ms     | 6.06 ms     |
++-------------+-------------+-------------+-------------+-------------+
+| Parallel=4  | 2.83 ms     | 2.81 ms     | 2.37 ms     | 2.48 ms     |
++-------------+-------------+-------------+-------------+-------------+

@@ -1,0 +1,162 @@
+.. raw:: latex
+
+   \newpage
+
+Auto-Execute SQL commands
+=========================
+
+You can set up automatic execution of SQL statements or scripts by creating and managing tasks. By using Create Task, you can schedule tasks at specific time intervals or using Cron expressions, and specify which database the task should run on.
+
+Syntax description
+------------------
+
+CREATE TASK
+~~~~~~~~~~~
+
+.. code:: sql
+
+   CREATE TASK [IF NOT EXISTS] <name> SCHEDULE '<num> SECONDS | <cron_expr>'
+       [DATABASE <db_name>]
+       [USER <username>]
+   AS
+       <sql>
+
+The statement fields are explained as follows:
+
+-  ``SCHEDULE``: Specifies execution every xx seconds, or use a Cron expression.
+-  ``DATABASE``: Optional, defaults to the current database name.
+-  ``USER``: Optional, defaults to the current username.
+-  ``<sql>``: The SQL statement to be executed.
+
+``cron_expr`` follows the standard cron expression specification as follows:
+
+.. code:: none
+
+   ┌───────────── min (0 - 59)
+    │ ┌────────────── hour (0 - 23)
+    │ │ ┌─────────────── day of month (1 - 31)
+    │ │ │ ┌──────────────── month (1 - 12)
+    │ │ │ │ ┌───────────────── day of week (0 - 6) (0 to 6 are Sunday to
+    │ │ │ │ │                  Saturday, or use names; 7 is also Sunday)
+    │ │ │ │ │
+    │ │ │ │ │
+    * * * * *
+
+Where ``*`` means execute in every cycle, or you can specify a specific number to execute only at that time.
+
+.. attention:: 
+
+   |product_name| currently does not support syntax like 0/5, although this is also a valid Cron expression.
+
+   If you want to execute repeatedly within a cycle, for example every 5 minutes, you can write: ``*/5 * * * *``.
+
+ALTER TASK
+~~~~~~~~~~
+
+.. code:: sql
+
+   ALTER TASK [IF EXISTS] <name>
+       [SCHEDULE '<num> SECONDS | <cron_expr>']
+       [DATABASE <db_name>]
+       [USER <username>]
+       [ACTIVE | NOT ACTIVE]
+       [AS <sql>]
+
+The statement fields are explained as follows:
+
+-  ``SCHEDULE``: Specify execution every xx seconds, or Cron expression
+-  ``DATABASE``: Database name
+-  ``USER``: Username
+-  ``ACTIVE | NOT ACTIVE``: Set the task as active/inactive
+-  ``sql``: The SQL statement to be executed
+
+DROP TASK
+~~~~~~~~~
+
+.. code:: sql
+
+   DROP TASK [ IF EXISTS ] <name>
+
+.. attention:: This statement will delete all execution history records of this Task.
+
+View Create Task metadata
+-------------------------
+
+|product_name| currently uses two system tables to store Task-related information.
+
+The ``pg_task`` system table mainly stores each Task, including its execution cycle, SQL commands to execute, and so on.
+
+.. code:: sql
+
+   postgres=# \d pg_task
+                Table "pg_catalog.pg_task"
+     Column  |  Type   | Collation | Nullable | Default
+   ----------+---------+-----------+----------+---------
+    jobid    | oid     |           | not null |
+    schedule | text    | C         |          |
+    command  | text    | C         |          |
+    nodename | text    | C         |          |
+    nodeport | integer |           |          |
+    database | text    | C         |          |
+    username | text    | C         |          |
+    active   | boolean |           |          |
+    jobname  | text    | C         |          |
+   Indexes:
+       "pg_task_jobid_index" PRIMARY KEY, btree (jobid), tablespace "pg_global"
+       "pg_task_jobname_username_index" UNIQUE CONSTRAINT, btree (jobname, username), tablespace "pg_global"
+   Tablespace: "pg_global"
+
+``pg_task_run_history`` mainly stores the execution history records of Tasks, including executed SQL commands, execution status, execution results, and so on.
+
+.. code:: sql
+
+   postgres=# \d pg_task_run_history
+                      Table "pg_catalog.pg_task_run_history"
+        Column     |           Type           | Collation | Nullable | Default
+   ----------------+--------------------------+-----------+----------+---------
+    runid          | oid                      |           | not null |
+    jobid          | oid                      |           | not null |
+    job_pid        | integer                  |           | not null |
+    database       | text                     | C         |          |
+    username       | text                     | C         |          |
+    command        | text                     | C         |          |
+    status         | text                     | C         |          |
+    return_message | text                     | C         |          |
+    start_time     | timestamp with time zone |           |          |
+    end_time       | timestamp with time zone |           |          |
+   Indexes:
+       "pg_task_run_history_runid_index" PRIMARY KEY, btree (runid), tablespace "pg_global"
+       "pg_task_run_history_jobid_index" btree (jobid), tablespace "pg_global"
+   Tablespace: "pg_global"
+
+Parameter tuning description
+----------------------------
+
+To adjust the behavior of Create Task in |product_name|, you can modify the following user configuration parameter GUC values.
+
+.. attention:: 
+
+   The following GUC values can only be modified through ``gpconfig -c -v``.
+
+      -  **task_enable_superuser_jobs**: Whether to allow execution of superuser Tasks.
+      -  **task_host_addr**: Database server address for client connections.
+      -  **task_log_run**: Log Task execution history to system tables.
+      -  **task_log_statement**: Log before each Task execution.
+      -  **task_timezone**: Time zone for Task execution
+      -  **task_use_background_worker**: Use background worker to run Tasks.
+      -  **max_running_tasks**: Maximum number of executable Tasks.
+
+Usage examples
+--------------
+
+Create an example table
+
+.. code:: sql
+
+   CREATE TABLE task_test (message TEXT) distributed by (message);
+
+Create a Task that executes every three seconds to insert a record into the table.
+
+.. code:: none
+
+   CREATE TASK insert_hello SCHEDULE '3 seconds' AS $$INSERT INTO task_test values ('Hello')$$;

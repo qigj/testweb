@@ -1,0 +1,231 @@
+# Configure Row-Level and Column-Level Permissions
+
+This document explains how to configure row-level security (RLS) and column-level security to achieve more fine-grained table access control, thereby restricting user access to specific data.
+
+In a database security architecture, access control is implemented in layers. At a high level, {{ product_name }} provides various security mechanisms to prevent unauthorized users from accessing the database cluster, such as host-based authentication, various authentication methods like LDAP or PAM, and limiting listening addresses.
+
+Once an authorized user gains database access, security controls are applied at the database object level. By using the `GRANT` and `REVOKE` commands, combined with role-based access control, you can manage user permissions for specific database objects like tables and views.
+
+This document focuses on more granular in-table security controls: how to configure permissions when a user has access to a table but business requirements dictate they cannot see specific rows or columns. In {{ product_name }}, this is primarily achieved through two methods:
+
+- Row-level security
+- Column-level security
+
+## Row-level security
+
+Row-Level Security (RLS) is a critical security feature in {{ product_name }}. It allows the table owner to define security policies on a table to precisely control which rows different users can view and manipulate. You can think of an RLS policy as an automatically applied filter: when a user performs any operation on the table, the system first applies this policy, filtering the data rows visible to the user based on its defined rules.
+
+RLS policies are powerful and flexible, allowing for access control based on specific commands (like `SELECT` or DML commands `INSERT`/`UPDATE`/`DELETE`), specific users or groups, or rows that meet certain conditions.
+
+### Characteristics of row-level security policies
+
+- **Disabled by default**: By default, no RLS policies are defined on a table. As long as a user has SQL permissions, they can access all rows in the table.
+- **Default-deny once enabled**: When the table owner enables RLS for a table using the `ALTER TABLE ... ENABLE ROW LEVEL SECURITY` command, the access policy defaults to "deny all". At this point, no user other than the table owner can access any rows in the table until an appropriate "allow" policy is created for them.
+
+    :::{note}
+    Operations that apply to the entire table (such as `TRUNCATE` and `REFERENCES`) are not restricted by row-level security.
+    :::
+
+- **Policy flexibility**: Security policies can be set for specific commands, specific roles, or a combination of both. A policy can apply to all commands (`ALL`) or only to `SELECT`, `INSERT`, `UPDATE`, or `DELETE`. Policies can be granted to multiple roles and follow standard role membership and inheritance rules.
+- **Privileges for superusers and owners**: Superusers and roles with the `BYPASSRLS` attribute are not subject to RLS policies. By default, the table owner is also not constrained, but policies can be forcibly applied to the owner using the `ALTER TABLE ... FORCE ROW LEVEL SECURITY` command.
+- **Owner permissions**: Only the table owner can enable or disable RLS and add policies to the table.
+
+### Enable and create a security policy
+
+Configuring RLS for a table involves two steps, both of which must be performed by the table owner: first, enable the RLS feature for the table, and second, create specific security policies.
+
+1.  Enable row-level security. Use the following command to enable RLS for the target table:
+
+    ```sql
+    ALTER TABLE <table_name> ENABLE ROW LEVEL SECURITY;
+    ```
+
+2.  Create a security policy. After enabling RLS, use the `CREATE POLICY` command to create specific policies. The core of a policy lies in the boolean expression defined in the `USING` or `WITH CHECK` clause. This expression is evaluated for each row before any conditions or functions from the user's query are executed. Only rows for which the expression returns `true` are visible or available for modification.
+
+    - The `USING` expression controls which rows are visible to the user (for `SELECT`) or available for modification (for `UPDATE`, `DELETE`).
+    - The `WITH CHECK` expression controls which new rows can be added by `INSERT` or `UPDATE`.
+
+    Policy expressions run as part of the query and with the permissions of the user running the query. If you need to access data that the user does not have permission to, you can use `SECURITY DEFINER` functions.
+
+    The syntax for `CREATE POLICY` is as follows:
+
+    ```sql
+    CREATE POLICY <name> ON <table_name>
+        [ AS { PERMISSIVE | RESTRICTIVE } ]
+        [ FOR { ALL | SELECT | INSERT | UPDATE | DELETE } ]
+        [ TO { <role_name> | PUBLIC | CURRENT_USER | SESSION_USER } [, ...] ]
+        [ USING ( <using_expression> ) ]
+        [ WITH CHECK ( <check_expression> ) ]
+    ```
+
+    Parameter descriptions:
+
+    - `name`: The name of the policy.
+    - `table_name`: The name of the table to which the policy applies.
+    - `PERMISSIVE`: Specifies the policy as permissive. All permissive policies applicable to a given query are combined using the boolean `OR` operator. Administrators can add to the set of accessible records by creating permissive policies. This is the default.
+    - `RESTRICTIVE`: Specifies the policy as restrictive. All restrictive policies applicable to a given query are combined using the boolean `AND` operator. Administrators can reduce the set of accessible records by creating restrictive policies, as each record must pass all restrictive policies.
+    - `FOR` clause: Specifies the command(s) to which the policy applies, such as `ALL`, `SELECT`, `INSERT`, `UPDATE`, `DELETE`.
+    - `TO` clause: Specifies the role(s) to which the policy applies. The default is `PUBLIC`, which applies the policy to all roles.
+    - `using_expression`: Any SQL conditional expression that returns a boolean value. The expression cannot contain any aggregate or window functions. For `SELECT`, `UPDATE`, or `DELETE` operations, only rows for which this expression returns `true` will be visible or modifiable.
+    - `check_expression`: Any SQL conditional expression that returns a boolean value, which also cannot contain aggregate or window functions. For `INSERT` or `UPDATE` operations, only new or updated rows for which this expression evaluates to `true` will be allowed. If the expression evaluates to `false` or `null` for any of the records, an error will be thrown.
+
+### Example: create a row-level security policy
+
+The following example demonstrates how to set up a row-level security policy for a table, allowing users to access only data related to their department.
+
+1. Connect to the database as an administrator: `psql -h <host_ip> -p <port> -U <user_name> -d <db_name>`.
+2. Create a sample table and insert data:
+
+    ```sql
+    CREATE TABLE projects (
+        project_id SERIAL PRIMARY KEY,
+        project_name TEXT,
+        project_manager TEXT,
+        department TEXT
+    );
+
+    INSERT INTO projects (project_name, project_manager, department) VALUES
+    ('Project Alpha', 'john', 'Engineering'),
+    ('Project Beta', 'kate', 'HR'),
+    ('Project Gamma', 'bob', 'Sales');
+    ```
+
+3. Enable row-level security for the `projects` table:
+
+    ```sql
+    ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
+    ```
+
+4. Create a row-level security policy. This policy checks a session variable `myapp.current_department` to determine the user's department.
+
+    ```sql
+    CREATE POLICY department_policy
+    ON projects
+    FOR SELECT
+    USING (department = current_setting('myapp.current_department'));
+    ```
+
+5. Create test users:
+
+    ```sql
+    CREATE USER john WITH PASSWORD '<password>';
+    CREATE USER kate WITH PASSWORD '<password>';
+    CREATE USER bob WITH PASSWORD '<password>';
+    ```
+
+6. Grant the `john` user permission to query the `projects` table:
+
+    ```sql
+    GRANT SELECT ON projects TO john;
+    ```
+
+7. Switch to the `john` user and set the department for the current session:
+
+    ```sql
+    SET ROLE john;
+    SET myapp.current_department = 'Engineering';
+    ```
+
+8. Query the `projects` table as the `john` user. Because the department is set to 'Engineering', the query will only return projects from that department:
+
+    ```sql
+    SELECT * FROM projects;
+
+    -- Expected result:
+    -- project_id | project_name  | project_manager | department
+    --------------+---------------+-----------------+-------------
+    --          1 | Project Alpha | john        | Engineering
+    ```
+
+## Column-level security
+
+Column-level security allows you to precisely control which columns in a table a user can access. By using the `GRANT` command, you can grant a user permission to view only specific columns, thereby protecting all other columns from access.
+
+### Column-level permissions and default privileges
+
+In {{ product_name }}, when certain types of objects are created, some permissions are granted to the `PUBLIC` role by default. However, for security, no privileges are granted to `PUBLIC` by default on tables, columns, sequences, foreign-data wrappers, foreign servers, large objects, schemas, or tablespaces.
+
+For other object types, the default privileges granted to `PUBLIC` are as follows:
+
+- **Databases**: `CONNECT` and `TEMPORARY` (create temporary tables) privileges.
+- **Functions and procedures**: `EXECUTE` privilege.
+- **Languages and data types**: `USAGE` privilege.
+
+The object owner can `REVOKE` these default privileges. For maximum security, it is recommended to issue the `REVOKE` in the same transaction that creates the object; this leaves no window in which another user can use the object. You can also override these default privilege settings using the `ALTER DEFAULT PRIVILEGES` command.
+
+The following table shows the abbreviations used for these privilege types in Access Control Lists (ACLs). You will see these letters in the output of psql commands or when viewing ACL columns in the system catalogs.
+
+| Privilege  | Abbreviation | Applicable Object Types                    |
+|------------|--------------|--------------------------------------------|
+| `SELECT`   | r ("read")   | Large objects, sequences, tables (and table-like objects), columns |
+| `INSERT`   | a ("append") | Tables, columns                            |
+| `UPDATE`   | w ("write")  | Large objects, sequences, tables, columns  |
+| `DELETE`   | d            | Tables                                     |
+| `TRUNCATE` | D            | Tables                                     |
+| `REFERENCES`| x           | Tables, columns                            |
+| `TRIGGER`  | t            | Tables                                     |
+| `CREATE`   | C            | Databases, schemas, tablespaces            |
+| `CONNECT`  | c            | Databases                                  |
+| `TEMPORARY`| T            | Databases                                  |
+| `EXECUTE`  | X            | Functions, procedures                      |
+| `USAGE`    | U            | Domains, foreign-data wrappers, foreign servers, languages, schemas, sequences, types |
+
+### Example: set column-level permissions
+
+This example demonstrates how to grant a user access to a specific column, so they can only view the authorized column.
+
+1. Create a test table and insert data:
+
+    ```sql
+    CREATE TABLE t_user (n_id INT, c_name TEXT) TABLESPACE oss_test;
+    SET synxdb.warehouse TO wh0;
+    INSERT INTO t_user VALUES (1, 'john');
+    ```
+
+2. Create the user `john` and grant connect and usage permissions:
+
+    ```sql
+    -- Creates a login role.
+    CREATE ROLE john LOGIN PASSWORD '123456';
+
+    -- Creates a user mapping for john (if external tablespace access is needed).
+    CREATE USER MAPPING FOR john SERVER test_server OPTIONS (accesskey '..', secretkey '..');
+
+    -- Grants privileges on the tablespace to john.
+    GRANT ALL PRIVILEGES ON TABLESPACE oss_test TO john;
+
+    -- Grants connect and usage permissions to john.
+    GRANT CONNECT ON DATABASE postgres TO john;
+    GRANT USAGE ON SCHEMA public TO john;
+    ```
+
+3. Grant the `SELECT` privilege on the `n_id` column of the `t_user` table to `john`:
+
+    ```sql
+    GRANT SELECT (n_id) ON t_user TO john;
+    ```
+
+4. Query data as the `john` user:
+
+    ```sql
+    -- Switches to the john user.
+    \c postgres john
+    You are now connected to database "postgres" as user "john".
+
+    -- Sets the warehouse for the session.
+    SET synxdb.warehouse TO wh0;
+
+    -- Querying the n_id column succeeds.
+    SELECT n_id FROM t_user;
+    -- n_id
+    --------
+    --    1
+    -- (1 row)
+
+    -- Querying the c_name column or all columns (*) will fail due to lack of permission.
+    SELECT c_name FROM t_user;
+    -- ERROR:  permission denied for table t_user
+
+    SELECT * FROM t_user;
+    -- ERROR:  permission denied for table t_user
+    ```

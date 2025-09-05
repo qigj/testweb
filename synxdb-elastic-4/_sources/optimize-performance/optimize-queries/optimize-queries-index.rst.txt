@@ -1,0 +1,14 @@
+Optimize Query Performance
+*******************************
+
+.. toctree::
+   :maxdepth: 2
+
+   optimize-query-performance-overview
+   use-orca/use-orca-index
+   update-statistics
+   query-hints
+   use-auto-mtv-for-query-optimization
+   push-down-agg-operators
+   execute-queries-in-parallel
+   auto-clustering

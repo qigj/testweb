@@ -1,0 +1,266 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auto-Clustering Tables &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Manage System" href="../../manage-system/manage-system-index.html" />
+    <link rel="prev" title="Execute Queries in Parallel" href="execute-queries-in-parallel.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../optimize-performance-index.html">Optimize Performance</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="optimize-queries-index.html">Optimize Query Performance</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="optimize-query-performance-overview.html">Query Performance Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="use-orca/use-orca-index.html">Use GPORCA Optimizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="update-statistics.html">Update Statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="query-hints.html">Query Hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="use-auto-mtv-for-query-optimization.html">Automatically Use Materialized Views for Query Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="push-down-agg-operators.html">Push Down Aggregation Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="execute-queries-in-parallel.html">Execute Queries in Parallel</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Auto-Clustering Tables</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#user-value">User value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-to-use">How to use</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-it-works">How it works</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../optimize-performance-index.html">Optimize Performance</a></li>
+          <li class="breadcrumb-item"><a href="optimize-queries-index.html">Optimize Query Performance</a></li>
+      <li class="breadcrumb-item active">Auto-Clustering Tables</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="auto-clustering-tables">
+<h1>Auto-Clustering Tables<a class="headerlink" href="#auto-clustering-tables" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">CLUSTER</span></code> statement physically reorders data in a table based on a specified index. This sorted data can greatly reduce the scan range during queries, thereby improving query performance. However, physical reordering is a one-time operation. As the table data is updated, its physical order gradually degrades, requiring a database administrator to manually execute the <code class="docutils literal notranslate"><span class="pre">CLUSTER</span></code> command to re-optimize it.</p>
+<p>To reduce manual maintenance, SynxDB Elastic provides an auto-clustering feature that automatically reorders tables physically. This feature is enabled by default and uses a background service to periodically and automatically perform incremental <code class="docutils literal notranslate"><span class="pre">CLUSTER</span></code> operations on tables that require physical reordering, thus continuously maintaining an efficient physical data layout.</p>
+<section id="user-value">
+<h2>User value<a class="headerlink" href="#user-value" title="Link to this heading"></a></h2>
+<p>You will mainly notice its presence and value in the following ways:</p>
+<ul class="simple">
+<li><p><strong>Improved query performance</strong>: If a query’s filter conditions can utilize the cluster key, the amount of data scanned is greatly reduced, leading to a notable increase in query speed.</p></li>
+<li><p><strong>Non-blocking write operations</strong>: The background reordering task runs concurrently with foreground write operations like <code class="docutils literal notranslate"><span class="pre">INSERT</span></code> and <code class="docutils literal notranslate"><span class="pre">COPY</span></code>, ensuring that they do not block each other and maintaining business continuity.</p></li>
+<li><p><strong>Background resource consumption</strong>: Auto-clustering consumes a certain amount of CPU, memory, and I/O. You can observe periodic resource usage peaks in the system through monitoring tools. The intensity and frequency of these peaks can be adjusted using global parameters.</p></li>
+<li><p><strong>Detailed logging</strong>: The database log records details of each reordering operation (such as the table operated on, time taken, and amount of data processed), providing a basis for performance evaluation and troubleshooting.</p></li>
+</ul>
+</section>
+<section id="how-to-use">
+<h2>How to use<a class="headerlink" href="#how-to-use" title="Link to this heading"></a></h2>
+<p>In most cases, you only need to define a cluster key for your table. You can also adjust or disable the feature using GUC parameters.</p>
+<section id="step-1-define-a-cluster-key-for-the-table">
+<h3>Step 1: Define a cluster key for the table<a class="headerlink" href="#step-1-define-a-cluster-key-for-the-table" title="Link to this heading"></a></h3>
+<p>You need to explicitly specify the columns to be used for physical reordering (the cluster key) when creating (<code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code>) or altering (<code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span></code>) a table. The auto-clustering service only affects tables with an explicitly defined cluster key. <strong>If a table does not have a cluster key defined, the service will ignore the table.</strong></p>
+<p><strong>How to choose a cluster key</strong></p>
+<p>It is recommended to choose the most frequently used filter columns as the cluster key, based on your business query patterns. For example, columns that often appear in <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> clauses or <code class="docutils literal notranslate"><span class="pre">JOIN</span></code> conditions, such as date columns or region ID columns.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Example: Creates a table that is physically reordered by columns c1 and c2.</span>
+<span class="c1">-- This table will be managed by the auto-clustering service.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">my_table</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">c1</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">c2</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">c3</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="n">cluster_columns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;c1, c2&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-adjust-global-configuration-parameters">
+<h3>Step 2: Adjust global configuration parameters<a class="headerlink" href="#step-2-adjust-global-configuration-parameters" title="Link to this heading"></a></h3>
+<p>Database administrators can adjust the overall behavior of auto-clustering by setting the following GUC parameters to balance performance optimization effects with system resource consumption.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter name</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Default value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cloud.enable_auto_cluster</span></code></p></td>
+<td><p>(Master switch) Controls whether to enable the auto-clustering feature.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cloud.cluster_worker_launch_interval</span></code></p></td>
+<td><p>The scheduling interval for the background service to check tables.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">30s</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cloud.num_cluster_data_files</span></code></p></td>
+<td><p>The threshold for the number of incremental data files that triggers a reordering operation on a table.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">10</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cloud.max_database_cluster_workers</span></code></p></td>
+<td><p>The maximum number of databases for which reordering tasks can be executed in parallel.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cloud.max_table_cluster_workers</span></code></p></td>
+<td><p>The maximum number of tables within a single database for which reordering operations can be performed in parallel.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>These parameters can be set at the session or system level:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Disables the auto-clustering feature at the system level.</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">cloud</span><span class="p">.</span><span class="n">enable_auto_cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">OFF</span><span class="p">;</span>
+
+<span class="c1">-- Adjusts the number of worker processes for parallel table processing.</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">cloud</span><span class="p">.</span><span class="n">max_table_cluster_workers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+
+<span class="c1">-- Adjusts the incremental file threshold for triggering physical reordering.</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">cloud</span><span class="p">.</span><span class="n">num_cluster_data_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="how-it-works">
+<h2>How it works<a class="headerlink" href="#how-it-works" title="Link to this heading"></a></h2>
+<p>The workflow of the auto-clustering feature is shown in the diagram below.</p>
+<p><img alt="auto-clustering" src="../../_images/auto-cluster.png" /></p>
+<p>The core components of this process include:</p>
+<ul class="simple">
+<li><p><strong>auto cluster launcher</strong>: Wakes up periodically according to the interval set by <code class="docutils literal notranslate"><span class="pre">cloud.cluster_worker_launch_interval</span></code> and is responsible for starting worker processes for databases.</p></li>
+<li><p><strong>database cluster worker</strong>: The maximum number of these workers is controlled by <code class="docutils literal notranslate"><span class="pre">cloud.max_database_cluster_workers</span></code>. It scans all tables with a defined cluster key within a single database and sorts them based on the number of incremental data files, prioritizing tables with the most incremental files.</p></li>
+<li><p><strong>cluster worker (for tables)</strong>: The maximum number of these workers is controlled by <code class="docutils literal notranslate"><span class="pre">cloud.max_table_cluster_workers</span></code>. When the number of a table’s incremental data files exceeds the <code class="docutils literal notranslate"><span class="pre">cloud.num_cluster_data_files</span></code> threshold, this process executes a <code class="docutils literal notranslate"><span class="pre">CLUSTER</span></code> operation on the table.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="../../manage-system/manage-system-index.html" class="btn btn-neutral float-right" title="Manage System" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="execute-queries-in-parallel.html" class="btn btn-neutral float-left" title="Execute Queries in Parallel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

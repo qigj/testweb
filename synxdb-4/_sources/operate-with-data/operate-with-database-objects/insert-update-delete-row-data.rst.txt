@@ -1,0 +1,122 @@
+.. raw:: latex
+
+   \newpage
+
+Insert, Update and Delete Row Data
+==================================
+
+This topic describes how to operate row data in |product_name|.
+
+Insert rows
+-----------
+
+The ``INSERT`` statement is used to insert rows into a table. Using this command requires you to input the table name and the value for each column to be inserted. You can specify column names in any order. If you do not specify column names, list the data values to be inserted in the order of columns in the table, separated by commas.
+
+For example, specify column names and values to be inserted:
+
+.. code:: sql
+
+   INSERT INTO products (name, price, product_no) VALUES ('Cheese', 9.99, 1);
+
+Only specify values to be inserted:
+
+.. code:: sql
+
+   INSERT INTO products VALUES (1, 'Cheese', 9.99);
+
+Usually, data values are constants, but scalar expressions can also be used. For example:
+
+.. code:: sql
+
+   INSERT INTO films SELECT * FROM tmp_films WHERE date_prod <
+   '2016-05-07';
+
+You can insert multiple rows in a single command. For example:
+
+.. code:: sql
+
+   INSERT INTO products (product_no, name, price) VALUES
+       (1, 'Cheese', 9.99),
+       (2, 'Bread', 1.99),
+       (3, 'Milk', 2.99);
+
+Insert rows into partitioned tables
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To insert data into a partitioned table, you need to specify the root partition table, which is created through the ``CREATE TABLE`` command. |product_name| does not support directly specifying leaf partitions in the ``INSERT`` command, which will cause an error. This is because data insertion is automatically managed by the database system, so leaf partitions are not visible to users.
+
+If the inserted data does not conform to the range of any existing partition (for example, the specified key value does not match any partition rule), an error will be returned.
+
+To ensure data is correctly inserted into a partitioned table, you only need to specify the root partition table in the ``INSERT`` statement. |product_name| automatically inserts data rows into the correct leaf partition based on the partition key. If data rows do not conform to the range of any leaf partition, |product_name| will return an error.
+
+Example:
+
+.. code:: sql
+
+   -- Inserts data into root partition table.
+   INSERT INTO sales (sale_id, product_no, year, amount) VALUES (1, 'Cheese', 2021, 9.99);
+
+For the above statement, |product_name| automatically inserts data rows into the correct partition based on the value of the year column, so there is no need to specify leaf partitions in the statement.
+
+Insert rows in Append-Optimized tables
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To insert large amounts of data into Append-Optimized (AO) tables, use external tables or the ``COPY`` command, which are more efficient than ``INSERT``.
+
+The storage design of AO tables in |product_name| is optimized for efficiently loading bulk data and is not suitable for single ``INSERT`` row data insertion. If you want to insert large amounts of data into AO tables, it is recommended to use batch loading methods, such as the ``COPY`` command. |product_name| supports executing multiple concurrent ``INSERT`` transactions on AO tables, but this feature is typically used for batch insertion rather than single-row insertion.
+
+Update existing rows
+--------------------
+
+The ``UPDATE`` command is used to update rows in a table. Using this command, you can update all rows, a subset of all rows, or a single row, and you can also update each column individually without affecting other columns.
+
+To perform an update operation, you need to specify:
+
+-  The table name and column name to be updated.
+-  The new value for the column.
+-  The condition for rows to be updated.
+
+For example, the following command updates all products with a price of 5 to a price of 10:
+
+.. code:: sql
+
+   UPDATE products SET price = 10 WHERE price = 5;
+
+Delete rows
+-----------
+
+The ``DELETE`` command is used to delete rows from a table. By specifying a ``WHERE`` clause, you can delete rows that meet specific conditions. If you do not specify a ``WHERE`` clause, all rows in the table will be deleted, resulting in a valid but empty table. For example, to delete all rows with a price of 10 from the products table:
+
+.. code:: sql
+
+   DELETE FROM products WHERE price = 10;
+
+Delete all rows from the products table:
+
+.. code:: sql
+
+   DELETE FROM products;
+
+Truncate table
+--------------
+
+The ``TRUNCATE`` command is used to quickly delete all rows from a table. For example:
+
+.. code:: sql
+
+   TRUNCATE mytable;
+
+This command will clear all rows in the table at once. Note that in |product_name|, even without the ``CASCADE`` option, the ``TRUNCATE`` command will by default affect inherited child tables. In addition, because |product_name| does not support foreign key constraints, the ``TRUNCATE`` command will not trigger any ``ON DELETE`` operations or rewrite rules. This command only clears rows in the specified table.
+
+Vacuum database
+---------------
+
+Data rows that have been deleted or updated still occupy physical space on disk. You can periodically execute the ``VACUUM`` command to remove these expired rows. For example:
+
+.. code:: sql
+
+   VACUUM mytable;
+
+The ``VACUUM`` command can be used to collect table-level statistics, such as row count and page count. After loading data, perform ``VACUUM`` operations on all tables (including AO tables).
+
+When maintaining data in |product_name|, especially when frequently performing update and delete operations, you need to use the ``VACUUM``, ``VACUUM FULL``, and ``VACUUM ANALYZE`` commands.

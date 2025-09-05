@@ -1,0 +1,121 @@
+Perform TPC-DS Benchmark Testing
+===================================================
+
+This guide describes how to run the TPC-DS benchmark on |product_name| v4.x.
+
+Prerequisites
+-------------
+
+Ensure the following conditions are met before running the test from a remote client host:
+
+-  ``psql`` client is installed and passwordless access to the remote cluster is configured (via ``.pgpass``).
+-  The ``gpadmin`` database is created with the default warehouse parameter:
+
+   .. code-block:: sql
+
+      ALTER ROLE gpadmin SET warehouse = 'testforcloud';
+
+   Replace ``gpadmin`` and ``testforcloud`` with the real user and warehouse you are using.
+
+Step 1. Install TPC-DS tools dependencies
+---------------------------------------------
+
+Install the required dependencies on ``mdw``:
+
+.. code-block:: bash
+
+   ssh root@mdw
+   yum -y install gcc make byacc
+
+The original source code is available at: `<http://tpc.org/tpc_documents_current_versions/current_specifications5.asp>`_.
+
+Step 2. Download and install TPC-DS tools
+--------------------------------------------
+
+Clone the TPC-DS tools repository from GitHub:
+
+.. code-block:: bash
+
+   ssh gpadmin@mdw
+   git clone https://github.com/SynxDBFE/TPC-DS-CBDB.git
+
+Step 3. Get psql connection options
+--------------------------------------------
+
+To run the benchmark, get the necessary connection options for PostgreSQL (``psql``).
+
+1. Log in to the Kubernetes (K8s) cluster and identify the tenant namespace:
+
+   .. code-block:: bash
+
+      kubectl get ns
+
+   Example output:
+
+   .. code-block:: text
+
+      NAME                                           STATUS   AGE
+      default                                        Active   97d
+      synxdb-system-4x                               Active   96d
+      kube-node-lease                                Active   97d
+      kube-public                                    Active   97d
+      kube-system                                    Active   97d
+      storage-system                                 Active   97d
+      tenant2-313a164c-cfe9-4514-941d-4c1d548ddf97   Active   93d
+
+2. Obtain the cluster mapping ports for the tenant:
+
+   .. code-block:: bash
+
+      kubectl get svc -o wide -n tenant2-313a164c-cfe9-4514-941d-4c1d548ddf97
+
+   Example output:
+
+   .. code-block:: text
+
+      NAME                    TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE   SELECTOR
+      cloudberry-proxy        ClusterIP   None           <none>        5432/TCP         93d   app=cloudberry-proxy
+      cloudberry-proxy-node   NodePort    10.96.199.21   <none>        5432:32355/TCP   93d   app=cloudberry-proxy
+
+   In this example, the obtained port is ``32355``, and the IP can be any node in the K8s cluster (for example, ``10.14.3.242``).
+
+Step 4. Modify configuration files
+---------------------------------------------
+
+Edit the ``tpcds_variables.sh`` file to configure the test parameters. Fill the ``PSQL_OPTIONS`` with the real psql connection information you have obtained. Edit ``GEN_DATA_SCALE`` according to your cluster size and need.
+
+.. code-block:: bash
+
+   ssh gpadmin@mdw
+   cd ~/TPC-DS-CBDB
+   vim tpcds_variables.sh
+
+Example configuration:
+
+.. code-block:: bash
+
+   export RUN_MODEL="cloud"
+   export RANDOM_DISTRIBUTION="true"
+   export TABLE_STORAGE_OPTIONS="compresstype=zstd, compresslevel=5"
+   export CLIENT_GEN_PATH="/tmp/dsbenchmark"
+   export PSQL_OPTIONS="-h 10.14.3.242 -p 32355"
+   export GEN_DATA_SCALE="10"  # Generate 10GB of data.
+   export MULTI_USER_COUNT="5"   # Number of concurrent streams for the throughput run.
+   export RUN_SINGLE_USER_REPORTS="true"
+   export RUN_MULTI_USER="true"
+   export RUN_MULTI_USER_QGEN="true"
+   export RUN_MULTI_USER_REPORTS="true"
+   export RUN_SCORE="true"
+
+For additional configuration parameters, refer to the repository README file: `<https://github.com/SynxDBFE/TPC-DS-CBDB/blob/main/README.md>`_.
+
+Step 5. Run the TPC-DS Benchmark
+-------------------------------------
+
+To execute the benchmark, log in as ``gpadmin`` and run the test script:
+
+.. code-block:: bash
+
+   ssh gpadmin@mdw
+   cd ~/TPC-DS-CBDB
+   ./run.sh

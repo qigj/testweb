@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backup and Restore Overview &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Perform Full Backup and Restore" href="full-backup-and-restore.html" />
+    <link rel="prev" title="Backup and Restore" href="br-index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../manage-system-index.html">Manage System</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../configure-database-system.html">Configure Database System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../routine-maintenance.html">Routine Maintenance Operations</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="br-index.html">Backup and Restore</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Backup and Restore Overview</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#parallel-backup-with-gpbackup-and-gprestore">Parallel backup with <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> and <code class="docutils literal notranslate"><span class="pre">gprestore</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#non-parallel-backup-with-pg-dump">Non-parallel backup with <code class="docutils literal notranslate"><span class="pre">pg_dump</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backup-support-for-unionstore-tables">Backup support for UnionStore tables</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="full-backup-and-restore.html">Perform Full Backup and Restore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="incremental-backup-and-restore.html">Perform Incremental Backup and Restore</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../high-availability/ha-index.html">High Availability</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../manage-system-index.html">Manage System</a></li>
+          <li class="breadcrumb-item"><a href="br-index.html">Backup and Restore</a></li>
+      <li class="breadcrumb-item active">Backup and Restore Overview</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="backup-and-restore-overview">
+<h1>Backup and Restore Overview<a class="headerlink" href="#backup-and-restore-overview" title="Link to this heading"></a></h1>
+<p>SynxDB Elastic offers both parallel and non-parallel methods for database backups and restores. Parallel operations handle large systems efficiently because each segment host writes data to its local disk at the same time. Non-parallel operations, however, transfer all data over the network to the coordinator, which then writes it to its storage. This method not only concentrates I/O on a single host but also requires the coordinator to have enough local disk space for the entire database.</p>
+<section id="parallel-backup-with-gpbackup-and-gprestore">
+<h2>Parallel backup with <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> and <code class="docutils literal notranslate"><span class="pre">gprestore</span></code><a class="headerlink" href="#parallel-backup-with-gpbackup-and-gprestore" title="Link to this heading"></a></h2>
+<p>SynxDB Elastic provides <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> and <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> for parallel backup and restore utilities. <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> uses table-level <code class="docutils literal notranslate"><span class="pre">ACCESS</span> <span class="pre">SHARE</span></code> locks instead of <code class="docutils literal notranslate"><span class="pre">EXCLUSIVE</span></code> locks on the <code class="docutils literal notranslate"><span class="pre">pg_class</span></code> catalog table. This enables you to execute DDL statements such as <code class="docutils literal notranslate"><span class="pre">CREATE</span></code>, <code class="docutils literal notranslate"><span class="pre">ALTER</span></code>, <code class="docutils literal notranslate"><span class="pre">DROP</span></code>, and <code class="docutils literal notranslate"><span class="pre">TRUNCATE</span></code> during backups, as long as these statements do not target the current backup set.</p>
+<p>Backup files created with <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> are designed to provide future capabilities for restoring individual database objects along with their dependencies, such as functions and required user-defined data types.</p>
+<p>For details about backup and restore using <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> and <code class="docutils literal notranslate"><span class="pre">gprestore</span></code>, see <a class="reference internal" href="full-backup-and-restore.html#perform-full-backup-and-restore"><span class="std std-ref">Perform Full Backup and Restore</span></a> and <a class="reference internal" href="incremental-backup-and-restore.html#perform-incremental-backup-and-restore"><span class="std std-ref">Perform Incremental Backup and Restore</span></a>.</p>
+<section id="command-line-flags-for-gpbackup-and-gprestore">
+<h3>Command-line flags for gpbackup and gprestore<a class="headerlink" href="#command-line-flags-for-gpbackup-and-gprestore" title="Link to this heading"></a></h3>
+<p>The command-line flags for <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> are as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Usage:
+gpbackup<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+
+Flags:
+<span class="w">      </span>--backup-dir<span class="w"> </span>string<span class="w">            </span>The<span class="w"> </span>absolute<span class="w"> </span>path<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>directory<span class="w"> </span>to<span class="w"> </span>which<span class="w"> </span>all<span class="w"> </span>backup<span class="w"> </span>files<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>written
+<span class="w">      </span>--compression-level<span class="w"> </span>int<span class="w">        </span>Level<span class="w"> </span>of<span class="w"> </span>compression<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span>during<span class="w"> </span>data<span class="w"> </span>backup.<span class="w"> </span>Range<span class="w"> </span>of<span class="w"> </span>valid<span class="w"> </span>values<span class="w"> </span>depends<span class="w"> </span>on<span class="w"> </span>compression<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">(</span>default<span class="w"> </span><span class="m">1</span><span class="o">)</span>
+<span class="w">      </span>--compression-type<span class="w"> </span>string<span class="w">      </span>Type<span class="w"> </span>of<span class="w"> </span>compression<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span>during<span class="w"> </span>data<span class="w"> </span>backup.<span class="w"> </span>Valid<span class="w"> </span>values<span class="w"> </span>are<span class="w"> </span><span class="s1">&#39;gzip&#39;</span>,<span class="w"> </span><span class="s1">&#39;zstd&#39;</span><span class="w"> </span><span class="o">(</span>default<span class="w"> </span><span class="s2">&quot;gzip&quot;</span><span class="o">)</span>
+<span class="w">      </span>--copy-queue-size<span class="w"> </span>int<span class="w">          </span>number<span class="w"> </span>of<span class="w"> </span>COPY<span class="w"> </span>commands<span class="w"> </span>gpbackup<span class="w"> </span>should<span class="w"> </span>enqueue<span class="w"> </span>when<span class="w"> </span>backing<span class="w"> </span>up<span class="w"> </span>using<span class="w"> </span>the<span class="w"> </span>--single-data-file<span class="w"> </span>option<span class="w"> </span><span class="o">(</span>default<span class="w"> </span><span class="m">1</span><span class="o">)</span>
+<span class="w">      </span>--data-only<span class="w">                    </span>Only<span class="w"> </span>back<span class="w"> </span>up<span class="w"> </span>data,<span class="w"> </span><span class="k">do</span><span class="w"> </span>not<span class="w"> </span>back<span class="w"> </span>up<span class="w"> </span>metadata
+<span class="w">      </span>--dbname<span class="w"> </span>string<span class="w">                </span>The<span class="w"> </span>database<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>backed<span class="w"> </span>up
+<span class="w">      </span>--debug<span class="w">                        </span>Print<span class="w"> </span>verbose<span class="w"> </span>and<span class="w"> </span>debug<span class="w"> </span>log<span class="w"> </span>messages
+<span class="w">      </span>--exclude-schema<span class="w"> </span>stringArray<span class="w">   </span>Back<span class="w"> </span>up<span class="w"> </span>all<span class="w"> </span>metadata<span class="w"> </span>except<span class="w"> </span>objects<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>specified<span class="w"> </span>schema<span class="o">(</span>s<span class="o">)</span>.<span class="w"> </span>--exclude-schema<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>specified<span class="w"> </span>multiple<span class="w"> </span>times.
+<span class="w">      </span>--exclude-schema-file<span class="w"> </span>string<span class="w">   </span>A<span class="w"> </span>file<span class="w"> </span>containing<span class="w"> </span>a<span class="w"> </span>list<span class="w"> </span>of<span class="w"> </span>schemas<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>excluded<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span>backup
+<span class="w">      </span>--exclude-table<span class="w"> </span>stringArray<span class="w">    </span>Back<span class="w"> </span>up<span class="w"> </span>all<span class="w"> </span>metadata<span class="w"> </span>except<span class="w"> </span>the<span class="w"> </span>specified<span class="w"> </span>table<span class="o">(</span>s<span class="o">)</span>.<span class="w"> </span>--exclude-table<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>specified<span class="w"> </span>multiple<span class="w"> </span>times.
+<span class="w">      </span>--exclude-table-file<span class="w"> </span>string<span class="w">    </span>A<span class="w"> </span>file<span class="w"> </span>containing<span class="w"> </span>a<span class="w"> </span>list<span class="w"> </span>of<span class="w"> </span>fully-qualified<span class="w"> </span>tables<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>excluded<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span>backup
+<span class="w">      </span>--from-timestamp<span class="w"> </span>string<span class="w">        </span>A<span class="w"> </span>timestamp<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span>to<span class="w"> </span>base<span class="w"> </span>the<span class="w"> </span>current<span class="w"> </span>incremental<span class="w"> </span>backup<span class="w"> </span>off
+<span class="w">      </span>--help<span class="w">                         </span>Help<span class="w"> </span><span class="k">for</span><span class="w"> </span>gpbackup
+<span class="w">      </span>--include-schema<span class="w"> </span>stringArray<span class="w">   </span>Back<span class="w"> </span>up<span class="w"> </span>only<span class="w"> </span>the<span class="w"> </span>specified<span class="w"> </span>schema<span class="o">(</span>s<span class="o">)</span>.<span class="w"> </span>--include-schema<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>specified<span class="w"> </span>multiple<span class="w"> </span>times.
+<span class="w">      </span>--include-schema-file<span class="w"> </span>string<span class="w">   </span>A<span class="w"> </span>file<span class="w"> </span>containing<span class="w"> </span>a<span class="w"> </span>list<span class="w"> </span>of<span class="w"> </span>schema<span class="o">(</span>s<span class="o">)</span><span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>included<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>backup
+<span class="w">      </span>--include-table<span class="w"> </span>stringArray<span class="w">    </span>Back<span class="w"> </span>up<span class="w"> </span>only<span class="w"> </span>the<span class="w"> </span>specified<span class="w"> </span>table<span class="o">(</span>s<span class="o">)</span>.<span class="w"> </span>--include-table<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>specified<span class="w"> </span>multiple<span class="w"> </span>times.
+<span class="w">      </span>--include-table-file<span class="w"> </span>string<span class="w">    </span>A<span class="w"> </span>file<span class="w"> </span>containing<span class="w"> </span>a<span class="w"> </span>list<span class="w"> </span>of<span class="w"> </span>fully-qualified<span class="w"> </span>tables<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>included<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>backup
+<span class="w">      </span>--incremental<span class="w">                  </span>Only<span class="w"> </span>back<span class="w"> </span>up<span class="w"> </span>data<span class="w"> </span><span class="k">for</span><span class="w"> </span>AO<span class="w"> </span>tables<span class="w"> </span>that<span class="w"> </span>have<span class="w"> </span>been<span class="w"> </span>modified<span class="w"> </span>since<span class="w"> </span>the<span class="w"> </span>last<span class="w"> </span>backup
+<span class="w">      </span>--jobs<span class="w"> </span>int<span class="w">                     </span>The<span class="w"> </span>number<span class="w"> </span>of<span class="w"> </span>parallel<span class="w"> </span>connections<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span>when<span class="w"> </span>backing<span class="w"> </span>up<span class="w"> </span>data<span class="w"> </span><span class="o">(</span>default<span class="w"> </span><span class="m">1</span><span class="o">)</span>
+<span class="w">      </span>--leaf-partition-data<span class="w">          </span>For<span class="w"> </span>partition<span class="w"> </span>tables,<span class="w"> </span>create<span class="w"> </span>one<span class="w"> </span>data<span class="w"> </span>file<span class="w"> </span>per<span class="w"> </span>leaf<span class="w"> </span>partition<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>one<span class="w"> </span>data<span class="w"> </span>file<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>whole<span class="w"> </span>table
+<span class="w">      </span>--metadata-only<span class="w">                </span>Only<span class="w"> </span>back<span class="w"> </span>up<span class="w"> </span>metadata,<span class="w"> </span><span class="k">do</span><span class="w"> </span>not<span class="w"> </span>back<span class="w"> </span>up<span class="w"> </span>data
+<span class="w">      </span>--no-compression<span class="w">               </span>Skip<span class="w"> </span>compression<span class="w"> </span>of<span class="w"> </span>data<span class="w"> </span>files
+<span class="w">      </span>--plugin-config<span class="w"> </span>string<span class="w">         </span>The<span class="w"> </span>configuration<span class="w"> </span>file<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span><span class="k">for</span><span class="w"> </span>a<span class="w"> </span>plugin
+<span class="w">      </span>--quiet<span class="w">                        </span>Suppress<span class="w"> </span>non-warning,<span class="w"> </span>non-error<span class="w"> </span>log<span class="w"> </span>messages
+<span class="w">      </span>--single-data-file<span class="w">             </span>Back<span class="w"> </span>up<span class="w"> </span>all<span class="w"> </span>data<span class="w"> </span>to<span class="w"> </span>a<span class="w"> </span>single<span class="w"> </span>file<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>one<span class="w"> </span>per<span class="w"> </span>table
+<span class="w">      </span>--verbose<span class="w">                      </span>Print<span class="w"> </span>verbose<span class="w"> </span>log<span class="w"> </span>messages
+<span class="w">      </span>--version<span class="w">                      </span>Print<span class="w"> </span>version<span class="w"> </span>number<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+<span class="w">      </span>--with-stats<span class="w">                   </span>Back<span class="w"> </span>up<span class="w"> </span>query<span class="w"> </span>plan<span class="w"> </span>statistics
+<span class="w">      </span>--without-globals<span class="w">              </span>Skip<span class="w"> </span>backup<span class="w"> </span>of<span class="w"> </span>global<span class="w"> </span>metadata
+</pre></div>
+</div>
+<p>The command-line flags for <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> are as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Usage:
+gprestore<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+
+Flags:
+<span class="w">      </span>--backup-dir<span class="w"> </span>string<span class="w">            </span>The<span class="w"> </span>absolute<span class="w"> </span>path<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>directory<span class="w"> </span><span class="k">in</span><span class="w"> </span>which<span class="w"> </span>the<span class="w"> </span>backup<span class="w"> </span>files<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>restored<span class="w"> </span>are<span class="w"> </span>located
+<span class="w">      </span>--copy-queue-size<span class="w"> </span>int<span class="w">          </span>Number<span class="w"> </span>of<span class="w"> </span>COPY<span class="w"> </span>commands<span class="w"> </span>gprestore<span class="w"> </span>should<span class="w"> </span>enqueue<span class="w"> </span>when<span class="w"> </span>restoring<span class="w"> </span>a<span class="w"> </span>backup<span class="w"> </span>taken<span class="w"> </span>using<span class="w"> </span>the<span class="w"> </span>--single-data-file<span class="w"> </span>option<span class="w"> </span><span class="o">(</span>default<span class="w"> </span><span class="m">1</span><span class="o">)</span>
+<span class="w">      </span>--create-db<span class="w">                    </span>Create<span class="w"> </span>the<span class="w"> </span>database<span class="w"> </span>before<span class="w"> </span>metadata<span class="w"> </span>restore
+<span class="w">      </span>--data-only<span class="w">                    </span>Only<span class="w"> </span>restore<span class="w"> </span>data,<span class="w"> </span><span class="k">do</span><span class="w"> </span>not<span class="w"> </span>restore<span class="w"> </span>metadata
+<span class="w">      </span>--debug<span class="w">                        </span>Print<span class="w"> </span>verbose<span class="w"> </span>and<span class="w"> </span>debug<span class="w"> </span>log<span class="w"> </span>messages
+<span class="w">      </span>--exclude-schema<span class="w"> </span>stringArray<span class="w">   </span>Restore<span class="w"> </span>all<span class="w"> </span>metadata<span class="w"> </span>except<span class="w"> </span>objects<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>specified<span class="w"> </span>schema<span class="o">(</span>s<span class="o">)</span>.<span class="w"> </span>--exclude-schema<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>specified<span class="w"> </span>multiple<span class="w"> </span>times.
+<span class="w">      </span>--exclude-schema-file<span class="w"> </span>string<span class="w">   </span>A<span class="w"> </span>file<span class="w"> </span>containing<span class="w"> </span>a<span class="w"> </span>list<span class="w"> </span>of<span class="w"> </span>schemas<span class="w"> </span>that<span class="w"> </span>will<span class="w"> </span>not<span class="w"> </span>be<span class="w"> </span>restored
+<span class="w">      </span>--exclude-table<span class="w"> </span>stringArray<span class="w">    </span>Restore<span class="w"> </span>all<span class="w"> </span>metadata<span class="w"> </span>except<span class="w"> </span>the<span class="w"> </span>specified<span class="w"> </span>relation<span class="o">(</span>s<span class="o">)</span>.<span class="w"> </span>--exclude-table<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>specified<span class="w"> </span>multiple<span class="w"> </span>times.
+<span class="w">      </span>--exclude-table-file<span class="w"> </span>string<span class="w">    </span>A<span class="w"> </span>file<span class="w"> </span>containing<span class="w"> </span>a<span class="w"> </span>list<span class="w"> </span>of<span class="w"> </span>fully-qualified<span class="w"> </span>relation<span class="o">(</span>s<span class="o">)</span><span class="w"> </span>that<span class="w"> </span>will<span class="w"> </span>not<span class="w"> </span>be<span class="w"> </span>restored
+<span class="w">      </span>--help<span class="w">                         </span>Help<span class="w"> </span><span class="k">for</span><span class="w"> </span>gprestore
+<span class="w">      </span>--include-schema<span class="w"> </span>stringArray<span class="w">   </span>Restore<span class="w"> </span>only<span class="w"> </span>the<span class="w"> </span>specified<span class="w"> </span>schema<span class="o">(</span>s<span class="o">)</span>.<span class="w"> </span>--include-schema<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>specified<span class="w"> </span>multiple<span class="w"> </span>times.
+<span class="w">      </span>--include-schema-file<span class="w"> </span>string<span class="w">   </span>A<span class="w"> </span>file<span class="w"> </span>containing<span class="w"> </span>a<span class="w"> </span>list<span class="w"> </span>of<span class="w"> </span>schemas<span class="w"> </span>that<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>restored
+<span class="w">      </span>--include-table<span class="w"> </span>stringArray<span class="w">    </span>Restore<span class="w"> </span>only<span class="w"> </span>the<span class="w"> </span>specified<span class="w"> </span>relation<span class="o">(</span>s<span class="o">)</span>.<span class="w"> </span>--include-table<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>specified<span class="w"> </span>multiple<span class="w"> </span>times.
+<span class="w">      </span>--include-table-file<span class="w"> </span>string<span class="w">    </span>A<span class="w"> </span>file<span class="w"> </span>containing<span class="w"> </span>a<span class="w"> </span>list<span class="w"> </span>of<span class="w"> </span>fully-qualified<span class="w"> </span>relation<span class="o">(</span>s<span class="o">)</span><span class="w"> </span>that<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>restored
+<span class="w">      </span>--incremental<span class="w">                  </span>BETA<span class="w"> </span>FEATURE:<span class="w"> </span>Only<span class="w"> </span>restore<span class="w"> </span>data<span class="w"> </span><span class="k">for</span><span class="w"> </span>all<span class="w"> </span>heap<span class="w"> </span>tables<span class="w"> </span>and<span class="w"> </span>only<span class="w"> </span>AO<span class="w"> </span>tables<span class="w"> </span>that<span class="w"> </span>have<span class="w"> </span>been<span class="w"> </span>modified<span class="w"> </span>since<span class="w"> </span>the<span class="w"> </span>last<span class="w"> </span>backup
+<span class="w">      </span>--jobs<span class="w"> </span>int<span class="w">                     </span>Number<span class="w"> </span>of<span class="w"> </span>parallel<span class="w"> </span>connections<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span>when<span class="w"> </span>restoring<span class="w"> </span>table<span class="w"> </span>data<span class="w"> </span>and<span class="w"> </span>post-data<span class="w"> </span><span class="o">(</span>default<span class="w"> </span><span class="m">1</span><span class="o">)</span>
+<span class="w">      </span>--metadata-only<span class="w">                </span>Only<span class="w"> </span>restore<span class="w"> </span>metadata,<span class="w"> </span><span class="k">do</span><span class="w"> </span>not<span class="w"> </span>restore<span class="w"> </span>data
+<span class="w">      </span>--on-error-continue<span class="w">            </span>Log<span class="w"> </span>errors<span class="w"> </span>and<span class="w"> </span><span class="k">continue</span><span class="w"> </span>restore,<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>exiting<span class="w"> </span>on<span class="w"> </span>first<span class="w"> </span>error
+<span class="w">      </span>--plugin-config<span class="w"> </span>string<span class="w">         </span>The<span class="w"> </span>configuration<span class="w"> </span>file<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span><span class="k">for</span><span class="w"> </span>a<span class="w"> </span>plugin
+<span class="w">      </span>--quiet<span class="w">                        </span>Suppress<span class="w"> </span>non-warning,<span class="w"> </span>non-error<span class="w"> </span>log<span class="w"> </span>messages
+<span class="w">      </span>--redirect-db<span class="w"> </span>string<span class="w">           </span>Restore<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>specified<span class="w"> </span>database<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>database<span class="w"> </span>that<span class="w"> </span>was<span class="w"> </span>backed<span class="w"> </span>up
+<span class="w">      </span>--redirect-schema<span class="w"> </span>string<span class="w">       </span>Restore<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>specified<span class="w"> </span>schema<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>schema<span class="w"> </span>that<span class="w"> </span>was<span class="w"> </span>backed<span class="w"> </span>up
+<span class="w">      </span>--resize-cluster<span class="w">               </span>Restore<span class="w"> </span>a<span class="w"> </span>backup<span class="w"> </span>taken<span class="w"> </span>on<span class="w"> </span>a<span class="w"> </span>cluster<span class="w"> </span>with<span class="w"> </span>more<span class="w"> </span>or<span class="w"> </span>fewer<span class="w"> </span>segments<span class="w"> </span>than<span class="w"> </span>the<span class="w"> </span>cluster<span class="w"> </span>to<span class="w"> </span>which<span class="w"> </span>it<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>restored
+<span class="w">      </span>--run-analyze<span class="w">                  </span>Run<span class="w"> </span>ANALYZE<span class="w"> </span>on<span class="w"> </span>restored<span class="w"> </span>tables
+<span class="w">      </span>--timestamp<span class="w"> </span>string<span class="w">             </span>The<span class="w"> </span>timestamp<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>restored,<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>format<span class="w"> </span>YYYYMMDDHHMMSS
+<span class="w">      </span>--truncate-table<span class="w">               </span>Removes<span class="w"> </span>data<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>tables<span class="w"> </span>getting<span class="w"> </span>restored
+<span class="w">      </span>--verbose<span class="w">                      </span>Print<span class="w"> </span>verbose<span class="w"> </span>log<span class="w"> </span>messages
+<span class="w">      </span>--version<span class="w">                      </span>Print<span class="w"> </span>version<span class="w"> </span>number<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+<span class="w">      </span>--with-globals<span class="w">                 </span>Restore<span class="w"> </span>global<span class="w"> </span>metadata
+<span class="w">      </span>--with-stats<span class="w">                   </span>Restore<span class="w"> </span>query<span class="w"> </span>plan<span class="w"> </span>statistics
+</pre></div>
+</div>
+</section>
+</section>
+<section id="non-parallel-backup-with-pg-dump">
+<h2>Non-parallel backup with <code class="docutils literal notranslate"><span class="pre">pg_dump</span></code><a class="headerlink" href="#non-parallel-backup-with-pg-dump" title="Link to this heading"></a></h2>
+<p>You can also use the PostgreSQL non-parallel backup utilitiesm<code class="docutils literal notranslate"><span class="pre">pg_dump</span></code> and <code class="docutils literal notranslate"><span class="pre">pg_dumpall</span></code> to create a single dump file on the coordinator host that contains all data from all active segments.</p>
+<p>The PostgreSQL non-parallel utilities should be used only for special cases. They are much slower than using <code class="docutils literal notranslate"><span class="pre">gpbackup</span></code> and <code class="docutils literal notranslate"><span class="pre">gprestore</span></code> because all of the data must pass through the coordinator. In addition, it is often the case that the coordinator host has insufficient disk space to save a backup of an entire distributed SynxDB Elastic.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">pg_restore</span></code> utility requires compressed dump files created by <code class="docutils literal notranslate"><span class="pre">pg_dump</span></code> or <code class="docutils literal notranslate"><span class="pre">pg_dumpall</span></code>. Before starting the restore, you should modify the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> statements in the dump files to include the SynxDB Elastic <code class="docutils literal notranslate"><span class="pre">DISTRIBUTED</span></code> clause. If you do not include the <code class="docutils literal notranslate"><span class="pre">DISTRIBUTED</span></code> clause, SynxDB Elastic assigns default values, which might not be optimal.</p>
+<p>To perform a non-parallel restore using parallel backup files, you can copy the backup files from each segment host to the coordinator host, and then load them through the coordinator.</p>
+<p>Another non-parallel method for backing up SynxDB Elastic data is to use the <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">TO</span></code> SQL command to copy all or a portion of a table out of the database to a delimited text file on the coordinator host.</p>
+</section>
+<section id="backup-support-for-unionstore-tables">
+<h2>Backup support for UnionStore tables<a class="headerlink" href="#backup-support-for-unionstore-tables" title="Link to this heading"></a></h2>
+<p>SynxDB Elastic supports backing up UnionStore tables using the standard PostgreSQL <code class="docutils literal notranslate"><span class="pre">pg_dump</span></code> utility. UnionStore tables can be backed up and restored just like regular heap tables, maintaining their storage format and access method.</p>
+<p>When using <code class="docutils literal notranslate"><span class="pre">pg_dump</span></code> with UnionStore tables:</p>
+<ul class="simple">
+<li><p>The table structure and data are exported in the standard PostgreSQL format</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">USING</span> <span class="pre">union_store</span></code> clause is preserved in the dump file</p></li>
+<li><p>The restore process will recreate the tables with the correct UnionStore access method</p></li>
+</ul>
+<p>Example of backing up a UnionStore table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Create a UnionStore table</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">unionstore_table</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="nb">text</span><span class="p">)</span><span class="w"> </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="n">ts_union_store</span><span class="p">;</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">unionstore_table</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;test&#39;</span><span class="p">);</span>
+
+<span class="c1">-- Backup using pg_dump</span>
+<span class="n">pg_dump</span><span class="w"> </span><span class="o">-</span><span class="n">t</span><span class="w"> </span><span class="n">unionstore_table</span><span class="w"> </span><span class="n">mydatabase</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">unionstore_backup</span><span class="p">.</span><span class="k">sql</span>
+
+<span class="c1">-- Restore the table</span>
+<span class="n">psql</span><span class="w"> </span><span class="n">mydatabase</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">unionstore_backup</span><span class="p">.</span><span class="k">sql</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>UnionStore tables are fully compatible with <code class="docutils literal notranslate"><span class="pre">pg_dump</span></code></p></li>
+<li><p>The backup process preserves the UnionStore access method and all associated metadata</p></li>
+<li><p>When restoring, ensure the UnionStore extension is installed in the target database</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="full-backup-and-restore.html" class="btn btn-neutral float-right" title="Perform Full Backup and Restore" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="br-index.html" class="btn btn-neutral float-left" title="Backup and Restore" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

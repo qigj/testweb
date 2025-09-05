@@ -1,0 +1,476 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Installing the SynxDB Software - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="installing-the-synxdb-software"><a class="header" href="#installing-the-synxdb-software">Installing the SynxDB Software</a></h1>
+<p>Describes how to install the SynxDB software binaries on all of the hosts that will comprise your SynxDB system, how to enable passwordless SSH for the <code>gpadmin</code> user, and how to verify the installation.</p>
+<p>Perform the following tasks in order:</p>
+<ol>
+<li><a href="#topic_oy5_21n_1jb">Install SynxDB.</a></li>
+<li><a href="#topic_xmb_gb5_vhb">Enable Passwordless SSH.</a></li>
+<li><a href="#topic10">Confirm the software installation.</a></li>
+<li><a href="#topic_cwj_hzb_vhb">Perform next steps.</a></li>
+</ol>
+<h2 id="installing-synxdb"><a class="header" href="#installing-synxdb"><a id="topic_oy5_21n_1jb"></a>Installing SynxDB</a></h2>
+<p>You must install SynxDB on each host machine of the SynxDB cluster.</p>
+<p>Synx Data Labs distributes the SynxDB software via a repository that must be installed on each cluster host. This guide assumes that each host can access the Synx Data Labs repositories. If your environment restricts internet access, or if you prefer to host repositories within your infrastructure to ensure consistent package availability, contact Synx Data Labs to obtain a complete repository mirror for local hosting.</p>
+<p>Perform the following steps on each host machine of your cluster:</p>
+<p>Follow these steps to securely install SynxDB to your system:</p>
+<ol>
+<li>
+<p>Login to your Enterprise Linux 8 or 9 system as the <code>root</code> user.</p>
+</li>
+<li>
+<p>Import the Synx Data Labs GPG key so you can use it to validate downloaded packages:</p>
+<pre><code>wget -nv https://synxdb-repo.s3.us-west-2.amazonaws.com/gpg/RPM-GPG-KEY-SYNXDB
+rpm --import RPM-GPG-KEY-SYNXDB
+</code></pre>
+</li>
+<li>
+<p>Verify that you have imported the keys:</p>
+<pre><code>rpm -q gpg-pubkey --qf "%{NAME}-%{VERSION}-%{RELEASE} %{SUMMARY}\n" | grep SynxDB
+</code></pre>
+<p>You should see output similar to:</p>
+<pre><code>gpg-pubkey-df4bfefe-67975261 gpg(SynxDB Infrastructure &lt;infrastructure@synxdata.com&gt;)
+</code></pre>
+</li>
+<li>
+<p>Download the SynxDB repository package:</p>
+<pre><code class="language-bash">wget -nv https://synxdb-repo.s3.us-west-2.amazonaws.com/repo-release/synxdb2-release-1-1.rpm
+</code></pre>
+</li>
+<li>
+<p>Verify the package signature of the repository package you just downloaded.</p>
+<pre><code class="language-bash">rpm --checksig synxdb2-release-1-1.rpm
+</code></pre>
+<p>Ensure that the command output shows that the signature is OK. For example:</p>
+<pre><code>synxdb2-release-1-1.rpm: digests signatures OK
+</code></pre>
+</li>
+<li>
+<p>After verifying the package signature, install the SynxDB repository package. For Enterprise Linux 9:</p>
+<pre><code class="language-bash">dnf install -y synxdb2-release-1-1.rpm
+</code></pre>
+<p>The repository installation shows details of the installation process similar to:</p>
+<pre><code>Last metadata expiration check: 2:11:29 ago on Mon Mar 10 18:53:32 2025.
+Dependencies resolved.
+=========================================================================
+ Package            Architecture   Version          Repository      Size
+=========================================================================
+Installing:
+ synxdb-release     noarch         1-1              @commandline    8.1 k
+
+Transaction Summary
+=========================================================================
+Install  1 Package
+
+Total size: 8.1 k
+Installed size: 0  
+Downloading Packages:
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                 1/1 
+  Running scriptlet: synxdb2-release-1-1.noarch                      1/1 
+  Installing       : synxdb2-release-1-1.noarch                      1/1 
+  Verifying        : synxdb2-release-1-1.noarch                      1/1 
+
+Installed:
+  synxdb2-release-1-1.noarch
+
+Complete!
+</code></pre>
+<p><strong>Note:</strong> The <code>-y</code> option in the <code>dnf install</code> command automatically confirms and proceeds with installing the software as well as dependent packages. If you prefer to confirm each dependency manually, omit the <code>-y</code> flag.</p>
+</li>
+<li>
+<p>After you have installed the repository package, install SynxDB with the command:</p>
+<pre><code class="language-bash">dnf install -y synxdb
+</code></pre>
+<p>The installation process installs all dependencies required for SynxDB 2 in addition to the SynxDB software.</p>
+</li>
+<li>
+<p>Verify the installation with:</p>
+<pre><code class="language-bash">rpm -qi synxdb
+</code></pre>
+<p>You should see installation details similar to:</p>
+<pre><code>Name        : synxdb
+Version     : 2.27.2
+Release     : 1.el8
+Architecture: x86_64
+Install Date: Fri Mar 14 17:22:59 2025
+Group       : Applications/Databases
+Size        : 1541443881
+License     : ASL 2.0
+Signature   : RSA/SHA256, Thu Mar 13 10:36:01 2025, Key ID b783878edf4bfefe
+Source RPM  : synxdb-2.27.2-1.el8.src.rpm
+Build Date  : Thu Mar 13 09:55:50 2025
+Build Host  : cdw
+Relocations : /usr/local/synxdb 
+Vendor      : Synx Data Labs, Inc.
+URL         : https://synxdatalabs.com
+Summary     : High-performance MPP database for enterprise analytics
+Description :
+
+SynxDB is a high-performance, enterprise-grade, massively parallel
+processing (MPP) database designed for advanced analytics on
+large-scale data sets. Derived from PostgreSQL and the last
+open-source version of Greenplum, SynxDB offers seamless
+compatibility, powerful analytical capabilities, and robust security
+features.
+
+Key Features:
+- Massively parallel processing for optimized query performance
+- Advanced analytics for complex data workloads
+- Seamless integration with ETL pipelines and BI tools
+- Broad compatibility with diverse data sources and formats
+- Enhanced security and operational reliability
+
+Disclaimer &amp; Attribution:
+
+SynxDB is derived from the last open-source version of Greenplum,
+originally developed by Pivotal Software, Inc., and maintained under
+Broadcom Inc.'s stewardship. Greenplum® is a registered trademark of
+Broadcom Inc. Synx Data Labs, Inc. and SynxDB are not affiliated with,
+endorsed by, or sponsored by Broadcom Inc. References to Greenplum are
+provided for comparative, interoperability, and attribution purposes
+in compliance with open-source licensing requirements.
+
+For more information, visit the official SynxDB website at
+https://synxdatalabs.com.
+
+</code></pre>
+<p>Also verify that the <code>/usr/local/synxdb</code> directory points to the specific version of SynxDB that you downloaded:</p>
+<pre><code>ls -ld /usr/local/synxdb*
+</code></pre>
+<p>For version 2.27.2 the output is:</p>
+<pre><code>lrwxrwxrwx  1 root root   24 Feb 19 10:05 /usr/local/synxdb -&gt; /usr/local/synxdb-2.27.2
+drwxr-xr-x 10 root root 4096 Mar 10 21:07 /usr/local/synxdb-2.27.2
+</code></pre>
+</li>
+<li>
+<p>If you have not yet created the <code>gpadmin</code> administrator user and group, execute these steps:</p>
+<pre><code class="language-bash"># groupadd gpadmin
+# useradd gpadmin -r -m -g gpadmin
+# passwd gpadmin
+New password: &lt;changeme&gt;
+Retype new password: &lt;changeme&gt;
+</code></pre>
+</li>
+<li>
+<p>Login as the <code>gpadmin</code> user and set the SynxDB environment:</p>
+<pre><code class="language-bash">su - gpadmin
+source /usr/local/synxdb/synxdb_path.sh
+</code></pre>
+</li>
+<li>
+<p>Finally, verify that the following SynxDB executable paths and versions match the expected paths and versions for your installation:</p>
+<pre><code class="language-bash"># which postgres
+/usr/local/synxdb-2.27.2/bin/postgres
+# which psql
+/usr/local/synxdb-2.27.2/bin/psql
+# postgres --version
+postgres (SynxDB) 9.4.26
+# postgres --gp-version
+postgres (SynxDB) 6.27.2+SynxDB_GA build 1
+# psql --version
+psql (PostgreSQL) 9.4.26
+
+
+</code></pre>
+</li>
+</ol>
+<h2 id="enabling-passwordless-ssh"><a class="header" href="#enabling-passwordless-ssh"><a id="topic_xmb_gb5_vhb"></a>Enabling Passwordless SSH</a></h2>
+<p>The <code>gpadmin</code> user on each SynxDB host must be able to SSH from any host in the cluster to any other host in the cluster without entering a password or passphrase (called “passwordless SSH”). If you enable passwordless SSH from the master host to every other host in the cluster (“1-<em>n</em> passwordless SSH”), you can use the SynxDB <code>gpssh-exkeys</code> command-line utility to enable passwordless SSH from every host to every other host (“<em>n</em>-<em>n</em> passwordless SSH”).</p>
+<ol>
+<li>
+<p>Log in to the master host as the <code>gpadmin</code> user.</p>
+</li>
+<li>
+<p>Source the <code>path</code> file in the SynxDB installation directory.</p>
+<pre><code>$ source /usr/local/synxdb/synxdb_path.sh
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> Add the above <code>source</code> command to the <code>gpadmin</code> user’s <code>.bashrc</code> or other shell startup file so that the SynxDB path and environment variables are set whenever you log in as <code>gpadmin</code>.</p>
+</blockquote>
+</li>
+<li>
+<p>Use the <code>ssh-copy-id</code> command to add the <code>gpadmin</code> user’s public key to the <code>authorized_hosts</code> SSH file on every other host in the cluster.</p>
+<pre><code>$ ssh-copy-id smdw
+$ ssh-copy-id sdw1
+$ ssh-copy-id sdw2
+$ ssh-copy-id sdw3
+. . .
+</code></pre>
+<p>This enables 1-<em>n</em> passwordless SSH. You will be prompted to enter the <code>gpadmin</code> user’s password for each host. If you have the <code>sshpass</code> command on your system, you can use a command like the following to avoid the prompt.</p>
+<pre><code>$ SSHPASS=&lt;password&gt; sshpass -e ssh-copy-id smdw
+</code></pre>
+</li>
+<li>
+<p>In the <code>gpadmin</code> home directory, create a file named <code>hostfile_exkeys</code> that has the machine configured host names and host addresses (interface names) for each host in your SynxDB system (master, standby master, and segment hosts). Make sure there are no blank lines or extra spaces. Check the <code>/etc/hosts</code> file on your systems for the correct host names to use for your environment. For example, if you have a master, standby master, and three segment hosts with two unbonded network interfaces per host, your file would look something like this:</p>
+<pre><code>mdw
+mdw-1
+mdw-2
+smdw
+smdw-1
+smdw-2
+sdw1
+sdw1-1
+sdw1-2
+sdw2
+sdw2-1
+sdw2-2
+sdw3
+sdw3-1
+sdw3-2
+</code></pre>
+</li>
+<li>
+<p>Run the <code>gpssh-exkeys</code> utility with your <code>hostfile_exkeys</code> file to enable <em>n</em>-<em>n</em> passwordless SSH for the <code>gpadmin</code> user.</p>
+<pre><code>$ gpssh-exkeys -f hostfile_exkeys
+</code></pre>
+</li>
+</ol>
+<h2 id="confirming-your-installation"><a class="header" href="#confirming-your-installation"><a id="topic10"></a>Confirming Your Installation</a></h2>
+<p>To make sure the SynxDB software was installed and configured correctly, run the following confirmation steps from your SynxDB master host. If necessary, correct any problems before continuing on to the next task.</p>
+<ol>
+<li>
+<p>Log in to the master host as <code>gpadmin</code>:</p>
+<pre><code>$ su - gpadmin
+</code></pre>
+</li>
+<li>
+<p>Use the <code>gpssh</code> utility to see if you can log in to all hosts without a password prompt, and to confirm that the SynxDB software was installed on all hosts. Use the <code>hostfile_exkeys</code> file you used to set up passwordless SSH. For example:</p>
+<pre><code>$ gpssh -f hostfile_exkeys -e 'ls -l /usr/local/synxdb-&lt;version&gt;'
+</code></pre>
+<p>If the installation was successful, you should be able to log in to all hosts without a password prompt. All hosts should show that they have the same contents in their installation directories, and that the directories are owned by the <code>gpadmin</code> user.</p>
+<p>If you are prompted for a password, run the following command to redo the ssh key exchange:</p>
+<pre><code>$ gpssh-exkeys -f hostfile_exkeys
+</code></pre>
+</li>
+</ol>
+<h2 id="about-your-synxdb-installation"><a class="header" href="#about-your-synxdb-installation"><a id="topic_zdf_1f5_vhb"></a>About Your SynxDB Installation</a></h2>
+<ul>
+<li><code>synxdb_path.sh</code> — This file contains the environment variables for SynxDB. See <a href="init_gpdb.html">Setting SynxDB Environment Variables</a>.</li>
+<li><strong>bin</strong> — This directory contains the SynxDB management utilities. This directory also contains the PostgreSQL client and server programs, most of which are also used in SynxDB.</li>
+<li><strong>docs/cli_help</strong> — This directory contains help files for SynxDB command-line utilities.</li>
+<li><strong>docs/cli_help/gpconfigs</strong> — This directory contains sample <code>gpinitsystem</code> configuration files and host files that can be modified and used when installing and initializing a SynxDB system.</li>
+<li><strong>ext</strong> — Bundled programs (such as Python) used by some SynxDB utilities.</li>
+<li><strong>include</strong> — The C header files for SynxDB.</li>
+<li><strong>lib</strong> — SynxDB and PostgreSQL library files.</li>
+<li><strong>sbin</strong> — Supporting/Internal scripts and programs.</li>
+<li><strong>share</strong> — Shared files for SynxDB.</li>
+</ul>
+<h2 id="next-steps"><a class="header" href="#next-steps"><a id="topic_cwj_hzb_vhb"></a>Next Steps</a></h2>
+<ul>
+<li><a href="create_data_dirs.html">Creating the Data Storage Areas</a></li>
+<li><a href="validate.html">Validating Your Systems</a></li>
+<li><a href="init_gpdb.html">Initializing a SynxDB System</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../install_guide/prep_os.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../install_guide/create_data_dirs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../install_guide/prep_os.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../install_guide/create_data_dirs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

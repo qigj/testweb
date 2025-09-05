@@ -1,0 +1,325 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>REVOKE - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="revoke"><a class="header" href="#revoke">REVOKE</a></h1>
+<p>Removes access privileges.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code class="language-{#sql_command_synopsis}">REVOKE [GRANT OPTION FOR] { {SELECT | INSERT | UPDATE | DELETE 
+       | REFERENCES | TRIGGER | TRUNCATE } [, ...] | ALL [PRIVILEGES] }
+
+       ON { [TABLE] &lt;table_name&gt; [, ...]
+            | ALL TABLES IN SCHEMA schema_name [, ...] }
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC} [, ...]
+       [CASCADE | RESTRICT]
+
+REVOKE [ GRANT OPTION FOR ] { { SELECT | INSERT | UPDATE 
+       | REFERENCES } ( &lt;column_name&gt; [, ...] )
+       [, ...] | ALL [ PRIVILEGES ] ( &lt;column_name&gt; [, ...] ) }
+       ON [ TABLE ] &lt;table_name&gt; [, ...]
+       FROM { [ GROUP ]  &lt;role_name&gt; | PUBLIC } [, ...]
+       [ CASCADE | RESTRICT ]
+
+REVOKE [GRANT OPTION FOR] { {USAGE | SELECT | UPDATE} [,...] 
+       | ALL [PRIVILEGES] }
+       ON { SEQUENCE &lt;sequence_name&gt; [, ...]
+            | ALL SEQUENCES IN SCHEMA schema_name [, ...] }
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+       [CASCADE | RESTRICT]
+
+REVOKE [GRANT OPTION FOR] { {CREATE | CONNECT 
+       | TEMPORARY | TEMP} [, ...] | ALL [PRIVILEGES] }
+       ON DATABASE &lt;database_name&gt; [, ...]
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC} [, ...]
+       [CASCADE | RESTRICT]
+
+REVOKE [ GRANT OPTION FOR ]
+       { USAGE | ALL [ PRIVILEGES ] }
+       ON DOMAIN &lt;domain_name&gt; [, ...]
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+       [ CASCADE | RESTRICT ]
+
+
+REVOKE [ GRANT OPTION FOR ]
+       { USAGE | ALL [ PRIVILEGES ] }
+       ON FOREIGN DATA WRAPPER &lt;fdw_name&gt; [, ...]
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+       [ CASCADE | RESTRICT ]
+
+REVOKE [ GRANT OPTION FOR ]
+       { USAGE | ALL [ PRIVILEGES ] }
+       ON FOREIGN SERVER &lt;server_name&gt; [, ...]
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+       [ CASCADE | RESTRICT ]
+
+REVOKE [GRANT OPTION FOR] {EXECUTE | ALL [PRIVILEGES]}
+       ON { FUNCTION &lt;funcname&gt; ( [[&lt;argmode&gt;] [&lt;argname&gt;] &lt;argtype&gt;
+                              [, ...]] ) [, ...]
+            | ALL FUNCTIONS IN SCHEMA schema_name [, ...] }
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC} [, ...]
+       [CASCADE | RESTRICT]
+
+REVOKE [GRANT OPTION FOR] {USAGE | ALL [PRIVILEGES]}
+       ON LANGUAGE &lt;langname&gt; [, ...]
+       FROM { [ GROUP ]  &lt;role_name&gt; | PUBLIC} [, ...]
+       [ CASCADE | RESTRICT ]
+
+REVOKE [GRANT OPTION FOR] { {CREATE | USAGE} [, ...] 
+       | ALL [PRIVILEGES] }
+       ON SCHEMA &lt;schema_name&gt; [, ...]
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC} [, ...]
+       [CASCADE | RESTRICT]
+
+REVOKE [GRANT OPTION FOR] { CREATE | ALL [PRIVILEGES] }
+       ON TABLESPACE &lt;tablespacename&gt; [, ...]
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+       [CASCADE | RESTRICT]
+
+REVOKE [ GRANT OPTION FOR ]
+       { USAGE | ALL [ PRIVILEGES ] }
+       ON TYPE &lt;type_name&gt; [, ...]
+       FROM { [ GROUP ] &lt;role_name&gt; | PUBLIC } [, ...]
+       [ CASCADE | RESTRICT ] 
+
+REVOKE [ADMIN OPTION FOR] &lt;parent_role&gt; [, ...] 
+       FROM [ GROUP ] &lt;member_role&gt; [, ...]
+       [CASCADE | RESTRICT]
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p><code>REVOKE</code> command revokes previously granted privileges from one or more roles. The key word <code>PUBLIC</code> refers to the implicitly defined group of all roles.</p>
+<p>See the description of the <a href="GRANT.html">GRANT</a> command for the meaning of the privilege types.</p>
+<p>Note that any particular role will have the sum of privileges granted directly to it, privileges granted to any role it is presently a member of, and privileges granted to <code>PUBLIC</code>. Thus, for example, revoking <code>SELECT</code> privilege from <code>PUBLIC</code> does not necessarily mean that all roles have lost <code>SELECT</code> privilege on the object: those who have it granted directly or via another role will still have it. Similarly, revoking <code>SELECT</code> from a user might not prevent that user from using <code>SELECT</code> if <code>PUBLIC</code> or another membership role still has <code>SELECT</code> rights.</p>
+<p>If <code>GRANT OPTION FOR</code> is specified, only the grant option for the privilege is revoked, not the privilege itself. Otherwise, both the privilege and the grant option are revoked.</p>
+<p>If a role holds a privilege with grant option and has granted it to other roles then the privileges held by those other roles are called dependent privileges. If the privilege or the grant option held by the first role is being revoked and dependent privileges exist, those dependent privileges are also revoked if <code>CASCADE</code> is specified, else the revoke action will fail. This recursive revocation only affects privileges that were granted through a chain of roles that is traceable to the role that is the subject of this <code>REVOKE</code> command. Thus, the affected roles may effectively keep the privilege if it was also granted through other roles.</p>
+<p>When you revoke privileges on a table, SynxDB revokes the corresponding column privileges (if any) on each column of the table, as well. On the other hand, if a role has been granted privileges on a table, then revoking the same privileges from individual columns will have no effect.</p>
+<p>When revoking membership in a role, <code>GRANT OPTION</code> is instead called <code>ADMIN OPTION</code>, but the behavior is similar.</p>
+<h2 id="parameters"><a class="header" href="#parameters"><a id="section4a"></a>Parameters</a></h2>
+<p>See <a href="GRANT.html">GRANT</a>.</p>
+<h2 id="notes"><a class="header" href="#notes"><a id="section4"></a>Notes</a></h2>
+<p>A user may revoke only those privileges directly granted by that user. If, for example, user A grants a privilege with grant option to user B, and user B has in turn granted it to user C, then user A cannot revoke the privilege directly from C. Instead, user A could revoke the grant option from user B and use the <code>CASCADE</code> option so that the privilege is in turn revoked from user C. For another example, if both A and B grant the same privilege to C, A can revoke their own grant but not B’s grant, so C effectively still has the privilege.</p>
+<p>When a non-owner of an object attempts to <code>REVOKE</code> privileges on the object, the command fails outright if the user has no privileges whatsoever on the object. As long as some privilege is available, the command proceeds, but it will revoke only those privileges for which the user has grant options. The <code>REVOKE ALL PRIVILEGES</code> forms issue a warning message if no grant options are held, while the other forms issue a warning if grant options for any of the privileges specifically named in the command are not held. (In principle these statements apply to the object owner as well, but since SynxDB always treats the owner as holding all grant options, the cases can never occur.)</p>
+<p>If a superuser chooses to issue a <code>GRANT</code> or <code>REVOKE</code> command, SynxDB performs the command as though it were issued by the owner of the affected object. Since all privileges ultimately come from the object owner (possibly indirectly via chains of grant options), it is possible for a superuser to revoke all privileges, but this might require use of <code>CASCADE</code> as stated above.</p>
+<p><code>REVOKE</code> may also be invoked by a role that is not the owner of the affected object, but is a member of the role that owns the object, or is a member of a role that holds privileges <code>WITH GRANT OPTION</code> on the object. In this case, SynxDB performs the command as though it were issued by the containing role that actually owns the object or holds the privileges <code>WITH GRANT OPTION</code>. For example, if table <code>t1</code> is owned by role <code>g1</code>, of which role <code>u1</code> is a member, then <code>u1</code> can revoke privileges on <code>t1</code> that are recorded as being granted by <code>g1</code>. This includes grants made by <code>u1</code> as well as by other members of role <code>g1</code>.</p>
+<p>If the role that runs <code>REVOKE</code> holds privileges indirectly via more than one role membership path, it is unspecified which containing role will be used to perform the command. In such cases it is best practice to use <code>SET ROLE</code> to become the specific role as which you want to do the <code>REVOKE</code>. Failure to do so may lead to revoking privileges other than the ones you intended, or not revoking any privileges at all.</p>
+<p>Use <code>psql</code>’s <code>\dp</code> meta-command to obtain information about existing privileges for tables and columns. There are other <code>\d</code> meta-commands that you can use to display the privileges of non-table objects.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section5"></a>Examples</a></h2>
+<p>Revoke insert privilege for the public on table <code>films</code>:</p>
+<pre><code>REVOKE INSERT ON films FROM PUBLIC;
+</code></pre>
+<p>Revoke all privileges from role <code>sally</code> on view <code>topten</code>. Note that this actually means revoke all privileges that the current role granted (if not a superuser).</p>
+<pre><code>REVOKE ALL PRIVILEGES ON topten FROM sally;
+</code></pre>
+<p>Revoke membership in role <code>admins</code> from user <code>joe</code>:</p>
+<pre><code>REVOKE admins FROM joe;
+</code></pre>
+<h2 id="compatibility"><a class="header" href="#compatibility"><a id="section6"></a>Compatibility</a></h2>
+<p>The compatibility notes of the <a href="GRANT.html">GRANT</a> command also apply to <code>REVOKE</code>.</p>
+<p>Either <code>RESTRICT</code> or <code>CASCADE</code> is required according to the standard, but SynxDB assumes <code>RESTRICT</code> by default.</p>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section7"></a>See Also</a></h2>
+<p><a href="GRANT.html">GRANT</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/sql_commands/RETRIEVE.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/sql_commands/ROLLBACK.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/sql_commands/RETRIEVE.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/sql_commands/ROLLBACK.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

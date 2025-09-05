@@ -1,0 +1,340 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Example of Managing Transaction IDs - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="example-of-managing-transaction-ids"><a class="header" href="#example-of-managing-transaction-ids">Example of Managing Transaction IDs</a></h1>
+<p>For SynxDB, the transaction ID (XID) value an incrementing 32-bit (2<sup>32</sup>) value. The maximum unsigned 32-bit value is 4,294,967,295, or about four billion. The XID values restart at 3 after the maximum is reached. SynxDB handles the limit of XID values with two features:</p>
+<ul>
+<li>
+<p>Calculations on XID values using modulo-2<sup>32</sup> arithmetic that allow SynxDB to reuse XID values. The modulo calculations determine the order of transactions, whether one transaction has occurred before or after another, based on the XID.</p>
+<p>Every XID value can have up to two billion (2<sup>31</sup>) XID values that are considered previous transactions and two billion (231 -1 ) XID values that are considered newer transactions. The XID values can be considered a circular set of values with no endpoint similar to a 24 hour clock.</p>
+<p>Using the SynxDB modulo calculations, as long as two XIDs are within 2<sup>31</sup> transactions of each other, comparing them yields the correct result.</p>
+</li>
+<li>
+<p>A frozen XID value that SynxDB uses as the XID for current (visible) data rows. Setting a row’s XID to the frozen XID performs two functions.</p>
+<ul>
+<li>When SynxDB compares XIDs using the modulo calculations, the frozen XID is always smaller, earlier, when compared to any other XID. If a row’s XID is not set to the frozen XID and 2<sup>31</sup> new transactions are run, the row appears to be run in the future based on the modulo calculation.</li>
+<li>When the row’s XID is set to the frozen XID, the original XID can be used, without duplicating the XID. This keeps the number of data rows on disk with assigned XIDs below (2<sup>32</sup>).</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> SynxDB assigns XID values only to transactions that involve DDL or DML operations, which are typically the only transactions that require an XID.</p>
+</blockquote>
+<h2 id="simple-mvcc-example"><a class="header" href="#simple-mvcc-example"><a id="topic_zsw_yck_wv"></a>Simple MVCC Example</a></h2>
+<p>This is a simple example of the concepts of a MVCC database and how it manages data and transactions with transaction IDs. This simple MVCC database example consists of a single table:</p>
+<ul>
+<li>The table is a simple table with 2 columns and 4 rows of data.</li>
+<li>The valid transaction ID (XID) values are from 0 up to 9, after 9 the XID restarts at 0.</li>
+<li>The frozen XID is -2. This is different than the SynxDB frozen XID.</li>
+<li>Transactions are performed on a single row.</li>
+<li>Only insert and update operations are performed.</li>
+<li>All updated rows remain on disk, no operations are performed to remove obsolete rows.</li>
+</ul>
+<p>The example only updates the amount values. No other changes to the table.</p>
+<p>The example shows these concepts.</p>
+<ul>
+<li><a href="#transactions">How transaction IDs are used to manage multiple, simultaneous transactions on a table.</a></li>
+<li><a href="#managin_xid">How transaction IDs are managed with the frozen XID</a></li>
+<li><a href="#modulo_calc">How the modulo calculation determines the order of transactions based on transaction IDs</a></li>
+</ul>
+<h3 id="managing-simultaneous-transactions"><a class="header" href="#managing-simultaneous-transactions"><a id="transactions"></a>Managing Simultaneous Transactions</a></h3>
+<p>This table is the initial table data on disk with no updates. The table contains two database columns for transaction IDs, <code>xmin</code> (transaction that created the row) and <code>xmax</code> (transaction that updated the row). In the table, changes are added, in order, to the bottom of the table.</p>
+<div class="table-wrapper"><table><thead><tr><th>item</th><th>amount</th><th>xmin</th><th>xmax</th></tr></thead><tbody>
+<tr><td>widget</td><td>100</td><td>0</td><td>null</td></tr>
+<tr><td>giblet</td><td>200</td><td>1</td><td>null</td></tr>
+<tr><td>sprocket</td><td>300</td><td>2</td><td>null</td></tr>
+<tr><td>gizmo</td><td>400</td><td>3</td><td>null</td></tr>
+</tbody></table>
+</div>
+<p>The next table shows the table data on disk after some updates on the amount values have been performed.</p>
+<ul>
+<li>xid = 4: <code>update tbl set amount=208 where item = 'widget'</code></li>
+<li>xid = 5: <code>update tbl set amount=133 where item = 'sprocket'</code></li>
+<li>xid = 6: <code>update tbl set amount=16 where item = 'widget'</code></li>
+</ul>
+<p>In the next table, the bold items are the current rows for the table. The other rows are obsolete rows, table data that on disk but is no longer current. Using the xmax value, you can determine the current rows of the table by selecting the rows with <code>null</code> value. SynxDB uses a slightly different method to determine current table rows.</p>
+<div class="table-wrapper"><table><thead><tr><th>item</th><th>amount</th><th>xmin</th><th>xmax</th></tr></thead><tbody>
+<tr><td>widget</td><td>100</td><td>0</td><td>4</td></tr>
+<tr><td><strong>giblet</strong></td><td><strong>200</strong></td><td>1</td><td><strong>null</strong></td></tr>
+<tr><td>sprocket</td><td>300</td><td>2</td><td>5</td></tr>
+<tr><td><strong>gizmo</strong></td><td><strong>400</strong></td><td>3</td><td><strong>null</strong></td></tr>
+<tr><td>widget</td><td>208</td><td>4</td><td>6</td></tr>
+<tr><td><strong>sprocket</strong></td><td><strong>133</strong></td><td>5</td><td><strong>null</strong></td></tr>
+<tr><td><strong>widget</strong></td><td><strong>16</strong></td><td>6</td><td><strong>null</strong></td></tr>
+</tbody></table>
+</div>
+<p>The simple MVCC database works with XID values to determine the state of the table. For example, both these independent transactions run concurrently.</p>
+<ul>
+<li><code>UPDATE</code> command changes the sprocket amount value to <code>133</code> (xmin value <code>5</code>)</li>
+<li><code>SELECT</code> command returns the value of sprocket.</li>
+</ul>
+<p>During the <code>UPDATE</code> transaction, the database returns the value of sprocket <code>300</code>, until the <code>UPDATE</code> transaction completes.</p>
+<h3 id="managing-xids-and-the-frozen-xid"><a class="header" href="#managing-xids-and-the-frozen-xid"><a id="managin_xid"></a>Managing XIDs and the Frozen XID</a></h3>
+<p>For this simple example, the database is close to running out of available XID values. When SynxDB is close to running out of available XID values, SynxDB takes these actions.</p>
+<ul>
+<li>
+<p>SynxDB issues a warning stating that the database is running out of XID values.</p>
+<pre><code>WARNING: database "&lt;database_name&gt;" must be vacuumed within &lt;number_of_transactions&gt; transactions
+</code></pre>
+</li>
+<li>
+<p>Before the last XID is assigned, SynxDB stops accepting transactions to prevent assigning an XID value twice and issues this message.</p>
+<pre><code>FATAL: database is not accepting commands to avoid wraparound data loss in database "&lt;database_name&gt;" 
+</code></pre>
+</li>
+</ul>
+<p>To manage transaction IDs and table data that is stored on disk, SynxDB provides the <code>VACUUM</code> command.</p>
+<ul>
+<li>A <code>VACUUM</code> operation frees up XID values so that a table can have more than 10 rows by changing the xmin values to the frozen XID.</li>
+<li>A <code>VACUUM</code> operation manages obsolete or deleted table rows on disk. This database’s <code>VACUUM</code> command changes the XID values <code>obsolete</code> to indicate obsolete rows. A SynxDB <code>VACUUM</code> operation, without the <code>FULL</code> option, deletes the data opportunistically to remove rows on disk with minimal impact to performance and data availability.</li>
+</ul>
+<p>For the example table, a <code>VACUUM</code> operation has been performed on the table. The command updated table data on disk. This version of the <code>VACUUM</code> command performs slightly differently than the SynxDB command, but the concepts are the same.</p>
+<ul>
+<li>
+<p>For the widget and sprocket rows on disk that are no longer current, the rows have been marked as <code>obsolete</code>.</p>
+</li>
+<li>
+<p>For the giblet and gizmo rows that are current, the xmin has been changed to the frozen XID.</p>
+<p>The values are still current table values (the row’s xmax value is <code>null</code>). However, the table row is visible to all transactions because the xmin value is frozen XID value that is older than all other XID values when modulo calculations are performed.</p>
+</li>
+</ul>
+<p>After the <code>VACUUM</code> operation, the XID values <code>0</code>, <code>1</code>, <code>2</code>, and <code>3</code> available for use.</p>
+<div class="table-wrapper"><table><thead><tr><th>item</th><th>amount</th><th>xmin</th><th>xmax</th></tr></thead><tbody>
+<tr><td>widget</td><td>100</td><td>obsolete</td><td>obsolete</td></tr>
+<tr><td><strong>giblet</strong></td><td><strong>200</strong></td><td>-2</td><td><strong>null</strong></td></tr>
+<tr><td>sprocket</td><td>300</td><td>obsolete</td><td>obsolete</td></tr>
+<tr><td><strong>gizmo</strong></td><td><strong>400</strong></td><td>-2</td><td><strong>null</strong></td></tr>
+<tr><td>widget</td><td>208</td><td>4</td><td>6</td></tr>
+<tr><td><strong>sprocket</strong></td><td><strong>133</strong></td><td>5</td><td><strong>null</strong></td></tr>
+<tr><td><strong>widget</strong></td><td><strong>16</strong></td><td>6</td><td><strong>null</strong></td></tr>
+</tbody></table>
+</div>
+<p>When a row disk with the xmin value of <code>-2</code> is updated, the xmax value is replaced with the transaction XID as usual, and the row on disk is considered obsolete after any concurrent transactions that access the row have completed.</p>
+<p>Obsolete rows can be deleted from disk. For SynxDB, the <code>VACUUM</code> command, with <code>FULL</code> option, does more extensive processing to reclaim disk space.</p>
+<h3 id="example-of-xid-modulo-calculations"><a class="header" href="#example-of-xid-modulo-calculations"><a id="modulo_calc"></a>Example of XID Modulo Calculations</a></h3>
+<p>The next table shows the table data on disk after more <code>UPDATE</code> transactions. The XID values have rolled over and start over at <code>0</code>. No additional <code>VACUUM</code> operations have been performed.</p>
+<div class="table-wrapper"><table><thead><tr><th>item</th><th>amount</th><th>xmin</th><th>xmax</th></tr></thead><tbody>
+<tr><td>widget</td><td>100</td><td>obsolete</td><td>obsolete</td></tr>
+<tr><td>giblet</td><td>200</td><td>-2</td><td>1</td></tr>
+<tr><td>sprocket</td><td>300</td><td>obsolete</td><td>obsolete</td></tr>
+<tr><td>gizmo</td><td>400</td><td>-2</td><td>9</td></tr>
+<tr><td>widget</td><td>208</td><td>4</td><td>6</td></tr>
+<tr><td><strong>sprocket</strong></td><td><strong>133</strong></td><td>5</td><td><strong>null</strong></td></tr>
+<tr><td>widget</td><td>16</td><td>6</td><td>7</td></tr>
+<tr><td><strong>widget</strong></td><td><strong>222</strong></td><td>7</td><td><strong>null</strong></td></tr>
+<tr><td>giblet</td><td>233</td><td>8</td><td>0</td></tr>
+<tr><td><strong>gizmo</strong></td><td><strong>18</strong></td><td>9</td><td><strong>null</strong></td></tr>
+<tr><td>giblet</td><td>88</td><td>0</td><td>1</td></tr>
+<tr><td><strong>giblet</strong></td><td><strong>44</strong></td><td>1</td><td><strong>null</strong></td></tr>
+</tbody></table>
+</div>
+<p>When performing the modulo calculations that compare XIDs, SynxDB, considers the XIDs of the rows and the current range of available XIDs to determine if XID wrapping has occurred between row XIDs.</p>
+<p>For the example table XID wrapping has occurred. The XID <code>1</code> for giblet row is a later transaction than the XID <code>7</code> for widget row based on the modulo calculations for XID values even though the XID value <code>7</code> is larger than <code>1</code>.</p>
+<p>For the widget and sprocket rows, XID wrapping has not occurred and XID <code>7</code> is a later transaction than XID <code>5</code>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/intro/about_mvcc.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/intro/about_loading.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/intro/about_mvcc.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/intro/about_loading.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

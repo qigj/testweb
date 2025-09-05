@@ -1,0 +1,151 @@
+.. raw:: latex
+
+   \newpage
+
+Use RoaringBitMap Bitmap Operations
+===================================
+
+|product_name| supports RoaringBitMap, an efficient bitmap compression algorithm that has been widely adopted across various programming languages and big data platforms. By integrating RoaringBitmap functionality, |product_name| provides a native database data type that supports rich database functions and aggregation operations.
+
+RoaringBitmap outperforms traditional compressed bitmaps such as WAH, EWAH, or Concise, particularly in terms of performance. In some cases, RoaringBitmap can be hundreds of times faster than traditional compression methods while providing superior compression efficiency. In certain application scenarios, its performance can even exceed that of uncompressed bitmaps. This high efficiency in bit operations is particularly suitable for big data cardinality calculations, commonly used in data deduplication, tag filtering, and time series complex calculations.
+
+.. topic:: Introduction to Bitmap
+
+   A bitmap is a data structure used to efficiently store and manipulate binary data consisting of 0s and 1s. It is primarily used for fast lookups, efficient storage, and operations on large sets of boolean data (such as "yes" or "no"). In a bitmap, each element occupies only one binary bit, which can greatly save storage space while enabling fast data processing.
+
+   Common applications of bitmaps include membership detection, deduplication, statistical calculations, data filtering, and screening.
+
+Usage
+-----
+
+Load the plugin
+~~~~~~~~~~~~~~~
+
+Before using RoaringBitMap, you need to load the ``roaringbitmap`` plugin first. Please ensure that the plugin file has been synchronized to the corresponding directories on all nodes.
+
+.. code:: sql
+
+   CREATE EXTENSION roaringbitmap;
+
+Create tables
+~~~~~~~~~~~~~
+
+You can specify fields of type ``roaringbitmap`` in the ``CREATE TABLE`` statement.
+
+The following table ``t1`` contains a field named ``bitmap`` with the data type ``roaringbitmap``. This field is specifically used to store and manipulate ``RoaringBitmap`` type data.
+
+.. code:: sql
+
+   CREATE TABLE t1 (id integer, bitmap roaringbitmap);
+
+Create a bitmap
+~~~~~~~~~~~~~~~
+
+-  Use the ``RB_BUILD`` function to create a bitmap:
+
+   .. code:: sql
+
+      INSERT INTO t1 SELECT 1,RB_BUILD(ARRAY[1,2,3,4,5,6,7,8,9,200]);
+
+   The above statement inserts a row of data into table ``t1``. The ``id`` field has a value of ``1``, while the ``bitmap`` field is generated through the ``RB_BUILD`` function. The ``RB_BUILD`` function accepts an integer array as a parameter and constructs a ``RoaringBitmap`` object. In this example, it constructs a bitmap containing the numbers 1, 2, 3, 4, 5, 6, 7, 8, 9, and 200. This means that in this bitmap, these specific positions will be set to 1, indicating that these elements exist.
+
+-  Use the ``RB_BUILD_AGG`` function to aggregate values into a bitmap:
+
+   .. code:: sql
+
+      INSERT INTO t1 SELECT 2,RB_BUILD_AGG(e) FROM GENERATE_SERIES(1,100) e;
+
+   The above statement uses PostgreSQL's ``GENERATE_SERIES`` function to generate a sequence from 1 to 100, with each number serving as the value of variable ``e``. The ``RB_BUILD_AGG`` function aggregates these values into a ``RoaringBitmap``. This function is typically used for aggregation operations, integrating multiple input values into one ``RoaringBitmap``. Therefore, the ``RoaringBitmap`` created here contains all integers from 1 to 100. In this insert statement, the ``id`` field has a value of ``2``.
+
+Bitmap union operations
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: sql
+
+   SELECT RB_OR(a.bitmap,b.bitmap) FROM (SELECT bitmap FROM t1 WHERE id = 1) AS a,(SELECT bitmap FROM t1 WHERE id = 2) AS b;
+
+The above ``SELECT`` statement uses the ``RB_OR`` function to perform a logical "OR" operation on two ``RoaringBitmap`` data sets, which is a union operation.
+
+This statement merges the contents of two specific ``RoaringBitmap`` data sets, making the resulting new ``RoaringBitmap`` contain all elements from both original data sets. This is particularly useful when processing large data sets, such as merging user behavior data from two different time periods or conditions for comprehensive analysis.
+
+Bitmap union and intersection aggregation operations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-  Use ``RB_OR_AGG`` for union aggregation operations:
+
+   .. code:: sql
+
+      SELECT RB_OR_AGG(bitmap) FROM t1;
+
+   The above statement uses the ``RB_OR_AGG`` function to perform a logical "OR" aggregation operation on the ``bitmap`` column of all rows in table ``t1``, which is a union operation. This means it will traverse the ``bitmap`` data in each row of the table and merge all ``bitmaps`` into one, where any bit marked as 1 in any row will also be marked as 1 in the result ``bitmap``. This is suitable for merging multiple data sets to obtain elements that appear in any of the data sets.
+
+-  Use ``RB_AND_AGG`` for intersection aggregation operations:
+
+   .. code:: sql
+
+      SELECT RB_AND_AGG(bitmap) FROM t1;
+
+   The ``RB_AND_AGG`` function performs a logical "AND" aggregation operation on the ``bitmap`` data in table ``t1``, which is an intersection operation. This function only sets a corresponding bit in the result ``bitmap`` to 1 when the corresponding bits in all ``bitmaps`` are 1. This operation is typically used to find common elements across all data sets.
+
+-  Use ``RB_XOR_AGG`` for symmetric difference aggregation operations:
+
+   .. code:: sql
+
+      SELECT RB_XOR_AGG(bitmap) FROM t1;
+
+   The ``RB_XOR_AGG`` function performs a logical "XOR" aggregation operation, which is a symmetric difference. This operation compares all ``bitmaps`` and sets those bits in the result ``bitmap`` that appear in an odd number of ``bitmaps``. This means if a bit is 1 in an odd number of ``bitmaps``, it will also be 1 in the result; if it is 1 in an even number of ``bitmaps``, it will be 0 in the result. This helps identify special elements that appear only in some data sets.
+
+-  Use the ``RB_BUILD_AGG`` function for aggregation operations:
+
+   .. code:: sql
+
+      SELECT RB_BUILD_AGG(e) FROM GENERATE_SERIES(1,100) e;
+
+   The above statement uses the ``RB_BUILD_AGG`` function to aggregate consecutive integers generated from ``GENERATE_SERIES(1,100)``, creating a ``RoaringBitmap`` that contains these integers. This function is typically used to create a compact ``RoaringBitmap`` from a series of individual elements, which is very useful when processing continuous data or when efficient compression is needed.
+
+Statistical cardinality
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: sql
+
+   SELECT RB_CARDINALITY(bitmap) FROM t1;
+
+The above statement uses the ``RB_CARDINALITY`` function, which aims to calculate the cardinality of the ``bitmap`` field in each row of table ``t1``, that is, the number of bits set to 1 in that ``RoaringBitmap``. Cardinality refers to the number of unique elements in a set. In the context of ``RoaringBitmap``, this means calculating how many different integers are in the set represented by the bitmap. For example, if a ``RoaringBitmap`` contains the numbers 1, 2, 3, and 5, its cardinality is 4.
+
+Convert bitmap to SETOF integer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-  Use the ``RB_ITERATE`` function for conversion:
+
+   .. code:: sql
+
+      SELECT RB_ITERATE(bitmap) FROM t1 WHERE id = 1;
+
+   The ``RB_ITERATE`` function is typically used to iterate through all bits set to 1 in a ``RoaringBitmap`` and return the values they represent. In the above query, this function will iterate through all elements in the ``bitmap`` field where ``id`` is 1, returning a result set containing all these elements. This makes it convenient to view or process all elements in this bitmap.
+
+-  Use the ``RB_ITERATE_DECREMENT`` function for conversion:
+
+   .. code:: sql
+
+      SELECT RB_ITERATE_DECREMENT(bitmap) FROM t1 WHERE id = 1;
+
+   The ``RB_ITERATE_DECREMENT`` function works similarly to ``RB_ITERATE``, but it returns elements in the bitmap in descending order during iteration. This means if the bitmap contains elements 1, 2, 3, 4, this function will return 4, 3, 2, 1. This is very useful when you need to process or examine elements in the bitmap in order from high to low.
+
+Conversion between bytea and roaringbitmap data types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-  Convert ``roaringbitmap`` type to ``bytea`` type:
+
+   .. code:: sql
+
+      SELECT RB_BUILD('{1,2,3}')::BYTEA;
+
+   The above statement first uses the ``RB_BUILD`` function to create a ``RoaringBitmap`` containing integers 1, 2, and 3. Subsequently, through the type conversion operator ``::BYTEA``, this ``RoaringBitmap`` object is converted to ``bytea`` type. ``bytea`` is a data type in PostgreSQL used to store binary data, which means the converted result is the binary representation of the ``RoaringBitmap`` object.
+
+-  Convert ``bytea`` type to ``roaringbitmap`` type:
+
+   .. code:: sql
+
+      SELECT '\x3a3000000100000000000000100000000100'::ROARINGBITMAP;
+
+   The above statement starts with a binary string of ``bytea`` type, given in literal form (starting with ``\x`` to indicate hexadecimal binary data). Through the type conversion operator ``::ROARINGBITMAP``, this binary data is converted to ``RoaringBitmap`` type. This indicates that you can convert ``RoaringBitmap`` data stored in binary format back to its corresponding bitmap data structure.

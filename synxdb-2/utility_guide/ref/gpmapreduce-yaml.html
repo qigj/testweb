@@ -1,0 +1,448 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>gpmapreduce.yaml - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gpmapreduceyaml"><a class="header" href="#gpmapreduceyaml">gpmapreduce.yaml</a></h1>
+<p>gpmapreduce configuration file.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code>%YAML 1.1
+---
+VERSION: 1.0.0.2
+DATABASE: dbname
+USER: db_username
+HOST: master_hostname
+PORT: master_port
+</code></pre>
+<pre><code>  - DEFINE: 
+  - INPUT:
+     NAME: input_name
+     FILE: 
+       - *hostname*: /path/to/file
+     GPFDIST:
+       - *hostname*:port/file_pattern
+     TABLE: table_name
+     QUERY: SELECT_statement
+     EXEC: command_string
+     COLUMNS:
+       - field_name data_type
+     FORMAT: TEXT | CSV
+     DELIMITER: delimiter_character
+     ESCAPE: escape_character
+     NULL: null_string
+     QUOTE: csv_quote_character
+     ERROR_LIMIT: integer
+     ENCODING: database_encoding
+</code></pre>
+<pre><code>  - OUTPUT:
+     NAME: output_name
+     FILE: file_path_on_client
+     TABLE: table_name
+     KEYS:        - column_name
+     MODE: REPLACE | APPEND
+</code></pre>
+<pre><code>  - MAP:
+     NAME: function_name
+     FUNCTION: function_definition
+     LANGUAGE: perl | python | c
+     LIBRARY: /path/filename.so
+     PARAMETERS: 
+       - nametype
+     RETURNS: 
+       - nametype
+     OPTIMIZE: STRICT IMMUTABLE
+     MODE: SINGLE | MULTI
+</code></pre>
+<pre><code>  - TRANSITION | CONSOLIDATE | FINALIZE:
+     NAME: function_name
+     FUNCTION: function_definition
+     LANGUAGE: perl | python | c
+     LIBRARY: /path/filename.so
+     PARAMETERS: 
+       - nametype
+     RETURNS: 
+       - nametype
+     OPTIMIZE: STRICT IMMUTABLE
+     MODE: SINGLE | MULTI
+</code></pre>
+<pre><code>  - REDUCE:
+     NAME: reduce_job_name
+     TRANSITION: transition_function_name
+     CONSOLIDATE: consolidate_function_name
+     FINALIZE: finalize_function_name
+     INITIALIZE: value
+     KEYS:
+       - key_name
+</code></pre>
+<pre><code>  - TASK:
+     NAME: task_name
+     SOURCE: input_name
+     MAP: map_function_name
+     REDUCE: reduce_function_name
+EXECUTE:
+</code></pre>
+<pre><code>  - RUN:
+     SOURCE: input_or_task_name
+     TARGET: output_name
+     MAP: map_function_name
+     REDUCE: reduce_function_name...
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section4"></a>Description</a></h2>
+<p>You specify the input, map and reduce tasks, and the output for the SynxDB MapReduce <code>gpmapreduce</code> program in a YAML-formatted configuration file. (This reference page uses the name <code>gpmapreduce.yaml</code> when referring to this file; you may choose your own name for the file.)</p>
+<p>The <code>gpmapreduce</code> utility processes the YAML configuration file in order, using indentation (spaces) to determine the document hierarchy and the relationships between the sections. The use of white space in the file is significant.</p>
+<h2 id="keys-and-values"><a class="header" href="#keys-and-values"><a id="section5"></a>Keys and Values</a></h2>
+<h3 id="version"><a class="header" href="#version">VERSION</a></h3>
+<p>Required. The version of the SynxDB MapReduce YAML specification. Current supported versions are 1.0.0.1, 1.0.0.2, and 1.0.0.3.</p>
+<h3 id="database"><a class="header" href="#database">DATABASE</a></h3>
+<p>Optional. Specifies which database in SynxDB to connect to. If not specified, defaults to the default database or <code>$PGDATABASE</code> if set.</p>
+<h3 id="user"><a class="header" href="#user">USER</a></h3>
+<p>Optional. Specifies which database role to use to connect. If not specified, defaults to the current user or <code>$PGUSER</code> if set. You must be a SynxDB superuser to run functions written in untrusted Python and Perl. Regular database users can run functions written in trusted Perl. You also must be a database superuser to run MapReduce jobs that contain <code>FILE</code>, <code>GPFDIST</code> and <code>EXEC</code> input types.</p>
+<h3 id="host"><a class="header" href="#host">HOST</a></h3>
+<p>Optional. Specifies SynxDB master host name. If not specified, defaults to localhost or <code>$PGHOST</code> if set.</p>
+<h3 id="port"><a class="header" href="#port">PORT</a></h3>
+<p>Optional. Specifies SynxDB master port. If not specified, defaults to 5432 or <code>$PGPORT</code> if set.</p>
+<h3 id="define"><a class="header" href="#define">DEFINE</a></h3>
+<p>Required. A sequence of definitions for this MapReduce document. The <code>DEFINE</code> section must have at least one <code>INPUT</code> definition.</p>
+<h3 id="input"><a class="header" href="#input">INPUT</a></h3>
+<p>Required. Defines the input data. Every MapReduce document must have at least one input defined. Multiple input definitions are allowed in a document, but each input definition can specify only one of these access types: a file, a <code>gpfdist</code> file reference, a table in the database, an SQL command, or an operating system command.</p>
+<h3 id="name"><a class="header" href="#name">NAME</a></h3>
+<p>A name for this input. Names must be unique with regards to the names of other objects in this MapReduce job (such as map function, task, reduce function and output names). Also, names cannot conflict with existing objects in the database (such as tables, functions or views).</p>
+<h3 id="file"><a class="header" href="#file">FILE</a></h3>
+<p>A sequence of one or more input files in the format: <code>seghostname:/path/to/filename</code>. You must be a SynxDB superuser to run MapReduce jobs with <code>FILE</code> input. The file must reside on a SynxDB segment host.</p>
+<h3 id="gpfdist"><a class="header" href="#gpfdist">GPFDIST</a></h3>
+<p>A sequence identifying one or more running <code>gpfdist</code> file servers in the format: <code>hostname[:port]/file_pattern</code>. You must be a SynxDB superuser to run MapReduce jobs with <code>GPFDIST</code> input.</p>
+<h3 id="table"><a class="header" href="#table"><a id="TABLE"></a>TABLE</a></h3>
+<p>The name of an existing table in the database.</p>
+<h3 id="query"><a class="header" href="#query">QUERY</a></h3>
+<p>A SQL <code>SELECT</code> command to run within the database.</p>
+<h3 id="exec"><a class="header" href="#exec"><a id="EXEC"></a>EXEC</a></h3>
+<p>An operating system command to run on the SynxDB segment hosts. The command is run by all segment instances in the system by default. For example, if you have four segment instances per segment host, the command will be run four times on each host. You must be a SynxDB superuser to run MapReduce jobs with <code>EXEC</code> input.</p>
+<h3 id="columns"><a class="header" href="#columns">COLUMNS</a></h3>
+<p>Optional. Columns are specified as: <code>column_name``[``data_type``]</code>. If not specified, the default is <code>value text</code>. The <code>DELIMITER</code> character is what separates two data value fields (columns). A row is determined by a line feed character (<code>0x0a</code>).</p>
+<h3 id="format"><a class="header" href="#format">FORMAT</a></h3>
+<p>Optional. Specifies the format of the data - either delimited text (<code>TEXT</code>) or comma separated values (<code>CSV</code>) format. If the data format is not specified, defaults to <code>TEXT</code>.</p>
+<h3 id="delimiter"><a class="header" href="#delimiter">DELIMITER</a></h3>
+<p>Optional for <code>FILE</code>, <code>FILE</code> and <code>FILE</code> inputs. Specifies a single character that separates data values. The default is a tab character in <code>TEXT</code> mode, a comma in <code>CSV</code> mode. The delimiter character must only appear between any two data value fields. Do not place a delimiter at the beginning or end of a row.</p>
+<h3 id="escape"><a class="header" href="#escape">ESCAPE</a></h3>
+<p>Optional for <code>FILE</code>, <code>FILE</code> and <code>FILE</code> inputs. Specifies the single character that is used for C escape sequences (such as <code>\n</code>,<code>\t</code>,<code>\100</code>, and so on) and for escaping data characters that might otherwise be taken as row or column delimiters. Make sure to choose an escape character that is not used anywhere in your actual column data. The default escape character is a \ (backslash) for text-formatted files and a <code>"</code> (double quote) for csv-formatted files, however it is possible to specify another character to represent an escape. It is also possible to deactivate escaping by specifying the value <code>'OFF'</code> as the escape value. This is very useful for data such as text-formatted web log data that has many embedded backslashes that are not intended to be escapes.</p>
+<h3 id="null"><a class="header" href="#null">NULL</a></h3>
+<p>Optional for <code>FILE</code>, <code>FILE</code> and <code>FILE</code> inputs. Specifies the string that represents a null value. The default is <code>\N</code> in <code>TEXT</code> format, and an empty value with no quotations in <code>CSV</code> format. You might prefer an empty string even in <code>TEXT</code> mode for cases where you do not want to distinguish nulls from empty strings. Any input data item that matches this string will be considered a null value.</p>
+<h3 id="quote"><a class="header" href="#quote">QUOTE</a></h3>
+<p>Optional for <code>FILE</code>, <code>FILE</code> and <code>FILE</code> inputs. Specifies the quotation character for <code>CSV</code> formatted files. The default is a double quote (<code>"</code>). In <code>CSV</code> formatted files, data value fields must be enclosed in double quotes if they contain any commas or embedded new lines. Fields that contain double quote characters must be surrounded by double quotes, and the embedded double quotes must each be represented by a pair of consecutive double quotes. It is important to always open and close quotes correctly in order for data rows to be parsed correctly.</p>
+<h3 id="error_limit"><a class="header" href="#error_limit">ERROR_LIMIT</a></h3>
+<p>If the input rows have format errors they will be discarded provided that the error limit count is not reached on any SynxDB segment instance during input processing. If the error limit is not reached, all good rows will be processed and any error rows discarded.</p>
+<h3 id="encoding"><a class="header" href="#encoding">ENCODING</a></h3>
+<p>Character set encoding to use for the data. Specify a string constant (such as <code>'SQL_ASCII'</code>), an integer encoding number, or <code>DEFAULT</code> to use the default client encoding. See <a href="../../ref_guide/character_sets.html">Character Set Support</a> for more information.</p>
+<h3 id="output"><a class="header" href="#output"><a id="OUTPUT"></a>OUTPUT</a></h3>
+<p>Optional. Defines where to output the formatted data of this MapReduce job. If output is not defined, the default is <code>STDOUT</code> (standard output of the client). You can send output to a file on the client host or to an existing table in the database.</p>
+<h3 id="name-1"><a class="header" href="#name-1"><a id="OUTPUTNAME"></a>NAME</a></h3>
+<p>A name for this output. The default output name is <code>STDOUT</code>. Names must be unique with regards to the names of other objects in this MapReduce job (such as map function, task, reduce function and input names). Also, names cannot conflict with existing objects in the database (such as tables, functions or views).</p>
+<h3 id="file-1"><a class="header" href="#file-1"><a id="OUTPUTFILE"></a>FILE</a></h3>
+<p>Specifies a file location on the MapReduce client machine to output data in the format: <code>/path/to/filename</code>.</p>
+<h3 id="table-1"><a class="header" href="#table-1"><a id="OUTPUTTABLE"></a>TABLE</a></h3>
+<p>Specifies the name of a table in the database to output data. If this table does not exist prior to running the MapReduce job, it will be created using the distribution policy specified with <code>FILE</code>.</p>
+<h3 id="keys"><a class="header" href="#keys">KEYS</a></h3>
+<p>Optional for <a href="#OUTPUTTABLE">TABLE</a> output. Specifies the column(s) to use as the SynxDB distribution key. If the <code>FILE</code> task contains a <code>FILE</code> definition, then the <code>REDUCE</code> keys will be used as the table distribution key by default. Otherwise, the first column of the table will be used as the distribution key.</p>
+<h3 id="mode"><a class="header" href="#mode">MODE</a></h3>
+<p>Optional for <a href="#OUTPUTTABLE">TABLE</a> output. If not specified, the default is to create the table if it does not already exist, but error out if it does exist. Declaring <code>APPEND</code> adds output data to an existing table (provided the table schema matches the output format) without removing any existing data. Declaring <code>REPLACE</code> will drop the table if it exists and then recreate it. Both <code>APPEND</code> and <code>REPLACE</code> will create a new table if one does not exist.</p>
+<h3 id="map"><a class="header" href="#map">MAP</a></h3>
+<p>Required. Each <code>MAP</code> function takes data structured in (<code>key</code>, <code>value</code>) pairs, processes each pair, and generates zero or more output (<code>key</code>, <code>value</code>) pairs. The SynxDB MapReduce framework then collects all pairs with the same key from all output lists and groups them together. This output is then passed to the <code>REDUCE</code> task, which is comprised of <code>TRANSITION | CONSOLIDATE | FINALIZE</code> functions. There is one predefined <code>MAP</code> function named <code>IDENTITY</code> that returns (<code>key</code>, <code>value</code>) pairs unchanged. Although (<code>key</code>, <code>value</code>) are the default parameters, you can specify other prototypes as needed.</p>
+<h3 id="transition--consolidate--finalize"><a class="header" href="#transition--consolidate--finalize">TRANSITION | CONSOLIDATE | FINALIZE</a></h3>
+<p><code>TRANSITION</code>, <code>CONSOLIDATE</code> and <code>FINALIZE</code> are all component pieces of <code>FILE</code>. A <code>TRANSITION</code> function is required. <code>CONSOLIDATE</code> and <code>FINALIZE</code> functions are optional. By default, all take <code>state</code> as the first of their input <code>FILE</code>, but other prototypes can be defined as well.</p>
+<p>A <code>TRANSITION</code> function iterates through each value of a given key and accumulates values in a <code>state</code> variable. When the transition function is called on the first value of a key, the <code>state</code> is set to the value specified by <code>FILE</code> of a <code>FILE</code> job (or the default state value for the data type). A transition takes two arguments as input; the current state of the key reduction, and the next value, which then produces a new <code>state</code>.</p>
+<p>If a <code>CONSOLIDATE</code> function is specified, <code>TRANSITION</code> processing is performed at the segment-level before redistributing the keys across the SynxDB interconnect for final aggregation (two-phase aggregation). Only the resulting <code>state</code> value for a given key is redistributed, resulting in lower interconnect traffic and greater parallelism. <code>CONSOLIDATE</code> is handled like a <code>TRANSITION</code>, except that instead of <code>(state + value) =&gt; state</code>, it is <code>(state + state) =&gt; state</code>.</p>
+<p>If a <code>FINALIZE</code> function is specified, it takes the final <code>state</code> produced by <code>CONSOLIDATE</code> (if present) or <code>TRANSITION</code> and does any final processing before emitting the final result. <code>TRANSITION</code> and <code>CONSOLIDATE</code>functions cannot return a set of values. If you need a <code>REDUCE</code> job to return a set, then a <code>FINALIZE</code> is necessary to transform the final state into a set of output values.</p>
+<h3 id="name-2"><a class="header" href="#name-2">NAME</a></h3>
+<p>Required. A name for the function. Names must be unique with regards to the names of other objects in this MapReduce job (such as function, task, input and output names). You can also specify the name of a function built-in to SynxDB. If using a built-in function, do not supply <code>FILE</code> or a <code>FILE</code> body.</p>
+<h3 id="function"><a class="header" href="#function">FUNCTION</a></h3>
+<p>Optional. Specifies the full body of the function using the specified <code>FILE</code>. If <code>FUNCTION</code> is not specified, then a built-in database function corresponding to <code>NAME</code> is used.</p>
+<h3 id="language"><a class="header" href="#language">LANGUAGE</a></h3>
+<p>Required when <code>FILE</code> is used. Specifies the implementation language used to interpret the function. This release has language support for <code>perl</code>, <code>python</code>, and <code>C</code>. If calling a built-in database function, <code>LANGUAGE</code> should not be specified.</p>
+<h3 id="library"><a class="header" href="#library">LIBRARY</a></h3>
+<p>Required when <code>FILE</code> is C (not allowed for other language functions). To use this attribute, <code>VERSION</code> must be 1.0.0.2. The specified library file must be installed prior to running the MapReduce job, and it must exist in the same file system location on all SynxDB hosts (master and segments).</p>
+<h3 id="parameters"><a class="header" href="#parameters">PARAMETERS</a></h3>
+<p>Optional. Function input parameters. The default type is <code>text</code>.</p>
+<ul>
+<li>
+<p><code>MAP</code> default - <code>key text</code>, <code>value text</code></p>
+</li>
+<li>
+<p><code>TRANSITION</code> default - <code>state text</code>, <code>value text</code></p>
+</li>
+<li>
+<p><code>CONSOLIDATE</code> default - <code>state1 text</code>, <code>state2 text</code> (must have exactly two input parameters of the same data type)</p>
+</li>
+<li>
+<p><code>FINALIZE</code> default - <code>state text</code> (single parameter only)</p>
+</li>
+</ul>
+<h3 id="returns"><a class="header" href="#returns">RETURNS</a></h3>
+<p>Optional. The default return type is <code>text</code>.</p>
+<ul>
+<li><code>MAP</code> default - <code>key text</code>, <code>value text</code></li>
+<li><code>TRANSITION</code> default - <code>state text</code> (single return value only)</li>
+<li><code>CONSOLIDATE</code> default - <code>state text</code> (single return value only)</li>
+<li><code>FINALIZE</code> default - <code>value text</code></li>
+</ul>
+<h3 id="optimize"><a class="header" href="#optimize">OPTIMIZE</a></h3>
+<p>Optional optimization parameters for the function:</p>
+<ul>
+<li><code>STRICT</code> - function is not affected by <code>NULL</code> values</li>
+<li><code>IMMUTABLE</code> - function will always return the same value for a given input</li>
+</ul>
+<h3 id="mode-1"><a class="header" href="#mode-1">MODE</a></h3>
+<p>Optional. Specifies the number of rows returned by the function.</p>
+<ul>
+<li><code>MULTI</code> - returns 0 or more rows per input record. The return value of the function must be an array of rows to return, or the function must be written as an iterator using <code>yield</code> in Python or <code>return_next</code> in Perl. <code>MULTI</code> is the default mode for <code>MAP</code> and <code>FINALIZE</code> functions.</li>
+<li><code>SINGLE</code> - returns exactly one row per input record. <code>SINGLE</code> is the only mode supported for <code>TRANSITION</code> and <code>CONSOLIDATE</code> functions. When used with <code>MAP</code> and <code>FINALIZE</code> functions, <code>SINGLE</code> mode can provide modest performance improvement.</li>
+</ul>
+<h3 id="reduce"><a class="header" href="#reduce">REDUCE</a></h3>
+<p>Required. A <code>REDUCE</code> definition names the <code>TRANSITION | CONSOLIDATE | FINALIZE</code> functions that comprise the reduction of (<code>key</code>, <code>value</code>) pairs to the final result set. There are also several predefined <code>REDUCE</code> jobs you can run, which all operate over a column named <code>value</code>:</p>
+<ul>
+<li><code>IDENTITY</code> - returns (key, value) pairs unchanged</li>
+<li><code>SUM</code> - calculates the sum of numeric data</li>
+<li><code>AVG</code> - calculates the average of numeric data</li>
+<li><code>COUNT</code> - calculates the count of input data</li>
+<li><code>MIN</code> - calculates minimum value of numeric data</li>
+<li><code>MAX</code> - calculates maximum value of numeric data</li>
+</ul>
+<h3 id="name-3"><a class="header" href="#name-3">NAME</a></h3>
+<p>Required. The name of this <code>REDUCE</code> job. Names must be unique with regards to the names of other objects in this MapReduce job (function, task, input and output names). Also, names cannot conflict with existing objects in the database (such as tables, functions or views).</p>
+<h3 id="transition"><a class="header" href="#transition">TRANSITION</a></h3>
+<p>Required. The name of the <code>TRANSITION</code> function.</p>
+<h3 id="consolidate"><a class="header" href="#consolidate">CONSOLIDATE</a></h3>
+<p>Optional. The name of the <code>CONSOLIDATE</code> function.</p>
+<h3 id="finalize"><a class="header" href="#finalize">FINALIZE</a></h3>
+<p>Optional. The name of the <code>FINALIZE</code> function.</p>
+<h3 id="initialize"><a class="header" href="#initialize">INITIALIZE</a></h3>
+<p>Optional for <code>text</code> and <code>float</code> data types. Required for all other data types. The default value for text is <code>''</code> . The default value for float is <code>0.0</code> . Sets the initial <code>state</code> value of the <code>TRANSITION</code> function.</p>
+<h3 id="keys-1"><a class="header" href="#keys-1">KEYS</a></h3>
+<p>Optional. Defaults to <code>[key, *]</code>. When using a multi-column reduce it may be necessary to specify which columns are key columns and which columns are value columns. By default, any input columns that are not passed to the <code>TRANSITION</code> function are key columns, and a column named <code>key</code> is always a key column even if it is passed to the <code>TRANSITION</code> function. The special indicator <code>*</code> indicates all columns not passed to the <code>TRANSITION</code> function. If this indicator is not present in the list of keys then any unmatched columns are discarded.</p>
+<h3 id="task"><a class="header" href="#task">TASK</a></h3>
+<p>Optional. A <code>TASK</code> defines a complete end-to-end <code>INPUT</code>/<code>MAP</code>/<code>REDUCE</code> stage within a SynxDB MapReduce job pipeline. It is similar to <code>FILE</code> except it is not immediately run. A task object can be called as <code>FILE</code> to further processing stages.</p>
+<h3 id="name-4"><a class="header" href="#name-4">NAME</a></h3>
+<p>Required. The name of this task. Names must be unique with regards to the names of other objects in this MapReduce job (such as map function, reduce function, input and output names). Also, names cannot conflict with existing objects in the database (such as tables, functions or views).</p>
+<h3 id="source"><a class="header" href="#source">SOURCE</a></h3>
+<p>The name of an <code>FILE</code> or another <code>TASK</code>.</p>
+<h3 id="map-1"><a class="header" href="#map-1">MAP</a></h3>
+<p>Optional. The name of a <code>FILE</code> function. If not specified, defaults to <code>IDENTITY</code>.</p>
+<h3 id="reduce-1"><a class="header" href="#reduce-1">REDUCE</a></h3>
+<p>Optional. The name of a <code>FILE</code> function. If not specified, defaults to <code>IDENTITY</code>.</p>
+<h3 id="execute"><a class="header" href="#execute">EXECUTE</a></h3>
+<p>Required. <code>EXECUTE</code> defines the final <code>INPUT</code>/<code>MAP</code>/<code>REDUCE</code> stage within a SynxDB MapReduce job pipeline.</p>
+<h3 id="run"><a class="header" href="#run">RUN</a></h3>
+<h3 id="source-1"><a class="header" href="#source-1">SOURCE</a></h3>
+<p>Required. The name of an <code>FILE</code> or <code>FILE</code>.</p>
+<h3 id="target"><a class="header" href="#target">TARGET</a></h3>
+<p>Optional. The name of an <a href="#OUTPUT">OUTPUT</a>. The default output is <code>STDOUT</code>.</p>
+<h3 id="map-2"><a class="header" href="#map-2">MAP</a></h3>
+<p>Optional. The name of a <code>FILE</code> function. If not specified, defaults to <code>IDENTITY</code>.</p>
+<h3 id="reduce-2"><a class="header" href="#reduce-2">REDUCE</a></h3>
+<p>Optional. The name of a <code>FILE</code> function. Defaults to <code>IDENTITY</code>.</p>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section11"></a>See Also</a></h2>
+<p><a href="gpmapreduce.html">gpmapreduce</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../utility_guide/ref/gpmapreduce.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../utility_guide/ref/gpmemreport.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../utility_guide/ref/gpmapreduce.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../utility_guide/ref/gpmemreport.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

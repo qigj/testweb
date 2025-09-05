@@ -1,0 +1,17 @@
+Supported BI tools
+=====================
+
+|product_name| is a cloud-native, storage-compute-separated database built on the Apache Cloudberry (Greenplum) kernel.
+
+Any BI tool that supports Greenplum is also compatible with |product_name|. This includes, but is not limited to:
+
+-  Tableau
+-  Power BI
+-  Looker
+-  Apache Superset
+-  Metabase
+-  Qlik Sense
+
+To set up and configure your preferred BI tool, follow the connection methods of :ref:`JDBC driver <develop-guides/jdbc-driver:use jdbc>` and :ref:`ODBC driver <develop-guides/odbc-driver:use odbc>`.
+
+For further assistance, consult the documentation of your BI tool.

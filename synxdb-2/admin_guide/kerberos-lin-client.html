@@ -1,0 +1,326 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Configuring Kerberos for Linux Clients - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="configuring-kerberos-for-linux-clients"><a class="header" href="#configuring-kerberos-for-linux-clients">Configuring Kerberos for Linux Clients</a></h1>
+<p>You can configure Linux client applications to connect to a SynxDB system that is configured to authenticate with Kerberos.</p>
+<p>If your JDBC application on Red Hat Enterprise Linux uses Kerberos authentication when it connects to your SynxDB, your client system must be configured to use Kerberos authentication. If you are not using Kerberos authentication to connect to a SynxDB, Kerberos is not needed on your client system.</p>
+<ul>
+<li><a href="#topic13">Requirements</a></li>
+<li><a href="#topic17">Setting Up Client System with Kerberos Authentication</a></li>
+<li><a href="#topic18">Running a Java Application</a></li>
+</ul>
+<p>For information about enabling Kerberos authentication with SynxDB, see the chapter “Setting Up Kerberos Authentication” in the <em>SynxDB Administrator Guide</em>.</p>
+<h2 id="requirements"><a class="header" href="#requirements"><a id="topic13"></a>Requirements</a></h2>
+<p>The following are requirements to connect to a SynxDB that is enabled with Kerberos authentication from a client system with a JDBC application.</p>
+<ul>
+<li><a href="#topic14">Prerequisites</a></li>
+<li><a href="#topic15">Required Software on the Client Machine</a></li>
+</ul>
+<h3 id="prerequisites"><a class="header" href="#prerequisites"><a id="topic14"></a>Prerequisites</a></h3>
+<ul>
+<li>
+<p>Kerberos must be installed and configured on the SynxDB master host.</p>
+<blockquote>
+<p><strong>Important</strong> SynxDB must be configured so that a remote user can connect to SynxDB with Kerberos authentication. Authorization to access SynxDB is controlled by the <code>pg_hba.conf</code> file. For details, see “Editing the pg_hba.conf File” in the <em>SynxDB Administration Guide</em>, and also see the <em>SynxDB Security Configuration Guide</em>.</p>
+</blockquote>
+</li>
+<li>
+<p>The client system requires the Kerberos configuration file <code>krb5.conf</code> from the SynxDB master.</p>
+</li>
+<li>
+<p>The client system requires a Kerberos keytab file that contains the authentication credentials for the SynxDB user that is used to log into the database.</p>
+</li>
+<li>
+<p>The client machine must be able to connect to SynxDB master host.</p>
+<p>If necessary, add the SynxDB master host name and IP address to the system <code>hosts</code> file. On Linux systems, the <code>hosts</code> file is in <code>/etc</code>.</p>
+</li>
+</ul>
+<h3 id="required-software-on-the-client-machine"><a class="header" href="#required-software-on-the-client-machine"><a id="topic15"></a>Required Software on the Client Machine</a></h3>
+<ul>
+<li>
+<p>The Kerberos <code>kinit</code> utility is required on the client machine. The <code>kinit</code> utility is available when you install the Kerberos packages:</p>
+<ul>
+<li>krb5-libs</li>
+<li>krb5-workstation<br/></li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> When you install the Kerberos packages, you can use other Kerberos utilities such as <code>klist</code> to display Kerberos ticket information.</p>
+</blockquote>
+</li>
+</ul>
+<p>Java applications require this additional software:</p>
+<ul>
+<li>
+<p>Java JDK</p>
+<p>Java JDK 1.7.0_17 is supported on Red Hat Enterprise Linux 6.x.</p>
+</li>
+<li>
+<p>Ensure that JAVA_HOME is set to the installation directory of the supported Java JDK.</p>
+</li>
+</ul>
+<h2 id="setting-up-client-system-with-kerberos-authentication"><a class="header" href="#setting-up-client-system-with-kerberos-authentication"><a id="topic17"></a>Setting Up Client System with Kerberos Authentication</a></h2>
+<p>To connect to SynxDB with Kerberos authentication requires a Kerberos ticket. On client systems, tickets are generated from Kerberos keytab files with the <code>kinit</code> utility and are stored in a cache file.</p>
+<ol>
+<li>
+<p>Install a copy of the Kerberos configuration file <code>krb5.conf</code> from the SynxDB master. The file is used by the SynxDB client software and the Kerberos utilities.</p>
+<p>Install <code>krb5.conf</code> in the directory <code>/etc</code>.</p>
+<p>If needed, add the parameter <code>default_ccache_name</code> to the <code>[libdefaults]</code> section of the <code>krb5.ini</code> file and specify location of the Kerberos ticket cache file on the client system.</p>
+</li>
+<li>
+<p>Obtain a Kerberos keytab file that contains the authentication credentials for the SynxDB user.</p>
+</li>
+<li>
+<p>Run <code>kinit</code> specifying the keytab file to create a ticket on the client machine. For this example, the keytab file <code>gpdb-kerberos.keytab</code> is in the current directory. The ticket cache file is in the <code>gpadmin</code> user home directory.</p>
+<pre><code>&gt; kinit -k -t gpdb-kerberos.keytab -c /home/gpadmin/cache.txt 
+   gpadmin/kerberos-gpdb@KRB.EXAMPLE.COM
+</code></pre>
+</li>
+</ol>
+<h2 id="running-psql"><a class="header" href="#running-psql"><a id="topic12"></a>Running psql</a></h2>
+<p>From a remote system, you can access a SynxDB that has Kerberos authentication enabled.</p>
+<h3 id="to-connect-to-synxdb-with-psql"><a class="header" href="#to-connect-to-synxdb-with-psql"><a id="mh151095"></a>To connect to SynxDB with psql</a></h3>
+<ol>
+<li>
+<p>As the gpadmin user, open a command window.</p>
+</li>
+<li>
+<p>Start <code>psql</code> from the command window and specify a connection to the SynxDB specifying the user that is configured with Kerberos authentication.</p>
+<p>The following example logs into the SynxDB on the machine <code>kerberos-gpdb</code> as the <code>gpadmin</code> user with the Kerberos credentials <code>gpadmin/kerberos-gpdb</code>:</p>
+<pre><code>$ psql -U "gpadmin/kerberos-gpdb" -h kerberos-gpdb postgres
+</code></pre>
+</li>
+</ol>
+<h2 id="running-a-java-application"><a class="header" href="#running-a-java-application"><a id="topic18"></a>Running a Java Application</a></h2>
+<p>Accessing SynxDB from a Java application with Kerberos authentication uses the Java Authentication and Authorization Service (JAAS)</p>
+<ol>
+<li>
+<p>Create the file <code>.java.login.config</code> in the user home folder.</p>
+<p>For example, on a Linux system, the home folder is similar to <code>/home/gpadmin</code>.</p>
+<p>Add the following text to the file:</p>
+<pre><code>pgjdbc {
+  com.sun.security.auth.module.Krb5LoginModule required
+  doNotPrompt=true
+  useTicketCache=true
+  ticketCache = "/home/gpadmin/cache.txt"
+  debug=true
+  client=true;
+};
+</code></pre>
+</li>
+<li>
+<p>Create a Java application that connects to SynxDB using Kerberos authentication and run the application as the user.</p>
+</li>
+</ol>
+<p>This example database connection URL uses a PostgreSQL JDBC driver and specifies parameters for Kerberos authentication.</p>
+<pre><code>jdbc:postgresql://kerberos-gpdb:5432/mytest? 
+  kerberosServerName=postgres&amp;jaasApplicationName=pgjdbc&amp; 
+  user=gpadmin/kerberos-gpdb
+</code></pre>
+<p>The parameter names and values specified depend on how the Java application performs Kerberos authentication.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../admin_guide/kerberos.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../admin_guide/kerberos-win-client.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../admin_guide/kerberos.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../admin_guide/kerberos-win-client.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

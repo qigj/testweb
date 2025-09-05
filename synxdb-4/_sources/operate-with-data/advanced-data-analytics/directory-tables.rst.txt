@@ -1,0 +1,406 @@
+.. raw:: latex
+
+   \newpage
+
+Directory Tables
+==========================
+
+|product_name| has introduced directory tables for unified management of unstructured data on local or object storages.
+
+Large-scale AI applications need to handle unstructured, multi-modal datasets. Therefore, AI application developers must continually prepare a large amount high-quality unstructured data, train large models through repeated iterations, and build rich knowledge bases. This creates technical challenges in managing and processing unstructured data.
+
+To address these challenges, |product_name| introduces directory tables for managing multiple types of unstructured data. Developers can use simple SQL statements to leverage multiple computing engines for unified data processing and application development.
+
+Directory tables store, manage, and analyze unstructured data objects within tablespaces. When unstructured data files are imported, a directory table record (file metadata) is created, and the file itself is loaded into object storage. The table metadata remains linked to the corresponding object storage file.
+
+Usage
+--------
+
+Create a directory table
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can create a directory table in a local tablespace or in a tablespace of an external storage (such as object storage services or distributed file systems like HDFS).
+
+Create in local storage
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To create a directory table in local storage, follow the SQL syntax below. You need to replace ``<table_name>`` and ``<tablespace_name>`` with the actual table name and tablespace name.
+
+.. code:: sql
+
+   -- Method 1: To create a directory table in a tablespace other than the default one,
+   -- create the tablespace first and then create the directory table within that tablespace.
+   CREATE DIRECTORY TABLE <table_name>;
+
+   -- Method 2: To create a directory table in the default tablespace,
+   -- simply omit the TABLESPACE clause.
+   CREATE TABLESPACE <tablespace_name>
+          LOCATION '<tablespace_path>';
+
+   CREATE DIRECTORY TABLE <table_name>
+          TABLESPACE <tablespace_name>;
+
+Create in external storage
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+To create a directory table in an external storage, you first need to create a tablespace in that storage. You'll need to provide connection information of the external storage server, such as server IP address, protocol, and access credentials. The following examples show how to create directory tables on QingCloud Object Storage and HDFS.
+
+1. Create server objects and define connection methods for external data sources. |product_name| supports protocols for multiple storage options, including S3 object storage and HDFS. The following examples create server objects named ``oss_server`` and ``hdfs_server`` on QingCloud and HDFS, respectively.
+
+   -  For QingCloud:
+
+      .. code:: sql
+
+         CREATE STORAGE SERVER oss_server OPTIONS(protocol 'qingstor', prefix '<path_prefix>', endpoint '<endpoint_address>', https 'true', virtual_host 'false');
+
+   -  For HDFS:
+
+      .. code:: sql
+
+         CREATE STORAGE SERVER hdfs_server OPTIONS(port '<port_number>' protocol 'hdfs', namenode '<HDFS_node_IP:port_number>', https 'false');
+
+   The parameters in the above commands are described as follows:
+
+   -  ``protocol``: The protocol used to connect to the external data source. In the examples above, ``'qingstor'`` indicates using the QingCloud object storage service protocol, and ``'hdfs'`` indicates using the HDFS storage service protocol.
+   -  ``prefix``: Sets the path prefix when accessing object storage. If this prefix is set, all operations will be limited to this specific path, such as prefix ``'/rose-oss-test4/usf1'``. This is typically used to organize and isolate data stored in the same bucket.
+   -  ``endpoint``: Specifies the network address of the external object storage service. For example, ``'pek3b.qingstor.com'`` is a specific regional node of the QingCloud service. Through this endpoint, |product_name| can access external data.
+   -  ``https``: Specifies whether to connect to the object storage service using the HTTPS protocol. In this command, ``'false'`` indicates using an unencrypted HTTP connection. This setting might be influenced by data transmission security requirements, and it is generally recommended to use HTTPS to ensure data security.
+   -  ``virtual_host``: Determines whether to access the bucket using virtual hosting. ``'false'`` means that bucket access is not done in virtual host style (which means that the bucket name is not included in the URL). This option is typically dependent on the URL format support provided by the storage service provider.
+   -  ``namenode``: Represents the IP of the HDFS node. You need to replace ``<HDFS_node_IP:port>`` with the actual IP address and port number, such as ``'192.168.51.106:8020'``.
+   -  ``port``: Specifies the port number of the HDFS node. You need to replace ``<port_number>`` with the real port number, for example, ``8020``.
+
+2. Create user mappings to provide the current user with the authentication information required to access these external servers.
+
+   -  For QingCloud:
+
+      .. code:: sql
+
+         CREATE STORAGE USER MAPPING FOR CURRENT_USER STORAGE SERVER oss_server OPTIONS (accesskey '<QingCloud access key>', secretkey '<QingCloud secret key>');
+
+   -  HDFS：
+
+      .. code:: sql
+
+         CREATE STORAGE USER MAPPING FOR CURRENT_USER STORAGE SERVER hdfs_server OPTIONS (auth_method 'simple');
+
+   The parameters in the above commands are described as follows:
+
+   -  ``accesskey`` and ``secretkey``: These parameters provide the necessary authentication information. ``'accesskey'`` and ``'secretkey'`` are similar to username and password, and are used to access the object storage service.
+   -  ``auth_method``: Indicates the authentication method for accessing HDFS. simple indicates simple authentication mode, and kerberos indicates using Kerberos authentication mode.
+
+3. Create tablespaces on the external servers. These tablespaces are specifically associated with the previously defined external servers, and the location option of the tablespace specifies a specific path on the external storage. The following examples create tablespaces ``dir_oss`` and ``dir_hdfs`` on QingCloud and HDFS, respectively.
+
+   -  For QingCloud:
+
+      .. code:: sql
+
+         CREATE TABLESPACE dir_oss location '<object_storage_path>' SERVER oss_server HANDLER '$libdir/dfs_tablespace, remote_file_handler';
+
+         -- You need to replace <object_storage_path> with the actual path on the object storage,
+         -- such as /tbs-49560-0-mgq-multi/oss-server-01-17.
+
+   -  HDFS：
+
+      .. code:: sql
+
+         CREATE TABLESPACE dir_hdfs location '<object_storage_path>' SERVER hdfs_server HANDLER '$libdir/dfs_tablespace, remote_file_handler';
+
+         -- You need to replace <object_storage_path> with the actual path on the object storage,
+         -- such as /tbs-49560-0-mgq-multi/oss-server-01-17.
+
+4. Create directory tables in the tablespaces. The following statements create directory tables ``dir_table_oss`` and ``dir_table_hdfs`` in tablespaces ``dir_oss`` and ``dir_hdfs``, respectively.
+
+   .. code:: sql
+
+      CREATE DIRECTORY TABLE dir_table_oss TABLESPACE dir_oss;
+      CREATE DIRECTORY TABLE dir_table_hdfs TABLESPACE dir_hdfs;
+
+
+   .. tip:: 
+
+      If you encounter the error message ``directory ... does not exist`` while creating the tablespace, you need to configure ``shared_preload_libraries`` for the cluster and then import the library to the object storage. To do this, follow these steps:
+
+         1. Run the command ``gpconfig -c shared_preload_libraries -v 'dfs_tablespace'`` to configure the cluster.
+         2. Restart the cluster using the command ``gpstop -ra``.
+
+Create index on a directory table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Directory tables support index to accelerate queries. The syntax to create index is as follows:
+
+.. code:: sql
+
+   CREATE INDEX index_name ON <directory_table_name> (<column_name>);
+
+View the field information of directory table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: 
+
+   \dY   -- Lists all the directory tables.
+   \d <directory_table>   -- Shows the field information of a directory table.
+
+In general, the fields of a directory table are as follows:
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table:: 
+   :header-rows: 1
+
+   * - **Field name**
+     - **Data type**
+     - **Note**
+   * - ``RELATIVE_PATH``
+     - ``TEXT``
+     - 
+   * - ``SIZE``
+     - ``NUMBER``
+     - 
+   * - ``LAST_MODIFIED``
+     - ``TIMESTAMP_LTZ``
+     - 
+   * - ``MD5``
+     - ``HEX``
+     - 
+   * - ``TAG``
+     - ``TEXT``
+     - User-defined tags. Can be used to mark data lineage, file upload department/team, classification. "k1=v1, k2=v2"
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+Upload file into directory table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+After uploading a file to a directory table, |product_name| manages the file's upload to local storage or object storage and stores the file's metadata in the directory table. Currently, users cannot directly manage object storage directory files.
+
+Upload files from local storage to database object storage:
+
+.. code:: 
+
+   \COPY BINARY '<directory_table_name>' FROM '<local_path_to_file>' '<relative_path>';
+   COPY BINARY '<directory_table_name>' FROM '<local_path_to_file>' '<relative_path>';  -- the starting slash \ can be omitted.
+
+   -- <directory_table_name> is the directory table name.
+   -- <local_path_to_file> is the local path to the file to be uploaded.
+   -- <relative_path> is the target path to the local or object storage,
+   -- and the file will be uploaded to this path.
+
+.. tip:: 
+
+   It is recommended to use the subdirectory capability of ``<path>`` to ensure that the directory path after uploading is consistent with the local one, which simplifies file management.
+
+For enhanced file management and data flow tracking, you can add tags to the upload command. These tags provide additional information or markings for your files.
+
+.. code:: 
+
+   \COPY BINARY '<directory_table_name>' FROM '<local_path_to_file>' '<relative_path>' WITH tag '<tag_name>';
+
+Examples:
+
+.. code:: 
+
+   -- Uploads the file to the root path.
+   \COPY BINARY dir_table_oss FROM '/data/country.data' 'country.data';
+
+   -- Uploads the file to a specified path top_level/second_level
+   \COPY BINARY dir_table_oss FROM '/data/region.tbl' 'top_level/second_level/region.tbl';
+
+   -- Uploads the file to the root path with a tag
+   \COPY BINARY dir_table_oss FROM '/data/country1.data' 'country1.data' with tag 'country';
+
+   -- Uploads the file to a specified path top_level/second_level with a tag
+   \COPY BINARY dir_table_oss FROM '/data/region1.tbl' 'top_level/second_level/region1.tbl' with tag 'region';
+
+You can also use the command-line tool ``gpdirtableload`` to upload files in bulk to object storage. Use the syntax ``gpdirtableload --inputfile <directory>`` to upload files in a directory to object storage. The command-line flags for ``gpdirtableload`` are as follows:
+
+.. _gpdirtableload_usage:
+
+.. code-block:: shell
+   :caption: gpdirtableload Usage
+
+   Usage:
+   gpdirtableload [flags]
+
+   Flags:
+         --database string       Database to connect to (default gpadmin)
+         --dest-path string      Target path to the table root directory (default: root directory of the table)
+         --force-password-auth   Force a password prompt (default false)
+         --help                  Print help info and exit
+         --mode                  Upload or download data
+         --host string           Host to connect to (default localhost)
+         --input-file strings    Relative path to the directory of input files. Uploading or downloading a single file is supported.
+         --logfile string        Log output to logfile (default none)
+         --port int              Port to connect to (default 5432)
+         --stop-on-error         Stop loading files when an error occurs (default false)
+         --table string          Table to load to
+         --tag string            File tag
+         --tasks int             The maximum number of files that concurrently loads (default 1)
+         --user string           User to connect as (default gpadmin)
+         --verbose               Indicates that the tool should generate verbose output (default false)
+         --version               Print version info and exit
+
+Export files to local
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can export data from a directory table to your local file system for backup:
+
+.. code:: none
+
+    -- Exports data to the machine where psql client is running.
+   \COPY BINARY DIRECTORY TABLE '<directory_table_name>' '<relative_path>' TO '<target_path>';
+
+   -- Exports to the machine where the coordinator is running.
+   COPY BINARY DIRECTORY TABLE '<directory_table_name>' '<relative_path>' TO '<target_path>';
+
+   -- <directory_table_name> is the table name.
+   -- <relative_path> is the relative path of the directory table.
+   -- <target_path> is the destination, including the path to your local file system and the target path.
+
+For example:
+
+.. code:: none
+
+   -- Exports file to your local root directory.
+   \COPY BINARY DIRECTORY TABLE dir_table_oss 'country.data' TO '/data/country.CSV';
+
+You can also use the command-line tool ``gpdirtableload`` to download files to your local system in a batch. For the detailed command-line flags, see the :ref:`gpdirtableload_usage`.
+
+Query and use the files managed by directory table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Query the metadata of a file in directory table:
+
+.. code:: sql
+
+   -- Uses the table function directory_table() to read the file metadata and content.
+   SELECT relative_path, 
+          size, 
+          last_modified, 
+          md5,
+          tag,
+          content
+          FROM directory_table('<directory_table>');
+
+   -- You can use one of the following statements to query the data of a directory table.
+   SELECT * FROM <directory_table>;
+   SELECT * FROM DIRECTORY_TABLE('<directory_table>');
+
+Add transaction lock to directory table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can use the lock statement to control access to the directory table. This helps keep data consistent and safe. By using different lock types, you can limit how other transactions access the table to avoid problems.
+
+Lock statement syntax:
+
+.. code-block:: sql
+
+   LOCK TABLE <table_name> IN <lock_mode>;
+
+Where ``<lock_mode>`` can be one of the following:
+
+-  ``ACCESS SHARE MODE``: This lock lets other transactions read the table, but not change it. It is for read-only queries.
+-  ``ROW SHARE MODE``: This lock lets other transactions read the rows in the table, but not change them. It works with ``SELECT FOR UPDATE`` or ``FOR SHARE``.
+-  ``ROW EXCLUSIVE MODE``: This lock lets the transaction change the table. Other transactions can read but not change it.
+-  ``SHARE UPDATE EXCLUSIVE MODE``: This lock allows some maintenance tasks. Other transactions can read but not change the table.
+-  ``SHARE MODE``: This lock lets other transactions read the table, but not change it.
+-  ``SHARE ROW EXCLUSIVE MODE``: This lock allows some actions, like creating triggers. Other transactions can read but not change the table.
+-  ``EXCLUSIVE``: This lock allows only the ``Access Share`` lock at the same time. It only lets the table be read. It is usually acquired by ``REFRESH MATERIALIZED VIEW CONCURRENTLY``.
+-  ``ACCESS EXCLUSIVE MODE``: This is the highest level of lock. It makes sure the holder is the only one accessing the table. It is acquired by commands like ``DROP TABLE``, ``TRUNCATE``, and ``VACUUM FULL``.
+
+Here is how to use the lock statement with ``ACCESS SHARE MODE``:
+
+.. code-block:: sql
+
+   BEGIN;
+   LOCK TABLE dir_table1 IN ACCESS SHARE MODE;  -- Others can still read dir_table1
+   SELECT * FROM dir_table1;  -- Read dir_table1
+   LOCK TABLE dir_table1 IN ACCESS EXCLUSIVE MODE;  -- Request exclusive lock; others cannot access
+   COMMIT;
+
+Here is how to use the lock statement with ``ACCESS EXCLUSIVE MODE``:
+
+.. code-block:: sql
+
+   BEGIN;
+   LOCK TABLE dir_table1 IN ACCESS EXCLUSIVE MODE;  -- Others cannot read or change dir_table1
+
+   -- Do some actions...
+   ROLLBACK;  -- Undo actions and release the lock
+
+Delete the file managed by directory table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To delete a file managed by directory table, you need the admin privilege:
+
+.. code:: sql
+
+   SELECT remove_file('dir_table_oss', 'country.data');
+
+   -- This command deletes the file country.data managed in the table dir_table_oss.
+
+Delete a directory table
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Delete a directory table. After the deletion, all the file managed by the table will be deleted as well. To delete a directory table, you need the admin privilege.
+
+.. code:: sql
+
+   DROP DIRECTORY TABLE <table_name>;
+
+Back up and restore directory tables
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can use the command-line tools ``gpbackup`` and ``gprestore`` to back up and restore data stored in directory tables.
+
+For more details about ``gpbackup`` and ``gprestore``, see :ref:`manage-system/backup-and-restore/br-overview:backup and restore overview`.
+
+Implementation
+^^^^^^^^^^^^^^
+
+The backup and restore process for directory tables is similar to that of regular tables, using the ``copy to`` and ``copy from`` commands. However, because the ``copy`` command for directory tables is not supported on segment nodes, directory tables are not implemented on segment nodes.
+
+Back up directory tables using gpbackup
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+See the following example command to back up a local directory table:
+
+.. code:: bash
+
+   gpbackup --include-table public.dir_table --dbname postgres --backup-dir /home/tmp/backup/
+
+-  ``--include-table``: Backs up a single table, used the same way as for regular tables.
+-  ``--include-table-file``: Backs up multiple tables, can back up directory tables along with other types of tables.
+-  Full backups are the same as full backups for regular tables, with no additional parameters required.
+-  Incremental backups are the same as incremental backups for regular tables, with no additional parameters required.
+
+Restore directory tables using gprestore
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+See the following example command to restore a local directory table:
+
+.. code:: bash
+
+   gprestore --timestamp 20240909152156 --backup-dir <local-directory> --on-error-continue
+
+``--backup-dir <local-directory>``: This parameter specifies the local directory where the directory table backup is stored. For example, ``--backup-dir /home/tmp/backup/``.
+
+See the following command to restore a remote directory table:
+
+.. code:: bash
+
+   gprestore --timestamp 20240923172522 --plugin-config <config-of-remote-directory>
+
+``--plugin-config <config-of-remote-directory>``: This parameter points to the configuration file with remote directory information. For example, ``--plugin-config /home/gpadmin/s3.yaml``. The file content is as follows:
+
+.. code:: yaml
+
+   executablepath: /usr/local/cloudberry-db-1.6.0+dev.58.geb9f37ef/bin/gpbackup_s3_plugin
+   options:
+   endpoint: https://obs.***.myhuaweicloud.com
+   aws_access_key_id: ***
+   aws_secret_access_key: ***
+   bucket:  ***
+   folder:  backup_folder

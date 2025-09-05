@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Load Data between SynxDB Elastic and Spark &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Load Data between SynxDB Elastic and Spark</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="load-data-between-product-name-and-spark">
+<h1>Load Data between SynxDB Elastic and Spark<a class="headerlink" href="#load-data-between-product-name-and-spark" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This guide provides instructions for bidirectional data integration between Apache Spark and SynxDB Elastic. It covers both data ingestion from SynxDB Elastic into Spark and data export from Spark to SynxDB Elastic, enabling seamless data movement between these two platforms.</p>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>Before proceeding with the integration, ensure the following components are installed in your Spark environment.</p>
+<p>Required JAR Dependencies:</p>
+<ul class="simple">
+<li><p>spark-cloudberry_2.12-1.1.0-spark_3.5.jar</p></li>
+<li><p>aws-java-sdk-bundle-1.11.364.jar</p></li>
+<li><p>postgresql-42.1.4.jar</p></li>
+</ul>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<section id="step-1-set-up-product-name-foreign-server">
+<h3>Step 1. Set up SynxDB Elastic foreign server<a class="headerlink" href="#step-1-set-up-product-name-foreign-server" title="Link to this heading"></a></h3>
+<p>As a superuser, configure the foreign server and establish necessary permissions in SynxDB Elastic.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Initializes the datalake foreign data wrapper</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="n">datalake_fdw</span><span class="p">;</span>
+
+<span class="c1">-- Configures the foreign data wrapper for Spark integration</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw_spark</span>
+<span class="w">    </span><span class="k">HANDLER</span><span class="w"> </span><span class="n">datalake_fdw_handler</span>
+<span class="w">    </span><span class="k">VALIDATOR</span><span class="w"> </span><span class="n">datalake_fdw_validator</span>
+<span class="w">    </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">mpp_execute</span><span class="w"> </span><span class="s1">&#39;all segments&#39;</span><span class="w"> </span><span class="p">);</span>
+
+<span class="c1">-- Establishes the foreign server connection</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">foreign_server_spark</span>
+<span class="w">    </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw_spark</span>
+<span class="w">    </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">        </span><span class="k">host</span><span class="w"> </span><span class="s1">&#39;10.13.9.167:9000&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">protocol</span><span class="w"> </span><span class="s1">&#39;s3&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ishttps</span><span class="w"> </span><span class="s1">&#39;false&#39;</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="c1">-- Configures user permissions</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">USAGE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">foreign_server_spark</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">sparkuser</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">pg_authid</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">sparkuser</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">pg_user_mapping</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">sparkuser</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>After configuring the server and permissions, switch to a regular user to create user mapping with authentication credentials.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Creates user mapping with authentication credentials</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">sparkuser</span>
+<span class="w">    </span><span class="n">SERVER</span><span class="w"> </span><span class="n">foreign_server_spark</span>
+<span class="w">    </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">        </span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;gpadmin&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">accesskey</span><span class="w"> </span><span class="s1">&#39;minioadmin&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">secretkey</span><span class="w"> </span><span class="s1">&#39;minioadmin&#39;</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="c1">-- Configures user environment</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">sparkuser</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">warehouse</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">w02</span><span class="p">;</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">sparkuser</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">default_tablespace</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">tbs_001</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-configure-spark-connection">
+<h3>Step 2. Configure Spark connection<a class="headerlink" href="#step-2-configure-spark-connection" title="Link to this heading"></a></h3>
+<p>Configure the Spark environment with the following connection parameters:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.{</span><span class="nc">Row</span><span class="p">,</span><span class="w"> </span><span class="nc">SaveMode</span><span class="p">,</span><span class="w"> </span><span class="nc">SparkSession</span><span class="p">}</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nc">SQLContext</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">types</span><span class="p">.{</span><span class="nc">StructType</span><span class="p">,</span><span class="w"> </span><span class="nc">StructField</span><span class="p">,</span><span class="w"> </span><span class="nc">IntegerType</span><span class="p">,</span><span class="w"> </span><span class="nc">StringType</span><span class="p">,</span><span class="w"> </span><span class="nc">DateType</span><span class="p">}</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">defaultOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">   </span><span class="s">&quot;url&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;10.13.9.158:32744&quot;</span><span class="p">,</span><span class="w">           </span><span class="c1">// Database endpoint</span>
+<span class="w">   </span><span class="s">&quot;user&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;sparkuser&quot;</span><span class="p">,</span><span class="w">                  </span><span class="c1">// Authentication username</span>
+<span class="w">   </span><span class="s">&quot;password&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;sparkuser&quot;</span><span class="p">,</span><span class="w">              </span><span class="c1">// Authentication password</span>
+<span class="w">   </span><span class="s">&quot;database&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;gpadmin&quot;</span><span class="p">,</span><span class="w">                </span><span class="c1">// Target database name</span>
+<span class="w">   </span><span class="s">&quot;tempdir&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;/dfs-stg/spark_test&quot;</span><span class="p">,</span><span class="w">     </span><span class="c1">// Temporary storage location</span>
+<span class="w">   </span><span class="s">&quot;server_name&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;foreign_server_spark&quot;</span><span class="w"> </span><span class="c1">// Foreign server identifier</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="ingest-data-from-product-name-to-spark">
+<h2>Ingest data from SynxDB Elastic to Spark<a class="headerlink" href="#ingest-data-from-product-name-to-spark" title="Link to this heading"></a></h2>
+<section id="step-1-create-the-source-table">
+<h3>Step 1. Create the source table<a class="headerlink" href="#step-1-create-the-source-table" title="Link to this heading"></a></h3>
+<p>Create and populate the source table in SynxDB Elastic:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">employees</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+<span class="w">    </span><span class="n">first_name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">    </span><span class="n">last_name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">    </span><span class="n">email</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<span class="w">    </span><span class="n">hire_date</span><span class="w"> </span><span class="nb">DATE</span>
+<span class="p">);</span>
+
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">employees</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">first_name</span><span class="p">,</span><span class="w"> </span><span class="n">last_name</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">hire_date</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+<span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Jane&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Smith&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;jane.smith@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;2023-02-10&#39;</span><span class="p">),</span>
+<span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Johnson&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;alice.johnson@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;2023-03-05&#39;</span><span class="p">),</span>
+<span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Bob&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Brown&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;bob.brown@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;2023-04-01&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-load-data">
+<h3>Step 2. Load data<a class="headerlink" href="#step-2-load-data" title="Link to this heading"></a></h3>
+<p>The following methods demonstrate different approaches to load data from SynxDB Elastic into Spark:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// Method 1: Custom SQL Query</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">dfQuery</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span>
+<span class="w">      </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;cloudberry&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">options</span><span class="p">(</span><span class="n">defaultOptions</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;query&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;select * from public.employees&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">load</span><span class="p">()</span>
+<span class="w">      </span><span class="p">.</span><span class="n">show</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1">// Method 2: Direct Table Access</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">dfTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span>
+<span class="w">      </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;cloudberry&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">options</span><span class="p">(</span><span class="n">defaultOptions</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;dbtable&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;public.employees&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">load</span><span class="p">()</span>
+<span class="w">      </span><span class="p">.</span><span class="n">show</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1">// Method 3: Temporary View Creation</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">dfTempView</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span>
+<span class="w">      </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;cloudberry&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">options</span><span class="p">(</span><span class="n">defaultOptions</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;dbtable&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;public.employees&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">load</span><span class="p">()</span>
+<span class="w">      </span><span class="p">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s">&quot;spark_employees&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">sql</span><span class="p">(</span><span class="s">&quot;select * from spark_employees&quot;</span><span class="p">).</span><span class="n">show</span>
+
+<span class="c1">// Method 4: External Table Definition</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">ex_tbl_hd_gpadmin_employees</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">    CREATE TABLE ex_tbl_hd_gpadmin_employees (</span>
+<span class="s">      id int,</span>
+<span class="s">      first_name VARCHAR(50),</span>
+<span class="s">      last_name VARCHAR(50),</span>
+<span class="s">      email VARCHAR(100),</span>
+<span class="s">      hire_date DATE</span>
+<span class="s">    )</span>
+<span class="s">    USING cloudberry</span>
+<span class="s">    OPTIONS (</span>
+<span class="s">      url &#39;10.13.9.158:32744&#39;,             // Database endpoint</span>
+<span class="s">      user &#39;sparkuser&#39;,                    // Authentication username</span>
+<span class="s">      password &#39;sparkuser&#39;,                // Authentication password</span>
+<span class="s">      database &#39;gpadmin&#39;,                  // Target database</span>
+<span class="s">      tempdir &#39;/dfs-stg/spark_test&#39;,       // Temporary storage</span>
+<span class="s">      server_name &#39;foreign_server_spark&#39;,  // Foreign server</span>
+<span class="s">      dbtable &#39;public.employees&#39;,          // Source table</span>
+<span class="s">      compress &#39;off&#39;</span>
+<span class="s">    )</span>
+<span class="s">&quot;&quot;&quot;</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">sql</span><span class="p">(</span><span class="n">ex_tbl_hd_gpadmin_employees</span><span class="p">)</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">sql</span><span class="p">(</span><span class="s">&quot;select * from ex_tbl_hd_gpadmin_employees&quot;</span><span class="p">).</span><span class="n">show</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="export-data-from-spark-to-product-name">
+<h2>Export data from Spark to SynxDB Elastic<a class="headerlink" href="#export-data-from-spark-to-product-name" title="Link to this heading"></a></h2>
+<p>Given that you have already created a table in SynxDB Elastic, you can directly use Spark to load data from CSV file to the table. The following steps show how to load a CSV file  <code class="docutils literal notranslate"><span class="pre">path/to/your/data/employess_spark.csv</span></code>, prepare the source data in Spark and export them to the <code class="docutils literal notranslate"><span class="pre">public.employees</span></code> table in SynxDB Elastic.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>id,firstname,lastname,email,hiredate
+<span class="m">4</span>,John,Doe,john.doe@example.com,2023-01-15
+<span class="m">5</span>,Jane,Smith,jane.smith@example.com,2023-02-20
+<span class="m">6</span>,Michael,Brown,michael.brown@example.com,2023-03-10
+</pre></div>
+</div>
+<section id="step-1-prepare-data">
+<h3>Step 1. Prepare data<a class="headerlink" href="#step-1-prepare-data" title="Link to this heading"></a></h3>
+<p>Prepare the source data in Spark.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// Define the data schema</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">StructType</span><span class="p">(</span><span class="nc">Array</span><span class="p">(</span>
+<span class="w">    </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">IntegerType</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">),</span>
+<span class="w">    </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;firstname&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">StringType</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">),</span>
+<span class="w">    </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;lastname&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">StringType</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">),</span>
+<span class="w">    </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;email&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">StringType</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">),</span>
+<span class="w">    </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;hiredate&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">DateType</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="p">))</span>
+
+<span class="c1">// Load data from CSV source</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span>
+<span class="w">      </span><span class="p">.</span><span class="n">schema</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;header&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;dateFormat&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;yyyy-MM-dd&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;encoding&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">csv</span><span class="p">(</span><span class="s">&quot;path/to/your/data/employess_spark.csv&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-export-data">
+<h3>Step 2. Export data<a class="headerlink" href="#step-2-export-data" title="Link to this heading"></a></h3>
+<p>Execute the data export to SynxDB Elastic. The option <code class="docutils literal notranslate"><span class="pre">dbtable</span></code> is used to specify the target table in SynxDB Elastic. The option <code class="docutils literal notranslate"><span class="pre">columnmap</span></code> is an optional parameter used to map the column names of the source data to the column names of the target table. The mode of the data export is to specify whether to <code class="docutils literal notranslate"><span class="pre">Append</span></code> or <code class="docutils literal notranslate"><span class="pre">Overwrite</span></code> the data in the target table.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">.</span><span class="n">write</span>
+<span class="w">   </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;cloudberry&quot;</span><span class="p">)</span>
+<span class="w">   </span><span class="p">.</span><span class="n">options</span><span class="p">(</span><span class="n">defaultOptions</span><span class="p">)</span>
+<span class="w">   </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;dbtable&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;public.employees&quot;</span><span class="p">)</span>
+<span class="w">   </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;columnmap&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">       </span><span class="s">&quot;id&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s">&quot;firstname&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;first_name&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s">&quot;lastname&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;last_name&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s">&quot;email&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;email&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s">&quot;hiredate&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;hire_date&quot;</span>
+<span class="w">   </span><span class="p">).</span><span class="n">toString</span><span class="p">())</span>
+<span class="w">   </span><span class="p">.</span><span class="n">mode</span><span class="p">(</span><span class="nc">SaveMode</span><span class="p">.</span><span class="nc">Append</span><span class="p">)</span><span class="w"> </span><span class="c1">// Append or Overwrite</span>
+<span class="w">   </span><span class="p">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="step-3-verify-data">
+<h3>Step 3. Verify data<a class="headerlink" href="#step-3-verify-data" title="Link to this heading"></a></h3>
+<p>Verify the exported data in SynxDB Elastic:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">gpadmin</span><span class="o">=#</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">employees</span><span class="p">;</span>
+<span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">first_name</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">last_name</span><span class="w"> </span><span class="o">|</span><span class="w">           </span><span class="n">email</span><span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="n">hire_date</span>
+<span class="c1">----+------------+-----------+---------------------------+------------</span>
+<span class="w">  </span><span class="mi">3</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Bob</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="n">Brown</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="n">bob</span><span class="p">.</span><span class="n">brown</span><span class="o">@</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="mi">2023</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">01</span>
+<span class="w">  </span><span class="mi">4</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">John</span><span class="w">       </span><span class="o">|</span><span class="w"> </span><span class="n">Doe</span><span class="w">       </span><span class="o">|</span><span class="w"> </span><span class="n">john</span><span class="p">.</span><span class="n">doe</span><span class="o">@</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="mi">2023</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">15</span>
+<span class="w">  </span><span class="mi">5</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Jane</span><span class="w">       </span><span class="o">|</span><span class="w"> </span><span class="n">Smith</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="n">jane</span><span class="p">.</span><span class="n">smith</span><span class="o">@</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="mi">2023</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">20</span>
+<span class="w">  </span><span class="mi">6</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Michael</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Brown</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="n">michael</span><span class="p">.</span><span class="n">brown</span><span class="o">@</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2023</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">10</span>
+<span class="w">  </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Jane</span><span class="w">       </span><span class="o">|</span><span class="w"> </span><span class="n">Smith</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="n">jane</span><span class="p">.</span><span class="n">smith</span><span class="o">@</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="mi">2023</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">10</span>
+<span class="w">  </span><span class="mi">2</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Alice</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="n">Johnson</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="n">alice</span><span class="p">.</span><span class="n">johnson</span><span class="o">@</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2023</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">05</span>
+<span class="p">(</span><span class="mi">6</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

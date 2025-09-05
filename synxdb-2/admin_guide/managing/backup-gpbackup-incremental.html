@@ -1,0 +1,380 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Creating and Using Incremental Backups with gpbackup and gprestore - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="creating-and-using-incremental-backups-with-gpbackup-and-gprestore"><a class="header" href="#creating-and-using-incremental-backups-with-gpbackup-and-gprestore">Creating and Using Incremental Backups with gpbackup and gprestore</a></h1>
+<p>The <code>gpbackup</code> and <code>gprestore</code> utilities support creating incremental backups of append-optimized tables and restoring from incremental backups. An incremental backup backs up all specified heap tables and backs up append-optimized tables (including append-optimized, column-oriented tables) only if the tables have changed. For example, if a row of an append-optimized table has changed, the table is backed up. For partitioned append-optimized tables, only the changed leaf partitions are backed up.</p>
+<p>Incremental backups are efficient when the total amount of data in append-optimized tables or table partitions that changed is small compared to the data that has not changed since the last backup.</p>
+<p>An incremental backup backs up an append-optimized table only if one of the following operations was performed on the table after the last full or incremental backup:</p>
+<ul>
+<li><code>ALTER TABLE</code></li>
+<li><code>DELETE</code></li>
+<li><code>INSERT</code></li>
+<li><code>TRUNCATE</code></li>
+<li><code>UPDATE</code></li>
+<li><code>DROP</code> and then re-create the table</li>
+</ul>
+<p>To restore data from incremental backups, you need a complete incremental backup set.</p>
+<ul>
+<li>
+<p><strong><a href="../managing/backup-gpbackup-incremental.html">About Incremental Backup Sets</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../managing/backup-gpbackup-incremental.html">Using Incremental Backups</a></strong></p>
+</li>
+</ul>
+<h2 id="about-incremental-backup-sets"><a class="header" href="#about-incremental-backup-sets"><a id="topic_kvf_mkr_t2b"></a>About Incremental Backup Sets</a></h2>
+<p>An incremental backup set includes the following backups:</p>
+<ul>
+<li>A full backup. This is the full backup that the incremental backups are based on.</li>
+<li>The set of incremental backups that capture the changes to the database from the time of the full backup.</li>
+</ul>
+<p>For example, you can create a full backup and then create three daily incremental backups. The full backup and all three incremental backups are the backup set. For information about using an incremental backup set, see <a href="#incr_backup_scenario">Example Using Incremental Backup Sets</a>.</p>
+<p>When you create or add to an incremental backup set, <code>gpbackup</code> ensures that the backups in the set are created with a consistent set of backup options to ensure that the backup set can be used in a restore operation. For information about backup set consistency, see <a href="#topic_btr_xfr_t2b">Using Incremental Backups</a>.</p>
+<p>When you create an incremental backup you include these options with the other <code>gpbackup</code> options to create a backup:</p>
+<ul>
+<li>
+<p><code>--leaf-partition-data</code> - Required for all backups in the incremental backup set.</p>
+<ul>
+<li>Required when you create a full backup that will be the base backup for an incremental backup set.</li>
+<li>Required when you create an incremental backup.</li>
+</ul>
+</li>
+<li>
+<p><code>--incremental</code> - Required when you create an incremental backup.</p>
+<p>You cannot combine <code>--data-only</code> or <code>--metadata-only</code> with <code>--incremental</code>.</p>
+</li>
+<li>
+<p><code>--from-timestamp</code> - Optional. This option can be used with <code>--incremental</code>. The timestamp you specify is an existing backup. The timestamp can be either a full backup or incremental backup. The backup being created must be compatible with the backup specified with the <code>--from-timestamp</code> option.</p>
+<p>If you do not specify <code>--from-timestamp</code>, <code>gpbackup</code> attempts to find a compatible backup based on information in the <code>gpbackup</code> history file. See <a href="#incr_backup_notes">Incremental Backup Notes</a>.</p>
+</li>
+</ul>
+<h2 id="using-incremental-backups"><a class="header" href="#using-incremental-backups"><a id="topic_btr_xfr_t2b"></a>Using Incremental Backups</a></h2>
+<ul>
+<li><a href="#incr_backup_scenario">Example Using Incremental Backup Sets</a></li>
+<li><a href="#gpbackup_increment">Creating an Incremental Backup with gpbackup</a></li>
+<li><a href="#gprestore_increment">Restoring from an Incremental Backup with gprestore</a></li>
+<li><a href="#incr_backup_notes">Incremental Backup Notes</a></li>
+</ul>
+<p>When you add an incremental backup to a backup set, <code>gpbackup</code> ensures that the full backup and the incremental backups are consistent by checking these <code>gpbackup</code> options:</p>
+<ul>
+<li>
+<p><code>--dbname</code> - The database must be the same.</p>
+</li>
+<li>
+<p><code>--backup-dir</code> - The directory must be the same. The backup set, the full backup and the incremental backups, must be in the same location.</p>
+</li>
+<li>
+<p><code>--single-data-file</code> - This option must be either specified or absent for all backups in the set.</p>
+</li>
+<li>
+<p><code>--plugin-config</code> - If this option is specified, it must be specified for all backups in the backup set. The configuration must reference the same plugin binary.</p>
+</li>
+<li>
+<p><code>--include-table-file</code>, <code>--include-schema</code>, or any other options that filter tables and schemas must be the same.</p>
+<p>When checking schema filters, only the schema names are checked, not the objects contained in the schemas.</p>
+</li>
+<li>
+<p><code>--no-compression</code> - If this option is specified, it must be specified for all backups in the backup set.</p>
+<p>If compression is used on the on the full backup, compression must be used on the incremental backups. Different compression levels are allowed for the backups in the backup set. For a backup, the default is compression level 1.</p>
+</li>
+</ul>
+<p>If you try to add an incremental backup to a backup set, the backup operation fails if the <code>gpbackup</code> options are not consistent.</p>
+<p>For information about the <code>gpbackup</code> and <code>gprestore</code> utility options, see the <a href="../../utility_guide/ref/gpbackup.html">gpbackup</a> and <a href="../../utility_guide/ref/gprestore.html">gprestore</a> reference documentation.</p>
+<h3 id="example-using-incremental-backup-sets"><a class="header" href="#example-using-incremental-backup-sets"><a id="incr_backup_scenario"></a>Example Using Incremental Backup Sets</a></h3>
+<p>Each backup has a timestamp taken when the backup is created. For example, if you create a backup on May 14, 2017, the backup file names contain <code>20170514hhmmss</code>. The hhmmss represents the time: hour, minute, and second.</p>
+<p>This example assumes that you have created two full backups and incremental backups of the database <em>mytest</em>. To create the full backups, you used this command:</p>
+<pre><code>gpbackup --dbname mytest --backup-dir /mybackup --leaf-partition-data
+</code></pre>
+<p>You created incremental backups with this command:</p>
+<pre><code>gpbackup --dbname mytest --backup-dir /mybackup --leaf-partition-data --incremental
+</code></pre>
+<p>When you specify the <code>--backup-dir</code> option, the backups are created in the <code>/mybackup</code> directory on each SynxDB host.</p>
+<p>In the example, the full backups have the timestamp keys <code>20170514054532</code> and <code>20171114064330</code>. The other backups are incremental backups. The example consists of two backup sets, the first with two incremental backups, and second with one incremental backup. The backups are listed from earliest to most recent.</p>
+<ul>
+<li><code>20170514054532</code> (full backup)</li>
+<li><code>20170714095512</code></li>
+<li><code>20170914081205</code></li>
+<li><code>20171114064330</code> (full backup)</li>
+<li><code>20180114051246</code></li>
+</ul>
+<p>To create a new incremental backup based on the latest incremental backup, you must include the same <code>--backup-dir</code> option as the incremental backup as well as the options <code>--leaf-partition-data</code> and <code>--incremental</code>.</p>
+<pre><code>gpbackup --dbname mytest --backup-dir /mybackup --leaf-partition-data --incremental
+</code></pre>
+<p>You can specify the <code>--from-timestamp</code> option to create an incremental backup based on an existing incremental or full backup. Based on the example, this command adds a fourth incremental backup to the backup set that includes <code>20170914081205</code> as an incremental backup and uses <code>20170514054532</code> as the full backup.</p>
+<pre><code>gpbackup --dbname mytest --backup-dir /mybackup --leaf-partition-data --incremental --from-timestamp 20170914081205
+</code></pre>
+<p>This command creates an incremental backup set based on the full backup <code>20171114064330</code> and is separate from the backup set that includes the incremental backup <code>20180114051246</code>.</p>
+<pre><code>gpbackup --dbname mytest --backup-dir /mybackup --leaf-partition-data --incremental --from-timestamp 20171114064330
+</code></pre>
+<p>To restore a database with the incremental backup <code>20170914081205</code>, you need the incremental backups <code>20120914081205</code> and <code>20170714095512</code>, and the full backup <code>20170514054532</code>. This would be the <code>gprestore</code> command.</p>
+<pre><code>gprestore --backup-dir /backupdir --timestamp 20170914081205
+</code></pre>
+<h3 id="creating-an-incremental-backup-with-gpbackup"><a class="header" href="#creating-an-incremental-backup-with-gpbackup"><a id="gpbackup_increment"></a>Creating an Incremental Backup with gpbackup</a></h3>
+<p>The <code>gpbackup</code> output displays the timestamp of the backup on which the incremental backup is based. In this example, the incremental backup is based on the backup with timestamp <code>20180802171642</code>. The backup <code>20180802171642</code> can be an incremental or full backup.</p>
+<pre><code>$ gpbackup --dbname test --backup-dir /backups --leaf-partition-data --incremental
+20180803:15:40:51 gpbackup:gpadmin:mdw:002907-[INFO]:-Starting backup of database test
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Backup Timestamp = 20180803154051
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Backup Database = test
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Gathering list of tables for backup
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Acquiring ACCESS SHARE locks on tables
+Locks acquired:  5 / 5 [================================================================] 100.00% 0s
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Gathering additional table metadata
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Metadata will be written to /backups/gpseg-1/backups/20180803/20180803154051/gpbackup_20180803154051_metadata.sql
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Writing global database metadata
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Global database metadata backup complete
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Writing pre-data metadata
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Pre-data metadata backup complete
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Writing post-data metadata
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Post-data metadata backup complete
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Basing incremental backup off of backup with timestamp = 20180802171642
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Writing data to file
+Tables backed up:  4 / 4 [==============================================================] 100.00% 0s
+20180803:15:40:52 gpbackup:gpadmin:mdw:002907-[INFO]:-Data backup complete
+20180803:15:40:53 gpbackup:gpadmin:mdw:002907-[INFO]:-Found neither /usr/local/synxdb-db/./bin/gp_email_contacts.yaml nor /home/gpadmin/gp_email_contacts.yaml
+20180803:15:40:53 gpbackup:gpadmin:mdw:002907-[INFO]:-Email containing gpbackup report /backups/gpseg-1/backups/20180803/20180803154051/gpbackup_20180803154051_report will not be sent
+20180803:15:40:53 gpbackup:gpadmin:mdw:002907-[INFO]:-Backup completed successfully
+</code></pre>
+<h3 id="restoring-from-an-incremental-backup-with-gprestore"><a class="header" href="#restoring-from-an-incremental-backup-with-gprestore"><a id="gprestore_increment"></a>Restoring from an Incremental Backup with gprestore</a></h3>
+<p>When restoring an from an incremental backup, you can specify the <code>--verbose</code> option to display the backups that are used in the restore operation on the command line. For example, the following <code>gprestore</code> command restores a backup using the timestamp <code>20180807092740</code>, an incremental backup. The output includes the backups that were used to restore the database data.</p>
+<pre><code>$ gprestore --create-db --timestamp 20180807162904 --verbose
+...
+20180807:16:31:56 gprestore:gpadmin:mdw:008603-[INFO]:-Pre-data metadata restore complete
+20180807:16:31:56 gprestore:gpadmin:mdw:008603-[DEBUG]:-Verifying backup file count
+20180807:16:31:56 gprestore:gpadmin:mdw:008603-[DEBUG]:-Restoring data from backup with timestamp: 20180807162654
+20180807:16:31:56 gprestore:gpadmin:mdw:008603-[DEBUG]:-Reading data for table public.tbl_ao from file (table 1 of 1)
+20180807:16:31:56 gprestore:gpadmin:mdw:008603-[DEBUG]:-Checking whether segment agents had errors during restore
+20180807:16:31:56 gprestore:gpadmin:mdw:008603-[DEBUG]:-Restoring data from backup with timestamp: 20180807162819
+20180807:16:31:56 gprestore:gpadmin:mdw:008603-[DEBUG]:-Reading data for table public.test_ao from file (table 1 of 1)
+20180807:16:31:56 gprestore:gpadmin:mdw:008603-[DEBUG]:-Checking whether segment agents had errors during restore
+20180807:16:31:56 gprestore:gpadmin:mdw:008603-[DEBUG]:-Restoring data from backup with timestamp: 20180807162904
+20180807:16:31:56 gprestore:gpadmin:mdw:008603-[DEBUG]:-Reading data for table public.homes2 from file (table 1 of 4)
+20180807:16:31:56 gprestore:gpadmin:mdw:008603-[DEBUG]:-Reading data for table public.test2 from file (table 2 of 4)
+20180807:16:31:56 gprestore:gpadmin:mdw:008603-[DEBUG]:-Reading data for table public.homes2a from file (table 3 of 4)
+20180807:16:31:56 gprestore:gpadmin:mdw:008603-[DEBUG]:-Reading data for table public.test2a from file (table 4 of 4)
+20180807:16:31:56 gprestore:gpadmin:mdw:008603-[DEBUG]:-Checking whether segment agents had errors during restore
+20180807:16:31:57 gprestore:gpadmin:mdw:008603-[INFO]:-Data restore complete
+20180807:16:31:57 gprestore:gpadmin:mdw:008603-[INFO]:-Restoring post-data metadata
+20180807:16:31:57 gprestore:gpadmin:mdw:008603-[INFO]:-Post-data metadata restore complete
+...
+</code></pre>
+<p>The output shows that the restore operation used three backups.</p>
+<p>When restoring an from an incremental backup, <code>gprestore</code> also lists the backups that are used in the restore operation in the <code>gprestore</code> log file.</p>
+<p>During the restore operation, <code>gprestore</code> displays an error if the full backup or other required incremental backup is not available.</p>
+<h3 id="incremental-backup-notes"><a class="header" href="#incremental-backup-notes"><a id="incr_backup_notes"></a>Incremental Backup Notes</a></h3>
+<p>To create an incremental backup, or to restore data from an incremental backup set, you need the complete backup set. When you archive incremental backups, the complete backup set must be archived. You must archive all the files created on the master and all segments.</p>
+<p>Each time <code>gpbackup</code> runs, the utility adds backup information to the history file <code>gpbackup_history.yaml</code> in the SynxDB master data directory. The file includes backup options and other backup information.</p>
+<p>If you do not specify the <code>--from-timestamp</code> option when you create an incremental backup, <code>gpbackup</code> uses the most recent backup with a consistent set of options. The utility checks the backup history file to find the backup with a consistent set of options. If the utility cannot find a backup with a consistent set of options or the history file does not exist, <code>gpbackup</code> displays a message stating that a full backup must be created before an incremental can be created.</p>
+<p>If you specify the <code>--from-timestamp</code> option when you create an incremental backup, <code>gpbackup</code> ensures that the options of the backup that is being created are consistent with the options of the specified backup.</p>
+<p>The <code>gpbackup</code> option <code>--with-stats</code> is not required to be the same for all backups in the backup set. However, to perform a restore operation with the <code>gprestore</code> option <code>--with-stats</code> to restore statistics, the backup you specify must have must have used the <code>--with-stats</code> when creating the backup.</p>
+<p>You can perform a restore operation from any backup in the backup set. However, changes captured in incremental backups later than the backup use to restore database data will not be restored.</p>
+<p>When restoring from an incremental backup set, <code>gprestore</code> checks the backups and restores each append-optimized table from the most recent version of the append-optimized table in the backup set and restores the heap tables from the latest backup.</p>
+<p>The incremental back up set, a full backup and associated incremental backups, must be on a single device. For example, the backups in a backup set must all be on a file system or must all be on a Data Domain system.</p>
+<p>If you specify the <code>gprestore</code> option <code>--incremental</code> to restore data from a specific incremental backup, you must also specify the <code>--data-only</code> option. Before performing the restore operation, <code>gprestore</code> ensures that the tables being restored exist. If a table does not exist, <code>gprestore</code> returns an error and exits.</p>
+<p><strong>Warning:</strong> Changes to the SynxDB segment configuration invalidate incremental backups. After you change the segment configuration (add or remove segment instances), you must create a full backup before you can create an incremental backup.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/managing/backup-gpbackup.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/managing/backup-plugins.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/managing/backup-gpbackup.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/managing/backup-plugins.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

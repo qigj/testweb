@@ -1,0 +1,325 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Use Aggregation Pushdown to Speed Up Query Execution &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Use Aggregation Pushdown to Speed Up Query Execution</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="use-aggregation-pushdown-to-speed-up-query-execution">
+<h1>Use Aggregation Pushdown to Speed Up Query Execution<a class="headerlink" href="#use-aggregation-pushdown-to-speed-up-query-execution" title="Link to this heading"></a></h1>
+<p>Aggregation pushdown is an optimization technique that moves the aggregation operation closer to the data source. SynxDB Elastic supports pushing down aggregation operations, which means that the
+aggregation operator is processed before the join operator.</p>
+<p>In <a class="reference external" href="#applicable-scenarios">applicable scenarios</a>, aggregation pushdown can greatly reduce the size of the input set for join or aggregation operators, thereby enhancing their performance.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>In the native PostgreSQL kernel’s optimization logic, aggregation operations in each query are always performed after all join operations have been completed (excluding subqueries). Therefore, SynxDB Elastic introduces aggregation pushdown, permitting the early execution of aggregation operations in applicable scenarios.</p></li>
+<li><p>To determine whether the optimizer’s chosen execution plan applies the aggregation pushdown optimization, check the position relationship between aggregation and join in the execution plan tree. If a plan first executes <code class="docutils literal notranslate"><span class="pre">Partial</span> <span class="pre">Aggregation</span></code>, then performs <code class="docutils literal notranslate"><span class="pre">Join</span></code>, and finally performs <code class="docutils literal notranslate"><span class="pre">Final</span> <span class="pre">Aggregation</span></code>, it indicates that the optimizer has applied aggregation pushdown.</p></li>
+</ul>
+</div>
+<section id="usage-example">
+<h2>Usage example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
+<p>Before using this aggregation pushdown optimization, you need to manually enable the GUC parameter <code class="docutils literal notranslate"><span class="pre">gp_enable_agg_pushdown</span></code>.</p>
+<p>In addition, you need to manually set <code class="docutils literal notranslate"><span class="pre">optimizer=off</span></code> to disable the GPORCA optimizer, because this optimization currently only works in the PostgreSQL optimizer.</p>
+<p>The following is an example of using aggregation pushdown optimization.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Creates tables t1 and t2.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">t1</span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">val1</span><span class="w"> </span><span class="nb">INT</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">t2</span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">val2</span><span class="w"> </span><span class="nb">INT</span><span class="p">);</span>
+
+<span class="k">SET</span><span class="w"> </span><span class="n">OPTIMIZER</span><span class="o">=</span><span class="k">OFF</span><span class="p">;</span><span class="w"> </span><span class="c1">-- Disables the GPORCA optimizer.</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">gp_enable_agg_pushdown</span><span class="o">=</span><span class="k">ON</span><span class="p">;</span><span class="w"> </span><span class="c1">-- Enables the GUC parameter.</span>
+
+<span class="c1">-- Executes a query with aggregation and join operations.</span>
+<span class="k">EXPLAIN</span><span class="w"> </span><span class="p">(</span><span class="n">COSTS</span><span class="w"> </span><span class="k">OFF</span><span class="p">)</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">val1</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="k">NATURAL</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">                     </span><span class="n">QUERY</span><span class="w"> </span><span class="n">PLAN</span>
+<span class="c1">-----------------------------------------------------</span>
+<span class="w"> </span><span class="n">Gather</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span><span class="w">  </span><span class="p">(</span><span class="n">slice1</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Finalize</span><span class="w"> </span><span class="n">GroupAggregate</span>
+<span class="w">         </span><span class="k">Group</span><span class="w"> </span><span class="k">Key</span><span class="p">:</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="n">id</span>
+<span class="w">         </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Sort</span>
+<span class="w">               </span><span class="n">Sort</span><span class="w"> </span><span class="k">Key</span><span class="p">:</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="n">id</span>
+<span class="w">               </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Hash</span><span class="w"> </span><span class="k">Join</span>
+<span class="w">                     </span><span class="n">Hash</span><span class="w"> </span><span class="n">Cond</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">t2</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
+<span class="w">                     </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">t2</span>
+<span class="w">                     </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Hash</span>
+<span class="w">                           </span><span class="o">-&gt;</span><span class="w">  </span><span class="k">Partial</span><span class="w"> </span><span class="n">HashAggregate</span>
+<span class="w">                                 </span><span class="k">Group</span><span class="w"> </span><span class="k">Key</span><span class="p">:</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="n">id</span>
+<span class="w">                                 </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">t1</span>
+<span class="n">Optimizer</span><span class="p">:</span><span class="w"> </span><span class="n">Postgres</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="n">optimizer</span>
+<span class="p">(</span><span class="mi">13</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>From the execution plan result of the above example, you can see that before performing the HashJoin operation, SynxDB Elastic first performs an aggregation operation on table <code class="docutils literal notranslate"><span class="pre">t1</span></code> based on the <code class="docutils literal notranslate"><span class="pre">id</span></code> column. This aggregation operation does not compromise the correctness of the statement’s results and is likely to reduce the amount of data entering the HashJoin, thereby improving the efficiency of the statement execution.</p>
+</section>
+<section id="applicable-scenarios">
+<h2>Applicable scenarios<a class="headerlink" href="#applicable-scenarios" title="Link to this heading"></a></h2>
+<p>Using aggregation pushdown in the following scenarios is expected to get obvious query performance improvements.</p>
+<section id="applicable-scenario-1">
+<h3>Applicable scenario 1<a class="headerlink" href="#applicable-scenario-1" title="Link to this heading"></a></h3>
+<p>A table where each record of data corresponds to multiple records of data in another table, requiring the two tables to be joined for group aggregation.</p>
+<p>For example, to sum the prices of items in each order from the order table (<code class="docutils literal notranslate"><span class="pre">order_tbl</span></code>) and the order line table (<code class="docutils literal notranslate"><span class="pre">order_line_tbl</span></code>), which means to calculate the total amount of each order <code class="docutils literal notranslate"><span class="pre">SUM(price)</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">price</span><span class="p">)</span>
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="n">order_tbl</span><span class="w"> </span><span class="n">o</span><span class="p">,</span><span class="w"> </span><span class="n">order_line_tbl</span><span class="w"> </span><span class="n">ol</span>
+<span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ol</span><span class="p">.</span><span class="n">order_id</span>
+<span class="w">  </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Execution method in the native PostgreSQL optimizer: PostgreSQL’s native optimizer can perform aggregation only after joining tables. Because every item in <code class="docutils literal notranslate"><span class="pre">order_line_tbl</span></code> corresponds to an order in <code class="docutils literal notranslate"><span class="pre">order_tbl</span></code>, the Join operator will not filter out any data.</p></li>
+<li><p>Execution method in SynxDB Elastic: assuming that each order contains an average of 10 items, the volume of data is expected to decrease tenfold after aggregation. With aggregation pushdown enabled, the database first aggregates data in <code class="docutils literal notranslate"><span class="pre">order_line_tbl</span></code> based on <code class="docutils literal notranslate"><span class="pre">order_id</span></code>, reducing the volume of data entering the Join operator by tenfold, significantly reducing the cost of the Join operator. The corresponding execution plan is as follows:</p></li>
+</ul>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">EXPLAIN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">price</span><span class="p">)</span>
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="n">order_tbl</span><span class="w"> </span><span class="n">o</span><span class="p">,</span><span class="w"> </span><span class="n">order_line_tbl</span><span class="w"> </span><span class="n">ol</span>
+<span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ol</span><span class="p">.</span><span class="n">order_id</span>
+<span class="w">  </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="p">;</span>
+<span class="w">                                          </span><span class="n">QUERY</span><span class="w"> </span><span class="n">PLAN</span>
+<span class="c1">-----------------------------------------------------------------------------------------------</span>
+<span class="w"> </span><span class="n">Gather</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span><span class="w">  </span><span class="p">(</span><span class="n">slice1</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">712</span><span class="p">.</span><span class="mi">89</span><span class="p">..</span><span class="mi">879</span><span class="p">.</span><span class="mi">56</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">10000</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Finalize</span><span class="w"> </span><span class="n">HashAggregate</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">712</span><span class="p">.</span><span class="mi">89</span><span class="p">..</span><span class="mi">746</span><span class="p">.</span><span class="mi">23</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">3333</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="w">         </span><span class="k">Group</span><span class="w"> </span><span class="k">Key</span><span class="p">:</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span>
+<span class="w">         </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Hash</span><span class="w"> </span><span class="k">Join</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">617</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">696</span><span class="p">.</span><span class="mi">23</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">3333</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="w">               </span><span class="n">Hash</span><span class="w"> </span><span class="n">Cond</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">ol</span><span class="p">.</span><span class="n">order_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="p">)</span>
+<span class="w">               </span><span class="o">-&gt;</span><span class="w">  </span><span class="k">Partial</span><span class="w"> </span><span class="n">HashAggregate</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">538</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">571</span><span class="p">.</span><span class="mi">38</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">3338</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="w">                     </span><span class="k">Group</span><span class="w"> </span><span class="k">Key</span><span class="p">:</span><span class="w"> </span><span class="n">ol</span><span class="p">.</span><span class="n">order_id</span>
+<span class="w">                     </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">order_line_tbl</span><span class="w"> </span><span class="n">ol</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">371</span><span class="p">.</span><span class="mi">33</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">33333</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="w">               </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Hash</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">37</span><span class="p">.</span><span class="mi">33</span><span class="p">..</span><span class="mi">37</span><span class="p">.</span><span class="mi">33</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">3333</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">                     </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">order_tbl</span><span class="w"> </span><span class="n">o</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">37</span><span class="p">.</span><span class="mi">33</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">3333</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="w"> </span><span class="n">Optimizer</span><span class="p">:</span><span class="w"> </span><span class="n">Postgres</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="n">optimizer</span>
+</pre></div>
+</div>
+<p>Similar scenario includes: joining the project table (<code class="docutils literal notranslate"><span class="pre">project</span></code>) and the experiment table (<code class="docutils literal notranslate"><span class="pre">experiment</span></code>), and calculating the total experiment cost in the past year for each <code class="docutils literal notranslate"><span class="pre">project</span></code>. The corresponding reference SQL statement is as follows:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">proj_name</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">experiment</span><span class="w"> </span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">project</span><span class="w"> </span><span class="n">p</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">e_pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">p_pid</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">start_time</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">interval</span><span class="w"> </span><span class="s1">&#39;1 year&#39;</span>
+<span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">proj_name</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>For this query, with aggregation pushdown enabled, SynxDB Elastic performs pre-aggregation on the experiment table based on the <code class="docutils literal notranslate"><span class="pre">e_pid</span></code> column, aggregating information of the same project together.</p>
+<p>However, if this query also applies many filters on the project table, this might cause a high selectivity rate for join, leading to inefficient execution. Therefore, aggregation pushdown might not be suitable in such cases.</p>
+</section>
+<section id="applicable-scenario-2">
+<h3>Applicable scenario 2<a class="headerlink" href="#applicable-scenario-2" title="Link to this heading"></a></h3>
+<p>In a query statement, the Join operator greatly increases the result set size, requiring grouped calculations.</p>
+<p>For example, joining the <code class="docutils literal notranslate"><span class="pre">person_1</span></code> table with the <code class="docutils literal notranslate"><span class="pre">person_2</span></code> table to find out how many unique pairs can be formed for each name that appears in both tables. The SQL query is as follows:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person_1</span><span class="w"> </span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">person_2</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In this example, if a <code class="docutils literal notranslate"><span class="pre">name</span></code> appears X times in the <code class="docutils literal notranslate"><span class="pre">p1</span></code> table and Y times in the <code class="docutils literal notranslate"><span class="pre">p2</span></code> table, then this name will appear X*Y times in the final result. If a large amount of data is in this scenario, the result set after the join might become very large.</p>
+<p>In the above example, if the aggregation operation is pushed down in advance to either the <code class="docutils literal notranslate"><span class="pre">p1</span></code> or <code class="docutils literal notranslate"><span class="pre">p2</span></code> side, then each name will appear at most once after aggregation on that side. This effectively reduces the workload of the Join operator and the size of the input set for the subsequent aggregation operator. The corresponding execution plan is as follows:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">EXPLAIN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person_1</span><span class="w"> </span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">person_2</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+<span class="w">                                       </span><span class="n">QUERY</span><span class="w"> </span><span class="n">PLAN</span>
+<span class="c1">-----------------------------------------------------------------------------------------</span>
+<span class="w"> </span><span class="n">Gather</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span><span class="w">  </span><span class="p">(</span><span class="n">slice1</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">1758</span><span class="p">.</span><span class="mi">62</span><span class="p">..</span><span class="mi">1925</span><span class="p">.</span><span class="mi">23</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">9997</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Finalize</span><span class="w"> </span><span class="n">HashAggregate</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">1758</span><span class="p">.</span><span class="mi">62</span><span class="p">..</span><span class="mi">1791</span><span class="p">.</span><span class="mi">94</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">3332</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="w">         </span><span class="k">Group</span><span class="w"> </span><span class="k">Key</span><span class="p">:</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">name</span>
+<span class="w">         </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Hash</span><span class="w"> </span><span class="k">Join</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">762</span><span class="p">.</span><span class="mi">93</span><span class="p">..</span><span class="mi">1592</span><span class="p">.</span><span class="mi">17</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">33290</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="w">               </span><span class="n">Hash</span><span class="w"> </span><span class="n">Cond</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">p2</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+<span class="w">               </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">p2</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">371</span><span class="p">.</span><span class="mi">33</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">33333</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">               </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Hash</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">637</span><span class="p">.</span><span class="mi">97</span><span class="p">..</span><span class="mi">637</span><span class="p">.</span><span class="mi">97</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">9997</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="w">                     </span><span class="o">-&gt;</span><span class="w">  </span><span class="k">Partial</span><span class="w"> </span><span class="n">HashAggregate</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">538</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">637</span><span class="p">.</span><span class="mi">97</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">9997</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="w">                           </span><span class="k">Group</span><span class="w"> </span><span class="k">Key</span><span class="p">:</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">name</span>
+<span class="w">                           </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">p1</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">371</span><span class="p">.</span><span class="mi">33</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">33333</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="w"> </span><span class="n">Optimizer</span><span class="p">:</span><span class="w"> </span><span class="n">Postgres</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="n">optimizer</span>
+<span class="p">(</span><span class="mi">11</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="unsuitable-scenarios">
+<h2>Unsuitable scenarios<a class="headerlink" href="#unsuitable-scenarios" title="Link to this heading"></a></h2>
+<p>In the following scenarios, aggregation pushdown is unlikely to bring performance improvement. It is not recommended to enable aggregation pushdown in these scenarios.</p>
+<section id="unsuitable-scenario-1">
+<h3>Unsuitable scenario 1<a class="headerlink" href="#unsuitable-scenario-1" title="Link to this heading"></a></h3>
+<p>The data volume does not change much after aggregation.</p>
+<p>Contrary to the <a class="reference external" href="#applicable-scenario-1">applicable scenario 1</a> and <a class="reference external" href="#applicable-scenario-2">applicable scenario 2</a>, if aggregation in advance does not greatly change the data volume and cannot reduce the size of the input set for subsequent computing, then it is recommended first to execute the Join operator to avoid unnecessary overhead.</p>
+</section>
+<section id="unsuitable-scenario-2">
+<h3>Unsuitable scenario 2<a class="headerlink" href="#unsuitable-scenario-2" title="Link to this heading"></a></h3>
+<p>If the join key is different from the grouping key, pushing down aggregation will change the grouping key used after the pushdown. In such cases, aggregation pushdown that rewrites the grouping key cannot reduce the data volume, causing poor performance of the pushed-down aggregation:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t1</span><span class="p">,</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t2</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>For the above query examples, directly pushing down the aggregation to the <code class="docutils literal notranslate"><span class="pre">t1</span></code> side will cause incorrect results, with details similar to the limitations in <a class="reference external" href="#unsuitable-scenario-1">unsuitable scenario 1</a>. To ensure the accuracy of the results, the equivalent grouping key for the actual pushed-down aggregation becomes <code class="docutils literal notranslate"><span class="pre">GROUP</span> <span class="pre">BY</span> <span class="pre">t1.key,</span> <span class="pre">t1.value</span></code>.</p>
+<p>In this case, if the key and value in the <code class="docutils literal notranslate"><span class="pre">t1</span></code> table are completely unrelated, each group might only contain a single tuple, so this aggregation pushdown will not have any positive effect. However, if the key and value are strongly correlated, or the same key always corresponds to the same value, then the grouping effect is not affected.</p>
+<p>In the example above, the original grouping by <code class="docutils literal notranslate"><span class="pre">t1.value</span></code> is obvious. But after the aggregation pushdown, the grouping key changes to <code class="docutils literal notranslate"><span class="pre">t1.key,</span> <span class="pre">t1.value</span></code>, and if the correlation between key and value is weak, it makes the grouping in the aggregation less effective.</p>
+</section>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading"></a></h2>
+<p>This section describes some limitations of the aggregation pushdown feature, including situations where this optimization cannot logically be applied and cases where it is not yet supported in engineering implementation.</p>
+<section id="limitation-1">
+<h3>Limitation 1<a class="headerlink" href="#limitation-1" title="Link to this heading"></a></h3>
+<p>Aggregation pushdown cannot be applied when filtering is performed on columns other than those in the <code class="docutils literal notranslate"><span class="pre">GROUP</span> <span class="pre">BY</span></code> clause during the join and subsequent computing processes. Consider the following SQL query:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t1</span><span class="p">,</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t2</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="n">val</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">t2</span><span class="p">.</span><span class="n">val</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In the above example, assume two tuples A and B from table <code class="docutils literal notranslate"><span class="pre">t1</span></code>, both with the <code class="docutils literal notranslate"><span class="pre">id</span></code> value <code class="docutils literal notranslate"><span class="pre">100</span></code>, and a tuple C from table <code class="docutils literal notranslate"><span class="pre">t2</span></code>, also with the <code class="docutils literal notranslate"><span class="pre">id</span></code> value <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p>
+<p>During the join process of AB and C, although A and B have the same <code class="docutils literal notranslate"><span class="pre">id</span></code> values, it is not guaranteed that they will both pass or fail the filtering condition <code class="docutils literal notranslate"><span class="pre">AB.val</span> <span class="pre">&gt;</span> <span class="pre">C.val</span></code>. In this case, pre-aggregating the sum of <code class="docutils literal notranslate"><span class="pre">val</span></code> based on <code class="docutils literal notranslate"><span class="pre">id</span></code> will inevitably combine the <code class="docutils literal notranslate"><span class="pre">val</span></code> s of A and B. However, they might not both pass or fail the filtering condition, causing incorrect results.</p>
+<p>In contrast, the following query example is similar but suitable for aggregation pushdown:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t1</span><span class="p">,</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t2</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">t2</span><span class="p">.</span><span class="n">id_thre</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This example also considers the same ABC tuples as the previous example. Because the additional filtering condition only uses the <code class="docutils literal notranslate"><span class="pre">id</span></code> column from <code class="docutils literal notranslate"><span class="pre">t1</span></code>, the two tuples AB with the same <code class="docutils literal notranslate"><span class="pre">id</span></code> and the given tuple C will either all pass or all fail the filtering together. Therefore, it is possible to aggregate the sum of <code class="docutils literal notranslate"><span class="pre">val</span></code> s of the AB tuples in advance.</p>
+</section>
+<section id="limitation-2">
+<h3>Limitation 2<a class="headerlink" href="#limitation-2" title="Link to this heading"></a></h3>
+<p>Aggregation pushdown on both sides of a Join is not supported. Consider the following SQL query:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t1</span><span class="p">,</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t2</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>You can rewrite the statement to get an equivalent alternative statement:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">sum1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">cnt2</span><span class="w"> </span><span class="k">FROM</span>
+<span class="w">    </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="n">AT1</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">sum1</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="n">AT2</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">cnt2</span><span class="p">)</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">AT1</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AT2</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In this example, the aggregation operation is pushed down to both sides of the join. For all tuples in the <code class="docutils literal notranslate"><span class="pre">t1</span></code> table with <code class="docutils literal notranslate"><span class="pre">id</span></code> 100, SynxDB Elastic pre-aggregates their <code class="docutils literal notranslate"><span class="pre">val</span></code> s, resulting in a corresponding <code class="docutils literal notranslate"><span class="pre">sum1</span></code>.</p>
+<p>During the actual join process, for each tuple in the <code class="docutils literal notranslate"><span class="pre">t2</span></code> table with <code class="docutils literal notranslate"><span class="pre">id</span></code> 100, a join is performed with the tuple belonging to <code class="docutils literal notranslate"><span class="pre">sum1</span></code>, resulting in the corresponding tuples. This means that for each <code class="docutils literal notranslate"><span class="pre">id</span></code> 100 in <code class="docutils literal notranslate"><span class="pre">t2</span></code>, <code class="docutils literal notranslate"><span class="pre">sum1</span></code> will appear once in the final sum, allowing SynxDB Elastic to pre-aggregate <code class="docutils literal notranslate"><span class="pre">t2</span></code>, calculating the total number of tuples with <code class="docutils literal notranslate"><span class="pre">id</span></code> 100 as <code class="docutils literal notranslate"><span class="pre">cnt2</span></code>. The final result can then be calculated through <code class="docutils literal notranslate"><span class="pre">sum1</span> <span class="pre">*</span> <span class="pre">cnt2</span></code>.</p>
+<p>This scenario involves relatively complex statement and expression rewriting, and is currently not supported in SynxDB Elastic.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

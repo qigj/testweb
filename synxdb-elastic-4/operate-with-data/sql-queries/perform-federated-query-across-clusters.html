@@ -1,0 +1,449 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cross-Cluster Federated Query &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Advanced Data Analytics" href="../advanced-data-analytics/advanced-data-analytics-index.html" />
+    <link rel="prev" title="Table Join Queries" href="join-queries.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../operate-with-data-index.html">Operate with Data</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../operate-with-db-objects/operate-with-db-objects-index.html">Operate with Database Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../choose-table-storage-models/choose-table-storage-models-index.html">Choose Table Storage Model</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="sql-queries-index.html">Perform SQL Queries</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="join-queries.html">Table Join Queries</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Cross-Cluster Federated Query</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#user-scenarios">User scenarios</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usages">Usages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced-data-analytics/advanced-data-analytics-index.html">Advanced Data Analytics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../work-with-transactions.html">Work with Transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transaction-concurrency-control.html">Control Transactional Concurrency</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../operate-with-data-index.html">Operate with Data</a></li>
+          <li class="breadcrumb-item"><a href="sql-queries-index.html">Perform SQL Queries</a></li>
+      <li class="breadcrumb-item active">Cross-Cluster Federated Query</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cross-cluster-federated-query">
+<h1>Cross-Cluster Federated Query<a class="headerlink" href="#cross-cluster-federated-query" title="Link to this heading"></a></h1>
+<p>SynxDB Elastic has supported cross-cluster federated queries, allowing you to query data across multiple PostgreSQL database clusters. This feature enables cross-cluster data pushdown, allowing queries to be executed locally in multiple clusters, and then the results are aggregated. The pushdown capability effectively reduces data transfer and improves query performance and processing efficiency.</p>
+<p>This feature is implemented through the MPP foreign data wrapper <code class="docutils literal notranslate"><span class="pre">postgres_fdw</span></code>, which allows remote PostgreSQL databases to be treated as shards in SynxDB Elastic, enabling data sharing and federated queries across homogenous systems. Each remote PostgreSQL table can be viewed as an external table, and multiple remote tables can be added to SynxDB Elastic for operations. In this way, you can access and query data from other clusters within one cluster without complex data import or migration operations. This provides great convenience for scenarios that involve handling similar data across multiple clusters.</p>
+<section id="user-scenarios">
+<h2>User scenarios<a class="headerlink" href="#user-scenarios" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Data integration and analysis</strong>: In some companies, data is often spread across multiple database clusters of the same type. This feature helps companies integrate data across clusters for unified analysis and processing. The ability to perform cross-cluster federated queries allows businesses to quickly merge data from different units and generate unified reports and analysis results. This integration reduces the complexity of manual data importing and processing, while improving the real-time aspect of data analysis.</p></li>
+<li><p><strong>Simplified data management</strong>: The cross-cluster query feature reduces the need for duplicating data across databases, enabling data in each cluster to be directly involved in queries, avoiding the maintenance of redundant data. By treating remote databases as external shards, you can easily manage and access these shards without worrying about data synchronization. At the same time, this also reduces the potential risks and maintenance costs associated with cross-cluster data synchronization.</p></li>
+<li><p><strong>Efficient distributed querying</strong>: By pushing down queries to reduce network traffic and bottlenecks caused by centralized processing, this feature is especially suited for large-scale distributed data analyses. When handling big data, distributed querying can significantly reduce the computing and communication load, enhancing the system’s overall processing capacity. Especially when performing complex analytical calculations across multiple clusters, pushdown queries effectively utilize the computing resources of each cluster, improving processing efficiency.</p></li>
+</ul>
+</section>
+<section id="usages">
+<h2>Usages<a class="headerlink" href="#usages" title="Link to this heading"></a></h2>
+<p>This section explains how to perform cross-cluster federated queries using the <code class="docutils literal notranslate"><span class="pre">postgres_fdw</span></code> extension.</p>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Ensure that all clusters involved in the federated query can communicate with each other. This includes network connectivity and secure access configurations to make sure data can be transmitted smoothly between the clusters without restrictions.</p></li>
+</ul>
+</section>
+<section id="step-1-create-a-foreign-data-wrapper">
+<h3>Step 1. Create a foreign data wrapper<a class="headerlink" href="#step-1-create-a-foreign-data-wrapper" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Load the <code class="docutils literal notranslate"><span class="pre">postgres_fdw</span></code> foreign data wrapper in SynxDB Elastic.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="n">postgres_fdw</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a remote server object, for example, <code class="docutils literal notranslate"><span class="pre">testserver</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">testserver</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">postgres_fdw</span><span class="w"> </span><span class="p">(</span><span class="k">host</span><span class="w"> </span><span class="s1">&#39;&lt;remote_server_IP&gt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">dbname</span><span class="w"> </span><span class="s1">&#39;&lt;remote_database_name&gt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="s1">&#39;&lt;remote_port_number&gt;&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>You can create multiple server objects as needed, for example, creating <code class="docutils literal notranslate"><span class="pre">mpps1</span></code>, <code class="docutils literal notranslate"><span class="pre">mpps2</span></code>, and <code class="docutils literal notranslate"><span class="pre">mpps3</span></code> for the remote databases <code class="docutils literal notranslate"><span class="pre">fdw1</span></code>, <code class="docutils literal notranslate"><span class="pre">fdw2</span></code>, and <code class="docutils literal notranslate"><span class="pre">fdw3</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">mpps1</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">postgres_fdw</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">host</span><span class="w"> </span><span class="s1">&#39;xxx.xxx.xxx.xxx&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">dbname</span><span class="w"> </span><span class="s1">&#39;fdw1&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="s1">&#39;7000&#39;</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">mpps2</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">postgres_fdw</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">host</span><span class="w"> </span><span class="s1">&#39;xxx.xxx.xxx.xxx&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">dbname</span><span class="w"> </span><span class="s1">&#39;fdw2&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="s1">&#39;7000&#39;</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">mpps3</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">postgres_fdw</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">host</span><span class="w"> </span><span class="s1">&#39;xxx.xxx.xxx.xxx&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">dbname</span><span class="w"> </span><span class="s1">&#39;fdw3&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="s1">&#39;7000&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>These commands allow you to define different server objects for different remote databases, making it easier to create external tables and perform queries later.</p>
+</li>
+</ol>
+</section>
+<section id="step-2-create-a-user-mapping">
+<h3>Step 2. Create a user mapping<a class="headerlink" href="#step-2-create-a-user-mapping" title="Link to this heading"></a></h3>
+<p>Create a user mapping for each server. You need to fill in the actual database username and password in the <code class="docutils literal notranslate"><span class="pre">OPTIONS</span></code> section.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">CURRENT_USER</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">mpps1</span><span class="w"> </span><span class="k">OPTIONS</span><span class="p">(</span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;postgres&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="s1">&#39;xxx&#39;</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">CURRENT_USER</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">mpps2</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;postgres&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="s1">&#39;xxx&#39;</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">CURRENT_USER</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">mpps3</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;postgres&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="s1">&#39;xxx&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>User mapping links the current database user with the remote database user, allowing access to remote data when running queries. Depending on your needs, you can also specify different access permissions for each server.</p>
+</section>
+<section id="step-3-create-a-foreign-table-and-add-shards">
+<h3>Step 3. Create a foreign table and add shards<a class="headerlink" href="#step-3-create-a-foreign-table-and-add-shards" title="Link to this heading"></a></h3>
+<p>Create a foreign table <code class="docutils literal notranslate"><span class="pre">fs1</span></code>, and add the table <code class="docutils literal notranslate"><span class="pre">t1</span></code> from the remote server <code class="docutils literal notranslate"><span class="pre">mpps1</span></code> as a foreign shard:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">fs1</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+<span class="w">    </span><span class="n">b</span><span class="w"> </span><span class="nb">text</span>
+<span class="p">)</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">mpps1</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">schema_name</span><span class="w"> </span><span class="s1">&#39;public&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="s1">&#39;t1&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">mpp_execute</span><span class="w"> </span><span class="s1">&#39;all segments&#39;</span><span class="p">);</span>
+
+<span class="k">ADD</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="n">SEGMENT</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">mpps1</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">fs1</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>With these commands, you can add one or more tables from remote databases as foreign shards to an external table. The data from these shards automatically participates in queries. This allows you to access and manage remote shard data just like you would with local tables.</p>
+</section>
+<section id="step-4-perform-cross-cluster-federated-query">
+<h3>Step 4. Perform Cross-Cluster Federated Query<a class="headerlink" href="#step-4-perform-cross-cluster-federated-query" title="Link to this heading"></a></h3>
+<section id="single-table-query">
+<h4>Single table query<a class="headerlink" href="#single-table-query" title="Link to this heading"></a></h4>
+<p>For single table queries, you can directly query the foreign table <code class="docutils literal notranslate"><span class="pre">fs1</span></code>. The database system distributes the query to the remote cluster for execution.</p>
+<ol class="arabic">
+<li><p>Check the query plan.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">EXPLAIN</span><span class="w"> </span><span class="p">(</span><span class="n">COSTS</span><span class="w"> </span><span class="k">OFF</span><span class="p">)</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fs1</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The execution plan shows <code class="docutils literal notranslate"><span class="pre">Foreign</span> <span class="pre">Scan</span> <span class="pre">on</span> <span class="pre">fs1</span></code>, which indicates that the query operation has been distributed to the remote server for execution.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>          <span class="n">QUERY</span> <span class="n">PLAN</span>
+<span class="o">---</span>
+<span class="n">Gather</span> <span class="n">Motion</span> <span class="mi">1</span><span class="p">:</span><span class="mi">1</span>  <span class="p">(</span><span class="n">slice1</span><span class="p">;</span> <span class="n">segments</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+   <span class="o">-&gt;</span>  <span class="n">Foreign</span> <span class="n">Scan</span> <span class="n">on</span> <span class="n">fs1</span>
+<span class="n">Optimizer</span><span class="p">:</span> <span class="n">Postgres</span> <span class="n">query</span> <span class="n">optimizer</span>
+<span class="p">(</span><span class="mi">3</span> <span class="n">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Run the query.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fs1</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The returned data is from the remote table <code class="docutils literal notranslate"><span class="pre">t1</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="n">b</span>
+<span class="c1">---+------</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw1</span>
+<span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="k">row</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>From the output, you can see that the data is only from the <code class="docutils literal notranslate"><span class="pre">mpps1</span></code> server.</p>
+</li>
+<li><p>Add other remote servers as shards.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ADD</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="n">SEGMENT</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">mpps2</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">fs1</span><span class="p">;</span>
+<span class="k">ADD</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="n">SEGMENT</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">mpps3</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">fs1</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Check the query plan again.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">EXPLAIN</span><span class="w"> </span><span class="p">(</span><span class="n">COSTS</span><span class="w"> </span><span class="k">OFF</span><span class="p">)</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fs1</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="w">            </span><span class="n">QUERY</span><span class="w"> </span><span class="n">PLAN</span>
+<span class="c1">---</span>
+<span class="n">Gather</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span><span class="w">  </span><span class="p">(</span><span class="n">slice1</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w">  </span><span class="k">Foreign</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">fs1</span>
+<span class="n">Optimizer</span><span class="p">:</span><span class="w"> </span><span class="n">Postgres</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="n">optimizer</span>
+<span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Run the query again.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fs1</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Returned result:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="n">b</span>
+<span class="c1">---+------</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw2</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw1</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw3</span>
+<span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The result shows that the newly added shards <code class="docutils literal notranslate"><span class="pre">mpps2</span></code> and <code class="docutils literal notranslate"><span class="pre">mpps3</span></code> have successfully participated in the query.</p>
+</li>
+</ol>
+</section>
+<section id="multi-table-join">
+<h4>Multi-table join<a class="headerlink" href="#multi-table-join" title="Link to this heading"></a></h4>
+<p>For multi-table join operations, the optimizer automatically generates an appropriate execution plan based on the number of segments in the tables.</p>
+<ol class="arabic">
+<li><p>Create the foreign table <code class="docutils literal notranslate"><span class="pre">fs2</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">fs2</span><span class="w"> </span><span class="p">(</span>
+<span class="w">   </span><span class="n">a</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+<span class="w">   </span><span class="n">b</span><span class="w"> </span><span class="nb">text</span>
+<span class="w">   </span><span class="p">)</span>
+<span class="n">SERVER</span><span class="w"> </span><span class="n">mpps1</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">schema_name</span><span class="w"> </span><span class="s1">&#39;public&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="s1">&#39;t2&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">mpp_execute</span><span class="w"> </span><span class="s1">&#39;all segments&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Add segments.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ADD</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="n">SEGMENT</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">mpps1</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">fs2</span><span class="p">;</span>
+<span class="k">ADD</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="n">SEGMENT</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">mpps2</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">fs2</span><span class="p">;</span>
+<span class="k">ADD</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="n">SEGMENT</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">mpps3</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">fs2</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Execute the join query between the two tables.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">EXPLAIN</span><span class="w"> </span><span class="p">(</span><span class="n">COSTS</span><span class="w"> </span><span class="k">OFF</span><span class="p">)</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fs1</span><span class="p">,</span><span class="w"> </span><span class="n">fs2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">fs1</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs2</span><span class="p">.</span><span class="n">a</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The query plan shows that the optimizer has chosen <code class="docutils literal notranslate"><span class="pre">Hash</span> <span class="pre">Join</span></code>, and the data from both tables is redistributed based on key values, allowing the join operation to be performed across different nodes.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="w">                        </span><span class="n">QUERY</span><span class="w"> </span><span class="n">PLAN</span>
+<span class="c1">---</span>
+<span class="n">Gather</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span><span class="w">  </span><span class="p">(</span><span class="n">slice1</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Hash</span><span class="w"> </span><span class="k">Join</span>
+<span class="w">         </span><span class="n">Hash</span><span class="w"> </span><span class="n">Cond</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">fs1</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs2</span><span class="p">.</span><span class="n">a</span><span class="p">)</span>
+<span class="w">         </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Redistribute</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="mi">3</span><span class="w">  </span><span class="p">(</span><span class="n">slice2</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">               </span><span class="n">Hash</span><span class="w"> </span><span class="k">Key</span><span class="p">:</span><span class="w"> </span><span class="n">fs1</span><span class="p">.</span><span class="n">a</span>
+<span class="w">               </span><span class="o">-&gt;</span><span class="w">  </span><span class="k">Foreign</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">fs1</span>
+<span class="w">         </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Hash</span>
+<span class="w">               </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Redistribute</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="mi">3</span><span class="w">  </span><span class="p">(</span><span class="n">slice3</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">                     </span><span class="n">Hash</span><span class="w"> </span><span class="k">Key</span><span class="p">:</span><span class="w"> </span><span class="n">fs2</span><span class="p">.</span><span class="n">a</span>
+<span class="w">                     </span><span class="o">-&gt;</span><span class="w">  </span><span class="k">Foreign</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">fs2</span>
+<span class="n">Optimizer</span><span class="p">:</span><span class="w"> </span><span class="n">Postgres</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="n">optimizer</span>
+<span class="p">(</span><span class="mi">11</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Run the actual join query.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fs1</span><span class="p">,</span><span class="w"> </span><span class="n">fs2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">fs1</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs2</span><span class="p">.</span><span class="n">a</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="n">b</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="n">b</span>
+<span class="c1">---+------+---+------</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw2</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw1</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw3</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw2</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw2</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw2</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw1</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw2</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw3</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw3</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw2</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw3</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw1</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw3</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw3</span>
+<span class="p">(</span><span class="mi">9</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The returned results show that all matching rows between <code class="docutils literal notranslate"><span class="pre">fs1</span></code> and <code class="docutils literal notranslate"><span class="pre">fs2</span></code> are successfully joined.</p>
+</li>
+</ol>
+</section>
+<section id="join-pushdown-with-gp-foreign-server-condition">
+<h4>Join pushdown with gp_foreign_server condition<a class="headerlink" href="#join-pushdown-with-gp-foreign-server-condition" title="Link to this heading"></a></h4>
+<p>To further optimize query performance, you can add the <code class="docutils literal notranslate"><span class="pre">gp_foreign_server</span></code> condition in the join to enable join pushdown.</p>
+<ol class="arabic">
+<li><p>Check the query plan.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">EXPLAIN</span><span class="w"> </span><span class="p">(</span><span class="n">COSTS</span><span class="w"> </span><span class="k">OFF</span><span class="p">)</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fs1</span><span class="p">,</span><span class="w"> </span><span class="n">fs2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">fs1</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs2</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">fs1</span><span class="p">.</span><span class="n">gp_foreign_server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs2</span><span class="p">.</span><span class="n">gp_foreign_server</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The query plan shows that the <code class="docutils literal notranslate"><span class="pre">Foreign</span> <span class="pre">Scan</span></code> operation has pushed the join down to the remote server, reducing the burden on local computing.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="w">            </span><span class="n">QUERY</span><span class="w"> </span><span class="n">PLAN</span>
+<span class="c1">---</span>
+<span class="n">Gather</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span><span class="w">  </span><span class="p">(</span><span class="n">slice1</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w">  </span><span class="k">Foreign</span><span class="w"> </span><span class="n">Scan</span>
+<span class="w">         </span><span class="n">Relations</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">fs1</span><span class="p">)</span><span class="w"> </span><span class="k">INNER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="p">(</span><span class="n">fs2</span><span class="p">)</span>
+<span class="n">Optimizer</span><span class="p">:</span><span class="w"> </span><span class="n">Postgres</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="n">optimizer</span>
+<span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Run the query.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fs1</span><span class="p">,</span><span class="w"> </span><span class="n">fs2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">fs1</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs2</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">fs1</span><span class="p">.</span><span class="n">gp_foreign_server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs2</span><span class="p">.</span><span class="n">gp_foreign_server</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The returned result:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="n">b</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="n">b</span>
+<span class="c1">---+------+---+------</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw3</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw3</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw1</span>
+<span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw2</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fdw2</span>
+<span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>By adding the <code class="docutils literal notranslate"><span class="pre">gp_foreign_server</span></code> condition, the query is pushed down to the remote server, making fewer matching rows and greatly improving query efficiency.</p>
+</li>
+</ol>
+</section>
+<section id="aggregate-pushdown">
+<h4>Aggregate pushdown<a class="headerlink" href="#aggregate-pushdown" title="Link to this heading"></a></h4>
+<p>Aggregate queries can be pushed down to the remote server to greatly reduce data transfer, improving query efficiency.</p>
+<ol class="arabic">
+<li><p>Run an aggregate query.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fs1</span><span class="p">,</span><span class="w"> </span><span class="n">fs2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">fs1</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs2</span><span class="p">.</span><span class="n">a</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The returned result:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">count</span>
+<span class="c1">---</span>
+<span class="w">   </span><span class="mi">9</span>
+<span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="k">row</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Check the query plan.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">EXPLAIN</span><span class="w"> </span><span class="p">(</span><span class="n">COSTS</span><span class="w"> </span><span class="k">OFF</span><span class="p">)</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fs1</span><span class="p">,</span><span class="w"> </span><span class="n">fs2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">fs1</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs2</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">fs1</span><span class="p">.</span><span class="n">gp_foreign_server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs2</span><span class="p">.</span><span class="n">gp_foreign_server</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The query plan shows that the aggregate operation has been pushed down to the remote server, reducing the aggregation load on the local node.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                        <span class="n">QUERY</span> <span class="n">PLAN</span>
+<span class="o">---</span>
+<span class="n">Finalize</span> <span class="n">Aggregate</span>
+   <span class="o">-&gt;</span>  <span class="n">Gather</span> <span class="n">Motion</span> <span class="mi">3</span><span class="p">:</span><span class="mi">1</span>  <span class="p">(</span><span class="n">slice1</span><span class="p">;</span> <span class="n">segments</span><span class="p">:</span> <span class="mi">3</span><span class="p">)</span>
+         <span class="o">-&gt;</span>  <span class="n">Foreign</span> <span class="n">Scan</span>
+               <span class="n">Relations</span><span class="p">:</span> <span class="n">Aggregate</span> <span class="n">on</span> <span class="p">((</span><span class="n">fs1</span><span class="p">)</span> <span class="n">INNER</span> <span class="n">JOIN</span> <span class="p">(</span><span class="n">fs2</span><span class="p">))</span>
+<span class="n">Optimizer</span><span class="p">:</span> <span class="n">Postgres</span> <span class="n">query</span> <span class="n">optimizer</span>
+
+<span class="p">(</span><span class="mi">5</span> <span class="n">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>By pushing the aggregation operation to the remote server, the database system can leverage the remote server’s computing power to perform part of the aggregation work, thus improving overall query performance.</p>
+</li>
+</ol>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="../advanced-data-analytics/advanced-data-analytics-index.html" class="btn btn-neutral float-right" title="Advanced Data Analytics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="join-queries.html" class="btn btn-neutral float-left" title="Table Join Queries" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

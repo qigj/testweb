@@ -1,0 +1,447 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>gpinitsystem - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gpinitsystem"><a class="header" href="#gpinitsystem">gpinitsystem</a></h1>
+<p>Initializes a SynxDB system using configuration parameters specified in the <code>gpinitsystem_config</code> file.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code>gpinitsystem -c &lt;cluster_configuration_file&gt; 
+            [-h &lt;hostfile_gpinitsystem&gt;]
+            [-B &lt;parallel_processes&gt;] 
+            [-p &lt;postgresql_conf_param_file&gt;]
+            [-s &lt;standby_master_host&gt;
+                [-P &lt;standby_master_port&gt;]
+                [-S &lt;standby_master_datadir&gt; | --standby_datadir=&lt;standby_master_datadir&gt;]]
+            [--ignore-warnings]
+            [-m &lt;number&gt; | --max_connections=number&gt;]
+            [-b &lt;size&gt; | --shared_buffers=&lt;size&gt;]
+            [-n &lt;locale&gt; | --locale=&lt;locale&gt;] [--lc-collate=&lt;locale&gt;] 
+            [--lc-ctype=&lt;locale&gt;] [--lc-messages=&lt;locale&gt;] 
+            [--lc-monetary=&lt;locale&gt;] [--lc-numeric=&lt;locale&gt;] 
+            [--lc-time=&lt;locale&gt;] [-e &lt;password&gt; | --su_password=&lt;password&gt;] 
+            [--mirror-mode={group|spread}] [-a] [-q] [-l &lt;logfile_directory&gt;] [-D]
+            [-I &lt;input_configuration_file&gt;]
+            [-O &lt;output_configuration_file&gt;]
+
+gpinitsystem -v | --version
+
+gpinitsystem -? | --help
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p>The <code>gpinitsystem</code> utility creates a SynxDB instance or writes an input configuration file using the values defined in a cluster configuration file and any command-line options that you provide. See <a href="#section5">Initialization Configuration File Format</a> for more information about the configuration file. Before running this utility, make sure that you have installed the SynxDB software on all the hosts in the array.</p>
+<p>With the <code>&lt;-O output_configuration_file&gt;</code> option, <code>gpinitsystem</code> writes all provided configuration information to the specified output file. This file can be used with the <code>-I</code> option to create a new cluster or re-create a cluster from a backed up configuration. See <a href="#section5">Initialization Configuration File Format</a> for more information.</p>
+<p>In a SynxDB DBMS, each database instance (the master instance and all segment instances) must be initialized across all of the hosts in the system in such a way that they can all work together as a unified DBMS. The <code>gpinitsystem</code> utility takes care of initializing the SynxDB master and each segment instance, and configuring the system as a whole.</p>
+<p>Before running <code>gpinitsystem</code>, you must set the <code>$GPHOME</code> environment variable to point to the location of your SynxDB installation on the master host and exchange SSH keys between all host addresses in the array using <code>gpssh-exkeys</code>.</p>
+<p>This utility performs the following tasks:</p>
+<ul>
+<li>Verifies that the parameters in the configuration file are correct.</li>
+<li>Ensures that a connection can be established to each host address. If a host address cannot be reached, the utility will exit.</li>
+<li>Verifies the locale settings.</li>
+<li>Displays the configuration that will be used and prompts the user for confirmation.</li>
+<li>Initializes the master instance.</li>
+<li>Initializes the standby master instance (if specified).</li>
+<li>Initializes the primary segment instances.</li>
+<li>Initializes the mirror segment instances (if mirroring is configured).</li>
+<li>Configures the SynxDB system and checks for errors.</li>
+<li>Starts the SynxDB system.</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> This utility uses secure shell (SSH) connections between systems to perform its tasks. In large SynxDB deployments, cloud deployments, or deployments with a large number of segments per host, this utility may exceed the host’s maximum threshold for unauthenticated connections. Consider updating the SSH <code>MaxStartups</code> and <code>MaxSessions</code> configuration parameters to increase this threshold. For more information about SSH configuration options, refer to the SSH documentation for your Linux distribution.</p>
+</blockquote>
+<h2 id="options"><a class="header" href="#options"><a id="section4"></a>Options</a></h2>
+<h3 id="-a"><a class="header" href="#-a">-a</a></h3>
+<p>Do not prompt the user for confirmation.</p>
+<h3 id="-b-parallel_processes"><a class="header" href="#-b-parallel_processes">-B parallel_processes</a></h3>
+<p>The number of segments to create in parallel. If not specified, the utility will start up to 4 parallel processes at a time.</p>
+<h3 id="-c-cluster_configuration_file"><a class="header" href="#-c-cluster_configuration_file">-c cluster_configuration_file</a></h3>
+<p>Required. The full path and filename of the configuration file, which contains all of the defined parameters to configure and initialize a new SynxDB system. See <a href="#section5">Initialization Configuration File Format</a> for a description of this file. You must provide either the <code>-c &lt;cluster_configuration_file&gt;</code> option or the <code>-I &lt;input_configuration_file&gt;</code> option to <code>gpinitsystem</code>.</p>
+<h3 id="-d"><a class="header" href="#-d">-D</a></h3>
+<p>Sets log output level to debug.</p>
+<h3 id="-h-hostfile_gpinitsystem"><a class="header" href="#-h-hostfile_gpinitsystem">-h hostfile_gpinitsystem</a></h3>
+<p>Optional. The full path and filename of a file that contains the host addresses of your segment hosts. If not specified on the command line, you can specify the host file using the <code>MACHINE_LIST_FILE</code> parameter in the gpinitsystem_config file.</p>
+<h3 id="-i-input_configuration_file"><a class="header" href="#-i-input_configuration_file">-I input_configuration_file</a></h3>
+<p>The full path and filename of an input configuration file, which defines the SynxDB host systems, the master instance and segment instances on the hosts, using the <code>QD_PRIMARY_ARRAY</code>, <code>PRIMARY_ARRAY</code>, and <code>MIRROR_ARRAY</code> parameters. The input configuration file is typically created by using <code>gpinitsystem</code> with the <code>-O output\_configuration\_file</code> option. Edit those parameters in order to initialize a new cluster or re-create a cluster from a backed up configuration. You must provide either the <code>-c &lt;cluster_configuration_file&gt;</code> option or the <code>-I &lt;input_configuration_file&gt;</code> option to <code>gpinitsystem</code>.</p>
+<h3 id="ignore-warnings"><a class="header" href="#ignore-warnings">–ignore-warnings</a></h3>
+<p>Controls the value returned by <code>gpinitsystem</code> when warnings or an error occurs. The utility returns 0 if system initialization completes without warnings. If only warnings occur, system initialization completes and the system is operational.</p>
+<p>With this option, <code>gpinitsystem</code> also returns 0 if warnings occurred during system initialization, and returns a non-zero value if a fatal error occurs.</p>
+<p>If this option is not specified, <code>gpinitsystem</code> returns 1 if initialization completes with warnings, and returns value of 2 or greater if a fatal error occurs.</p>
+<p>See the <code>gpinitsystem</code> log file for warning and error messages.</p>
+<h3 id="-n-locale--localelocale"><a class="header" href="#-n-locale--localelocale">-n locale | –locale=locale</a></h3>
+<p>Sets the default locale used by SynxDB. If not specified, the default locale is <code>en_US.utf8</code>. A locale identifier consists of a language identifier and a region identifier, and optionally a character set encoding. For example, <code>sv_SE</code> is Swedish as spoken in Sweden, <code>en_US</code> is U.S. English, and <code>fr_CA</code> is French Canadian. If more than one character set can be useful for a locale, then the specifications look like this: <code>en_US.UTF-8</code> (locale specification and character set encoding). On most systems, the command <code>locale</code> will show the locale environment settings and <code>locale -a</code> will show a list of all available locales.</p>
+<h3 id="lc-collatelocale"><a class="header" href="#lc-collatelocale">–lc-collate=locale</a></h3>
+<p>Similar to <code>--locale</code>, but sets the locale used for collation (sorting data). The sort order cannot be changed after SynxDB is initialized, so it is important to choose a collation locale that is compatible with the character set encodings that you plan to use for your data. There is a special collation name of <code>C</code> or <code>POSIX</code> (byte-order sorting as opposed to dictionary-order sorting). The <code>C</code> collation can be used with any character encoding.</p>
+<h3 id="lc-ctypelocale"><a class="header" href="#lc-ctypelocale">–lc-ctype=locale</a></h3>
+<p>Similar to <code>--locale</code>, but sets the locale used for character classification (what character sequences are valid and how they are interpreted). This cannot be changed after SynxDB is initialized, so it is important to choose a character classification locale that is compatible with the data you plan to store in SynxDB.</p>
+<h3 id="lc-messageslocale"><a class="header" href="#lc-messageslocale">–lc-messages=locale</a></h3>
+<p>Similar to <code>--locale</code>, but sets the locale used for messages output by SynxDB. The current version of SynxDB does not support multiple locales for output messages (all messages are in English), so changing this setting will not have any effect.</p>
+<h3 id="lc-monetarylocale"><a class="header" href="#lc-monetarylocale">–lc-monetary=locale</a></h3>
+<p>Similar to <code>--locale</code>, but sets the locale used for formatting currency amounts.</p>
+<h3 id="lc-numericlocale"><a class="header" href="#lc-numericlocale">–lc-numeric=locale</a></h3>
+<p>Similar to <code>--locale</code>, but sets the locale used for formatting numbers.</p>
+<h3 id="lc-timelocale"><a class="header" href="#lc-timelocale">–lc-time=locale</a></h3>
+<p>Similar to <code>--locale</code>, but sets the locale used for formatting dates and times.</p>
+<h3 id="-l-logfile_directory"><a class="header" href="#-l-logfile_directory">-l logfile_directory</a></h3>
+<p>The directory to write the log file. Defaults to <code>~/gpAdminLogs</code>.</p>
+<h3 id="-m-number--max_connectionsnumber"><a class="header" href="#-m-number--max_connectionsnumber">-m number | –max_connections=number</a></h3>
+<p>Sets the maximum number of client connections allowed to the master. The default is 250.</p>
+<h3 id="-o-output_configuration_file"><a class="header" href="#-o-output_configuration_file">-O output_configuration_file</a></h3>
+<p>Optional, used during new cluster initialization. This option writes the <code>cluster_configuration_file</code> information (used with -c) to the specified <code>output_configuration_file</code>. This file defines the SynxDB members using the <code>QD_PRIMARY_ARRAY</code>, <code>PRIMARY_ARRAY</code>, and <code>MIRROR_ARRAY</code> parameters. Use this file as a template for the <code>-I</code> <code>input_configuration_file</code> option. See <a href="#section6">Examples</a> for more information.</p>
+<h3 id="-p-postgresql_conf_param_file"><a class="header" href="#-p-postgresql_conf_param_file">-p postgresql_conf_param_file</a></h3>
+<p>Optional. The name of a file that contains <code>postgresql.conf</code> parameter settings that you want to set for SynxDB. These settings will be used when the individual master and segment instances are initialized. You can also set parameters after initialization using the <code>gpconfig</code> utility.</p>
+<h3 id="-q"><a class="header" href="#-q">-q</a></h3>
+<p>Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.</p>
+<h3 id="-b-size--shared_bufferssize"><a class="header" href="#-b-size--shared_bufferssize">-b size | –shared_buffers=size</a></h3>
+<p>Sets the amount of memory a SynxDB server instance uses for shared memory buffers. You can specify sizing in kilobytes (kB), megabytes (MB) or gigabytes (GB). The default is 125MB.</p>
+<h3 id="-s-standby_master_host"><a class="header" href="#-s-standby_master_host">-s standby_master_host</a></h3>
+<p>Optional. If you wish to configure a backup master instance, specify the host name using this option. The SynxDB software must already be installed and configured on this host.</p>
+<h3 id="-p-standby_master_port"><a class="header" href="#-p-standby_master_port">-P standby_master_port</a></h3>
+<p>If you configure a standby master instance with <code>-s</code>, specify its port number using this option. The default port is the same as the master port. To run the standby and master on the same host, you must use this option to specify a different port for the standby. The SynxDB software must already be installed and configured on the standby host.</p>
+<h3 id="-s-standby_master_datadir--standby_dirstandby_master_datadir"><a class="header" href="#-s-standby_master_datadir--standby_dirstandby_master_datadir">-S standby_master_datadir | –standby_dir=standby_master_datadir</a></h3>
+<p>If you configure a standby master host with <code>-s</code>, use this option to specify its data directory. If you configure a standby on the same host as the master instance, the master and standby must have separate data directories.</p>
+<h3 id="-e-superuser_password--su_passwordsuperuser_password"><a class="header" href="#-e-superuser_password--su_passwordsuperuser_password">-e superuser_password | –su_password=superuser_password</a></h3>
+<p>Use this option to specify the password to set for the SynxDB superuser account (such as <code>gpadmin</code>). If this option is not specified, the default password <code>gparray</code> is assigned to the superuser account. You can use the <code>ALTER ROLE</code> command to change the password at a later time.</p>
+<pre><code>Recommended security best practices:
+
+-   Do not use the default password option for production environments.
+-   Change the password immediately after installation.
+</code></pre>
+<h3 id="mirror-modegroupspread"><a class="header" href="#mirror-modegroupspread">–mirror-mode={group|spread}</a></h3>
+<p>Use this option to specify the placement of mirror segment instances on the segment hosts. The default, <code>group</code>, groups the mirror segments for all of a host’s primary segments on a single alternate host. <code>spread</code> spreads mirror segments for the primary segments on a host across different hosts in the SynxDB array. Spreading is only allowed if the number of hosts is greater than the number of segment instances per host. See <a href="../../admin_guide/highavail/topics/g-overview-of-segment-mirroring.html">Overview of Segment Mirroring</a> for information about SynxDB mirroring strategies.</p>
+<h3 id="-v--version"><a class="header" href="#-v--version">-v | –version</a></h3>
+<p>Print the <code>gpinitsystem</code> version and exit.</p>
+<h3 id="---help"><a class="header" href="#---help">-? | –help</a></h3>
+<p>Show help about <code>gpinitsystem</code> command line arguments, and exit.</p>
+<h2 id="initialization-configuration-file-format"><a class="header" href="#initialization-configuration-file-format"><a id="section5"></a>Initialization Configuration File Format</a></h2>
+<p><code>gpinitsystem</code> requires a cluster configuration file with the following parameters defined. An example initialization configuration file can be found in <code>$GPHOME/docs/cli_help/gpconfigs/gpinitsystem_config</code>.</p>
+<p>To avoid port conflicts between SynxDB and other applications, the SynxDB port numbers should not be in the range specified by the operating system parameter <code>net.ipv4.ip_local_port_range</code>. For example, if <code>net.ipv4.ip_local_port_range = 10000 65535</code>, you could set SynxDB base port numbers to these values.</p>
+<pre><code>PORT_BASE = 6000
+MIRROR_PORT_BASE = 7000
+</code></pre>
+<h3 id="array_name"><a class="header" href="#array_name">ARRAY_NAME</a></h3>
+<p><strong>Required.</strong> A name for the cluster you are configuring. You can use any name you like. Enclose the name in quotes if the name contains spaces.</p>
+<h3 id="machine_list_file"><a class="header" href="#machine_list_file">MACHINE_LIST_FILE</a></h3>
+<p><strong>Optional.</strong> Can be used in place of the <code>-h</code> option. This specifies the file that contains the list of the segment host address names that comprise the SynxDB system. The master host is assumed to be the host from which you are running the utility and should not be included in this file. If your segment hosts have multiple network interfaces, then this file would include all addresses for the host. Give the absolute path to the file.</p>
+<h3 id="seg_prefix"><a class="header" href="#seg_prefix">SEG_PREFIX</a></h3>
+<p><strong>Required.</strong> This specifies a prefix that will be used to name the data directories on the master and segment instances. The naming convention for data directories in a SynxDB system is SEG_PREFIXnumber where number starts with 0 for segment instances (the master is always -1). So for example, if you choose the prefix <code>gpseg</code>, your master instance data directory would be named <code>gpseg-1</code>, and the segment instances would be named <code>gpseg0</code>, <code>gpseg1</code>, <code>gpseg2</code>, <code>gpseg3</code>, and so on.</p>
+<h3 id="port_base"><a class="header" href="#port_base">PORT_BASE</a></h3>
+<p><strong>Required.</strong> This specifies the base number by which primary segment port numbers are calculated. The first primary segment port on a host is set as <code>PORT_BASE</code>, and then incremented by one for each additional primary segment on that host. Valid values range from 1 through 65535.</p>
+<h3 id="data_directory"><a class="header" href="#data_directory">DATA_DIRECTORY</a></h3>
+<p><strong>Required.</strong> This specifies the data storage location(s) where the utility will create the primary segment data directories. The number of locations in the list dictate the number of primary segments that will get created per physical host (if multiple addresses for a host are listed in the host file, the number of segments will be spread evenly across the specified interface addresses). It is OK to list the same data storage area multiple times if you want your data directories created in the same location. The user who runs <code>gpinitsystem</code> (for example, the <code>gpadmin</code> user) must have permission to write to these directories. For example, this will create six primary segments per host:</p>
+<pre><code>declare -a DATA_DIRECTORY=(/data1/primary /data1/primary 
+/data1/primary /data2/primary /data2/primary /data2/primary)
+</code></pre>
+<h3 id="master_hostname"><a class="header" href="#master_hostname">MASTER_HOSTNAME</a></h3>
+<p><strong>Required.</strong> The host name of the master instance. This host name must exactly match the configured host name of the machine (run the <code>hostname</code> command to determine the correct hostname).</p>
+<h3 id="master_directory"><a class="header" href="#master_directory">MASTER_DIRECTORY</a></h3>
+<p><strong>Required.</strong> This specifies the location where the data directory will be created on the master host. You must make sure that the user who runs <code>gpinitsystem</code> (for example, the <code>gpadmin</code> user) has permissions to write to this directory.</p>
+<h3 id="master_port"><a class="header" href="#master_port">MASTER_PORT</a></h3>
+<p><strong>Required.</strong> The port number for the master instance. This is the port number that users and client connections will use when accessing the SynxDB system.</p>
+<h3 id="trusted_shell"><a class="header" href="#trusted_shell">TRUSTED_SHELL</a></h3>
+<p><strong>Required.</strong> The shell the <code>gpinitsystem</code> utility uses to run commands on remote hosts. Allowed values are <code>ssh</code>. You must set up your trusted host environment before running the <code>gpinitsystem</code> utility (you can use <code>gpssh-exkeys</code> to do this).</p>
+<h3 id="check_point_segments"><a class="header" href="#check_point_segments">CHECK_POINT_SEGMENTS</a></h3>
+<p><strong>Required.</strong> Maximum distance between automatic write ahead log (WAL) checkpoints, in log file segments (each segment is normally 16 megabytes). This will set the <code>checkpoint_segments</code> parameter in the <code>postgresql.conf</code> file for each segment instance in the SynxDB system.</p>
+<h3 id="encoding"><a class="header" href="#encoding">ENCODING</a></h3>
+<p><strong>Required.</strong> The character set encoding to use. This character set must be compatible with the <code>--locale</code> settings used, especially <code>--lc-collate</code> and <code>--lc-ctype</code>. SynxDB supports the same character sets as PostgreSQL.</p>
+<h3 id="database_name"><a class="header" href="#database_name">DATABASE_NAME</a></h3>
+<p><strong>Optional.</strong> The name of a SynxDB database to create after the system is initialized. You can always create a database later using the <code>CREATE DATABASE</code> command or the <code>createdb</code> utility.</p>
+<h3 id="mirror_port_base"><a class="header" href="#mirror_port_base">MIRROR_PORT_BASE</a></h3>
+<p><strong>Optional.</strong> This specifies the base number by which mirror segment port numbers are calculated. The first mirror segment port on a host is set as <code>MIRROR_PORT_BASE</code>, and then incremented by one for each additional mirror segment on that host. Valid values range from 1 through 65535 and cannot conflict with the ports calculated by <code>PORT_BASE</code>.</p>
+<h3 id="mirror_data_directory"><a class="header" href="#mirror_data_directory">MIRROR_DATA_DIRECTORY</a></h3>
+<p><strong>Optional.</strong> This specifies the data storage location(s) where the utility will create the mirror segment data directories. There must be the same number of data directories declared for mirror segment instances as for primary segment instances (see the <code>DATA_DIRECTORY</code> parameter). The user who runs <code>gpinitsystem</code> (for example, the <code>gpadmin</code> user) must have permission to write to these directories. For example:</p>
+<pre><code>declare -a MIRROR_DATA_DIRECTORY=(/data1/mirror 
+/data1/mirror /data1/mirror /data2/mirror /data2/mirror 
+/data2/mirror)
+</code></pre>
+<h3 id="qd_primary_array-primary_array-mirror_array"><a class="header" href="#qd_primary_array-primary_array-mirror_array"><a id="array_params"></a>QD_PRIMARY_ARRAY, PRIMARY_ARRAY, MIRROR_ARRAY</a></h3>
+<p><strong>Required</strong> when using <code>input_configuration file</code> with <code>-I</code> option. These parameters specify the SynxDB master host, the primary segment, and the mirror segment hosts respectively. During new cluster initialization, use the <code>gpinitsystem</code> <code>-O output\_configuration\_file</code> to populate <code>QD_PRIMARY_ARRAY</code>, <code>PRIMARY_ARRAY</code>, <code>MIRROR_ARRAY</code>.</p>
+<p>To initialize a new cluster or re-create a cluster from a backed up configuration, edit these values in the input configuration file used with the <code>gpinitsystem</code> <code>-I input\_configuration\_file</code> option. Use one of the following formats to specify the host information:</p>
+<pre><code>&lt;hostname&gt;~&lt;address&gt;~&lt;port&gt;~&lt;data_directory&gt;/&lt;seg_prefix&lt;segment_id&gt;~&lt;dbid&gt;~&lt;content_id&gt;
+</code></pre>
+<p>or</p>
+<pre><code>&lt;host&gt;~&lt;port&gt;~&lt;data_directory&gt;/&lt;seg_prefix&lt;segment_id&gt;~&lt;dbid&gt;~&lt;content_id&gt;
+</code></pre>
+<p>The first format populates the <code>hostname</code> and <code>address</code> fields in the <code>gp_segment_configuration</code> catalog table with the hostname and address values provided in the input configuration file. The second format populates <code>hostname</code> and <code>address</code> fields with the same value, derived from host.</p>
+<p>The SynxDB master always uses the value -1 for the segment ID and content ID. For example, seg_prefix&lt;segment_id&gt; and dbid values for <code>QD_PRIMARY_ARRAY</code> use <code>-1</code> to indicate the master instance:</p>
+<pre><code>QD_PRIMARY_ARRAY=mdw~mdw~5432~/gpdata/master/gpseg-1~1~-1
+declare -a PRIMARY_ARRAY=(
+sdw1~sdw1~40000~/gpdata/data1/gpseg0~2~0
+sdw1~sdw1~40001~/gpdata/data2/gpseg1~3~1
+sdw2~sdw2~40000~/gpdata/data1/gpseg2~4~2
+sdw2~sdw2~40001~/gpdata/data2/gpseg3~5~3
+)
+declare -a MIRROR_ARRAY=(
+sdw2~sdw2~50000~/gpdata/mirror1/gpseg0~6~0
+sdw2~sdw2~50001~/gpdata/mirror2/gpseg1~7~1
+sdw1~sdw1~50000~/gpdata/mirror1/gpseg2~8~2
+sdw1~sdw1~50001~/gpdata/mirror2/gpseg3~9~3
+)
+</code></pre>
+<p>To re-create a cluster using a known SynxDB system configuration, you can edit the segment and content IDs to match the values of the system.</p>
+<h3 id="heap_checksum"><a class="header" href="#heap_checksum">HEAP_CHECKSUM</a></h3>
+<p><strong>Optional.</strong> This parameter specifies if checksums are enabled for heap data. When enabled, checksums are calculated for heap storage in all databases, enabling SynxDB to detect corruption in the I/O system. This option is set when the system is initialized and cannot be changed later.</p>
+<p>The <code>HEAP_CHECKSUM</code> option is on by default and turning it off is strongly discouraged. If you set this option to off, data corruption in storage can go undetected and make recovery much more difficult.</p>
+<p>To determine if heap checksums are enabled in a SynxDB system, you can query the <code>data_checksums</code> server configuration parameter with the <code>gpconfig</code> management utility:</p>
+<pre><code>$ gpconfig -s data_checksums
+</code></pre>
+<h3 id="hba_hostnames"><a class="header" href="#hba_hostnames"><a id="hba_hostnames"></a>HBA_HOSTNAMES</a></h3>
+<p><strong>Optional.</strong> This parameter controls whether <code>gpinitsystem</code> uses IP addresses or host names in the <code>pg_hba.conf</code> file when updating the file with addresses that can connect to SynxDB. The default value is <code>0</code>, the utility uses IP addresses when updating the file. When initializing a SynxDB system, specify <code>HBA_HOSTNAMES=1</code> to have the utility use host names in the <code>pg_hba.conf</code> file.</p>
+<p>For information about how SynxDB resolves host names in the <code>pg_hba.conf</code> file, see <a href="../../admin_guide/client_auth.html">Configuring Client Authentication</a>.</p>
+<h2 id="specifying-hosts-using-hostnames-or-ip-addresses"><a class="header" href="#specifying-hosts-using-hostnames-or-ip-addresses"><a id="spechosts"></a>Specifying Hosts using Hostnames or IP Addresses</a></h2>
+<p>When initializing a SynxDB system with <code>gpinitsystem</code>, you can specify segment hosts using either hostnames or IP addresses. For example, you can use hostnames or IP addresses in the file specified with the <code>-h</code> option.</p>
+<ul>
+<li>If you specify a hostname, the resolution of the hostname to an IP address should be done locally for security. For example, you should use entries in a local <code>/etc/hosts</code> file to map a hostname to an IP address. The resolution of a hostname to an IP address should not be performed by an external service such as a public DNS server. You must stop the SynxDB system before you change the mapping of a hostname to a different IP address.</li>
+<li>If you specify an IP address, the address should not be changed after the initial configuration. When segment mirroring is enabled, replication from the primary to the mirror segment will fail if the IP address changes from the configured value. For this reason, you should use a hostname when initializing a SynxDB system unless you have a specific requirement to use IP addresses.</li>
+</ul>
+<p>When initializing the SynxDB system, <code>gpinitsystem</code> uses the initialization information to populate the <a href="../../ref_guide/system_catalogs/gp_segment_configuration.html">gp_segment_configuration</a> catalog table and adds hosts to the <code>pg_hba.conf</code> file. By default, the host IP address is added to the file. Specify the <code>gpinitsystem</code> configuration file parameter <a href="#hba_hostnames">HBA_HOSTNAMES</a>=1 to add hostnames to the file.</p>
+<p>SynxDB uses the <code>address</code> value of the <code>gp_segment_configuration</code> catalog table when looking up host systems for SynxDB interconnect (internal) communication between the master and segment instances and between segment instances, and for other internal communication.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section6"></a>Examples</a></h2>
+<p>Initialize a SynxDB system by supplying a cluster configuration file and a segment host address file, and set up a spread mirroring (<code>--mirror-mode=spread</code>) configuration:</p>
+<pre><code>$ gpinitsystem -c gpinitsystem_config -h hostfile_gpinitsystem --mirror-mode=spread
+</code></pre>
+<p>Initialize a SynxDB system and set the superuser remote password:</p>
+<pre><code>$ gpinitsystem -c gpinitsystem_config -h hostfile_gpinitsystem --su-password=mypassword
+</code></pre>
+<p>Initialize a SynxDB system with an optional standby master host:</p>
+<pre><code>$ gpinitsystem -c gpinitsystem_config -h hostfile_gpinitsystem -s host09
+</code></pre>
+<p>Initialize a SynxDB system and write the provided configuration to an output file, for example <code>cluster_init.config</code>:</p>
+<pre><code>$ gpinitsystem -c gpinitsystem_config -h hostfile_gpinitsystem -O cluster_init.config
+</code></pre>
+<p>The output file uses the <code>QD_PRIMARY_ARRAY</code> and <code>PRIMARY_ARRAY</code> parameters to define master and segment hosts:</p>
+<pre><code>TRUSTED_SHELL=ssh
+CHECK_POINT_SEGMENTS=8
+ENCODING=UNICODE
+SEG_PREFIX=gpseg
+HEAP_CHECKSUM=on
+HBA_HOSTNAMES=0
+QD_PRIMARY_ARRAY=mdw~mdw.local~5433~/data/master1/gpseg-1~1~-1
+declare -a PRIMARY_ARRAY=(
+mdw~mdw.local~6001~/data/primary1/gpseg0~2~0
+)
+declare -a MIRROR_ARRAY=(
+mdw~mdw.local~7001~/data/mirror1/gpseg0~3~0
+)
+</code></pre>
+<p>Initialize a SynxDB using an input configuration file (a file that defines the SynxDB cluster) using <code>QD_PRIMARY_ARRAY</code> and <code>PRIMARY_ARRAY</code> parameters:</p>
+<pre><code>$ gpinitsystem -I cluster_init.config
+</code></pre>
+<p>The following example uses a host system configured with multiple NICs. If host systems are configured with multiple NICs, you can initialize a SynxDB system to use each NIC as a SynxDB host system. You must ensure that the host systems are configured with sufficient resources to support all the segment instances being added to the host. Also, if high availability is enabled, you must ensure that the SynxDB system configuration supports failover if a host system fails. For information about SynxDB mirroring schemes, see <a href="../../best_practices/ha.html#topic_ngz_qf4_tt">../../best_practices/ha.html#topic_ngz_qf4_tt</a>.</p>
+<p>For this simple master and segment instance configuration, the host system <code>gp6m</code> is configured with two NICs <code>gp6m-1</code> and <code>gp6m-2</code>. In the configuration, the <a href="#array_params">QD_PRIMARY_ARRAY</a> parameter defines the master segment using <code>gp6m-1</code>. The <a href="#array_params">PRIMARY_ARRAY</a> and <a href="#array_params">MIRROR_ARRAY</a> parameters use <code>gp6m-2</code> to define a primary and mirror segment instance.</p>
+<pre><code>QD_PRIMARY_ARRAY=gp6m~gp6m-1~5432~/data/master/gpseg-1~1~-1
+declare -a PRIMARY_ARRAY=(
+gp6m~gp6m-2~40000~/data/data1/gpseg0~2~0
+gp6s~gp6s~40000~/data/data1/gpseg1~3~1
+)
+declare -a MIRROR_ARRAY=(
+gp6s~gp6s~50000~/data/mirror1/gpseg0~4~0
+gp6m~gp6m-2~50000~/data/mirror1/gpseg1~5~1
+)
+</code></pre>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section7"></a>See Also</a></h2>
+<p><a href="gpssh-exkeys.html">gpssh-exkeys</a>, <a href="gpdeletesystem.html">gpdeletesystem</a>, <a href="../../install_guide/init_gpdb.html">Initializing SynxDB</a>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../utility_guide/ref/gpinitstandby.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../utility_guide/ref/gpload.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../utility_guide/ref/gpinitstandby.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../utility_guide/ref/gpload.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

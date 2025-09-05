@@ -1,0 +1,14 @@
+Load Data
+***********************
+
+.. toctree::
+   :maxdepth: 2
+
+   load-data-using-copy
+   load-external-data-source-using-foreign-table
+   load-data-using-kafka-fdw
+   load-data-from-oss-and-hdfs
+   load-data-from-hive
+   load-data-between-synxdb-and-spark
+   load-data-using-gpfdist
+  

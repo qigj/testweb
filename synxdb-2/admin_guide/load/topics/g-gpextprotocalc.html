@@ -1,0 +1,510 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>gpextprotocal.c - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../../highlight.css">
+        <link rel="stylesheet" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gpextprotocalc"><a class="header" href="#gpextprotocalc">gpextprotocal.c</a></h1>
+<pre><code>#include "postgres.h"
+#include "fmgr.h"
+#include "funcapi.h" 
+#include "access/extprotocol.h"
+#include "catalog/pg_proc.h"
+#include "utils/array.h"
+#include "utils/builtins.h"
+#include "utils/memutils.h" 
+
+/* Our chosen URI format. We can change it however needed */
+typedef struct DemoUri 
+{ 
+   char     *protocol;
+   char     *path;
+}  DemoUri; 
+static DemoUri *ParseDemoUri(const char *uri_str);
+static void FreeDemoUri(DemoUri* uri); 
+
+/* Do the module magic dance */ 
+PG_MODULE_MAGIC; 
+PG_FUNCTION_INFO_V1(demoprot_export); 
+PG_FUNCTION_INFO_V1(demoprot_import); 
+PG_FUNCTION_INFO_V1(demoprot_validate_urls); 
+
+Datum demoprot_export(PG_FUNCTION_ARGS); 
+Datum demoprot_import(PG_FUNCTION_ARGS); 
+Datum demoprot_validate_urls(PG_FUNCTION_ARGS); 
+ 
+/* A user context that persists across calls. Can be 
+declared in any other way */
+typedef struct { 
+  char    *url; 
+  char    *filename; 
+  FILE    *file; 
+} extprotocol_t; 
+/* 
+* The read function - Import data into GPDB.
+*/ 
+Datum 
+myprot_import(PG_FUNCTION_ARGS) 
+{ 
+  extprotocol_t   *myData; 
+  char            *data; 
+  int             datlen; 
+  size_t          nread = 0; 
+ 
+  /* Must be called via the external table format manager */ 
+  if (!CALLED_AS_EXTPROTOCOL(fcinfo)) 
+    elog(ERROR, "myprot_import: not called by external
+       protocol manager"); 
+ 
+  /* Get our internal description of the protocol */ 
+  myData = (extprotocol_t *) EXTPROTOCOL_GET_USER_CTX(fcinfo); 
+ 
+  if(EXTPROTOCOL_IS_LAST_CALL(fcinfo)) 
+  { 
+    /* we're done receiving data. close our connection */ 
+    if(myData &amp;&amp; myData-&gt;file) 
+      if(fclose(myData-&gt;file)) 
+        ereport(ERROR, 
+          (errcode_for_file_access(), 
+           errmsg("could not close file \"%s\": %m", 
+               myData-&gt;filename))); 
+     
+    PG_RETURN_INT32(0); 
+  }
+  
+  if (myData == NULL) 
+  { 
+    /* first call. do any desired init */ 
+
+    const char    *p_name = "myprot"; 
+    DemoUri       *parsed_url; 
+    char          *url = EXTPROTOCOL_GET_URL(fcinfo); 
+    myData        = palloc(sizeof(extprotocol_t)); 
+    
+    myData-&gt;url   = pstrdup(url); 
+    parsed_url    = ParseDemoUri(myData-&gt;url); 
+    myData-&gt;filename = pstrdup(parsed_url-&gt;path); 
+    
+    if(strcasecmp(parsed_url-&gt;protocol, p_name) != 0) 
+      elog(ERROR, "internal error: myprot called with a
+          different protocol (%s)", 
+            parsed_url-&gt;protocol); 
+            
+    FreeDemoUri(parsed_url); 
+    
+    /* open the destination file (or connect to remote server in
+       other cases) */ 
+    myData-&gt;file = fopen(myData-&gt;filename, "r"); 
+    
+    if (myData-&gt;file == NULL) 
+      ereport(ERROR, 
+          (errcode_for_file_access(), 
+           errmsg("myprot_import: could not open file \"%s\"
+             for reading: %m", 
+             myData-&gt;filename), 
+           errOmitLocation(true))); 
+
+    EXTPROTOCOL_SET_USER_CTX(fcinfo, myData); 
+  }
+  /* ========================================== 
+   *          DO THE IMPORT 
+   * ========================================== */ 
+  data    = EXTPROTOCOL_GET_DATABUF(fcinfo); 
+  datlen  = EXTPROTOCOL_GET_DATALEN(fcinfo); 
+  
+  /* read some bytes (with fread in this example, but normally
+     in some other method over the network) */
+  if(datlen &gt; 0) 
+  { 
+    nread = fread(data, 1, datlen, myData-&gt;file); 
+    if (ferror(myData-&gt;file)) 
+      ereport(ERROR, 
+        (errcode_for_file_access(), 
+          errmsg("myprot_import: could not write to file
+            \"%s\": %m", 
+            myData-&gt;filename))); 
+  }
+  PG_RETURN_INT32((int)nread); 
+}
+/* 
+ * Write function - Export data out of GPDB 
+ */ 
+Datum  
+myprot_export(PG_FUNCTION_ARGS) 
+{ 
+  extprotocol_t  *myData; 
+  char           *data; 
+  int            datlen; 
+  size_t         wrote = 0; 
+  
+  /* Must be called via the external table format manager */ 
+  if (!CALLED_AS_EXTPROTOCOL(fcinfo)) 
+    elog(ERROR, "myprot_export: not called by external
+       protocol manager"); 
+       
+  /* Get our internal description of the protocol */ 
+  myData = (extprotocol_t *) EXTPROTOCOL_GET_USER_CTX(fcinfo); 
+  if(EXTPROTOCOL_IS_LAST_CALL(fcinfo)) 
+  { 
+    /* we're done sending data. close our connection */ 
+    if(myData &amp;&amp; myData-&gt;file) 
+      if(fclose(myData-&gt;file)) 
+        ereport(ERROR, 
+            (errcode_for_file_access(), 
+              errmsg("could not close file \"%s\": %m", 
+                 myData-&gt;filename))); 
+    
+    PG_RETURN_INT32(0); 
+  }
+  if (myData == NULL) 
+  { 
+    /* first call. do any desired init */ 
+    const char *p_name = "myprot"; 
+    DemoUri    *parsed_url; 
+    char       *url = EXTPROTOCOL_GET_URL(fcinfo); 
+    
+    myData           = palloc(sizeof(extprotocol_t)); 
+    
+    myData-&gt;url      = pstrdup(url); 
+    parsed_url       = ParseDemoUri(myData-&gt;url); 
+    myData-&gt;filename = pstrdup(parsed_url-&gt;path); 
+    
+    if(strcasecmp(parsed_url-&gt;protocol, p_name) != 0) 
+      elog(ERROR, "internal error: myprot called with a 
+         different protocol (%s)", 
+         parsed_url-&gt;protocol); 
+            
+    FreeDemoUri(parsed_url); 
+    
+    /* open the destination file (or connect to remote server in
+    other cases) */ 
+    myData-&gt;file = fopen(myData-&gt;filename, "a"); 
+    if (myData-&gt;file == NULL) 
+      ereport(ERROR, 
+        (errcode_for_file_access(), 
+           errmsg("myprot_export: could not open file \"%s\"
+             for writing: %m", 
+             myData-&gt;filename), 
+         errOmitLocation(true))); 
+     
+    EXTPROTOCOL_SET_USER_CTX(fcinfo, myData); 
+  } 
+  /* ======================================== 
+   *      DO THE EXPORT 
+   * ======================================== */ 
+  data   = EXTPROTOCOL_GET_DATABUF(fcinfo); 
+  datlen   = EXTPROTOCOL_GET_DATALEN(fcinfo); 
+  
+  if(datlen &gt; 0) 
+  { 
+    wrote = fwrite(data, 1, datlen, myData-&gt;file); 
+    
+    if (ferror(myData-&gt;file)) 
+      ereport(ERROR, 
+        (errcode_for_file_access(), 
+         errmsg("myprot_import: could not read from file
+            \"%s\": %m", 
+            myData-&gt;filename))); 
+  } 
+  PG_RETURN_INT32((int)wrote); 
+} 
+Datum  
+myprot_validate_urls(PG_FUNCTION_ARGS) 
+{ 
+  List         *urls; 
+  int          nurls; 
+  int          i; 
+  ValidatorDirection  direction; 
+  
+  /* Must be called via the external table format manager */ 
+  if (!CALLED_AS_EXTPROTOCOL_VALIDATOR(fcinfo)) 
+    elog(ERROR, "myprot_validate_urls: not called by external
+       protocol manager");
+       
+  nurls       = EXTPROTOCOL_VALIDATOR_GET_NUM_URLS(fcinfo); 
+  urls        = EXTPROTOCOL_VALIDATOR_GET_URL_LIST(fcinfo); 
+  direction   = EXTPROTOCOL_VALIDATOR_GET_DIRECTION(fcinfo); 
+  /* 
+   * Dumb example 1: search each url for a substring  
+   * we don't want to be used in a url. in this example 
+   * it's 'secured_directory'. 
+   */ 
+  for (i = 1 ; i &lt;= nurls ; i++) 
+  { 
+    char *url = EXTPROTOCOL_VALIDATOR_GET_NTH_URL(fcinfo, i); 
+    
+    if (strstr(url, "secured_directory") != 0) 
+    { 
+      ereport(ERROR, 
+       (errcode(ERRCODE_PROTOCOL_VIOLATION), 
+          errmsg("using 'secured_directory' in a url
+            isn't allowed "))); 
+    } 
+  } 
+  /* 
+   * Dumb example 2: set a limit on the number of urls  
+   * used. In this example we limit readable external 
+   * tables that use our protocol to 2 urls max. 
+   */ 
+  if(direction == EXT_VALIDATE_READ &amp;&amp; nurls &gt; 2) 
+  { 
+    ereport(ERROR, 
+      (errcode(ERRCODE_PROTOCOL_VIOLATION), 
+        errmsg("more than 2 urls aren't allowed in this protocol "))); 
+  }
+  PG_RETURN_VOID(); 
+}
+/* --- utility functions --- */ 
+static  
+DemoUri *ParseDemoUri(const char *uri_str) 
+{ 
+  DemoUri *uri = (DemoUri *) palloc0(sizeof(DemoUri)); 
+  int     protocol_len; 
+  
+   uri-&gt;path = NULL; 
+   uri-&gt;protocol = NULL; 
+  /* 
+   * parse protocol 
+   */ 
+  char *post_protocol = strstr(uri_str, "://"); 
+  
+  if(!post_protocol) 
+  { 
+    ereport(ERROR, 
+      (errcode(ERRCODE_SYNTAX_ERROR), 
+       errmsg("invalid protocol URI \'%s\'", uri_str), 
+       errOmitLocation(true))); 
+  }
+  
+  protocol_len = post_protocol - uri_str; 
+  uri-&gt;protocol = (char *)palloc0(protocol_len + 1); 
+  strncpy(uri-&gt;protocol, uri_str, protocol_len); 
+  
+  /* make sure there is more to the uri string */ 
+  if (strlen(uri_str) &lt;= protocol_len) 
+    ereport(ERROR, 
+      (errcode(ERRCODE_SYNTAX_ERROR), 
+       errmsg("invalid myprot URI \'%s\' : missing path",
+         uri_str), 
+      errOmitLocation(true))); 
+      
+  /* parse path */ 
+  uri-&gt;path = pstrdup(uri_str + protocol_len + strlen("://"));
+  
+  return uri; 
+}
+static 
+void FreeDemoUri(DemoUri *uri) 
+{ 
+  if (uri-&gt;path) 
+    pfree(uri-&gt;path); 
+  if (uri-&gt;protocol) 
+    pfree(uri-&gt;protocol); 
+   
+  pfree(uri); 
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../admin_guide/load/topics/g-installing-the-external-table-protocol.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../admin_guide/query/topics/query.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../admin_guide/load/topics/g-installing-the-external-table-protocol.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../admin_guide/query/topics/query.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

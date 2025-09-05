@@ -1,0 +1,325 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Configuring Proxies for the SynxDB Interconnect - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="configuring-proxies-for-the-synxdb-interconnect"><a class="header" href="#configuring-proxies-for-the-synxdb-interconnect">Configuring Proxies for the SynxDB Interconnect</a></h1>
+<p>You can configure a SynxDB system to use proxies for interconnect communication to reduce the use of connections and ports during query processing.</p>
+<p>The SynxDB <em>interconnect</em> (the networking layer) refers to the inter-process communication between segments and the network infrastructure on which this communication relies. For information about the SynxDB architecture and interconnect, see <a href="../intro/arch_overview.html">About the SynxDB Architecture</a>.</p>
+<p>In general, when running a query, a QD (query dispatcher) on the SynxDB master creates connections to one or more QE (query executor) processes on segments, and a QE can create connections to other QEs. For a description of SynxDB query processing and parallel query processing, see <a href="../query/topics/parallel-proc.html">About SynxDB Query Processing</a>.</p>
+<p>By default, connections between the QD on the master and QEs on segment instances and between QEs on different segment instances require a separate network port. You can configure a SynxDB system to use proxies when SynxDB communicates between the QD and QEs and between QEs on different segment instances. The interconnect proxies require only one network connection for SynxDB internal communication between two segment instances, so it consumes fewer connections and ports than <code>TCP</code> mode, and has better performance than <code>UDPIFC</code> mode in a high-latency network.</p>
+<p>To enable interconnect proxies for the SynxDB system, set these system configuration parameters.</p>
+<ul>
+<li>List the proxy ports with the parameter <a href="../../ref_guide/config_params/guc-list.html#gp_interconnect_proxy_addresses">gp_interconnect_proxy_addresses</a>. You must specify a proxy port for the master, standby master, and all segment instances.</li>
+<li>Set the parameter <a href="../../ref_guide/config_params/guc-list.html#gp_interconnect_type">gp_interconnect_type</a> to <code>proxy</code>.</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> When expanding a SynxDB system, you must deactivate interconnect proxies before adding new hosts and segment instances to the system, and you must update the <code>gp_interconnect_proxy_addresses</code> parameter with the newly-added segment instances before you re-enable interconnect proxies.</p>
+</blockquote>
+<h2 id="example"><a class="header" href="#example"><a id="topic_z4l_lcg_4mb"></a>Example</a></h2>
+<p>This example sets up a SynxDB system to use proxies for the SynxDB interconnect when running queries. The example sets the <a href="../../ref_guide/config_params/guc-list.html#gp_interconnect_proxy_addresses">gp_interconnect_proxy_addresses</a> parameter and tests the proxies before setting the <a href="../../ref_guide/config_params/guc-list.html#gp_interconnect_type">gp_interconnect_type</a> parameter for the SynxDB system.</p>
+<ul>
+<li><a href="#set_proxy_address">Setting the Interconnect Proxy Addresses</a></li>
+<li><a href="#test_proxy">Testing the Interconnect Proxies</a></li>
+<li><a href="#set_gpdb_proxy">Setting Interconnect Proxies for the System</a></li>
+</ul>
+<h3 id="setting-the-interconnect-proxy-addresses"><a class="header" href="#setting-the-interconnect-proxy-addresses"><a id="set_proxy_address"></a>Setting the Interconnect Proxy Addresses</a></h3>
+<p>Set the <code>gp_interconnect_proxy_addresses</code> parameter to specify the proxy ports for the master and segment instances. The syntax for the value has the following format and you must specify the parameter value as a single-quoted string.</p>
+<pre><code>&lt;db_id&gt;:&lt;cont_id&gt;:&lt;seg_address&gt;:&lt;port&gt;[, ... ]
+</code></pre>
+<p>For the master, standby master, and segment instance, the first three fields, db_id, cont_id, and seg_address can be found in the <a href="../../ref_guide/system_catalogs/gp_segment_configuration.html">gp_segment_configuration</a> catalog table. The fourth field, port, is the proxy port for the SynxDB master or a segment instance.</p>
+<ul>
+<li>db_id is the <code>dbid</code> column in the catalog table.</li>
+<li>cont_id is the <code>content</code> column in the catalog table.</li>
+<li>seg_address is the IP address or hostname corresponding to the <code>address</code> column in the catalog table.</li>
+<li>port is the TCP/IP port for the segment instance proxy that you specify.</li>
+</ul>
+<blockquote>
+<p><strong>Important</strong> If a segment instance hostname is bound to a different IP address at runtime, you must run <code>gpstop -u</code> to re-load the <code>gp_interconnect_proxy_addresses</code> value.</p>
+</blockquote>
+<p>This is an example PL/Python function that displays or sets the segment instance proxy port values for the <code>gp_interconnect_proxy_addresses</code> parameter. To create and run the function, you must enable PL/Python in the database with the <code>CREATE EXTENSION plpythonu</code> command.</p>
+<pre><code>--
+-- A PL/Python function to setup the interconnect proxy addresses.
+-- Requires the Python modules os and socket.
+--
+-- Usage:
+--   select my_setup_ic_proxy(-1000, '');              -- display IC proxy values for segments
+--   select my_setup_ic_proxy(-1000, 'update proxy');  -- update the gp_interconnect_proxy_addresses parameter
+--
+-- The first argument, "delta", is used to calculate the proxy port with this formula:
+--
+--   proxy_port = postmaster_port + delta
+--
+-- The second argument, "action", is used to update the gp_interconnect_proxy_addresses parameter.
+-- The parameter is not updated unless "action" is 'update proxy'.
+-- Note that running  "gpstop -u" is required for the update to take effect. 
+-- A SynxDB system restart will also work.
+--
+create or replace function my_setup_ic_proxy(delta int, action text)
+returns table(dbid smallint, content smallint, address text, port int) as $$
+    import os
+    import socket
+
+    results = []
+    value = ''
+
+    segs = plpy.execute('''SELECT dbid, content, port, address
+                              FROM gp_segment_configuration
+                            ORDER BY 1''')
+    for seg in segs:
+        dbid = seg['dbid']
+        content = seg['content']
+        port = seg['port']
+        address = seg['address']
+
+        # decide the proxy port
+        port = port + delta
+
+        # append to the result list
+        results.append((dbid, content, address, port))
+
+        # build the value for the GUC
+        if value:
+            value += ','
+        value += '{}:{}:{}:{}'.format(dbid, content, address, port)
+
+    if action.lower() == 'update proxy':
+        os.system('''gpconfig --skipvalidation -c gp_interconnect_proxy_addresses -v "'{}'"'''.format(value))
+        plpy.notice('''the settings are applied, please reload with 'gpstop -u' to take effect.''')
+    else:
+        plpy.notice('''if the settings are correct, re-run with 'update proxy' to apply.''')
+    return results
+$$ language plpythonu execute on master;
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> When you run the function, you should connect to the database using the SynxDB interconnect type <code>UDPIFC</code> or <code>TCP</code>. This example uses <code>psql</code> to connect to the database <code>mytest</code> with the interconnect type <code>UDPIFC</code>.</p>
+</blockquote>
+<pre><code>PGOPTIONS="-c gp_interconnect_type=udpifc" psql -d mytest
+</code></pre>
+<p>Running this command lists the segment instance values for the <code>gp_interconnect_proxy_addresses</code> parameter.</p>
+<pre><code>select my_setup_ic_proxy(-1000, '');
+</code></pre>
+<p>This command runs the function to set the parameter.</p>
+<pre><code>select my_setup_ic_proxy(-1000, 'update proxy');
+</code></pre>
+<p>As an alternative, you can run the s<a href="../../utility_guide/ref/gpconfig.html">gpconfig</a> utility to set the <code>gp_interconnect_proxy_addresses</code> parameter. To set the value as a string, the value is a single-quoted string that is enclosed in double quotes. The example SynxDB system consists of a master and a single segment instance.</p>
+<pre><code>gpconfig --skipvalidation -c gp_interconnect_proxy_addresses -v "'1:-1:192.168.180.50:35432,2:0:192.168.180.54:35000'"
+</code></pre>
+<p>After setting the <code>gp_interconnect_proxy_addresses</code> parameter, reload the <code>postgresql.conf</code> file with the <code>gpstop -u</code> command. This command does not stop and restart the SynxDB system.</p>
+<h3 id="testing-the-interconnect-proxies"><a class="header" href="#testing-the-interconnect-proxies"><a id="test_proxy"></a>Testing the Interconnect Proxies</a></h3>
+<p>To test the proxy ports configured for the system, you can set the <code>PGOPTIONS</code> environment variable when you start a <code>psql</code> session in a command shell. This command sets the environment variable to enable interconnect proxies, starts <code>psql</code>, and logs into the database <code>mytest</code>.</p>
+<pre><code>PGOPTIONS="-c gp_interconnect_type=proxy" psql -d mytest
+</code></pre>
+<p>You can run queries in the shell to test the system. For example, you can run a query that accesses all the primary segment instances. This query displays the segment IDs and number of rows on the segment instance from the table <code>sales</code>.</p>
+<pre><code># SELECT gp_segment_id, COUNT(*) FROM sales GROUP BY gp_segment_id ;
+</code></pre>
+<h3 id="setting-interconnect-proxies-for-the-system"><a class="header" href="#setting-interconnect-proxies-for-the-system"><a id="set_gpdb_proxy"></a>Setting Interconnect Proxies for the System</a></h3>
+<p>After you have tested the interconnect proxies for the system, set the server configuration parameter for the system with the <code>gpconfig</code> utility.</p>
+<pre><code>gpconfig -c  gp_interconnect_type -v proxy
+</code></pre>
+<p>Reload the <code>postgresql.conf</code> file with the <code>gpstop -u</code> command. This command does not stop and restart the SynxDB system.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/managing/compression.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/highavail/topics/g-enabling-high-availability-features.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/managing/compression.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/highavail/topics/g-enabling-high-availability-features.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Upgrading from an Earlier SynxDB 2 Release - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="upgrading-from-an-earlier-synxdb-2-release"><a class="header" href="#upgrading-from-an-earlier-synxdb-2-release">Upgrading from an Earlier SynxDB 2 Release</a></h1>
+<p>The upgrade path supported for this release is SynxDB 2.x to a newer SynxDB 2.x release.</p>
+<blockquote>
+<p><strong>Important</strong> Set the SynxDB timezone to a value that is compatible with your host systems. Setting the SynxDB timezone prevents SynxDB from selecting a timezone each time the cluster is restarted and sets the timezone for the SynxDB master and segment instances. After you upgrade to this release and if you have not set a SynxDB timezone value, verify that the selected SynxDB timezone is acceptable for your deployment. See <a href="localization.html">Configuring Timezone and Localization Settings</a> for more information.</p>
+</blockquote>
+<h2 id="prerequisites"><a class="header" href="#prerequisites"><a id="gpdb_prereq"></a>Prerequisites</a></h2>
+<p>Before starting the upgrade process, perform the following checks.</p>
+<ul>
+<li>
+<p>Verify the health of the SynxDB host hardware, and verify that the hosts meet the requirements for running SynxDB. The SynxDB <code>gpcheckperf</code> utility can assist you in confirming the host requirements.</p>
+<blockquote>
+<p><strong>Note</strong> If you need to run the <code>gpcheckcat</code> utility, run it a few weeks before the upgrade during a maintenance period. If necessary, you can resolve any issues found by the utility before the scheduled upgrade.</p>
+</blockquote>
+<p>The utility is in <code>$GPHOME/bin</code>. Place SynxDB in restricted mode when you run the <code>gpcheckcat</code> utility. See the <em>SynxDB Utility Guide</em> for information about the <code>gpcheckcat</code> utility.</p>
+<p>If <code>gpcheckcat</code> reports catalog inconsistencies, you can run <code>gpcheckcat</code> with the <code>-g</code> option to generate SQL scripts to fix the inconsistencies.</p>
+<p>After you run the SQL scripts, run <code>gpcheckcat</code> again. You might need to repeat the process of running <code>gpcheckcat</code> and creating SQL scripts to ensure that there are no inconsistencies. Run the SQL scripts generated by <code>gpcheckcat</code> on a quiescent system. The utility might report false alerts if there is activity on the system.</p>
+<blockquote>
+<p><strong>Important</strong> Synx Data Labs customers should contact Synx Data Labs Support if the <code>gpcheckcat</code> utility reports errors but does not generate a SQL script to fix the errors. Information for contacting Synx Data Labs Support is at <a href="https://www.synxdata.com/">https://www.synxdata.com/</a>.</p>
+</blockquote>
+</li>
+<li>
+<p>If you have configured the SynxDB Platform Extension Framework (PXF) in your previous SynxDB installation, you must stop the PXF service and back up PXF configuration files before upgrading to a new version of SynxDB.</p>
+<p>If you have not yet configured PXF, no action is necessary.</p>
+</li>
+</ul>
+<h2 id="upgrading-from-6x-to-a-newer-6x-release"><a class="header" href="#upgrading-from-6x-to-a-newer-6x-release"><a id="topic17"></a>Upgrading from 6.x to a Newer 6.x Release</a></h2>
+<p>An upgrade from SynxDB 2.x to a newer 6.x release involves stopping SynxDB, updating the SynxDB software binaries, and restarting SynxDB. If you are using SynxDB extension packages there are additional requirements. See <a href="#gpdb_prereq">Prerequisites</a> in the previous section.</p>
+<ol>
+<li>
+<p>Log in to your SynxDB master host as the SynxDB administrative user:</p>
+<pre><code>$ su - gpadmin
+</code></pre>
+</li>
+<li>
+<p>Perform a smart shutdown of your SynxDB 2.x system (there can be no active connections to the database). This example uses the <code>-a</code> option to deactivate confirmation prompts:</p>
+<pre><code>$ gpstop -a
+</code></pre>
+</li>
+<li>
+<p>Copy the new SynxDB software installation package to the <code>gpadmin</code> user’s home directory on each master, standby, and segment host.</p>
+</li>
+<li>
+<p><em>If you used <code>yum</code> or <code>apt</code> to install SynxDB to the default location</em>, run these commands on each host to upgrade to the new software release.</p>
+<p>For RHEL/CentOS systems:</p>
+<pre><code>$ sudo yum upgrade ./greenplum-db-&lt;version&gt;-&lt;platform&gt;.rpm
+</code></pre>
+<p>For Ubuntu systems:</p>
+<pre><code># apt install ./greenplum-db-&lt;version&gt;-&lt;platform&gt;.deb
+</code></pre>
+<p>The <code>yum</code> or <code>apt</code> command installs the new SynxDB software files into a version-specific directory under <code>/usr/local</code> and updates the symbolic link <code>/usr/local/greenplum-db</code> to point to the new installation directory.</p>
+</li>
+<li>
+<p><em>If you used <code>rpm</code> to install SynxDB to a non-default location on RHEL/CentOS systems</em>, run <code>rpm</code> on each host to upgrade to the new software release and specify the same custom installation directory with the <code>--prefix</code> option. For example:</p>
+<pre><code>$ sudo rpm -U ./greenplum-db-&lt;version&gt;-&lt;platform&gt;.rpm --prefix=&lt;directory&gt;
+</code></pre>
+<p>The <code>rpm</code> command installs the new SynxDB software files into a version-specific directory under the <code>&lt;directory&gt;</code> you specify, and updates the symbolic link <code>&lt;directory&gt;/greenplum-db</code> to point to the new installation directory.</p>
+</li>
+<li>
+<p>Update the permissions for the new installation. For example, run this command as <code>root</code> to change the user and group of the installed files to <code>gpadmin</code>.</p>
+<pre><code>$ sudo chown -R gpadmin:gpadmin /usr/local/greenplum*
+</code></pre>
+</li>
+<li>
+<p>If needed, update the <code>synxdb_path.sh</code> file on the master and standby master hosts for use with your specific installation. These are some examples.</p>
+<ul>
+<li>
+<p>If SynxDB uses LDAP authentication, edit the <code>synxdb_path.sh</code> file to add the line:</p>
+<pre><code>export LDAPCONF=/etc/openldap/ldap.conf
+</code></pre>
+</li>
+<li>
+<p>If SynxDB uses PL/Java, you might need to set or update the environment variables <code>JAVA_HOME</code> and <code>LD_LIBRARY_PATH</code> in <code>synxdb_path.sh</code>.</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> When comparing the previous and new <code>synxdb_path.sh</code> files, be aware that installing some SynxDB extensions also updates the <code>synxdb_path.sh</code> file. The <code>synxdb_path.sh</code> from the previous release might contain updates that were the result of installing those extensions.</p>
+</blockquote>
+</li>
+<li>
+<p>Edit the environment of the SynxDB superuser (<code>gpadmin</code>) and make sure you are sourcing the <code>synxdb_path.sh</code> file for the new installation. For example change the following line in the <code>.bashrc</code> or your chosen profile file:</p>
+<pre><code>source /usr/local/greenplum-db-&lt;current_version&gt;/synxdb_path.sh
+</code></pre>
+<p>to:</p>
+<pre><code>source /usr/local/greenplum-db-&lt;new_version&gt;/synxdb_path.sh
+</code></pre>
+<p>Or if you are sourcing a symbolic link (<code>/usr/local/greenplum-db</code>) in your profile files, update the link to point to the newly installed version. For example:</p>
+<pre><code>$ sudo rm /usr/local/greenplum-db
+$ sudo ln -s /usr/local/greenplum-db-&lt;new_version&gt; /usr/local/greenplum-db
+</code></pre>
+</li>
+<li>
+<p>Source the environment file you just edited. For example:</p>
+<pre><code>$ source ~/.bashrc
+</code></pre>
+</li>
+<li>
+<p>After all segment hosts have been upgraded, log in as the <code>gpadmin</code> user and restart your SynxDB system:</p>
+<pre><code># su - gpadmin
+$ gpstart
+</code></pre>
+</li>
+<li>
+<p>For SynxDB, use the <code>gppkg</code> utility to re-install SynxDB extensions. If you were previously using any SynxDB extensions such as pgcrypto, PL/R, PL/Java, or PostGIS, download the corresponding packages from <a href="https://www.synxdata.com/">Synx Data Labs</a>, and install using this utility. See the extension documentation for details.</p>
+<p>Also copy any files that are used by the extensions (such as JAR files, shared object files, and libraries) from the previous version installation directory to the new version installation directory on the master and segment host systems.</p>
+</li>
+<li>
+<p>If you configured PXF in your previous SynxDB installation, install PXF in your new SynxDB installation.</p>
+</li>
+</ol>
+<p>After upgrading SynxDB, ensure that all features work as expected. For example, test that backup and restore perform as expected, and SynxDB features such as user-defined functions, and extensions such as MADlib and PostGIS perform as expected.</p>
+<h2 id="troubleshooting-a-failed-upgrade"><a class="header" href="#troubleshooting-a-failed-upgrade"><a id="topic_zbx_szy_kbb"></a>Troubleshooting a Failed Upgrade</a></h2>
+<p>If you experience issues during the migration process, contact Synx Data Labs Support. Information for contacting Synx Data Labs Support is at <a href="https://www.synxdata.com/">https://www.synxdata.com/</a>.</p>
+<p><strong>Be prepared to provide the following information:</strong></p>
+<ul>
+<li>A completed <a href="#topic17">Upgrade Procedure</a></li>
+<li>Log output from <code>gpcheckcat</code> (located in <code>~/gpAdminLogs</code>)</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../install_guide/localization.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pxf-migrate/upgrade_pxf_6x.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../install_guide/localization.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pxf-migrate/upgrade_pxf_6x.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

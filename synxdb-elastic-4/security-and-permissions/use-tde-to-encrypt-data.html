@@ -1,0 +1,315 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Transparent Data Encryption &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data Anonymization Using Anon" href="use-anon.html" />
+    <link rel="prev" title="Manage Roles and Privileges" href="manage-users.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="set-security-and-permission-index.html">Configure Security and Permissions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="set-password-profile.html">Set Password Profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-pgcrypto.html">Use pgcrypto for Data Encryption</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-pgaudit.html">Log Auditing pgAudit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manage-users.html">Manage Roles and Privileges</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Transparent Data Encryption</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction-to-encryption-algorithms">Introduction to encryption algorithms</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#basic-concepts">Basic concepts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#key-management-module">Key management module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#algorithm-categories">Algorithm categories</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-use-tde">How to use TDE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-verify">How to verify</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="use-anon.html">Data Anonymization Using Anon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configure-row-column-security.html">Configure Row-Level and Column-Level Permissions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+      <li class="breadcrumb-item active">Transparent Data Encryption</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="transparent-data-encryption">
+<h1>Transparent Data Encryption<a class="headerlink" href="#transparent-data-encryption" title="Link to this heading"></a></h1>
+<p>To meet the need for user data security, SynxDB Elastic supports Transparent Data Encryption (TDE).</p>
+<p>Transparent Data Encryption (TDE) is a technology for encrypting database data files:</p>
+<ul class="simple">
+<li><p><strong>Data</strong>: Refers to the data within the database.</p></li>
+<li><p><strong>Encryption at rest</strong>: Data files are stored in an encrypted format on disk and are decrypted when read into memory. TDE protects data at rest.</p></li>
+<li><p><strong>Transparency</strong>: The encryption and decryption processes are managed automatically by TDE, so users and applications can use it without changing their operational habits or code.</p></li>
+</ul>
+<section id="introduction-to-encryption-algorithms">
+<h2>Introduction to encryption algorithms<a class="headerlink" href="#introduction-to-encryption-algorithms" title="Link to this heading"></a></h2>
+<section id="basic-concepts">
+<h3>Basic concepts<a class="headerlink" href="#basic-concepts" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>DEK (Data Encryption Key)</strong>: Used to directly encrypt data. It is generated by the database and stored in memory.</p></li>
+<li><p><strong>DEK plaintext</strong>: Synonymous with DEK, it can only be stored in memory.</p></li>
+<li><p><strong>Master Key</strong>: The primary key used to encrypt the DEK, ensuring its security.</p></li>
+<li><p><strong>DEK ciphertext</strong>: The DEK encrypted by the Master Key, which is persisted as ciphertext.</p></li>
+</ul>
+</section>
+<section id="key-management-module">
+<h3>Key management module<a class="headerlink" href="#key-management-module" title="Link to this heading"></a></h3>
+<p>The key management module is the core component of TDE. It uses a two-tier key structure with a Master Key and a DEK. In the cloud-native architecture of SynxDB Elastic, the Master Key is managed by an independent and secure <code class="docutils literal notranslate"><span class="pre">key-service</span></code> component deployed in a Kubernetes cluster. The DEK is used to encrypt database data, and its ciphertext is stored within the database.</p>
+</section>
+<section id="algorithm-categories">
+<h3>Algorithm categories<a class="headerlink" href="#algorithm-categories" title="Link to this heading"></a></h3>
+<p>Encryption algorithms are divided into symmetric and asymmetric encryption. Due to performance advantages, TDE primarily uses block cipher algorithms from symmetric encryption. SynxDB Elastic supports two industry-standard block cipher algorithms: AES and SM4.</p>
+<section id="aes-encryption-algorithm">
+<h4>AES encryption algorithm<a class="headerlink" href="#aes-encryption-algorithm" title="Link to this heading"></a></h4>
+<p>AES is an international standard block cipher algorithm that supports 128, 192, and 256-bit keys. Common encryption modes include:</p>
+<ul class="simple">
+<li><p>ECB: Electronic Codebook mode</p></li>
+<li><p>CBC: Cipher Block Chaining mode</p></li>
+<li><p>CFB: Cipher Feedback mode</p></li>
+<li><p>OFB: Output Feedback mode</p></li>
+<li><p>CTR: Counter mode</p></li>
+</ul>
+</section>
+<section id="more-iso-iec-encryption-algorithms">
+<h4>More ISO/IEC encryption algorithms<a class="headerlink" href="#more-iso-iec-encryption-algorithms" title="Link to this heading"></a></h4>
+<p>Other ISO/IEC algorithms include:</p>
+<ul class="simple">
+<li><p>ISO/IEC 14888-3/AMD1 (that is, SM2): An asymmetric encryption algorithm based on ECC, with better performance than RSA.</p></li>
+<li><p>ISO/IEC 10118-3:2018 (that is, SM3): A message digest algorithm similar to MD5, with a 256-bit output.</p></li>
+<li><p>ISO/IEC 18033-3:2010/AMD1:2021 (that is, SM4): A symmetric encryption algorithm for wireless LAN standards, supporting 128-bit keys and block lengths.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="how-to-use-tde">
+<h2>How to use TDE<a class="headerlink" href="#how-to-use-tde" title="Link to this heading"></a></h2>
+<p>In SynxDB Elastic, TDE is specified when creating a database, enabling database-level encryption.</p>
+<p>Before using TDE, you need to:</p>
+<ul class="simple">
+<li><p>Have permission to execute <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">DATABASE</span></code>.</p></li>
+<li><p>Ensure your version of SynxDB Elastic supports TDE.</p></li>
+<li><p>Have access to the <code class="docutils literal notranslate"><span class="pre">kubectl</span></code> command-line tool to manage the <code class="docutils literal notranslate"><span class="pre">key-service</span></code> during verification.</p></li>
+</ul>
+<p>When creating a database, use the <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">ENCRYPTION_ENABLE</span></code> clause to enable TDE and specify the tablespace and encryption algorithm (for example, <code class="docutils literal notranslate"><span class="pre">aes</span></code> or <code class="docutils literal notranslate"><span class="pre">sm4</span></code>).</p>
+<ul>
+<li><p>Create an encrypted database using the AES algorithm:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">encryptdb_aes</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">ENCRYPTION_ENABLE</span><span class="w"> </span><span class="s1">&#39;aes&#39;</span><span class="w"> </span><span class="n">tablespace</span><span class="w"> </span><span class="n">default_global_synxdb_tablespace</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create an encrypted database using the SM4 algorithm:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">encryptdb_sm4</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">ENCRYPTION_ENABLE</span><span class="w"> </span><span class="s1">&#39;sm4&#39;</span><span class="w"> </span><span class="n">tablespace</span><span class="w"> </span><span class="n">default_global_synxdb_tablespace</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Once created, all data stored in this database (including future tables and data) will be automatically encrypted.</p>
+</section>
+<section id="how-to-verify">
+<h2>How to verify<a class="headerlink" href="#how-to-verify" title="Link to this heading"></a></h2>
+<p>TDE is transparent to upper-layer applications. To verify that TDE can protect data security if the master key is lost, you can simulate a scenario where the <code class="docutils literal notranslate"><span class="pre">key-service</span></code> is unavailable.</p>
+<ol class="arabic">
+<li><p><strong>Create an encrypted database and write data to the database</strong>.</p>
+<p>First, create a database with AES encryption and switch to the database.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Create an encrypted database named encryptdb1</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">encryptdb1</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">ENCRYPTION_ENABLE</span><span class="w"> </span><span class="s1">&#39;aes&#39;</span><span class="w"> </span><span class="n">tablespace</span><span class="w"> </span><span class="n">default_global_synxdb_tablespace</span><span class="p">;</span>
+
+<span class="c1">-- Switch to the newly created database</span>
+<span class="err">\</span><span class="k">c</span><span class="w"> </span><span class="n">encryptdb1</span>
+</pre></div>
+</div>
+<p>To see detailed encryption and decryption logs in the following steps, you can enable the <code class="docutils literal notranslate"><span class="pre">debug_tde_print_encrypt_data</span></code> debug parameter. This is an optional step, mainly for demonstration and debugging purposes.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Sets the warehouse and enable the debug parameter.</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">warehouse</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">wl</span><span class="p">;</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">debug_tde_print_encrypt_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Next, create a table and insert data. At this point, you should see a notification in the terminal indicating the encryption operation.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Creates a test table.</span>
+<span class="n">encryptdb1</span><span class="o">=#</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">t1</span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="nb">int</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span>
+
+<span class="c1">-- Inserts data to trigger encryption.</span>
+<span class="n">encryptdb1</span><span class="o">=#</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">);</span>
+<span class="n">NOTICE</span><span class="p">:</span><span class="w">  </span><span class="n">Encrypt</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="n">BLock</span><span class="p">,</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="n">encrypt</span><span class="w"> </span><span class="n">algorithm</span><span class="p">:</span><span class="w"> </span><span class="n">AES_256</span><span class="w"> </span><span class="p">(</span><span class="n">seg0</span><span class="w"> </span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">:</span><span class="mi">5433</span><span class="w"> </span><span class="n">pid</span><span class="o">=</span><span class="mi">23938</span><span class="p">)</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">5</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Simulate the loss of the Master Key service</strong>.</p>
+<p>The Master Key is managed by the key-service component. You can use the <code class="docutils literal notranslate"><span class="pre">kubectl</span></code> command to scale the number of replicas for this service down to 0, simulating service unavailability.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scales the number of replicas for the key-service deployment to 0.</span>
+kubectl<span class="w"> </span>scale<span class="w"> </span>--replicas<span class="o">=</span><span class="m">0</span><span class="w"> </span>deployment/key-service<span class="w"> </span>-n<span class="w"> </span>&lt;your-namespace&gt;
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;your-namespace&gt;</span></code> with the namespace where your SynxDB Elastic system is running, for example, <code class="docutils literal notranslate"><span class="pre">synxdb-system-4x</span></code>.</p>
+</li>
+<li><p><strong>Verify that data is inaccessible when the key is lost</strong>.</p>
+<p>Because key information is cached in the database, you need to restart the database for the <code class="docutils literal notranslate"><span class="pre">key-service</span></code> shutdown to take effect. After the database restarts, try to query the data in the encrypted table.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">encryptdb1</span><span class="o">=#</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">t1</span><span class="p">;</span>
+<span class="n">ERROR</span><span class="p">:</span><span class="w">  </span><span class="k">get</span><span class="w"> </span><span class="n">master</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="n">fail</span><span class="p">,</span><span class="w"> </span><span class="n">dboid</span><span class="p">:</span><span class="w"> </span><span class="mi">16397</span><span class="p">,</span><span class="w"> </span><span class="n">key_path</span><span class="p">:</span><span class="o">/</span><span class="mi">16397</span><span class="o">/</span><span class="mi">1</span><span class="w">  </span><span class="p">(</span><span class="n">hd_keys_manager</span><span class="p">.</span><span class="k">c</span><span class="p">:</span><span class="mi">259</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The query will fail and return a “get master key fail” error. This clearly indicates that the database cannot decrypt the data without access to the master key from the <code class="docutils literal notranslate"><span class="pre">key-service</span></code>, thus verifying the security of TDE.</p>
+</li>
+<li><p><strong>Restore the Master Key service and verify the data</strong>.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Restores the number of replicas for the key-service deployment to 1.</span>
+kubectl<span class="w"> </span>scale<span class="w"> </span>--replicas<span class="o">=</span><span class="m">1</span><span class="w"> </span>deployment/key-service<span class="w"> </span>-n<span class="w"> </span>&lt;your-namespace&gt;
+</pre></div>
+</div>
+<p>Restart the database again to clear the error state and reload the key. After the database restarts, data queries should return to normal.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Successfully query data, triggering decryption.</span>
+<span class="n">encryptdb1</span><span class="o">=#</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t1</span><span class="p">;</span><span class="w"> </span><span class="p">[</span><span class="n">cite</span><span class="p">:</span><span class="w"> </span><span class="mi">70</span><span class="p">]</span>
+<span class="n">NOTICE</span><span class="p">:</span><span class="w">  </span><span class="n">Decrypt</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="n">BLock</span><span class="p">,</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="n">encrypt</span><span class="w"> </span><span class="n">algorithm</span><span class="p">:</span><span class="w"> </span><span class="n">AES_256</span><span class="w"> </span><span class="p">(</span><span class="n">seg0</span><span class="w"> </span><span class="n">slice1</span><span class="w"> </span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">:</span><span class="mi">5433</span><span class="w"> </span><span class="n">pid</span><span class="o">=</span><span class="mi">23938</span><span class="p">)</span>
+<span class="n">id</span>
+<span class="c1">----</span>
+<span class="p">(</span><span class="mi">5</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>By following these steps, you can fully verify the TDE feature in SynxDB Elastic: it is transparent to users under normal conditions and effectively prevents data access when the key service is abnormal, ensuring the security of data at rest.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="use-anon.html" class="btn btn-neutral float-right" title="Data Anonymization Using Anon" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="manage-users.html" class="btn btn-neutral float-left" title="Manage Roles and Privileges" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

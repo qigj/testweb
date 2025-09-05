@@ -1,0 +1,11 @@
+Manage System
+****************
+
+.. toctree::
+   :maxdepth: 2
+
+   monitor-system/monitor-console-index
+   set-security-and-permission/set-security-and-permission-index
+   backup-and-restore/br-index
+   expand-and-shrink-cluster
+   configure-database-system

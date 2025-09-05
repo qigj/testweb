@@ -1,0 +1,393 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>gpbackup - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gpbackup"><a class="header" href="#gpbackup">gpbackup</a></h1>
+<p>Create a SynxDB backup for use with the <code>gprestore</code> utility.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="synopsis"></a>Synopsis</a></h2>
+<pre><code>gpbackup --dbname &lt;database_name&gt;
+   [--backup-dir &lt;directory&gt;]
+   [--compression-level &lt;level&gt;]
+   [--compression-type &lt;type&gt;]
+   [--copy-queue-size &lt;int&gt;
+   [--data-only]
+   [--debug]
+   [--exclude-schema &lt;schema_name&gt; [--exclude-schema &lt;schema_name&gt; ...]]
+   [--exclude-table &lt;schema.table&gt; [--exclude-table &lt;schema.table&gt; ...]]
+   [--exclude-schema-file &lt;file_name&gt;]
+   [--exclude-table-file &lt;file_name&gt;]
+   [--include-schema &lt;schema_name&gt; [--include-schema &lt;schema_name&gt; ...]]
+   [--include-table &lt;schema.table&gt; [--include-table &lt;schema.table&gt; ...]]
+   [--include-schema-file &lt;file_name&gt;]
+   [--include-table-file &lt;file_name&gt;]
+   [--incremental [--from-timestamp &lt;backup-timestamp&gt;]]
+   [--jobs &lt;int&gt;]
+   [--leaf-partition-data]
+   [--metadata-only]
+   [--no-compression]
+   [--plugin-config &lt;config_file_location&gt;]
+   [--quiet]
+   [--single-data-file]
+   [--verbose]
+   [--version]
+   [--with-stats]
+   [--without-globals]
+
+gpbackup --help 
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="desc"></a>Description</a></h2>
+<p>The <code>gpbackup</code> utility backs up the contents of a database into a collection of metadata files and data files that can be used to restore the database at a later time using <code>gprestore</code>. When you back up a database, you can specify table level and schema level filter options to back up specific tables. For example, you can combine schema level and table level options to back up all the tables in a schema except for a single table.</p>
+<p>By default, <code>gpbackup</code> backs up objects in the specified database as well as global SynxDB system objects. Use <code>--without-globals</code> to omit global objects. <code>gprestore</code> does not restore global objects by default; use <code>--with-globals</code> to restore them. See <a href="../../admin_guide/managing/backup-gpbackup.html">Objects Included in a Backup or Restore</a> for additional information.</p>
+<p>For materialized views, data is not backed up, only the materialized view definition is backed up.</p>
+<p><code>gpbackup</code> stores the object metadata files and DDL files for a backup in the SynxDB master data directory by default. SynxDB segments use the <code>COPY ... ON SEGMENT</code> command to store their data for backed-up tables in compressed CSV data files, located in each segment’s data directory. See <a href="../../admin_guide/managing/backup-gpbackup.html">Understanding Backup Files</a> for additional information.</p>
+<p>You can add the <code>--backup-dir</code> option to copy all backup files from the SynxDB master and segment hosts to an absolute path for later use. Additional options are provided to filter the backup set in order to include or exclude specific tables.</p>
+<p>You can create an incremental backup with the <a href="#incremental">–incremental</a> option. Incremental backups are efficient when the total amount of data in append-optimized tables or table partitions that changed is small compared to the data has not changed. See <a href="../../admin_guide/managing/backup-gpbackup-incremental.html">Creating and Using Incremental Backups with gpbackup and gprestore</a> for information about incremental backups.</p>
+<p>With the default <code>--jobs</code> option (1 job), each <code>gpbackup</code> operation uses a single transaction on the SynxDB master host. The <code>COPY ... ON SEGMENT</code> command performs the backup task in parallel on each segment host. The backup process acquires an <code>ACCESS SHARE</code> lock on each table that is backed up. During the table locking process, the database should be in a quiescent state.</p>
+<p>When a back up operation completes, <code>gpbackup</code> returns a status code. See <a href="#return_codes">Return Codes</a>.</p>
+<p>The <code>gpbackup</code> utility cannot be run while <code>gpexpand</code> is initializing new segments. Backups created before the expansion cannot be restored with <code>gprestore</code> after the cluster expansion is completed.</p>
+<p><code>gpbackup</code> can send status email notifications after a back up operation completes. You specify when the utility sends the mail and the email recipients in a configuration file. See <a href="../../admin_guide/managing/backup-gpbackup.html">Configuring Email Notifications</a>.</p>
+<p><strong>Note:</strong> This utility uses secure shell (SSH) connections between systems to perform its tasks. In large SynxDB deployments, cloud deployments, or deployments with a large number of segments per host, this utility may exceed the host’s maximum threshold for unauthenticated connections. Consider updating the SSH <code>MaxStartups</code> and <code>MaxSessions</code> configuration parameters to increase this threshold. For more information about SSH configuration options, refer to the SSH documentation for your Linux distribution.</p>
+<h2 id="options"><a class="header" href="#options"><a id="opts"></a>Options</a></h2>
+<h3 id="dbname-database_name"><a class="header" href="#dbname-database_name">–dbname &lt;database_name&gt;</a></h3>
+<p>Required. Specifies the database to back up.</p>
+<h3 id="backup-dir"><a class="header" href="#backup-dir">–backup-dir <directory></a></h3>
+<p>Optional. Copies all required backup files (metadata files and data files) to the specified directory. You must specify directory as an absolute path (not relative). If you do not supply this option, metadata files are created on the SynxDB master host in the $MASTER_DATA_DIRECTORY/backups/YYYYMMDD/YYYYMMDDhhmmss/ directory. Segment hosts create CSV data files in the &lt;seg_dir&gt;/backups/YYYYMMDD/YYYYMMDDhhmmss/ directory. When you specify a custom backup directory, files are copied to these paths in subdirectories of the backup directory.</p>
+<p>You cannot combine this option with the option <code>--plugin-config</code>.</p>
+<h3 id="compression-level"><a class="header" href="#compression-level">–compression-level <level></a></h3>
+<p>Optional. Specifies the compression level (from 1 to 9) used to compress data files. The default is 1. Note that <code>gpbackup</code> uses compression by default.</p>
+<h3 id="compression-type"><a class="header" href="#compression-type">–compression-type <type></a></h3>
+<p>Optional. Specifies the compression type (<code>gzip</code> or <code>zstd</code>) used to compress data files. The default is <code>gzip</code>.</p>
+<p><strong>Note:</strong> In order to use the <code>zstd</code> compression type, Zstandard (http://facebook.github.io/zstd/) must be installed in a $PATH accessible by the gpadmin user.</p>
+<h3 id="copy-queue-size"><a class="header" href="#copy-queue-size">–copy-queue-size <int></a></h3>
+<p>Optional. Specifies the number of <code>COPY</code> commands <code>gpbackup</code> should enqueue when backing up using the <code>--single-data-file</code> option. This option optimizes backup performance by reducing the amount of time spent initializing <code>COPY</code> commands. If you do not set this option to 2 or greater, <code>gpbackup</code> enqueues 1 <code>COPY</code> command at a time.</p>
+<p><strong>Note:</strong> This option must be used with the<code>--single-data-file</code> option and cannot be used with the <code>--jobs</code> option.</p>
+<h3 id="data-only"><a class="header" href="#data-only">–data-only</a></h3>
+<p>Optional. Backs up only the table data into CSV files, but does not backup metadata files needed to recreate the tables and other database objects.</p>
+<h3 id="debug"><a class="header" href="#debug">–debug</a></h3>
+<p>Optional. Displays verbose debug messages during operation.</p>
+<h3 id="exclude-schema-schema_name"><a class="header" href="#exclude-schema-schema_name">–exclude-schema &lt;schema_name&gt;</a></h3>
+<p>Optional. Specifies a database schema to exclude from the backup. You can specify this option multiple times to exclude multiple schemas. You cannot combine this option with the option <code>--include-schema</code>, <code>--include-schema-file</code>, or a table filtering option such as <code>--include-table</code>.</p>
+<p>See <a href="../../admin_guide/managing/backup-gpbackup.html">Filtering the Contents of a Backup or Restore</a> for more information.</p>
+<p>See <a href="../../admin_guide/managing/backup-gpbackup.html">Requirements and Limitations</a> for limitations when leaf partitions of a partitioned table are in different schemas from the root partition.</p>
+<h3 id="exclude-schema-file-file_name"><a class="header" href="#exclude-schema-file-file_name">–exclude-schema-file &lt;file_name&gt;</a></h3>
+<p>Optional. Specifies a text file containing a list of schemas to exclude from the backup. Each line in the text file must define a single schema. The file must not include trailing lines. If a schema name uses any character other than a lowercase letter, number, or an underscore character, then you must include that name in double quotes. You cannot combine this option with the option <code>--include-schema</code> or <code>--include-schema-file</code>, or a table filtering option such as <code>--include-table</code>.</p>
+<p>See <a href="../../admin_guide/managing/backup-gpbackup.html">Filtering the Contents of a Backup or Restore</a> for more information.</p>
+<p>See <a href="../../admin_guide/managing/backup-gpbackup.html">Requirements and Limitations</a> for limitations when leaf partitions of a partitioned table are in different schemas from the root partition.</p>
+<h3 id="exclude-table-schematable"><a class="header" href="#exclude-table-schematable">–exclude-table &lt;schema.table&gt;</a></h3>
+<p>Optional. Specifies a table to exclude from the backup. The table must be in the format <code>&lt;schema-name&gt;.&lt;table-name&gt;</code>. If a table or schema name uses any character other than a lowercase letter, number, or an underscore character, then you must include that name in double quotes. You can specify this option multiple times. You cannot combine this option with the option <code>--exclude-schema</code>, <code>--exclude-schema-file</code>, or another a table filtering option such as <code>--include-table</code>.</p>
+<p>If you specify a leaf partition name, <code>gpbackup</code> ignores the partition names. The leaf partition is not excluded.</p>
+<p>See <a href="../../admin_guide/managing/backup-gpbackup.html">Filtering the Contents of a Backup or Restore</a> for more information.</p>
+<h3 id="exclude-table-file-file_name"><a class="header" href="#exclude-table-file-file_name">–exclude-table-file &lt;file_name&gt;</a></h3>
+<p>Optional. Specifies a text file containing a list of tables to exclude from the backup. Each line in the text file must define a single table using the format <code>&lt;schema-name&gt;.&lt;table-name&gt;</code>. The file must not include trailing lines. If a table or schema name uses any character other than a lowercase letter, number, or an underscore character, then you must include that name in double quotes. You cannot combine this option with the option <code>--exclude-schema</code>, <code>--exclude-schema-file</code>, or another a table filtering option such as <code>--include-table</code>.</p>
+<p>If you specify leaf partition names in a file that is used with <code>--exclude-table-file</code>, <code>gpbackup</code> ignores the partition names. The leaf partitions are not excluded.</p>
+<p>See <a href="../../admin_guide/managing/backup-gpbackup.html">Filtering the Contents of a Backup or Restore</a> for more information.</p>
+<h3 id="include-schema-schema_name"><a class="header" href="#include-schema-schema_name">–include-schema &lt;schema_name&gt;</a></h3>
+<p>Optional. Specifies a database schema to include in the backup. You can specify this option multiple times to include multiple schemas. If you specify this option, any schemas that are not included in subsequent <code>--include-schema</code> options are omitted from the backup set. You cannot combine this option with the options <code>--exclude-schema</code>, <code>--exclude-schema-file</code>, <code>--exclude-schema-file</code>, <code>--include-table</code>, or <code>--include-table-file</code>. See <a href="../../admin_guide/managing/backup-gpbackup.html">Filtering the Contents of a Backup or Restore</a> for more information.</p>
+<h3 id="include-schema-file-file_name"><a class="header" href="#include-schema-file-file_name">–include-schema-file &lt;file_name&gt;</a></h3>
+<p>Optional. Specifies a text file containing a list of schemas to back up. Each line in the text file must define a single schema. The file must not include trailing lines. If a schema name uses any character other than a lowercase letter, number, or an underscore character, then you must include that name in double quotes. See <a href="../../admin_guide/managing/backup-gpbackup.html">Filtering the Contents of a Backup or Restore</a> for more information.</p>
+<h3 id="include-table-schematable"><a class="header" href="#include-table-schematable">–include-table &lt;schema.table&gt;</a></h3>
+<p>Optional. Specifies a table to include in the backup. The table must be in the format <code>&lt;schema-name&gt;.&lt;table-name&gt;</code>. For information on specifying special characters in schema and table names, see <a href="#table_names">Schema and Table Names</a>.</p>
+<p>You can specify this option multiple times. You cannot combine this option with a schema filtering option such as <code>--include-schema</code>, or another table filtering option such as <code>--exclude-table-file</code>.</p>
+<p>You can also specify the qualified name of a sequence, a view, or a materialized view.</p>
+<p>If you specify this option, the utility does not automatically back up dependent objects. You must also explicitly specify dependent objects that are required. For example if you back up a view or a materialized view, you must also back up the tables that the view or materialized view uses. If you back up a table that uses a sequence, you must also back up the sequence.</p>
+<p>You can optionally specify a table leaf partition name in place of the table name, to include only specific leaf partitions in a backup with the <code>--leaf-partition-data</code> option. When a leaf partition is backed up, the leaf partition data is backed up along with the metadata for the partitioned table.</p>
+<p>See <a href="../../admin_guide/managing/backup-gpbackup.html">Filtering the Contents of a Backup or Restore</a> for more information.</p>
+<h3 id="include-table-file-file_name"><a class="header" href="#include-table-file-file_name">–include-table-file &lt;file_name&gt;</a></h3>
+<p>Optional. Specifies a text file containing a list of tables to include in the backup. Each line in the text file must define a single table using the format <code>&lt;schema-name&gt;.&lt;table-name&gt;</code>. The file must not include trailing lines. For information on specifying special characters in schema and table names, see <a href="#table_names">Schema and Table Names</a>.</p>
+<p>Any tables not listed in this file are omitted from the backup set. You cannot combine this option with a schema filtering option such as <code>--include-schema</code>, or another table filtering option such as <code>--exclude-table-file</code>.</p>
+<p>You can also specify the qualified name of a sequence, a view, or a materialized view.</p>
+<p>If you specify this option, the utility does not automatically back up dependent objects. You must also explicitly specify dependent objects that are required. For example if you back up a view or a materialized view, you must also specify the tables that the view or the materialized view uses. If you specify a table that uses a sequence, you must also specify the sequence.</p>
+<p>You can optionally specify a table leaf partition name in place of the table name, to include only specific leaf partitions in a backup with the <code>--leaf-partition-data</code> option. When a leaf partition is backed up, the leaf partition data is backed up along with the metadata for the partitioned table.</p>
+<p>See <a href="../../admin_guide/managing/backup-gpbackup.html">Filtering the Contents of a Backup or Restore</a> for more information.</p>
+<h3 id="incremental"><a class="header" href="#incremental">–incremental</a></h3>
+<p>Specify this option to add an incremental backup to an incremental backup set. A backup set is a full backup and one or more incremental backups. The backups in the set must be created with a consistent set of backup options to ensure that the backup set can be used in a restore operation.</p>
+<p>By default, <code>gpbackup</code> attempts to find the most recent existing backup with a consistent set of options. If the backup is a full backup, the utility creates a backup set. If the backup is an incremental backup, the utility adds the backup to the existing backup set. The incremental backup is added as the latest backup in the backup set. You can specify <code>--from-timestamp</code> to override the default behavior.</p>
+<h3 id="from-timestamp"><a class="header" href="#from-timestamp">–from-timestamp <backup-timestamp></a></h3>
+<p>Optional. Specifies the timestamp of a backup. The specified backup must have backup options that are consistent with the incremental backup that is being created. If the specified backup is a full backup, the utility creates a backup set. If the specified backup is an incremental backup, the utility adds the incremental backup to the existing backup set.</p>
+<p>You must specify <code>--leaf-partition-data</code> with this option. You cannot combine this option with <code>--data-only</code> or <code>--metadata-only</code>.</p>
+<p>A backup is not created and the utility returns an error if the backup cannot add the backup to an existing incremental backup set or cannot use the backup to create a backup set.</p>
+<p>For information about creating and using incremental backups, see <a href="../../admin_guide/managing/backup-gpbackup-incremental.html">Creating and Using Incremental Backups with gpbackup and gprestore</a>.</p>
+<h3 id="jobs"><a class="header" href="#jobs">–jobs <int></a></h3>
+<p>Optional. Specifies the number of jobs to run in parallel when backing up tables. By default, <code>gpbackup</code> uses 1 job (database connection). Increasing this number can improve the speed of backing up data. When running multiple jobs, each job backs up tables in a separate transaction. For example, if you specify <code>--jobs 2</code>, the utility creates two processes, each process starts a single transaction, and the utility backs up the tables in parallel using the two processes.
+<br/><br/><strong>Important:</strong> If you specify a value higher than 1, the database must be in a quiescent state at the very beginning while the utility creates the individual connections, initializes their transaction snapshots, and acquires a lock on the tables that are being backed up. If concurrent database operations are being performed on tables that are being backed up during the transaction snapshot initialization and table locking step, consistency between tables that are backed up in different parallel workers cannot be guaranteed.</p>
+<p>You cannot use this option in combination with the options <code>--metadata-only</code>, <code>--single-data-file</code>, or <code>--plugin-config</code>.
+<strong>Note:</strong> When using the <code>--jobs</code> flag, there is a potential deadlock scenario to generate a <code>WARNING</code> message in the log files. During the metadata portion of the backup, the main worker process gathers Access Share locks on all the tables in the backup set. During the data portion of the backup, based on the value of the <code>--jobs</code> flag, additional workers are created that attempt to take additional Access Share locks on the tables they back up. Between the metadata backup and the data backup, if a third party process (operations like <code>TRUNCATE</code>, <code>DROP</code>, <code>ALTER</code>) attempts to access the same tables and obtain an Exclusive lock, the worker thread identifies the potential deadlock, terminates its process, and hands off the table backup responsibilities to the main worker (that already has an Access Share lock on that particular table). A warning message is logged, similar to: <code>[WARNING]:-Worker 5 could not acquire AccessShareLock for table public.foo. Terminating worker and deferring table to main worker thread.</code></p>
+<h3 id="leaf-partition-data"><a class="header" href="#leaf-partition-data">–leaf-partition-data</a></h3>
+<p>Optional. For partitioned tables, creates one data file per leaf partition instead of one data file for the entire table (the default). Using this option also enables you to specify individual leaf partitions to include in or exclude from a backup, with the <code>--include-table</code>, <code>--include-table-file</code>, <code>--exclude-table</code>, and <code>--exclude-table-file</code> options.</p>
+<h3 id="metadata-only"><a class="header" href="#metadata-only">–metadata-only</a></h3>
+<p>Optional. Creates only the metadata files (DDL) needed to recreate the database objects, but does not back up the actual table data.</p>
+<h3 id="no-compression"><a class="header" href="#no-compression">–no-compression</a></h3>
+<p>Optional. Do not compress the table data CSV files.</p>
+<h3 id="plugin-config-config-file_location"><a class="header" href="#plugin-config-config-file_location">–plugin-config &lt;config-file_location&gt;</a></h3>
+<p>Specify the location of the <code>gpbackup</code> plugin configuration file, a YAML-formatted text file. The file contains configuration information for the plugin application that <code>gpbackup</code> uses during the backup operation.</p>
+<p>If you specify the <code>--plugin-config</code> option when you back up a database, you must specify this option with configuration information for a corresponding plugin application when you restore the database from the backup.</p>
+<p>You cannot combine this option with the option <code>--backup-dir</code>.</p>
+<p>For information about using storage plugin applications, see <a href="../../admin_guide/managing/backup-plugins.html">Using gpbackup Storage Plugins</a>.</p>
+<h3 id="quiet"><a class="header" href="#quiet">–quiet</a></h3>
+<p>Optional. Suppress all non-warning, non-error log messages.</p>
+<h3 id="single-data-file"><a class="header" href="#single-data-file">–single-data-file</a></h3>
+<p>Optional. Create a single data file on each segment host for all tables backed up on that segment. By default, each <code>gpbackup</code> creates one compressed CSV file for each table that is backed up on the segment.
+<br/><br/><strong>Note:</strong> If you use the <code>--single-data-file</code> option to combine table backups into a single file per segment, you cannot set the <code>gprestore</code> option <code>--jobs</code> to a value higher than 1 to perform a parallel restore operation.</p>
+<h3 id="verbose"><a class="header" href="#verbose">–verbose</a></h3>
+<p>Optional. Print verbose log messages.</p>
+<h3 id="version"><a class="header" href="#version">–version</a></h3>
+<p>Optional. Print the version number and exit.</p>
+<h3 id="with-stats"><a class="header" href="#with-stats">–with-stats</a></h3>
+<p>Optional. Include query plan statistics in the backup set.</p>
+<h3 id="without-globals"><a class="header" href="#without-globals">–without-globals</a></h3>
+<p>Optional. Omit the global SynxDB system objects during backup.</p>
+<h3 id="help"><a class="header" href="#help">–help</a></h3>
+<p>Displays the online help.</p>
+<h2 id="return-codes"><a class="header" href="#return-codes"><a id="return_codes"></a>Return Codes</a></h2>
+<p>One of these codes is returned after <code>gpbackup</code> completes.</p>
+<ul>
+<li><strong>0</strong> – Backup completed with no problems.</li>
+<li><strong>1</strong> – Backup completed with non-fatal errors. See log file for more information.</li>
+<li><strong>2</strong> – Backup failed with a fatal error. See log file for more information.</li>
+</ul>
+<h2 id="schema-and-table-names"><a class="header" href="#schema-and-table-names"><a id="table_names"></a>Schema and Table Names</a></h2>
+<p>When using the option <code>--include-table</code> or <code>--include-table-file</code> to filter backups, the schema or table names may contain upper-case characters, space ( ), newline (\n), (\t), or any of these special characters:</p>
+<p><code>~ # $ % ^ &amp; * ( ) _ - + [ ] { } &gt; &lt; \ | ; : / ? ! , " '</code></p>
+<p>For example:</p>
+<pre><code>public.foo"bar 
+public.foo bar
+public.foo\nbar
+</code></pre>
+<p><strong>Note:</strong> The <code>--include-table</code> and <code>--include-table-file</code> options do not support schema or table names that contain periods (<code>.</code>) or evaluated newlines.</p>
+<p>When the table name has special characters, the name must be enclosed in single quotes:</p>
+<pre><code>gpbackup --dbname test --include-table 'my#1schema'.'my_$42_Table'
+</code></pre>
+<p>When the table name contains single quotes, use an escape character for each quote or encapsulate the table name within double quotes. For example:</p>
+<pre><code>
+gpbackup --dbname test --include-table public.'foo\'bar'
+gpbackup --dbname test --include-table public."foo'bar"
+</code></pre>
+<p>When using the option <code>--include-table-file</code>, the table names in the text file do not require single quotes. For example, the contents of the text file could be similar to:</p>
+<pre><code>my#1schema.my_$42_Table
+my#1schema.my_$590_Table
+</code></pre>
+<h2 id="examples"><a class="header" href="#examples"><a id="examples"></a>Examples</a></h2>
+<p>Backup all schemas and tables in the “demo” database, including global SynxDB system objects statistics:</p>
+<pre><code>$ gpbackup --dbname demo
+</code></pre>
+<p>Backup all schemas and tables in the “demo” database except for the “twitter” schema:</p>
+<pre><code>$ gpbackup --dbname demo --exclude-schema twitter
+</code></pre>
+<p>Backup only the “twitter” schema in the “demo” database:</p>
+<pre><code>$ gpbackup --dbname demo --include-schema twitter
+</code></pre>
+<p>Backup all schemas and tables in the “demo” database, including global SynxDB system objects and query statistics, and copy all backup files to the /home/gpadmin/backup directory:</p>
+<pre><code>$ gpbackup --dbname demo --with-stats --backup-dir /home/gpadmin/backup
+</code></pre>
+<p>This example uses <code>--include-schema</code> with <code>--exclude-table</code> to back up a schema except for a single table.</p>
+<pre><code>$ gpbackup --dbname demo --include-schema mydata --exclude-table mydata.addresses
+</code></pre>
+<p>You cannot use the option <code>--exclude-schema</code> with a table filtering option such as <code>--include-table</code>.</p>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section9"></a>See Also</a></h2>
+<p><a href="gprestore.html">gprestore</a>, <a href="../../admin_guide/managing/backup-gpbackup.html">Parallel Backup with gpbackup and gprestore</a> and <a href="../../admin_guide/managing/backup-s3-plugin.html">Using the S3 Storage Plugin with gpbackup and gprestore</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../utility_guide/ref/gpaddmirrors.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../utility_guide/ref/gpcheckcat.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../utility_guide/ref/gpaddmirrors.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../utility_guide/ref/gpcheckcat.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

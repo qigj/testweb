@@ -1,0 +1,356 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>System Configuration - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="system-configuration"><a class="header" href="#system-configuration">System Configuration</a></h1>
+<p>Requirements and best practices for system administrators who are configuring SynxDB cluster hosts.</p>
+<p>Configuration of the SynxDB cluster is usually performed as root.</p>
+<h2 id="configuring-the-timezone"><a class="header" href="#configuring-the-timezone"><a id="topic_fvc_zh1_b2b"></a>Configuring the Timezone</a></h2>
+<p>SynxDB selects a timezone to use from a set of internally stored PostgreSQL timezones. The available PostgreSQL timezones are taken from the Internet Assigned Numbers Authority (IANA) Time Zone Database, and SynxDB updates its list of available timezones as necessary when the IANA database changes for PostgreSQL.</p>
+<p>SynxDB selects the timezone by matching a PostgreSQL timezone with the user specified time zone, or the host system time zone if no time zone is configured. For example, when selecting a default timezone, SynxDB uses an algorithm to select a PostgreSQL timezone based on the host system timezone files. If the system timezone includes leap second information, SynxDB cannot match the system timezone with a PostgreSQL timezone. In this case, SynxDB calculates a “best match” with a PostgreSQL timezone based on information from the host system.</p>
+<p>As a best practice, configure SynxDB and the host systems to use a known, supported timezone. This sets the timezone for the SynxDB master and segment instances, and prevents SynxDB from recalculating a “best match” timezone each time the cluster is restarted, using the current system timezone and SynxDB timezone files (which may have been updated from the IANA database since the last restart). Use the <code>gpconfig</code> utility to show and set the SynxDB timezone. For example, these commands show the SynxDB timezone and set the timezone to <code>US/Pacific</code>.</p>
+<pre><code># gpconfig -s TimeZone
+# gpconfig -c TimeZone -v 'US/Pacific'
+</code></pre>
+<p>You must restart SynxDB after changing the timezone. The command <code>gpstop -ra</code> restarts SynxDB. The catalog view <code>pg_timezone_names</code> provides SynxDB timezone information.</p>
+<h2 id="file-system"><a class="header" href="#file-system"><a id="file_system"></a>File System</a></h2>
+<p>XFS is the file system used for SynxDB data directories. Use the mount options described in <a href="../install_guide/prep_os.html">Configuring Your Systems</a>.</p>
+<h2 id="port-configuration"><a class="header" href="#port-configuration"><a id="port_config"></a>Port Configuration</a></h2>
+<p>See the <a href="../install_guide/prep_os.html#topic3">recommended OS parameter settings</a> in the <em>SynxDB Installation Guide</em> for further details.</p>
+<p>Set up <code>ip_local_port_range</code> so it does not conflict with the SynxDB port ranges. For example, setting this range in <code>/etc/sysctl.conf</code>:</p>
+<pre><code>net.ipv4.ip_local_port_range = 10000  65535
+</code></pre>
+<p>you could set the SynxDB base port numbers to these values.</p>
+<pre><code>PORT_BASE = 6000
+MIRROR_PORT_BASE = 7000
+</code></pre>
+<p>See the <a href="../install_guide/prep_os.html#topic3">Recommended OS Parameters Settings</a> in the <em>SynxDB Installation Guide</em> for further details.</p>
+<h2 id="io-configuration"><a class="header" href="#io-configuration"><a id="io_config"></a>I/O Configuration</a></h2>
+<p>Set the blockdev read-ahead size to 16384 on the devices that contain data directories. This command sets the read-ahead size for <code>/dev/sdb</code>.</p>
+<pre><code># /sbin/blockdev --setra 16384 /dev/sdb
+</code></pre>
+<p>This command returns the read-ahead size for <code>/dev/sdb</code>.</p>
+<pre><code># /sbin/blockdev --getra /dev/sdb
+16384
+</code></pre>
+<p>See the <a href="../install_guide/prep_os.html#topic3">Recommended OS Parameters Settings</a> in the <em>SynxDB Installation Guide</em> for further details.</p>
+<p>The deadline IO scheduler should be set for all data directory devices.</p>
+<pre><code> # cat /sys/block/sdb/queue/scheduler
+ noop anticipatory [deadline] cfq 
+</code></pre>
+<p>The maximum number of OS files and processes should be increased in the <code>/etc/security/limits.conf</code> file.</p>
+<pre><code>* soft  nofile 524288
+* hard  nofile 524288
+* soft  nproc 131072
+* hard  nproc 131072
+</code></pre>
+<h2 id="os-memory-configuration"><a class="header" href="#os-memory-configuration"><a id="os_mem_config"></a>OS Memory Configuration</a></h2>
+<p>The Linux sysctl <code>vm.overcommit_memory</code> and <code>vm.overcommit_ratio</code> variables affect how the operating system manages memory allocation. See the <a href="../install_guide/prep_os.html"><code>/etc/sysctl.conf</code></a> file parameters guidelines in the <em>SynxDB Datatabase Installation Guide</em> for further details.</p>
+<p><code>vm.overcommit_memory</code> determines the method the OS uses for determining how much memory can be allocated to processes. This should be always set to 2, which is the only safe setting for the database.</p>
+<blockquote>
+<p><strong>Note</strong> For information on configuration of overcommit memory, refer to:</p>
+</blockquote>
+<ul>
+<li><a href="https://www.google.com/url?q=https://en.wikipedia.org/wiki/Memory_overcommitment&amp;sa=D&amp;ust=1499719618717000&amp;usg=AFQjCNErcHO7vErv4pn9fIhCxrR0XRiknA">https://en.wikipedia.org/wiki/Memory_overcommitment</a></li>
+<li><a href="https://www.google.com/url?q=https://www.kernel.org/doc/Documentation/vm/overcommit-accounting&amp;sa=D&amp;ust=1499719618717000&amp;usg=AFQjCNEmu5tZutAaN1KCSlIwz4hwqihkOQ">https://www.kernel.org/doc/Documentation/vm/overcommit-accounting</a></li>
+</ul>
+<p><code>vm.overcommit_ratio</code> is the percent of RAM that is used for application processes. The default is 50 on Red Hat Enterprise Linux. See <a href="#segment_mem_config">Resource Queue Segment Memory Configuration</a> for a formula to calculate an optimal value.</p>
+<p>Do not enable huge pages in the operating system.</p>
+<p>See also <a href="workloads.html">Memory and Resource Management with Resource Queues</a>.</p>
+<h2 id="shared-memory-settings"><a class="header" href="#shared-memory-settings"><a id="shared_mem_config"></a>Shared Memory Settings</a></h2>
+<p>SynxDB uses shared memory to communicate between <code>postgres</code> processes that are part of the same <code>postgres</code> instance. The following shared memory settings should be set in <code>sysctl</code> and are rarely modified. See the <a href="../install_guide/prep_os.html"><code>sysctl.conf</code></a> file parameters in the <em>SynxDB Installation Guide</em> for further details.</p>
+<pre><code>kernel.shmmax = 810810728448
+kernel.shmmni = 4096
+kernel.shmall = 197951838
+</code></pre>
+<p>See <a href="../install_guide/prep_os.html">Setting the SynxDB Recommended OS Parameters</a> for more details.</p>
+<h2 id="number-of-segments-per-host"><a class="header" href="#number-of-segments-per-host"><a id="host_segs"></a>Number of Segments per Host</a></h2>
+<p>Determining the number of segments to run on each segment host has immense impact on overall system performance. The segments share the host’s CPU cores, memory, and NICs with each other and with other processes running on the host. Over-estimating the number of segments a server can accommodate is a common cause of suboptimal performance.</p>
+<p>The factors that must be considered when choosing how many segments to run per host include the following:</p>
+<ul>
+<li>Number of cores</li>
+<li>Amount of physical RAM installed in the server</li>
+<li>Number of NICs</li>
+<li>Amount of storage attached to server</li>
+<li>Mixture of primary and mirror segments</li>
+<li>ETL processes that will run on the hosts</li>
+<li>Non-SynxDB processes running on the hosts</li>
+</ul>
+<h2 id="resource-queue-segment-memory-configuration"><a class="header" href="#resource-queue-segment-memory-configuration"><a id="segment_mem_config"></a>Resource Queue Segment Memory Configuration</a></h2>
+<p>The <code>gp_vmem_protect_limit</code> server configuration parameter specifies the amount of memory that all active postgres processes for a single segment can consume at any given time. Queries that exceed this amount will fail. Use the following calculations to estimate a safe value for <code>gp_vmem_protect_limit</code>.</p>
+<ol>
+<li>
+<p>Calculate <code>gp_vmem</code>, the host memory available to SynxDB.</p>
+<ul>
+<li>
+<p>If the total system memory is less than 256 GB, use this formula:</p>
+<pre><code>gp_vmem = ((SWAP + RAM) – (7.5GB + 0.05 * RAM)) / 1.7
+</code></pre>
+</li>
+<li>
+<p>If the total system memory is equal to or greater than 256 GB, use this formula:</p>
+<pre><code>gp_vmem = ((SWAP + RAM) – (7.5GB + 0.05 * RAM)) / 1.17
+</code></pre>
+</li>
+</ul>
+<p>where <code>SWAP</code> is the host’s swap space in GB and <code>RAM</code> is the RAM installed on the host in GB.</p>
+</li>
+<li>
+<p>Calculate <code>max_acting_primary_segments</code>. This is the maximum number of primary segments that can be running on a host when mirror segments are activated due to a segment or host failure on another host in the cluster. With mirrors arranged in a 4-host block with 8 primary segments per host, for example, a single segment host failure would activate two or three mirror segments on each remaining host in the failed host’s block. The <code>max_acting_primary_segments</code> value for this configuration is 11 (8 primary segments plus 3 mirrors activated on failure).</p>
+</li>
+<li>
+<p>Calculate <code>gp_vmem_protect_limit</code> by dividing the total SynxDB memory by the maximum number of acting primaries:</p>
+<pre><code>gp_vmem_protect_limit = gp_vmem / max_acting_primary_segments
+</code></pre>
+<p>Convert to megabytes to find the value to set for the <code>gp_vmem_protect_limit</code> system configuration parameter.</p>
+</li>
+</ol>
+<p>For scenarios where a large number of workfiles are generated, adjust the calculation for <code>gp_vmem</code> to account for the workfiles.</p>
+<ul>
+<li>
+<p>If the total system memory is less than 256 GB:</p>
+<pre><code>gp_vmem = ((SWAP + RAM) – (7.5GB + 0.05 * RAM - (300KB * total_#_workfiles))) / 1.7
+</code></pre>
+</li>
+<li>
+<p>If the total system memory is equal to or greater than 256 GB:</p>
+<pre><code>gp_vmem = ((SWAP + RAM) – (7.5GB + 0.05 * RAM - (300KB * total_#_workfiles))) / 1.17
+</code></pre>
+</li>
+</ul>
+<p>For information about monitoring and managing workfile usage, see the <em>SynxDB Administrator Guide</em>.</p>
+<p>You can calculate the value of the <code>vm.overcommit_ratio</code> operating system parameter from the value of <code>gp_vmem</code>:</p>
+<pre><code>vm.overcommit_ratio = (RAM - 0.026 * gp_vmem) / RAM
+</code></pre>
+<p>See <a href="#os_mem_config">OS Memory Configuration</a> for more about about <code>vm.overcommit_ratio</code>.</p>
+<p>See also <a href="workloads.html">Memory and Resource Management with Resource Queues</a>.</p>
+<h2 id="resource-queue-statement-memory-configuration"><a class="header" href="#resource-queue-statement-memory-configuration"><a id="statement_mem_config"></a>Resource Queue Statement Memory Configuration</a></h2>
+<p>The <code>statement_mem</code> server configuration parameter is the amount of memory to be allocated to any single query in a segment database. If a statement requires additional memory it will spill to disk. Calculate the value for <code>statement_mem</code> with the following formula:</p>
+<p><code>(gp_vmem_protect_limit * .9) / max_expected_concurrent_queries</code></p>
+<p>For example, for 40 concurrent queries with <code>gp_vmem_protect_limit</code> set to 8GB (8192MB), the calculation for <code>statement_mem</code> would be:</p>
+<p><code>(8192MB * .9) / 40 = 184MB</code></p>
+<p>Each query would be allowed 184MB of memory before it must spill to disk.</p>
+<p>To increase <code>statement_mem</code> safely you must either increase <code>gp_vmem_protect_limit</code> or reduce the number of concurrent queries. To increase <code>gp_vmem_protect_limit</code>, you must add physical RAM and/or swap space, or reduce the number of segments per host.</p>
+<p>Note that adding segment hosts to the cluster cannot help out-of-memory errors unless you use the additional hosts to decrease the number of segments per host.</p>
+<p>Spill files are created when there is not enough memory to fit all the mapper output, usually when 80% of the buffer space is occupied.</p>
+<p>Also, see <a href="workloads.html">Resource Management</a> for best practices for managing query memory using resource queues.</p>
+<h2 id="resource-queue-spill-file-configuration"><a class="header" href="#resource-queue-spill-file-configuration"><a id="spill_files"></a>Resource Queue Spill File Configuration</a></h2>
+<p>SynxDB creates <em>spill files</em> (also called <em>workfiles</em>) on disk if a query is allocated insufficient memory to run in memory. A single query can create no more than 100,000 spill files, by default, which is sufficient for the majority of queries.</p>
+<p>You can control the maximum number of spill files created per query and per segment with the configuration parameter <code>gp_workfile_limit_files_per_query</code>. Set the parameter to 0 to allow queries to create an unlimited number of spill files. Limiting the number of spill files permitted prevents run-away queries from disrupting the system.</p>
+<p>A query could generate a large number of spill files if not enough memory is allocated to it or if data skew is present in the queried data. If a query creates more than the specified number of spill files, SynxDB returns this error:</p>
+<p><code>ERROR: number of workfiles per query limit exceeded</code></p>
+<p>Before raising the <code>gp_workfile_limit_files_per_query</code>, try reducing the number of spill files by changing the query, changing the data distribution, or changing the memory configuration.</p>
+<p>The <code>gp_toolkit</code> schema includes views that allow you to see information about all the queries that are currently using spill files. This information can be used for troubleshooting and for tuning queries:</p>
+<ul>
+<li>The <code>gp_workfile_entries</code> view contains one row for each operator using disk space for workfiles on a segment at the current time. See <a href="tuning_queries.html">How to Read Explain Plans</a> for information about operators.</li>
+<li>The <code>gp_workfile_usage_per_query</code> view contains one row for each query using disk space for workfiles on a segment at the current time.</li>
+<li>The <code>gp_workfile_usage_per_segment</code> view contains one row for each segment. Each row displays the total amount of disk space used for workfiles on the segment at the current time.</li>
+</ul>
+<p>See the <em>SynxDB Reference Guide</em> for descriptions of the columns in these views.</p>
+<p>The <code>gp_workfile_compression</code> configuration parameter specifies whether the spill files are compressed. It is <code>off</code> by default. Enabling compression can improve performance when spill files are used.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../best_practices/summary.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../best_practices/schema.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../best_practices/summary.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../best_practices/schema.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

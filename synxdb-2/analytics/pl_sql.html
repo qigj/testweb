@@ -1,0 +1,474 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>PL/pgSQL Language - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="plpgsql-language"><a class="header" href="#plpgsql-language">PL/pgSQL Language</a></h1>
+<p>This section contains an overview of the SynxDB PL/pgSQL language.</p>
+<ul>
+<li><a href="#topic2">About SynxDB PL/pgSQL</a></li>
+<li><a href="#topic67">PL/pgSQL Plan Caching</a></li>
+<li><a href="#topic6">PL/pgSQL Examples</a></li>
+<li><a href="#topic10">References</a></li>
+</ul>
+<h2 id="about-synxdb-plpgsql"><a class="header" href="#about-synxdb-plpgsql"><a id="topic2"></a>About SynxDB PL/pgSQL</a></h2>
+<p>SynxDB PL/pgSQL is a loadable procedural language that is installed and registered by default with SynxDB. You can create user-defined functions using SQL statements, functions, and operators.</p>
+<p>With PL/pgSQL you can group a block of computation and a series of SQL queries inside the database server, thus having the power of a procedural language and the ease of use of SQL. Also, with PL/pgSQL you can use all the data types, operators and functions of SynxDB SQL.</p>
+<p>The PL/pgSQL language is a subset of Oracle PL/SQL. SynxDB PL/pgSQL is based on Postgres PL/pgSQL. The Postgres PL/pgSQL documentation is at <a href="https://www.postgresql.org/docs/9.4/plpgsql.html">https://www.postgresql.org/docs/9.4/plpgsql.html</a></p>
+<p>When using PL/pgSQL functions, function attributes affect how SynxDB creates query plans. You can specify the attribute <code>IMMUTABLE</code>, <code>STABLE</code>, or <code>VOLATILE</code> as part of the <code>LANGUAGE</code> clause to classify the type of function. For information about the creating functions and function attributes, see the <a href="../ref_guide/sql_commands/CREATE_FUNCTION.html">CREATE FUNCTION</a> command in the <em>SynxDB Reference Guide</em>.</p>
+<p>You can run PL/SQL code blocks as anonymous code blocks. See the <a href="../ref_guide/sql_commands/DO.html">DO</a> command in the <em>SynxDB Reference Guide</em>.</p>
+<h3 id="synxdb-sql-limitations"><a class="header" href="#synxdb-sql-limitations"><a id="topic3"></a>SynxDB SQL Limitations</a></h3>
+<p>When using SynxDB PL/pgSQL, limitations include</p>
+<ul>
+<li>Triggers are not supported</li>
+<li>Cursors are forward moving only (not scrollable)</li>
+<li>Updatable cursors (<code>UPDATE...WHERE CURRENT OF</code> and <code>DELETE...WHERE CURRENT OF</code>) are not supported.</li>
+<li>Parallel retrieve cursors (<code>DECLARE...PARALLEL RETRIEVE</code>) are not supported.</li>
+</ul>
+<p>For information about SynxDB SQL conformance, see <a href="../ref_guide/feature_summary.html">Summary of SynxDB Features</a> in the <em>SynxDB Reference Guide</em>.</p>
+<h3 id="the-plpgsql-language"><a class="header" href="#the-plpgsql-language"><a id="topic4"></a>The PL/pgSQL Language</a></h3>
+<p>PL/pgSQL is a block-structured language. The complete text of a function definition must be a block. A block is defined as:</p>
+<pre><code>[ &lt;label&gt; ]
+[ DECLARE
+   declarations ]
+BEGIN
+   statements
+END [ &lt;label&gt; ];
+</code></pre>
+<p>Each declaration and each statement within a block is terminated by a semicolon (;). A block that appears within another block must have a semicolon after <code>END</code>, as shown in the previous block. The <code>END</code> that concludes a function body does not require a semicolon.</p>
+<p>A label is required only if you want to identify the block for use in an <code>EXIT</code> statement, or to qualify the names of variables declared in the block. If you provide a label after <code>END</code>, it must match the label at the block’s beginning.</p>
+<blockquote>
+<p><strong>Important</strong> Do not confuse the use of the <code>BEGIN</code> and <code>END</code> keywords for grouping statements in PL/pgSQL with the database commands for transaction control. The PL/pgSQL <code>BEGIN</code> and <code>END</code> keywords are only for grouping; they do not start or end a transaction. Functions are always run within a transaction established by an outer query — they cannot start or commit that transaction, since there would be no context for them to run in. However, a PL/pgSQL block that contains an <code>EXCEPTION</code> clause effectively forms a subtransaction that can be rolled back without affecting the outer transaction. For more about the <code>EXCEPTION</code> clause, see the PostgreSQL documentation on trapping errors at <a href="https://www.postgresql.org/docs/9.4/plpgsql-control-structures.html#PLPGSQL-ERROR-TRAPPING">https://www.postgresql.org/docs/9.4/plpgsql-control-structures.html#PLPGSQL-ERROR-TRAPPING</a>.</p>
+</blockquote>
+<p>Keywords are case-insensitive. Identifiers are implicitly converted to lowercase unless double-quoted, just as they are in ordinary SQL commands.</p>
+<p>Comments work the same way in PL/pgSQL code as in ordinary SQL:</p>
+<ul>
+<li>
+<p>A double dash (–) starts a comment that extends to the end of the line.</p>
+</li>
+<li>
+<p>A /* starts a block comment that extends to the matching occurrence of */.</p>
+<p>Block comments nest.</p>
+</li>
+</ul>
+<p>Any statement in the statement section of a block can be a subblock. Subblocks can be used for logical grouping or to localize variables to a small group of statements.</p>
+<p>Variables declared in a subblock mask any similarly-named variables of outer blocks for the duration of the subblock. You can access the outer variables if you qualify their names with their block’s label. For example this function declares a variable named <code>quantity</code> several times:</p>
+<pre><code>CREATE FUNCTION testfunc() RETURNS integer AS $$
+&lt;&lt; outerblock &gt;&gt;
+DECLARE
+   quantity integer := 30;
+BEGIN
+   RAISE NOTICE 'Quantity here is %', quantity;  -- Prints 30
+   quantity := 50;
+   --
+   -- Create a subblock
+   --
+   DECLARE
+      quantity integer := 80;
+   BEGIN
+      RAISE NOTICE 'Quantity here is %', quantity;  -- Prints 80
+      RAISE NOTICE 'Outer quantity here is %', outerblock.quantity;  -- Prints 50
+   END;
+   RAISE NOTICE 'Quantity here is %', quantity;  -- Prints 50
+   RETURN quantity;
+END;
+$$ LANGUAGE plpgsql;
+</code></pre>
+<h4 id="running-sql-commands"><a class="header" href="#running-sql-commands"><a id="topic5"></a>Running SQL Commands</a></h4>
+<p>You can run SQL commands with PL/pgSQL statements such as <code>EXECUTE</code>, <code>PERFORM</code>, and <code>SELECT ... INTO</code>. For information about the PL/pgSQL statements, see <a href="https://www.postgresql.org/docs/9.4/plpgsql-statements.html">https://www.postgresql.org/docs/9.4/plpgsql-statements.html</a>.</p>
+<blockquote>
+<p><strong>Note</strong> The PL/pgSQL statement <code>SELECT INTO</code> is not supported in the <code>EXECUTE</code> statement.</p>
+</blockquote>
+<h2 id="plpgsql-plan-caching"><a class="header" href="#plpgsql-plan-caching"><a id="topic67"></a>PL/pgSQL Plan Caching</a></h2>
+<p>A PL/pgSQL function’s volatility classification has implications on how SynxDB caches plans that reference the function. Refer to <a href="../admin_guide/query/topics/functions-operators.html#topic281">Function Volatility and Plan Caching</a> in the <em>SynxDB Administrator Guide</em> for information on plan caching considerations for SynxDB function volatility categories.</p>
+<p>When a PL/pgSQL function runs for the first time in a database session, the PL/pgSQL interpreter parses the function’s SQL expressions and commands. The interpreter creates a prepared execution plan as each expression and SQL command is first run in the function. The PL/pgSQL interpreter reuses the execution plan for a specific expression and SQL command for the life of the database connection. While this reuse substantially reduces the total amount of time required to parse and generate plans, errors in a specific expression or command cannot be detected until run time when that part of the function is run.</p>
+<p>SynxDB will automatically re-plan a saved query plan if there is any schema change to any relation used in the query, or if any user-defined function used in the query is redefined. This makes the re-use of a prepared plan transparent in most cases.</p>
+<p>The SQL commands that you use in a PL/pgSQL function must refer to the same tables and columns on every execution. You cannot use a parameter as the name of a table or a column in an SQL command.</p>
+<p>PL/pgSQL caches a separate query plan for each combination of actual argument types in which you invoke a polymorphic function to ensure that data type differences do not cause unexpected failures.</p>
+<p>Refer to the PostgreSQL <a href="https://www.postgresql.org/docs/9.4/plpgsql-implementation.html#PLPGSQL-PLAN-CACHING">Plan Caching</a> documentation for a detailed discussion of plan caching considerations in the PL/pgSQL language.</p>
+<h2 id="plpgsql-examples"><a class="header" href="#plpgsql-examples"><a id="topic6"></a>PL/pgSQL Examples</a></h2>
+<p>The following are examples of PL/pgSQL user-defined functions.</p>
+<h3 id="example-aliases-for-function-parameters"><a class="header" href="#example-aliases-for-function-parameters"><a id="topic7"></a>Example: Aliases for Function Parameters</a></h3>
+<p>Parameters passed to functions are named with identifiers such as <code>$1</code>, <code>$2</code>. Optionally, aliases can be declared for <code>$n</code> parameter names for increased readability. Either the alias or the numeric identifier can then be used to refer to the parameter value.</p>
+<p>There are two ways to create an alias. The preferred way is to give a name to the parameter in the <code>CREATE FUNCTION</code> command, for example:</p>
+<pre><code>CREATE FUNCTION sales_tax(subtotal real) RETURNS real AS $$
+BEGIN
+   RETURN subtotal * 0.06;
+END;
+$$ LANGUAGE plpgsql;
+</code></pre>
+<p>You can also explicitly declare an alias, using the declaration syntax:</p>
+<pre><code>name ALIAS FOR $n;
+</code></pre>
+<p>This example, creates the same function with the <code>DECLARE</code> syntax.</p>
+<pre><code>CREATE FUNCTION sales_tax(real) RETURNS real AS $$
+DECLARE
+    subtotal ALIAS FOR $1;
+BEGIN
+    RETURN subtotal * 0.06;
+END;
+$$ LANGUAGE plpgsql;
+</code></pre>
+<h3 id="example-using-the-data-type-of-a-table-column"><a class="header" href="#example-using-the-data-type-of-a-table-column"><a id="topic8"></a>Example: Using the Data Type of a Table Column</a></h3>
+<p>When declaring a variable, you can use the <code>%TYPE</code> construct to specify the data type of a variable or table column. This is the syntax for declaring a variable whose type is the data type of a table column:</p>
+<pre><code>name table.column_name%TYPE;
+</code></pre>
+<p>You can use the <code>%TYPE</code> construct to declare variables that will hold database values. For example, suppose you have a column named <code>user_id</code> in your <code>users</code> table. To declare a variable named <code>my_userid</code> with the same data type as the <code>users.user_id</code> column:</p>
+<pre><code>my_userid users.user_id%TYPE;
+</code></pre>
+<p><code>%TYPE</code> is particularly valuable in polymorphic functions, since the data types needed for internal variables may change from one call to the next. Appropriate variables can be created by applying <code>%TYPE</code> to the function’s arguments or result placeholders.</p>
+<h3 id="example-composite-type-based-on-a-table-row"><a class="header" href="#example-composite-type-based-on-a-table-row"><a id="topic_mbj_vfg_mjb"></a>Example: Composite Type Based on a Table Row</a></h3>
+<p>A variable of a composite type is called a row variable. The following syntax declares a composite variable based on table row:</p>
+<pre><code>name table_name%ROWTYPE;
+</code></pre>
+<p>Such a row variable can hold a whole row of a <code>SELECT</code> or <code>FOR</code> query result, so long as that query’s column set matches the declared type of the variable. The individual fields of the row value are accessed using the usual dot notation, for example <code>rowvar.column</code>.</p>
+<p>Parameters to a function can be composite types (complete table rows). In that case, the corresponding identifier <code>$n</code> will be a row variable, and fields can be selected from it, for <code>example $1.user_id</code>.</p>
+<p>Only the user-defined columns of a table row are accessible in a row-type variable, not the OID or other system columns. The fields of the row type inherit the table’s field size or precision for data types such as <code>char(n)</code>.</p>
+<p>The next example function uses a row variable composite type. Before creating the function, create the table that is used by the function with this command.</p>
+<pre><code>CREATE TABLE table1 (
+  f1 text,
+  f2 numeric,
+  f3 integer
+) distributed by (f1);
+</code></pre>
+<p>This <code>INSERT</code> command adds data to the table.</p>
+<pre><code>INSERT INTO table1 values 
+ ('test1', 14.1, 3),
+ ('test2', 52.5, 2),
+ ('test3', 32.22, 6),
+ ('test4', 12.1, 4) ;
+</code></pre>
+<p>This function uses a column <code>%TYPE</code> variable and <code>%ROWTYPE</code> composite variable based on <code>table1</code>.</p>
+<pre><code>CREATE OR REPLACE FUNCTION t1_calc( name text) RETURNS integer 
+AS $$ 
+DECLARE
+    t1_row   table1%ROWTYPE;
+    calc_int table1.f3%TYPE;
+BEGIN
+    SELECT * INTO t1_row FROM table1 WHERE table1.f1 = $1 ;
+    calc_int = (t1_row.f2 * t1_row.f3)::integer ;
+    RETURN calc_int ;
+END;
+$$ LANGUAGE plpgsql VOLATILE;
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> The previous function is classified as a <code>VOLATILE</code> function because function values could change within a single table scan.</p>
+</blockquote>
+<p>The following <code>SELECT</code> command uses the function.</p>
+<pre><code>select t1_calc( 'test1' );
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> The example PL/pgSQL function uses <code>SELECT</code> with the <code>INTO</code> clause. It is different from the SQL command <code>SELECT INTO</code>. If you want to create a table from a <code>SELECT</code> result inside a PL/pgSQL function, use the SQL command <code>CREATE TABLE AS</code>.</p>
+</blockquote>
+<h3 id="example-using-a-variable-number-of-arguments"><a class="header" href="#example-using-a-variable-number-of-arguments"><a id="topic_lsh_5n5_2z1717"></a>Example: Using a Variable Number of Arguments</a></h3>
+<p>You can declare a PL/pgSQL function to accept variable numbers of arguments, as long as all of the optional arguments are of the same data type. You must mark the last argument of the function as <code>VARIADIC</code> and declare the argument using an array type. You can refer to a function that includes <code>VARIADIC</code> arguments as a variadic function.</p>
+<p>For example, this variadic function returns the minimum value of a variable array of numerics:</p>
+<pre><code>CREATE FUNCTION mleast (VARIADIC numeric[]) 
+    RETURNS numeric AS $$
+  DECLARE minval numeric;
+  BEGIN
+    SELECT min($1[i]) FROM generate_subscripts( $1, 1) g(i) INTO minval;
+    RETURN minval;
+END;
+$$ LANGUAGE plpgsql;
+CREATE FUNCTION
+
+SELECT mleast(10, -1, 5, 4.4);
+ mleast
+--------
+     -1
+(1 row)
+
+</code></pre>
+<p>Effectively, all of the actual arguments at or beyond the <code>VARIADIC</code> position are gathered up into a one-dimensional array.</p>
+<p>You can pass an already-constructed array into a variadic function. This is particularly useful when you want to pass arrays between variadic functions. Specify <code>VARIADIC</code> in the function call as follows:</p>
+<pre><code>SELECT mleast(VARIADIC ARRAY[10, -1, 5, 4.4]);
+</code></pre>
+<p>This prevents PL/pgSQL from expanding the function’s variadic parameter into its element type.</p>
+<h3 id="example-using-default-argument-values"><a class="header" href="#example-using-default-argument-values"><a id="topic_lsh_5n5_2z1313"></a>Example: Using Default Argument Values</a></h3>
+<p>You can declare PL/pgSQL functions with default values for some or all input arguments. The default values are inserted whenever the function is called with fewer than the declared number of arguments. Because arguments can only be omitted from the end of the actual argument list, you must provide default values for all arguments after an argument defined with a default value.</p>
+<p>For example:</p>
+<pre><code>CREATE FUNCTION use_default_args(a int, b int DEFAULT 2, c int DEFAULT 3)
+    RETURNS int AS $$
+DECLARE
+    sum int;
+BEGIN
+    sum := $1 + $2 + $3;
+    RETURN sum;
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT use_default_args(10, 20, 30);
+ use_default_args
+------------------
+               60
+(1 row)
+
+SELECT use_default_args(10, 20);
+ use_default_args
+------------------
+               33
+(1 row)
+
+SELECT use_default_args(10);
+ use_default_args
+------------------
+               15
+(1 row)
+
+</code></pre>
+<p>You can also use the <code>=</code> sign in place of the keyword <code>DEFAULT</code>.</p>
+<h3 id="example-using-polymorphic-data-types"><a class="header" href="#example-using-polymorphic-data-types"><a id="topic_lsh_5n5_2z"></a>Example: Using Polymorphic Data Types</a></h3>
+<p>PL/pgSQL supports the polymorphic <em>anyelement</em>, <em>anyarray</em>, <em>anyenum</em>, and <em>anynonarray</em> types. Using these types, you can create a single PL/pgSQL function that operates on multiple data types. Refer to <a href="../ref_guide/data_types.html">SynxDB Data Types</a> for additional information on polymorphic type support in SynxDB.</p>
+<p>A special parameter named <code>$0</code> is created when the return type of a PL/pgSQL function is declared as a polymorphic type. The data type of <code>$0</code> identifies the return type of the function as deduced from the actual input types.</p>
+<p>In this example, you create a polymorphic function that returns the sum of two values:</p>
+<pre><code>CREATE FUNCTION add_two_values(v1 anyelement,v2 anyelement)
+    RETURNS anyelement AS $$ 
+DECLARE 
+    sum ALIAS FOR $0;
+BEGIN
+    sum := v1 + v2;
+    RETURN sum;
+END;
+$$ LANGUAGE plpgsql;
+</code></pre>
+<p>Run <code>add_two_values()</code> providing integer input values:</p>
+<pre><code>SELECT add_two_values(1, 2);
+ add_two_values
+----------------
+              3
+(1 row)
+</code></pre>
+<p>The return type of <code>add_two_values()</code> is integer, the type of the input arguments. Now execute <code>add_two_values()</code> providing float input values:</p>
+<pre><code>SELECT add_two_values (1.1, 2.2);
+ add_two_values
+----------------
+            3.3
+(1 row)
+</code></pre>
+<p>The return type of <code>add_two_values()</code> in this case is float.</p>
+<p>You can also specify <code>VARIADIC</code> arguments in polymorphic functions.</p>
+<h3 id="example-anonymous-block"><a class="header" href="#example-anonymous-block"><a id="topic_isw_3sx_cz"></a>Example: Anonymous Block</a></h3>
+<p>This example runs the statements in the <code>t1_calc()</code> function from a previous example as an anonymous block using the <code>DO</code> command. In the example, the anonymous block retrieves the input value from a temporary table.</p>
+<pre><code>CREATE TEMP TABLE list AS VALUES ('test1') DISTRIBUTED RANDOMLY;
+
+DO $$ 
+DECLARE
+    t1_row   table1%ROWTYPE;
+    calc_int table1.f3%TYPE;
+BEGIN
+    SELECT * INTO t1_row FROM table1, list WHERE table1.f1 = list.column1 ;
+    calc_int = (t1_row.f2 * t1_row.f3)::integer ;
+    RAISE NOTICE 'calculated value is %', calc_int ;
+END $$ LANGUAGE plpgsql ;
+</code></pre>
+<h2 id="references"><a class="header" href="#references"><a id="topic10"></a>References</a></h2>
+<p>The PostgreSQL documentation about PL/pgSQL is at <a href="https://www.postgresql.org/docs/9.4/plpgsql.html">https://www.postgresql.org/docs/9.4/plpgsql.html</a></p>
+<p>Also, see the <a href="../ref_guide/sql_commands/CREATE_FUNCTION.html">CREATE FUNCTION</a> command in the <em>SynxDB Reference Guide</em>.</p>
+<p>For a summary of built-in SynxDB functions, see <a href="../ref_guide/function-summary.html">Summary of Built-in Functions</a> in the <em>SynxDB Reference Guide</em>. For information about using SynxDB functions see “Querying Data” in the <em>SynxDB Administrator Guide</em></p>
+<p>For information about porting Oracle functions, see <a href="https://www.postgresql.org/docs/9.4/plpgsql-porting.html">https://www.postgresql.org/docs/9.4/plpgsql-porting.html</a>. For information about installing and using the Oracle compatibility functions with SynxDB, see “Oracle Compatibility Functions” in the <em>SynxDB Utility Guide</em>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../analytics/pl_perl.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../analytics/pl_python.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../analytics/pl_perl.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../analytics/pl_python.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

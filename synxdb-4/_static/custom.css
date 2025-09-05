@@ -1,0 +1,703 @@
+/* ===== ENTERPRISE PROFESSIONAL THEME ===== */
+
+/* Import Google Fonts for professional aesthetic */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap');
+
+/* ===== GLOBAL STYLES ===== */
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #e9ecef;
+    --text-primary: #212529;
+    --text-secondary: #495057;
+    --text-muted: #6c757d;
+    --accent: #343a40;
+    --accent-hover: #495057;
+    --border: #dee2e6;
+    --border-light: #e9ecef;
+    --code-bg: #f8f9fa;
+    --code-border: #dee2e6;
+    --link: #0056b3;
+    --link-hover: #004494;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --header-bg: #ffffff;
+    --header-border: #dee2e6;
+    --nav-bg: #f8f9fa;
+    --nav-hover: #e9ecef;
+}
+
+/* ===== BODY & TYPOGRAPHY ===== */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== HEADERS ===== */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* ===== LINKS ===== */
+a {
+    color: var(--link);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--link-hover);
+    text-decoration: none;
+}
+
+/* ===== CODE BLOCKS ===== */
+pre, code {
+    font-family: 'Source Code Pro', 'Courier New', monospace;
+    background-color: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 6px;
+    color: var(--text-primary);
+}
+
+pre {
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    position: relative;
+    box-shadow: 0 2px 4px var(--shadow);
+}
+
+pre::before {
+    content: "CODE";
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--accent);
+    color: var(--bg-primary);
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 0 6px 0 6px;
+    font-family: 'Inter', sans-serif;
+}
+
+code {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.9em;
+}
+
+/* ===== TABLES ===== */
+.rst-content table {
+    table-layout: auto;
+    width: 100%;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin: 1rem 0;
+    overflow: hidden;
+}
+
+.rst-content table th {
+    background-color: var(--bg-tertiary);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--accent);
+    min-width: 120px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+.rst-content table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    word-wrap: break-word;
+    white-space: normal;
+    min-width: 100px;
+    max-width: 400px;
+    font-family: 'Inter', sans-serif;
+}
+
+.rst-content table tr:hover {
+    background-color: var(--bg-tertiary);
+}
+
+/* ===== LISTS ===== */
+ul, ol {
+    color: var(--text-secondary);
+    padding-left: 2rem;
+}
+
+li {
+    margin: 0.5rem 0;
+}
+
+ul li::marker {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+/* ===== BLOCKQUOTES ===== */
+blockquote {
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--accent);
+    margin: 1rem 0;
+    padding: 1rem;
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+/* ===== SIDEBAR & NAVIGATION ===== */
+.wy-side-nav-search {
+    background: linear-gradient(135deg, var(--header-bg) 0%, var(--bg-secondary) 100%);
+    border-bottom: 1px solid var(--header-border);
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px var(--shadow);
+}
+
+/* Professional logo/homepage link styling */
+.wy-side-nav-search > a {
+    color: var(--accent);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.wy-side-nav-search > a:hover {
+    color: var(--accent-hover);
+    text-decoration: none;
+    transform: none;
+    text-shadow: none;
+    box-shadow: none;
+}
+
+.wy-side-nav-search > a:focus {
+    outline: none;
+    color: var(--accent-hover);
+}
+
+.wy-side-nav-search input[type="text"] {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.wy-side-nav-search input[type="text"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(52, 58, 64, 0.1);
+    outline: none;
+    background-color: var(--bg-primary);
+}
+
+.wy-nav-side {
+    background-color: var(--bg-primary);
+    border-right: 1px solid var(--border);
+    box-shadow: 2px 0 8px var(--shadow);
+}
+
+/* Navigation menu styling */
+.wy-menu-vertical {
+    padding: 0;
+    margin: 0;
+}
+
+.wy-menu-vertical li {
+    margin: 0;
+    border: none;
+}
+
+.wy-menu-vertical li a {
+    color: var(--text-secondary);
+    border: none;
+    border-bottom: 1px solid var(--border-light);
+    padding: 1rem 1.5rem;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.4;
+    display: block;
+    text-decoration: none;
+    position: relative;
+}
+
+.wy-menu-vertical li a:hover {
+    background-color: var(--bg-secondary);
+    color: var(--accent);
+    border-left: 3px solid var(--accent);
+    padding-left: 1.25rem;
+    font-weight: 500;
+    transform: none;
+    box-shadow: none;
+}
+
+.wy-menu-vertical li.current > a {
+    background-color: var(--accent);
+    color: var(--bg-primary);
+    font-weight: 600;
+    border-left: 4px solid var(--accent);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.wy-menu-vertical li.current > a:hover {
+    background-color: var(--accent-hover);
+    color: var(--bg-primary);
+}
+
+/* Submenu styling */
+.wy-menu-vertical li ul {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-secondary);
+}
+
+.wy-menu-vertical li ul li a {
+    padding: 0.75rem 1.5rem 0.75rem 2.5rem;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-muted);
+}
+
+.wy-menu-vertical li ul li a:hover {
+    background-color: var(--nav-hover);
+    color: var(--text-secondary);
+    border-left: 3px solid var(--border);
+    padding-left: 2.25rem;
+    transform: none;
+    box-shadow: none;
+}
+
+.wy-menu-vertical li ul li.current > a {
+    background-color: var(--accent);
+    color: var(--bg-primary);
+    font-weight: 500;
+    border-left: 4px solid var(--accent);
+}
+
+/* Section headers in navigation */
+.wy-menu-vertical li.toctree-l1 > a {
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border);
+    background-color: var(--bg-secondary);
+    padding: 1.25rem 1.5rem;
+}
+
+.wy-menu-vertical li.toctree-l1 > a:hover {
+    background-color: var(--nav-hover);
+    color: var(--accent);
+    border-left: 3px solid var(--accent);
+    padding-left: 1.25rem;
+    transform: none;
+    box-shadow: none;
+}
+
+.wy-menu-vertical li.toctree-l1.current > a {
+    background-color: var(--accent);
+    color: var(--bg-primary);
+    border-left: 4px solid var(--accent);
+    padding-left: 1.25rem;
+}
+
+/* ===== MOBILE HEADER FIXES ===== */
+@media (max-width: 768px) {
+    .wy-nav-top {
+        background: linear-gradient(135deg, var(--header-bg) 0%, var(--bg-secondary) 100%);
+        border-bottom: 1px solid var(--header-border);
+        box-shadow: 0 2px 8px var(--shadow);
+        padding: 0.75rem 1rem;
+    }
+    
+    .wy-nav-top a {
+        color: var(--accent);
+        font-weight: 600;
+        font-family: 'Inter', sans-serif;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    .wy-nav-top a:hover {
+        color: var(--accent-hover);
+        text-decoration: none;
+        transform: none;
+        text-shadow: none;
+        box-shadow: none;
+    }
+    
+    .wy-nav-top i {
+        color: var(--accent);
+    }
+    
+    .wy-nav-top .wy-breadcrumbs {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+    
+    .wy-nav-top .wy-breadcrumbs a {
+        color: var(--link);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    .wy-nav-top .wy-breadcrumbs a:hover {
+        color: var(--link-hover);
+    }
+    
+    /* Mobile menu button */
+    .wy-nav-top .wy-menu-toggle {
+        background-color: var(--accent);
+        color: var(--bg-primary);
+        border: none;
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px var(--shadow);
+    }
+    
+    .wy-nav-top .wy-menu-toggle:hover {
+        background-color: var(--accent-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px var(--shadow);
+    }
+    
+    /* Mobile navigation sidebar */
+    .wy-nav-side {
+        background-color: var(--bg-primary);
+        box-shadow: 2px 0 12px var(--shadow);
+    }
+    
+    .wy-menu-vertical li a {
+        padding: 1rem 1.25rem;
+        font-size: 0.9rem;
+    }
+    
+    .wy-menu-vertical li.toctree-l1 > a {
+        padding: 1.25rem 1.25rem;
+        font-weight: 600;
+    }
+}
+
+/* ===== MAIN CONTENT ===== */
+.wy-nav-content-wrap {
+    background-color: var(--bg-primary);
+}
+
+.wy-nav-content {
+    background-color: var(--bg-primary);
+    max-width: none;
+    padding: 2.5rem;
+    line-height: 1.7;
+    box-shadow: inset 2px 0 8px var(--shadow);
+}
+
+/* Professional content styling */
+.rst-content {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
+}
+
+.rst-content p {
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+}
+
+.rst-content ul, .rst-content ol {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+}
+
+.rst-content li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+/* ===== BUTTONS ===== */
+.btn, .btn-primary {
+    background-color: var(--accent);
+    border: 1px solid var(--accent);
+    color: var(--bg-primary);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover, .btn-primary:hover {
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
+    color: var(--bg-primary);
+    box-shadow: 0 4px 8px var(--shadow);
+    transform: translateY(-1px);
+}
+
+/* ===== ADMONITIONS ===== */
+.admonition {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin: 1rem 0;
+    padding: 1rem;
+}
+
+.admonition-title {
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .wy-nav-content {
+        padding: 1rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    pre {
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+}
+
+/* ===== SUBTLE ANIMATIONS ===== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+pre {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.btn, .btn-primary {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.text-accent {
+    color: var(--accent);
+}
+
+.bg-dark {
+    background-color: var(--bg-secondary);
+}
+
+.border-accent {
+    border-color: var(--accent);
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+    
+    pre, code {
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        color: black;
+    }
+}
+
+/* ===== PROFESSIONAL HOVER EFFECTS ===== */
+/* Remove any geeky hover effects from navigation */
+.wy-menu-vertical li a:hover,
+.wy-menu-vertical li a:focus,
+.wy-side-nav-search > a:hover,
+.wy-side-nav-search > a:focus,
+.wy-nav-top a:hover,
+.wy-nav-top a:focus {
+    text-shadow: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    animation: none !important;
+}
+
+/* Ensure smooth, professional transitions */
+.wy-menu-vertical li a,
+.wy-side-nav-search > a,
+.wy-nav-top a {
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease !important;
+}
+
+/* ===== HIDE SPHINX FOOTER TEXT ===== */
+.rst-versions,
+.rst-versions .rst-current-version,
+.rst-versions .rst-other-versions {
+    display: none !important;
+}
+
+/* Hide any remaining Sphinx attribution */
+.rst-versions .rst-current-version,
+.rst-versions .rst-other-versions {
+    display: none !important;
+}
+
+/* Ensure our custom footer is visible */
+.footer {
+    display: block !important;
+    background-color: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+}
+
+/* ===== FOOTER NAVIGATION BUTTONS ===== */
+.rst-footer-buttons {
+    margin: 2rem 0 1rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+}
+
+.rst-footer-buttons .btn {
+    background-color: var(--link);
+    border: 1px solid var(--border);
+    color: var(--bg-primary);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.rst-footer-buttons .btn:hover {
+    background-color: var(--link-hover);
+    border-color: var(--border);
+    color: var(--bg-primary);
+    box-shadow: 0 4px 8px var(--shadow);
+    transform: translateY(-1px);
+    text-decoration: none;
+}
+
+.rst-footer-buttons .btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 58, 64, 0.1);
+}
+
+/* Button styling only - keeping original Sphinx positioning */
+
+/* Button icons */
+.rst-footer-buttons .btn i {
+    font-size: 0.8rem;
+    transition: transform 0.2s ease;
+}
+
+.rst-footer-buttons .btn:hover i {
+    transform: none;
+}
+
+/* Responsive design for footer buttons */
+@media (max-width: 768px) {
+    .rst-footer-buttons {
+        padding: 0.75rem;
+    }
+    
+    .rst-footer-buttons .btn {
+        min-width: auto;
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.footer-section p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+}

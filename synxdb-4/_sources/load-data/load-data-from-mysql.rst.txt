@@ -1,0 +1,309 @@
+.. raw:: latex
+
+   \newpage
+
+Load Data from MySQL Server Using MySQL_FDW
+=============================================
+
+.. Code Testcase File: https://code.synxdb.xyz/cloudberry/plugins/mysql_fdw_cloudberry/-/blob/main/sql/connection_validation.sql?ref_type=heads
+.. Doc Testcase on Feishu: https://synxdb.feishu.cn/docx/XgcvdDEoUoKl3TxRYWVcoGkhnKV
+
+
+MySQL FDW is a Foreign Data Wrapper (FDW). You can use it to connect |product_name| to a MySQL database. MySQL FDW is developed based on Linux and can run on any POSIX-compliant system.
+
+Prerequisites
+---------------
+
+Before enabling MySQL FDW, ensure the following steps have been completed:
+
+1. MySQL Server has been correctly installed and is accessible.
+
+2. Install the MySQL Client on the Coordinator node of |product_name|. You can download and install client from the `MySQL official website <https://www.mysql.com/>`_.
+
+   .. note::
+
+      Ensure that ``libmysqlclient.so`` is installed. You can use ``find / -name libmysqlclient.so`` to check its path. If no path is returned, you can install the MySQL Client development package using the following command:
+
+      .. code:: bash
+
+         sudo yum install mysql-community-devel
+
+3. On the Coordinator node, as the ``gpadmin`` user, add the directory path of ``libmysqlclient.so`` to the ``LD_LIBRARY_PATH`` environment variable: ``export LD_LIBRARY_PATH=<path_to_directory_of_libmysqlclient.so>:$LD_LIBRARY_PATH``. You can find the path using the command from step 2.
+
+Use MySQL FDW
+----------------
+
+CREATE SERVER options
+~~~~~~~~~~~~~~~~~~~~~~~
+
+MySQL FDW accepts the following options via the CREATE SERVER command:
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :widths: 12 20
+   :header-rows: 1
+
+   * - Option
+     - Description
+   * - ``host``
+     - String, optional, default value ``127.0.0.1``. Address or hostname of the MySQL server.
+   * - ``port``
+     - Integer, optional, default value ``3306``. Port number of the MySQL server.
+   * - ``secure_auth``
+     - Boolean, optional, default value ``true``. Enable or disable secure authentication.
+   * - ``init_command``
+     - String, optional, no default value. SQL command to execute upon connection to the MySQL server.
+   * - ``use_remote_estimate``
+     - Boolean, optional, default value ``false``. Controls whether MySQL FDW issues a remote EXPLAIN command for cost estimation.
+   * - ``reconnect``
+     - Boolean, optional, default value ``false``. Enable or disable automatic reconnection to the MySQL server when an existing connection is lost.
+   * - ``sql_mode``
+     - String, optional, default value ``ANSI_QUOTES``. Sets MySQL’s sql_mode for the established connection.
+   * - ``ssl_key``
+     - String, optional, no default value. Path to the client private key file.
+   * - ``ssl_cert``
+     - String, optional, no default value. Path to the client public key certificate file.
+   * - ``ssl_ca``
+     - String, optional, no default value. Path to the Certificate Authority (CA) certificate file. If this option is used, the same certificate as the server must be specified.
+   * - ``ssl_capath``
+     - String, optional, no default value. Directory path containing trusted SSL CA certificate files.
+   * - ``ssl_cipher``
+     - String, optional, no default value. Allowed cipher list for SSL encryption.
+   * - ``fetch_size``
+     - Integer, optional, default value ``100``. Specifies the number of rows that MySQL FDW should fetch per fetch operation. Can be specified for a foreign table or a foreign server. The table option overrides the server option.
+   * - ``character_set``
+     - String, optional, default value ``auto``. The character set used for the MySQL connection. The default value is auto, which automatically detects based on the OS settings. Before the introduction of the character_set option, the character set setting was similar to the |product_name| database encoding. To get this old behavior, set character_set to the special value PGDatabaseEncoding.
+   * - ``mysql_default_file``
+     - String, optional, no default value. Specifies the path to the MySQL default file if connection details (like username, password) are to be retrieved from it.
+   * - ``truncatable``
+     - Boolean, optional, default value ``true``. Controls whether MySQL FDW allows the TRUNCATE command on foreign tables. Can be specified for foreign tables or foreign servers. Table-level options override server-level options.
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+CREATE USER MAPPING options
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+MySQL FDW accepts the following options via the CREATE USER MAPPING command:
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :widths: 12 20
+   :header-rows: 1
+
+   * - Option
+     - Description
+   * - ``username``
+     - String, no default value. Username used to connect to MySQL.
+   * - ``password``
+     - String, no default value. Password used for authenticating the MySQL server.
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+CREATE FOREIGN TABLE options
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+MySQL FDW accepts the following table-level options via the CREATE FOREIGN TABLE command:
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :widths: 12 20
+   :header-rows: 1
+
+   * - Option
+     - Description
+   * - ``dbname``
+     - String, required. The name of the MySQL database to query.
+   * - ``table_name``
+     - String, optional, default is the name of the foreign table. Name of the MySQL table.
+   * - ``fetch_size``
+     - Integer, optional. Same as the fetch_size parameter for the foreign server.
+   * - ``max_blob_size``
+     - Integer, optional. The maximum blob size to read without truncation.
+   * - ``truncatable``
+     - Boolean, optional, default value ``true``. Same as the foreign server option.
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+IMPORT FOREIGN SCHEMA options
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+MySQL FDW supports the IMPORT FOREIGN SCHEMA command and accepts the following custom options:
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :widths: 12 20
+   :header-rows: 1
+
+   * - Option
+     - Description
+   * - ``import_default``
+     - Boolean type, optional, default value is ``false``. This option controls whether the column DEFAULT expressions are included when importing foreign table definitions from a foreign server.
+   * - ``import_not_null``
+     - Boolean type, optional, default value is ``true``. This option controls whether the column NOT NULL constraints are included when importing foreign table definitions from a foreign server.
+   * - ``import_enum_as_text``
+     - Boolean type, optional, default value is ``false``. This option allows mapping the MySQL ENUM type to the TEXT type in foreign table definitions. Otherwise, a warning is issued that the creation of a custom type is required.
+   * - ``import_generated``
+     - Boolean type, optional, default value is ``true``. This option controls whether GENERATED column expressions are included when importing foreign table definitions from a foreign server. If the imported generated expression uses functions or operators not available in |product_name|, the import will completely fail.
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+TRUNCATE support
+~~~~~~~~~~~~~~~~~
+
+MySQL FDW implements the ``TRUNCATE`` API, which is available for PostgreSQL kernel versions 14 and above. MySQL provides a ``TRUNCATE`` command; see the `TRUNCATE TABLE Statement <https://dev.mysql.com/doc/refman/8.4/en/truncate-table.html>`_.
+
+Note the following usage limitations:
+
+- ``TRUNCATE ... CASCADE`` is not supported.
+- ``TRUNCATE ... RESTART IDENTITY`` is not supported and is ignored.
+- ``TRUNCATE ... CONTINUE IDENTITY`` is not supported and is ignored.
+- MySQL tables with foreign key references cannot be truncated.
+
+Functions
+~~~~~~~~~
+
+In addition to the standard ``mysql_fdw_handler()`` and ``mysql_fdw_validator()`` functions, MySQL FDW also provides the following utility functions for user invocation:
+
+- ``mysql_fdw_version()``: Returns the version number as an integer.
+- ``mysql_fdw_display_pushdown_list()``: Displays the contents of the ``mysql_fdw_pushdown.config`` file.
+
+.. note:: 
+
+   While MySQL FDW may insert or update values for generated columns in MySQL, it cannot prevent these values from being modified in MySQL. Therefore, there is no guarantee that a subsequent SELECT operation will retrieve the expected generated value for the column.
+
+Usage Examples
+--------------
+
+Installing the Extension
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+In a |product_name| database, enable the MySQL FDW extension as a superuser ``gpadmin``:
+
+.. code:: sql
+
+   CREATE EXTENSION mysql_fdw;
+
+Creating a Foreign Server
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Create a foreign server object and specify the connection parameters for the MySQL database:
+
+.. code:: sql
+
+   CREATE SERVER <mysql_server>
+   FOREIGN DATA WRAPPER mysql_fdw
+   OPTIONS (host '<localhost>', port '<3306>');
+
+.. note:: 
+
+   If MySQL Server and |product_name| Coordinator are installed on the same node, the value for ``host`` must be ``localhost``.
+
+Granting Permissions to Use Foreign Server
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Grant permission for a regular user to use the foreign server:
+
+.. code:: sql
+
+   GRANT USAGE ON FOREIGN SERVER <mysql_server> TO <gpadmin>;
+
+Creating a User Mapping
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Create a user mapping for the MySQL server, specifying the username and password. The following example code creates a MySQL user mapping for the current user:
+
+.. code:: sql
+
+   CREATE USER MAPPING for CURRENT_USER
+   SERVER <mysql_server>
+   OPTIONS (username '<mysql_username>', password '<mysql_pwd>');
+
+Creating a Foreign Table
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Create a foreign table, ensuring that the user has been granted permission to use the foreign server.
+
+If the MySQL table name differs from the foreign table name, use the ``table_name`` option to specify the MySQL table name.
+
+.. note:: 
+
+   The corresponding MySQL table must exist for the foreign table. To perform insert, delete, or update operations, the first column of the MySQL table must be unique. You can either set it as the primary key or add a ``UNIQUE`` constraint.
+
+The following example demonstrates how to create a foreign table. Replace the values in the command before running it:
+
+.. code:: sql
+
+   CREATE FOREIGN TABLE external_warehouse (
+   warehouse_id int,
+   warehouse_name text,
+   warehouse_created timestamp
+   )
+   SERVER mysql_server
+   OPTIONS (dbname 'mysql_db', table_name 'mysql_warehouse');
+
+You can perform insert, select, delete, and update operations in the same way as on a local table.
+
+.. code:: sql
+
+   -- Insert new rows into the table
+   INSERT INTO external_warehouse values (1, 'UPS', current_date);
+   INSERT INTO external_warehouse values (2, 'TV', current_date);
+   INSERT INTO external_warehouse values (3, 'Table', current_date);
+
+   -- Query data from the table
+   SELECT * FROM external_warehouse ORDER BY 1;
+
+   warehouse_id | warehouse_name | warehouse_created
+   -------------+----------------+-------------------
+            1 | UPS            | 10-JUL-20 00:00:00
+            2 | TV             | 10-JUL-20 00:00:00
+            3 | Table          | 10-JUL-20 00:00:00
+
+   -- Delete rows from the table
+   DELETE FROM external_warehouse where warehouse_id = 3;
+
+   -- Update rows in the table
+   UPDATE warehouse set warehouse_name = 'UPS_NEW' where warehouse_id = 1;
+
+   -- Use the VERBOSE option to EXPLAIN the table
+   EXPLAIN VERBOSE SELECT warehouse_id, warehouse_name FROM external_warehouse WHERE warehouse_name LIKE 'TV' limit 1;
+
+                                    QUERY PLAN
+   --------------------------------------------------------------------------------------------------------------------
+   Limit  (cost=10.00..11.00 rows=1 width=36)
+         Output: warehouse_id, warehouse_name
+         ->  Foreign Scan on public.warehouse  (cost=10.00..1010.00 rows=1000 width=36)
+                  Output: warehouse_id, warehouse_name
+                  Local server startup cost: 10
+                  Remote query: SELECT `warehouse_id`, `warehouse_name` FROM `db`.`warehouse` WHERE ((`warehouse_name` LIKE BINARY 'TV'))
+
+Importing a MySQL Database as a |product_name| Schema
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use the ``IMPORT FOREIGN SCHEMA`` command to import a schema from a MySQL database into |product_name|:
+
+.. code:: sql
+
+   IMPORT FOREIGN SCHEMA someschema
+   FROM SERVER <mysql_server>
+   INTO public;

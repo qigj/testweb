@@ -1,0 +1,300 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Understanding Segment Recovery - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../../highlight.css">
+        <link rel="stylesheet" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="understanding-segment-recovery"><a class="header" href="#understanding-segment-recovery">Understanding Segment Recovery</a></h1>
+<p>This topic provides background information about concepts and principles of segment recovery. If you have down segments and need immediate help recovering them, see the instructions in <a href="g-recovering-from-segment-failures.html">Recovering from Segment Failures</a>. For information on how SynxDB detects that segments are down and an explanation of the Fault Tolerance Server (FTS) that manages down segment tracking, see <a href="g-detecting-a-failed-segment.html">How SynxDB Detects a Failed Segment</a>.</p>
+<p>This topic is divided into the following sections:</p>
+<ul>
+<li><a href="#recovery_basics">Segment Recovery Basics</a></li>
+<li><a href="#flow_of_events">Segment Recovery: Flow of Events</a></li>
+<li><a href="#simple_example">Simple Failover and Recovery Example</a></li>
+<li><a href="#types_of_recovery">The Three Types of Segment Recovery</a></li>
+</ul>
+<h2 id="segment-recovery-basics"><a class="header" href="#segment-recovery-basics"><a id="recovery_basics"></a>Segment Recovery Basics</a></h2>
+<p>If the master cannot connect to a segment instance, it marks that segment as down in the SynxDB <code>gp_segment_configuration</code> table. The segment instance remains offline until an administrator takes steps to bring the segment back online. The process for recovering a down segment instance or host depends on the cause of the failure and on whether or not mirroring is enabled. A segment instance can be marked as down for a number of reasons:</p>
+<ul>
+<li>A segment host is unavailable; for example, due to network or hardware failures.</li>
+<li>A segment instance is not running; for example, there is no <code>postgres</code> database listener process.</li>
+<li>The data directory of the segment instance is corrupt or missing; for example, data is not accessible, the file system is corrupt, or there is a disk failure.</li>
+</ul>
+<p>In order to bring the down segment instance back into operation again, you must correct the problem that made it fail in the first place, and then – if you have mirroring enabled – you can attempt to recover the segment instance from its mirror using the <code>gprecoverseg</code> utility. See <a href="#types_of_recovery">The Three Types of Segment Recovery</a>, below, for details on the three possible ways to recover a downed segment’s data.</p>
+<h2 id="segment-recovery-flow-of-events"><a class="header" href="#segment-recovery-flow-of-events"><a id="flow_of_events"></a>Segment Recovery: Flow of Events</a></h2>
+<p><strong>When a Primary Segment Goes Down</strong></p>
+<p>The following summarizes the flow of events that follow a <strong>primary</strong> segment going down:</p>
+<ol>
+<li>A primary segment goes down.</li>
+<li>The Fault Tolerance Server (FTS) detects this and marks the segment as down in the <code>gp_segment_configuration</code> table.</li>
+<li>The mirror segment is promoted to primary and starts functioning as primary. The previous primary is demoted to mirror.</li>
+<li>The user fixes the underlying problem.</li>
+<li>The user runs <code>gprecoverseg</code> to bring back the (formerly primary) mirror segment.</li>
+<li>The WAL synchronization process ensures that the mirror segment data is synchronized with the primary segment data. Users can check the state of this synching with <code>gpstate -e</code>.</li>
+<li>SynxDB marks the segments as up (<code>u</code>) in the <code>gp_segment_configuration</code> table.</li>
+<li>If segments are not in their preferred roles, user runs <code>gprecoverseg -r</code> to restore them to their preferred roles.</li>
+</ol>
+<p><strong>When a Mirror Segment Goes Down</strong></p>
+<p>The following summarizes the flow of events that follow a <strong>mirror</strong> segment going down:</p>
+<ol>
+<li>A mirror segment goes down.</li>
+<li>The Fault Tolerance Server (FTS) detects this and marks the segment as down in the <code>gp_segment_configuration</code> table.</li>
+<li>The user fixes the underlying problem.</li>
+<li>The user runs <code>gprecoverseg</code> to bring back the (formerly mirror) mirror segment.</li>
+<li>The synching process occurs: the mirror comes into sync with its primary via WAL synching. You can check the state of this synching with <code>gpstate -e</code>.</li>
+</ol>
+<h2 id="rebalancing-after-recovery"><a class="header" href="#rebalancing-after-recovery"><a id="rebalancing"></a>Rebalancing After Recovery</a></h2>
+<p>After a segment instance has been recovered, the segments may not be in their preferred roles, which can cause processing to be skewed. The <code>gp_segment_configuration</code> table has the columns <code>role</code> (current role) and <code>preferred_role</code> (original role at the beginning). When a segment’s <code>role</code> and <code>preferred_role</code> do not match the system may not be balanced. To rebalance the cluster and bring all the segments into their preferred roles, run the <code>gprecoverseg -r</code>command.</p>
+<h2 id="simple-failover-and-recovery-example"><a class="header" href="#simple-failover-and-recovery-example"><a id="simple_example"></a>Simple Failover and Recovery Example</a></h2>
+<p>Consider a single primary-mirror segment instance pair where the primary segment has failed over to the mirror. The following table shows the segment instance preferred role, role, mode, and status from the <code>gp_segment_configuration</code> table before beginning recovery of the failed primary segment.</p>
+<p>You can also run <code>gpstate -e</code> to display any issues with a primary or mirror segment instances.</p>
+<div class="table-wrapper"><table><thead><tr><th>Segment Type </th><th><code>preferred_role</code></th><th><code>role</code></th><th><code>mode</code></th><th><code>status</code></th></tr></thead><tbody>
+<tr><td>Primary</td><td><code>p</code>(primary)</td><td><code>m</code>(mirror)</td><td><code>n</code>(Not In Sync)</td><td><code>d</code>(down)</td></tr>
+<tr><td>Mirror</td><td><code>m</code>(mirror)</td><td><code>p</code>(primary)</td><td><code>n</code>(Not In Sync)</td><td><code>u</code>(up)</td></tr>
+</tbody></table>
+</div>
+<p>The primary segment is down and segment instances are not in their preferred roles. The mirror segment is up and its role is now primary. However, it is not synchronized with its mirror (the former primary segment) because that segment is down. You must potentially fix either issues with the host the down segment is running on, issues with the segment instance itself, or both. You then use <code>gprecoverseg</code> to prepare failed segment instances for recovery and initiate synchronization between the primary and mirror instances.</p>
+<p>After <code>gprecoverseg</code> has completed, the segments are in the states shown in the following table where the primary-mirror segment pair is up with the primary and mirror roles reversed from their preferred roles.</p>
+<blockquote>
+<p><strong>Note</strong>
+There might be a lag between when <code>gprecoverseg</code> completes and when the segment status is set to <code>u</code> (up).</p>
+</blockquote>
+<div class="table-wrapper"><table><thead><tr><th>Segment Type </th><th><code>preferred_role</code></th><th><code>role</code></th><th><code>mode</code></th><th><code>status</code></th></tr></thead><tbody>
+<tr><td>Primary</td><td><code>p</code>(primary)</td><td><code>m</code>(mirror)</td><td><code>s</code>(Synchronized)</td><td><code>u</code>(up)</td></tr>
+<tr><td>Mirror</td><td><code>m</code>(mirror)<code>p</code>(primary)</td><td><code>s</code>(Synchronized)</td><td><code>u</code>(up)</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The <code>gprecoverseg -r</code> command rebalances the system by returning the segment roles to their preferred roles.</p>
+<div class="table-wrapper"><table><thead><tr><th> Segment Type</th><th><code>preferred_role</code></th><th><code>role</code></th><th><code>mode</code></th><th><code>status</code></th></tr></thead><tbody>
+<tr><td>Primary</td><td><code>p</code>(primary)</td><td><code>p</code>(primary)</td><td><code>s</code>(Synchronized)</td><td><code>u</code>(up)</td></tr>
+<tr><td>Mirror</td><td><code>m</code>(mirror)</td><td><code>m</code>(mirror)</td><td><code>s</code>(Synchronized)</td><td><code>u</code>(up)</td></tr>
+</tbody></table>
+</div>
+<h2 id="the-three-types-of-segment-recovery"><a class="header" href="#the-three-types-of-segment-recovery"><a id="types_of_recovery"></a>The Three Types of Segment Recovery</a></h2>
+<p>SynxDB can perform three types of segment recovery: full, differential, and incremental (the default).</p>
+<p>Full recovery
+:  Full recovery recovers all segments. Specifically, it erases all data files and directories on the current mirror segment and copies to the mirror segment the exact contents of the current primary segment. Full recovery uses the <code>pg_basebackup</code> utility to copy files.</p>
+<p>With full recovery, you may recover:</p>
+<ul>
+<li>to the current host – known as “in-place recovery”</li>
+<li>to a different host within the current cluster</li>
+<li>to a new host outside of the current cluster</li>
+</ul>
+<p>Differential recovery
+:   Differential recovery performs a filesystem-level diff between the primary and mirror segments, and copies from the primary to the mirror only those files that have changed on the primary. With differential recovery, you may only do in-place recovery. Differential recovery uses the <code>rsync</code> command to copy files.</p>
+<pre><code>&gt;**Note**
+&gt;Differential recovery is not supported when using input configuration files (`gprecoverseg -i`).
+</code></pre>
+<p>Incremental recovery (default)
+:   Incremental recovery brings the mirror segment contents into sync with the primary segment contents with the aid of write-ahead log files (WAL files). With incremental recovery, you may only do in-place recovery. Incremental recovery uses the <code>pg_rewind</code> utility to copy files.</p>
+<pre><code>By default, `gprecoverseg` performs an incremental recovery, placing the mirror into *Synchronizing* mode, which starts to replay the recorded changes from the primary onto the mirror. If the incremental recovery cannot be completed, the recovery fails and you should run `gprecoverseg` again with the `-F` option, to perform full recovery. This causes the primary to copy all of its data to the mirror.
+
+&gt;**Note** 
+&gt;After a failed incremental recovery attempt you must perform a full recovery.
+
+Whenever possible, you should perform an incremental recovery rather than a full recovery, as incremental recovery is substantially faster. If you **do** need to perform an in-place full recovery, you can speed up in-place full recovery with `gprecoverseg`'s `--differential` option, which causes `gprecoverseg` to skip recovery of any files and directories that are unchanged. 
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../admin_guide/highavail/topics/g-checking-for-failed-segments.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../admin_guide/highavail/topics/g-recovering-from-segment-failures.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../admin_guide/highavail/topics/g-checking-for-failed-segments.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../admin_guide/highavail/topics/g-recovering-from-segment-failures.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

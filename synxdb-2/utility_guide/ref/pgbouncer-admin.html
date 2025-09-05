@@ -1,0 +1,486 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>pgbouncer-admin - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="pgbouncer-admin"><a class="header" href="#pgbouncer-admin">pgbouncer-admin</a></h1>
+<p>PgBouncer Administration Console.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="syn"></a>Synopsis</a></h2>
+<pre><code>psql -p &lt;port&gt; pgbouncer
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="desc"></a>Description</a></h2>
+<p>The PgBouncer Administration Console is available via <code>psql</code>. Connect to the PgBouncer <code>&lt;port&gt;</code> and the virtual database named <code>pgbouncer</code> to log in to the console.</p>
+<p>Users listed in the <code>pgbouncer.ini</code> configuration parameters <code>admin_users</code> and <code>stats_users</code> have privileges to log in to the PgBouncer Administration Console. When <code>auth_type=any</code>, then any user is allowed in as a stats_user.</p>
+<p>Additionally, the user name <code>pgbouncer</code> is allowed to log in without password when the login comes via the Unix socket and the client has same Unix user UID as the running process.</p>
+<p>You can control connections between PgBouncer and SynxDB from the console. You can also set PgBouncer configuration parameters.</p>
+<h2 id="options"><a class="header" href="#options"><a id="opt"></a>Options</a></h2>
+<h3 id="-p-port"><a class="header" href="#-p-port">-p &lt;port&gt;</a></h3>
+<p>The PgBouncer port number.</p>
+<h2 id="command-syntax"><a class="header" href="#command-syntax"><a id="topic_bk3_3jc_dt"></a>Command Syntax</a></h2>
+<pre><code>pgbouncer=# SHOW help;
+NOTICE:  Console usage
+DETAIL:  
+    SHOW HELP|CONFIG|USERS|DATABASES|POOLS|CLIENTS|SERVERS|VERSION
+    SHOW FDS|SOCKETS|ACTIVE_SOCKETS|LISTS|MEM
+    SHOW DNS_HOSTS|DNS_ZONES
+    SHOW STATS|STATS_TOTALS|STATS_AVERAGES
+    SHOW TOTALS
+    SET key = arg
+    RELOAD
+    PAUSE [&lt;db&gt;]
+    RESUME [&lt;db&gt;]
+    DISABLE &lt;db&gt;
+    ENABLE &lt;db&gt;
+    RECONNECT [&lt;db&gt;]
+    KILL &lt;db&gt;
+    SUSPEND
+    SHUTDOWN
+</code></pre>
+<h2 id="administration-commands"><a class="header" href="#administration-commands"><a id="topic_bf5_jcl_gs"></a>Administration Commands</a></h2>
+<p>The following PgBouncer administration commands control the running <code>pgbouncer</code> process.</p>
+<h3 id="pause-db"><a class="header" href="#pause-db">PAUSE [&lt;db&gt;]</a></h3>
+<p>If no database is specified, PgBouncer tries to disconnect from all servers, first waiting for all queries to complete. The command will not return before all queries are finished. This command is to be used to prepare to restart the database.</p>
+<p>If a database name is specified, PgBouncer pauses only that database.</p>
+<p>New client connections to a paused database will wait until a <code>RESUME</code> command is invoked.</p>
+<h3 id="disable-db"><a class="header" href="#disable-db">DISABLE &lt;db&gt;</a></h3>
+<p>Reject all new client connections on the database.</p>
+<h3 id="enable-db"><a class="header" href="#enable-db">ENABLE &lt;db&gt;</a></h3>
+<p>Allow new client connections after a previous <code>DISABLE</code> command.</p>
+<h3 id="reconnect"><a class="header" href="#reconnect">RECONNECT</a></h3>
+<p>Close each open server connection for the given database, or all databases, after it is released (according to the pooling mode), even if its lifetime is not up yet. New server connections can be made immediately and will connect as necessary according to the pool size settings.</p>
+<p>This command is useful when the server connection setup has changed, for example to perform a gradual switchover to a new server. It is not necessary to run this command when the connection string in <code>pgbouncer.ini</code> has been changed and reloaded (see <code>RELOAD</code>) or when DNS resolution has changed, because then the equivalent of this command will be run automatically. This command is only necessary if something downstream of PgBouncer routes the connections.</p>
+<p>After this command is run, there could be an extended period where some server connections go to an old destination and some server connections go to a new destination. This is likely only sensible when switching read-only traffic between read-only replicas, or when switching between nodes of a multimaster replication setup. If all connections need to be switched at the same time, <code>PAUSE</code> is recommended instead. To close server connections without waiting (for example, in emergency failover rather than gradual switchover scenarios), also consider <code>KILL</code>.</p>
+<h3 id="kill-db"><a class="header" href="#kill-db">KILL &lt;db&gt;</a></h3>
+<p>Immediately drop all client and server connections to the named database.</p>
+<p>New client connections to a killed database will wait until <code>RESUME</code> is called.</p>
+<h3 id="suspend"><a class="header" href="#suspend">SUSPEND</a></h3>
+<p>All socket buffers are flushed and PgBouncer stops listening for data on them. The command will not return before all buffers are empty. To be used when rebooting PgBouncer online.</p>
+<p>New client connections to a suspended database will wait until <code>RESUME</code> is called.</p>
+<h3 id="resume-db"><a class="header" href="#resume-db">RESUME [&lt;db&gt;]</a></h3>
+<p>Resume work from a previous <code>KILL</code>, <code>PAUSE</code>, or <code>SUSPEND</code> command.</p>
+<h3 id="shutdown"><a class="header" href="#shutdown">SHUTDOWN</a></h3>
+<p>The PgBouncer process will exit. To exit from the <code>psql</code> command line session, enter <code>\q</code>.</p>
+<h3 id="reload"><a class="header" href="#reload">RELOAD</a></h3>
+<p>The PgBouncer process reloads the current configuration file and updates the changeable settings.</p>
+<p>PgBouncer notices when a configuration file reload changes the connection parameters of a database definition. An existing server connection to the old destination will be closed when the server connection is next released (according to the pooling mode), and new server connections will immediately use the updated connection parameters</p>
+<h3 id="wait_close-db"><a class="header" href="#wait_close-db">WAIT_CLOSE [&lt;db&gt;]</a></h3>
+<p>Wait until all server connections, either of the specified database or of all databases, have cleared the “close_needed” state (see <code>SHOW SERVERS</code>). This can be called after a <code>RECONNECT</code> or <code>RELOAD</code> to wait until the respective configuration change has been fully activated, for example in switchover scripts.</p>
+<h3 id="set-key--value"><a class="header" href="#set-key--value">SET key = value</a></h3>
+<p>Changes the specified configuration setting. See the <a href="#CONFIG"><code>SHOW CONFIG;</code></a> command.</p>
+<p>(Note that this command is run on the PgBouncer admin console and sets PgBouncer settings. A <code>SET</code> command run on another database will be passed to the PostgreSQL backend like any other SQL command.)</p>
+<h2 id="show-command"><a class="header" href="#show-command"><a id="topic_zfh_2dl_gs"></a>SHOW Command</a></h2>
+<p>The <code>SHOW &lt;category&gt;</code> command displays different types of PgBouncer information. You can specify one of the following categories:</p>
+<ul>
+<li><a href="#CLIENTS">CLIENTS</a></li>
+<li><a href="#CONFIG">CONFIG</a></li>
+<li><a href="#DATABASES">DATABASES</a></li>
+<li><a href="#DNS_HOSTS">DNS_HOSTS</a></li>
+<li><a href="#DNS_ZONES">DNS_ZONES</a></li>
+<li><a href="#FDS">FDS</a></li>
+<li><a href="#LISTS">LISTS</a></li>
+<li><a href="#MEM">MEM</a></li>
+<li><a href="#POOLS">POOLS</a></li>
+<li><a href="#SERVERS">SERVERS</a></li>
+<li><a href="#SOCKETS">SOCKETS, ACTIVE_SOCKETS</a>,</li>
+<li><a href="#STATS">STATS</a></li>
+<li><a href="#STATS_TOTALS">STATS_TOTALS</a></li>
+<li><a href="#STATS_AVERAGES">STATS_AVERAGES</a></li>
+<li><a href="#TOTALS">TOTALS</a></li>
+<li><a href="#USERS">USERS</a></li>
+<li><a href="#VERSION">VERSION</a></li>
+</ul>
+<h3 id="clients"><a class="header" href="#clients"><a id="CLIENTS"></a>CLIENTS</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Column</th><th>Description</th></tr></thead><tbody>
+<tr><td>type</td><td>C, for client.</td></tr>
+<tr><td>user</td><td>Client connected user.</td></tr>
+<tr><td>database</td><td>Database name.</td></tr>
+<tr><td>state</td><td>State of the client connection, one of <code>active</code> or <code>waiting</code>.</td></tr>
+<tr><td>addr</td><td>IP address of client.</td></tr>
+<tr><td>port</td><td>Port client is connected to.</td></tr>
+<tr><td>local_addr</td><td>Connection end address on local machine.</td></tr>
+<tr><td>local_port</td><td>Connection end port on local machine.</td></tr>
+<tr><td>connect_time</td><td>Timestamp of connect time.</td></tr>
+<tr><td>request_time</td><td>Timestamp of latest client request.</td></tr>
+<tr><td>wait</td><td>Current Time waiting in seconds.</td></tr>
+<tr><td>wait_us</td><td>Microsecond part of the current waiting time.</td></tr>
+<tr><td>ptr</td><td>Address of internal object for this connection. Used as unique ID.</td></tr>
+<tr><td>link</td><td>Address of server connection the client is paired with.</td></tr>
+<tr><td>remote_pid</td><td>Process ID, if client connects with Unix socket and the OS supports getting it.</td></tr>
+<tr><td>tls</td><td>A string with TLS connection information, or empty if not using TLS.</td></tr>
+</tbody></table>
+</div>
+<h3 id="config"><a class="header" href="#config"><a id="CONFIG"></a>CONFIG</a></h3>
+<p>Show the current PgBouncer configuration settings, one per row, with the following columns:</p>
+<div class="table-wrapper"><table><thead><tr><th>Column</th><th>Description</th></tr></thead><tbody>
+<tr><td>key</td><td>Configuration variable name</td></tr>
+<tr><td>value</td><td>Configuration value</td></tr>
+<tr><td>default</td><td>Configuration default value</td></tr>
+<tr><td>changeable</td><td>Either <code>yes</code> or <code>no</code>. Shows whether the variable can be changed while running. If <code>no</code>, the variable can be changed only at boot time. Use <code>SET</code> to change a variable at run time.</td></tr>
+</tbody></table>
+</div>
+<h3 id="databases"><a class="header" href="#databases"><a id="DATABASES"></a>DATABASES</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Column</th><th>Description</th></tr></thead><tbody>
+<tr><td>name</td><td>Name of configured database entry.</td></tr>
+<tr><td>host</td><td>Host pgbouncer connects to.</td></tr>
+<tr><td>port</td><td>Port pgbouncer connects to.</td></tr>
+<tr><td>database</td><td>Actual database name pgbouncer connects to.</td></tr>
+<tr><td>force_user</td><td>When user is part of the connection string, the connection between pgbouncer and the database server is forced to the given user, whatever the client user.</td></tr>
+<tr><td>pool_size</td><td>Maximum number of server connections.</td></tr>
+<tr><td>min_pool_size</td><td>Minimum number of server connections.</td></tr>
+<tr><td>reserve_pool</td><td>The maximum number of additional connections for this database.</td></tr>
+<tr><td>pool_mode</td><td>The database’s override <code>pool_mode</code> or NULL if the default will be used instead.</td></tr>
+<tr><td>max_connections</td><td>Maximum number of allowed connections for this database, as set by <code>max_db_connections</code>, either globally or per-database.</td></tr>
+<tr><td>current_connections</td><td>The current number of connections for this database.</td></tr>
+<tr><td>paused</td><td>Paused/unpaused state of the database. 1 if this database is currently paused, else 0.</td></tr>
+<tr><td>disabled</td><td>Enabled/disabled state of the database. 1 if this database is currently disabled, else 0.</td></tr>
+</tbody></table>
+</div>
+<h3 id="dns_hosts"><a class="header" href="#dns_hosts"><a id="DNS_HOSTS"></a>DNS_HOSTS</a></h3>
+<p>Show host names in DNS cache.</p>
+<div class="table-wrapper"><table><thead><tr><th>Column</th><th>Description</th></tr></thead><tbody>
+<tr><td>hostname</td><td>Host name</td></tr>
+<tr><td>ttl</td><td>How many seconds until next lookup.</td></tr>
+<tr><td>addrs</td><td>Comma-separated list of addresses.</td></tr>
+</tbody></table>
+</div>
+<h3 id="dns_zones"><a class="header" href="#dns_zones"><a id="DNS_ZONES"></a>DNS_ZONES</a></h3>
+<p>Show DNS zones in cache.</p>
+<div class="table-wrapper"><table><thead><tr><th>Column</th><th>Description</th></tr></thead><tbody>
+<tr><td>zonename</td><td>Zone name</td></tr>
+<tr><td>serial</td><td>Current DNS serial number</td></tr>
+<tr><td>count</td><td>Hostnames belonging to this zone</td></tr>
+</tbody></table>
+</div>
+<h3 id="fds"><a class="header" href="#fds"><a id="FDS"></a>FDS</a></h3>
+<p><code>SHOW FDS</code> is an internal command used for an online restart, for example when upgrading to a new PgBouncer version. It displays a list of file descriptors in use with the internal state attached to them. This command blocks the internal event loop, so it should not be used while PgBouncer is in use.</p>
+<p>When the connected user has username “pgbouncer”, connects through a Unix socket, and has the same UID as the running process, the actual file descriptors are passed over the connection. This mechanism is used to do an online restart.</p>
+<div class="table-wrapper"><table><thead><tr><th>Column</th><th>Description</th></tr></thead><tbody>
+<tr><td>fd</td><td>File descriptor numeric value.</td></tr>
+<tr><td>task</td><td>One of <code>pooler</code>, <code>client</code>, or <code>server</code>.</td></tr>
+<tr><td>user</td><td>User of the connection using the file descriptor.</td></tr>
+<tr><td>database</td><td>Database of the connection using the file descriptor.</td></tr>
+<tr><td>addr</td><td>IP address of the connection using the file descriptor, <code>unix</code> if a Unix socket is used.</td></tr>
+<tr><td>port</td><td>Port used by the connection using the file descriptor.</td></tr>
+<tr><td>cancel</td><td>Cancel key for this connection.</td></tr>
+<tr><td>link</td><td>File descriptor for corresponding server/client. NULL if idle.</td></tr>
+</tbody></table>
+</div>
+<h3 id="lists"><a class="header" href="#lists"><a id="LISTS"></a>LISTS</a></h3>
+<p>Shows the following PgBouncer internal information, in columns (not rows):</p>
+<div class="table-wrapper"><table><thead><tr><th>Item</th><th>Description</th></tr></thead><tbody>
+<tr><td>databases</td><td>Count of databases.</td></tr>
+<tr><td>users</td><td>Count of users.</td></tr>
+<tr><td>pools</td><td>Count of pools.</td></tr>
+<tr><td>free_clients</td><td>Count of free clients.</td></tr>
+<tr><td>used_clients</td><td>Count of used clients.</td></tr>
+<tr><td>login_clients</td><td>Count of clients in <code>login</code> state.</td></tr>
+<tr><td>free_servers</td><td>Count of free servers.</td></tr>
+<tr><td>used_servers</td><td>Count of used servers.</td></tr>
+<tr><td>dns_names</td><td>Count of DNS names in the cache.</td></tr>
+<tr><td>dns_zones</td><td>Count of DNS zones in the cache.</td></tr>
+<tr><td>dns_queries</td><td>Count of in-flight DNS queries.</td></tr>
+<tr><td>dns_pending</td><td>not used</td></tr>
+</tbody></table>
+</div>
+<h3 id="mem"><a class="header" href="#mem"><a id="MEM"></a>MEM</a></h3>
+<p>Shows low-level information about the current sizes of various internal memory allocations. The information presented is subject to change.</p>
+<h3 id="pools"><a class="header" href="#pools"><a id="POOLS"></a>POOLS</a></h3>
+<p>A new pool entry is made for each pair of (database, user).</p>
+<div class="table-wrapper"><table><thead><tr><th>Column</th><th>Description</th></tr></thead><tbody>
+<tr><td>database</td><td>Database name.</td></tr>
+<tr><td>user</td><td>User name.</td></tr>
+<tr><td>cl_active</td><td>Client connections that are linked to server connection and can process queries.</td></tr>
+<tr><td>cl_waiting</td><td>Client connections that have sent queries but have not yet got a server connection.</td></tr>
+<tr><td>cl_cancel_req</td><td>Client connections that have not yet forwarded query cancellations to the server.</td></tr>
+<tr><td>sv_active</td><td>Server connections that are linked to client.</td></tr>
+<tr><td>sv_idle</td><td>Server connections that are unused and immediately usable for client queries.</td></tr>
+<tr><td>sv_used</td><td>Server connections that have been idle more than <code>server_check_delay</code>. The <code>server_check_query</code> query must be run on them before they can be used again.</td></tr>
+<tr><td>sv_tested</td><td>Server connections that are currently running either <code>server_reset_query</code> or <code>server_check_query</code>.</td></tr>
+<tr><td>sv_login</td><td>Server connections currently in the process of logging in.</td></tr>
+<tr><td>maxwait</td><td>How long the first (oldest) client in the queue has waited, in seconds. If this begins to increase, the current pool of servers does not handle requests quickly enough. The cause may be either an overloaded server or the <code>pool_size</code> setting is too small.</td></tr>
+<tr><td>maxwait_us</td><td>Microsecond part of the maximum waiting time.</td></tr>
+<tr><td>pool_mode</td><td>The pooling mode in use.</td></tr>
+</tbody></table>
+</div>
+<h3 id="servers"><a class="header" href="#servers"><a id="SERVERS"></a>SERVERS</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Column</th><th>Description</th></tr></thead><tbody>
+<tr><td>type</td><td>S, for server.</td></tr>
+<tr><td>user</td><td>User name that <code>pgbouncer</code> uses to connect to server.</td></tr>
+<tr><td>database</td><td>Database name.</td></tr>
+<tr><td>state</td><td>State of the <code>pgbouncer</code> server connection, one of <code>active</code>, <code>idle</code>, <code>used</code>, <code>tested</code>, or <code>new</code>.</td></tr>
+<tr><td>addr</td><td>IP address of the SynxDB or PostgreSQL server.</td></tr>
+<tr><td>port</td><td>Port of the SynxDB or PostgreSQL server.</td></tr>
+<tr><td>local_addr</td><td>Connection start address on local machine.</td></tr>
+<tr><td>local_port</td><td>Connection start port on local machine.</td></tr>
+<tr><td>connect_time</td><td>When the connection was made.</td></tr>
+<tr><td>request_time</td><td>When the last request was issued.</td></tr>
+<tr><td>wait</td><td>Current waiting time in seconds.</td></tr>
+<tr><td>wait_us</td><td>Microsecond part of the current waiting time.</td></tr>
+<tr><td>close_needed</td><td>1 if the connection will be closed as soon as possible, because a configuration file reload or DNS update changed the connection information or <code>RECONNECT</code> was issued.</td></tr>
+<tr><td>ptr</td><td>Address of the internal object for this connection. Used as unique ID.</td></tr>
+<tr><td>link</td><td>Address of the client connection the server is paired with.</td></tr>
+<tr><td>remote_pid</td><td>Pid of backend server process. If the connection is made over Unix socket and the OS supports getting process ID info, it is the OS pid. Otherwise it is extracted from the cancel packet the server sent, which should be PID in case server is PostgreSQL, but it is a random number in case server is another PgBouncer.</td></tr>
+<tr><td>tls</td><td>A string with TLS connection information, or empty if not using TLS.</td></tr>
+</tbody></table>
+</div>
+<h3 id="sockets-active_sockets"><a class="header" href="#sockets-active_sockets"><a id="SOCKETS"></a>SOCKETS, ACTIVE_SOCKETS</a></h3>
+<p>Shows low-level information about sockets or only active sockets. This includes the information shown under <code>SHOW CLIENTS</code> and <code>SHOW SERVERS</code> as well as other more low-level information.</p>
+<h3 id="stats"><a class="header" href="#stats"><a id="STATS"></a>STATS</a></h3>
+<p>Shows statistics. In this and related commands, the total figures are since process start, the averages are updated every <code>stats_period</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Column</th><th>Description</th></tr></thead><tbody>
+<tr><td>database</td><td>Statistics are presented per database.</td></tr>
+<tr><td>total_xact_count</td><td>Total number of SQL transactions pooled by PgBouncer.</td></tr>
+<tr><td>total_query_count</td><td>Total number of SQL queries pooled by PgBouncer.</td></tr>
+<tr><td>total_received</td><td>Total volume in bytes of network traffic received by <code>pgbouncer</code>.</td></tr>
+<tr><td>total_sent</td><td>Total volume in bytes of network traffic sent by <code>pgbouncer</code>.</td></tr>
+<tr><td>total_xact_time</td><td>Total number of microseconds spent by PgBouncer when connected to SynxDB in a transaction, either idle in transaction or executing queries.</td></tr>
+<tr><td>total_query_time</td><td>Total number of microseconds spent by <code>pgbouncer</code> when actively connected to the database server.</td></tr>
+<tr><td>total_wait_time</td><td>Time spent (in microseconds) by clients waiting for a server.</td></tr>
+<tr><td>avg_xact_count</td><td>Average number of transactions per second in the last stat period.</td></tr>
+<tr><td>avg_query_count</td><td>Average queries per second in the last stats period.</td></tr>
+<tr><td>avg_recv</td><td>Average received (from clients) bytes per second.</td></tr>
+<tr><td>avg_sent</td><td>Average sent (to clients) bytes per second.</td></tr>
+<tr><td>avg_xact_time</td><td>Average transaction duration in microseconds.</td></tr>
+<tr><td>avg_query_time</td><td>Average query duration in microseconds.</td></tr>
+<tr><td>avg_wait_time</td><td>Time spent by clients waiting for a server in microseconds (average per second).</td></tr>
+</tbody></table>
+</div>
+<h3 id="stats_averages"><a class="header" href="#stats_averages"><a id="STATS_AVERAGES"></a>STATS_AVERAGES</a></h3>
+<p>Subset of <code>SHOW STATS</code> showing the average values for selected statistics (<code>avg_</code>)</p>
+<h3 id="stats_totals"><a class="header" href="#stats_totals"><a id="STATS_TOTALS"></a>STATS_TOTALS</a></h3>
+<p>Subset of <code>SHOW STATS</code> showing the total values for selected statistics (<code>total_</code>)</p>
+<h3 id="totals"><a class="header" href="#totals"><a id="TOTALS"></a>TOTALS</a></h3>
+<p>Like <code>SHOW STATS</code> but aggregated across all databases.</p>
+<h3 id="users"><a class="header" href="#users"><a id="USERS"></a>USERS</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Column</th><th>Description</th></tr></thead><tbody>
+<tr><td>name</td><td>The user name</td></tr>
+<tr><td>pool_mode</td><td>The user’s override pool_mode, or NULL if the default will be used instead.</td></tr>
+</tbody></table>
+</div>
+<h3 id="version"><a class="header" href="#version"><a id="VERSION"></a>VERSION</a></h3>
+<p>Display PgBouncer version information.</p>
+<blockquote>
+<p><strong>Note</strong> This reference documentation is based on the PgBouncer 1.16 documentation.</p>
+</blockquote>
+<h2 id="signals"><a class="header" href="#signals"><a id="signals"></a>Signals</a></h2>
+<p>SIGHUP : Reload config. Same as issuing the command <code>RELOAD</code> on the console.</p>
+<p>SIGINT : Safe shutdown. Same as issuing <code>PAUSE</code> and <code>SHUTDOWN</code> on the console.</p>
+<p>SIGTERM : Immediate shutdown. Same as issuing <code>SHUTDOWN</code> on the console.</p>
+<p>SIGUSR1 : Same as issuing <code>PAUSE</code> on the console.</p>
+<p>SIGUSR2 : Same as issuing <code>RESUME</code> on the console.</p>
+<h2 id="libevent-settings"><a class="header" href="#libevent-settings"><a id="libevent"></a>Libevent Settings</a></h2>
+<p>From the Libevent documentation:</p>
+<pre><code>It is possible to disable support for epoll, kqueue, devpoll, poll or select by
+setting the environment variable EVENT_NOEPOLL, EVENT_NOKQUEUE, EVENT_NODEVPOLL,
+EVENT_NOPOLL or EVENT_NOSELECT, respectively.
+
+By setting the environment variable EVENT_SHOW_METHOD, libevent displays the
+kernel notification method that it uses.
+</code></pre>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="seealso"></a>See Also</a></h2>
+<p><a href="pgbouncer.html">pgbouncer</a>, <a href="pgbouncer-ini.html">pgbouncer.ini</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../utility_guide/ref/pgbouncer-ini.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../utility_guide/ref/plcontainer.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../utility_guide/ref/pgbouncer-ini.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../utility_guide/ref/plcontainer.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

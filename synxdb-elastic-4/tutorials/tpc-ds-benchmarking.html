@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perform TPC-DS Benchmark Testing &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Reference Guide" href="../references/references-index.html" />
+    <link rel="prev" title="Quick-Start Guide" href="quick-start.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials-index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="quick-start.html">Quick-Start Guide</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Perform TPC-DS Benchmark Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-install-tpc-ds-tools-dependencies">Step 1. Install TPC-DS tools dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-download-and-install-tpc-ds-tools">Step 2. Download and install TPC-DS tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-get-psql-connection-options">Step 3. Get psql connection options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-4-modify-configuration-files">Step 4. Modify configuration files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-5-run-the-tpc-ds-benchmark">Step 5. Run the TPC-DS Benchmark</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tutorials-index.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Perform TPC-DS Benchmark Testing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="perform-tpc-ds-benchmark-testing">
+<h1>Perform TPC-DS Benchmark Testing<a class="headerlink" href="#perform-tpc-ds-benchmark-testing" title="Link to this heading"></a></h1>
+<p>This guide describes how to run the TPC-DS benchmark on SynxDB Elastic v4.x.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>Ensure the following conditions are met before running the test from a remote client host:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">psql</span></code> client is installed and passwordless access to the remote cluster is configured (via <code class="docutils literal notranslate"><span class="pre">.pgpass</span></code>).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">gpadmin</span></code> database is created with the default warehouse parameter:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">gpadmin</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">warehouse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;testforcloud&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">gpadmin</span></code> and <code class="docutils literal notranslate"><span class="pre">testforcloud</span></code> with the real user and warehouse you are using.</p>
+</li>
+</ul>
+</section>
+<section id="step-1-install-tpc-ds-tools-dependencies">
+<h2>Step 1. Install TPC-DS tools dependencies<a class="headerlink" href="#step-1-install-tpc-ds-tools-dependencies" title="Link to this heading"></a></h2>
+<p>Install the required dependencies on <code class="docutils literal notranslate"><span class="pre">mdw</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>root@mdw
+yum<span class="w"> </span>-y<span class="w"> </span>install<span class="w"> </span>gcc<span class="w"> </span>make<span class="w"> </span>byacc
+</pre></div>
+</div>
+<p>The original source code is available at: <a class="reference external" href="http://tpc.org/tpc_documents_current_versions/current_specifications5.asp">http://tpc.org/tpc_documents_current_versions/current_specifications5.asp</a>.</p>
+</section>
+<section id="step-2-download-and-install-tpc-ds-tools">
+<h2>Step 2. Download and install TPC-DS tools<a class="headerlink" href="#step-2-download-and-install-tpc-ds-tools" title="Link to this heading"></a></h2>
+<p>Clone the TPC-DS tools repository from GitHub:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>gpadmin@mdw
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/SynxDBFE/TPC-DS-CBDB.git
+</pre></div>
+</div>
+</section>
+<section id="step-3-get-psql-connection-options">
+<h2>Step 3. Get psql connection options<a class="headerlink" href="#step-3-get-psql-connection-options" title="Link to this heading"></a></h2>
+<p>To run the benchmark, get the necessary connection options for PostgreSQL (<code class="docutils literal notranslate"><span class="pre">psql</span></code>).</p>
+<ol class="arabic">
+<li><p>Log in to the Kubernetes (K8s) cluster and identify the tenant namespace:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>ns
+</pre></div>
+</div>
+<p>Example output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>NAME                                           STATUS   AGE
+default                                        Active   97d
+synxdb-system-4x                               Active   96d
+kube-node-lease                                Active   97d
+kube-public                                    Active   97d
+kube-system                                    Active   97d
+storage-system                                 Active   97d
+tenant2-313a164c-cfe9-4514-941d-4c1d548ddf97   Active   93d
+</pre></div>
+</div>
+</li>
+<li><p>Obtain the cluster mapping ports for the tenant:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-o<span class="w"> </span>wide<span class="w"> </span>-n<span class="w"> </span>tenant2-313a164c-cfe9-4514-941d-4c1d548ddf97
+</pre></div>
+</div>
+<p>Example output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>NAME                    TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE   SELECTOR
+cloudberry-proxy        ClusterIP   None           &lt;none&gt;        5432/TCP         93d   app=cloudberry-proxy
+cloudberry-proxy-node   NodePort    10.96.199.21   &lt;none&gt;        5432:32355/TCP   93d   app=cloudberry-proxy
+</pre></div>
+</div>
+<p>In this example, the obtained port is <code class="docutils literal notranslate"><span class="pre">32355</span></code>, and the IP can be any node in the K8s cluster (for example, <code class="docutils literal notranslate"><span class="pre">10.14.3.242</span></code>).</p>
+</li>
+</ol>
+</section>
+<section id="step-4-modify-configuration-files">
+<h2>Step 4. Modify configuration files<a class="headerlink" href="#step-4-modify-configuration-files" title="Link to this heading"></a></h2>
+<p>Edit the <code class="docutils literal notranslate"><span class="pre">tpcds_variables.sh</span></code> file to configure the test parameters. Fill the <code class="docutils literal notranslate"><span class="pre">PSQL_OPTIONS</span></code> with the real psql connection information you have obtained. Edit <code class="docutils literal notranslate"><span class="pre">GEN_DATA_SCALE</span></code> according to your cluster size and need.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>gpadmin@mdw
+<span class="nb">cd</span><span class="w"> </span>~/TPC-DS-CBDB
+vim<span class="w"> </span>tpcds_variables.sh
+</pre></div>
+</div>
+<p>Example configuration:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">RUN_MODEL</span><span class="o">=</span><span class="s2">&quot;cloud&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">RANDOM_DISTRIBUTION</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">TABLE_STORAGE_OPTIONS</span><span class="o">=</span><span class="s2">&quot;compresstype=zstd, compresslevel=5&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLIENT_GEN_PATH</span><span class="o">=</span><span class="s2">&quot;/tmp/dsbenchmark&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PSQL_OPTIONS</span><span class="o">=</span><span class="s2">&quot;-h 10.14.3.242 -p 32355&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">GEN_DATA_SCALE</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="w">  </span><span class="c1"># Generate 10GB of data.</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">MULTI_USER_COUNT</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="w">   </span><span class="c1"># Number of concurrent streams for the throughput run.</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">RUN_SINGLE_USER_REPORTS</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">RUN_MULTI_USER</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">RUN_MULTI_USER_QGEN</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">RUN_MULTI_USER_REPORTS</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">RUN_SCORE</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
+</pre></div>
+</div>
+<p>For additional configuration parameters, refer to the repository README file: <a class="reference external" href="https://github.com/SynxDBFE/TPC-DS-CBDB/blob/main/README.md">https://github.com/SynxDBFE/TPC-DS-CBDB/blob/main/README.md</a>.</p>
+</section>
+<section id="step-5-run-the-tpc-ds-benchmark">
+<h2>Step 5. Run the TPC-DS Benchmark<a class="headerlink" href="#step-5-run-the-tpc-ds-benchmark" title="Link to this heading"></a></h2>
+<p>To execute the benchmark, log in as <code class="docutils literal notranslate"><span class="pre">gpadmin</span></code> and run the test script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>gpadmin@mdw
+<span class="nb">cd</span><span class="w"> </span>~/TPC-DS-CBDB
+./run.sh
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="../references/references-index.html" class="btn btn-neutral float-right" title="Reference Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="quick-start.html" class="btn btn-neutral float-left" title="Quick-Start Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

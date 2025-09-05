@@ -1,0 +1,61 @@
+# Execute Queries in Parallel
+
+This document describes the use cases, methods, limitations, and common issues for the parallel query feature in {{ product_name }}. Parallel query aims to improve query performance by utilizing multiple CPU cores to process a single query.
+
+## Use cases
+
+You can deploy a small number of segments on a single physical machine and use dynamic parallelism adjustment as an alternative to deploying a large number of segments, thereby improving performance.
+
+Enabling operator parallelism provides a performance advantage when the host CPU and disk loads are not high.
+
+## How to use
+
+{{ product_name }} supports parallel query on heap tables.
+
+### Parallel query on heap tables
+
+1. Before enabling the parallel query feature, you need to disable the GPORCA optimizer.
+
+    ```sql
+    SET enable_parallel = ON;
+    SET optimizer = OFF;
+    ```
+
+2. Set the maximum degree of parallelism.
+
+    ```sql
+    -- This setting should take into account the number of CPU cores and segments.
+    SET max_parallel_workers_per_gather = 4;
+    ```
+
+Query example:
+
+```sql
+CREATE TABLE t1 (c1 int,c2 int, c3 int, c4 box);
+INSERT INTO t1 SELECT x, 2*x, 3*x, box('6,6,6,6') FROM generate_series(1,1000000) AS x;
+SELECT count(*) from t1;
+```
+
+## Parameter description
+
+| Parameter name                            | Description                                | Default value | Required to set | Example                                                 |
+|-------------------------------------------|--------------------------------------------|---------------|-----------------|---------------------------------------------------------|
+| `enable_parallel`                         | Enables or disables the parallel feature.  | `OFF`         | Yes             | `SET enable_parallel = ON;`                             |
+| `optimizer`                               | Enables or disables the GPORCA optimizer.  | `ON`          | Yes             | `SET optimizer = OFF;`                                  |
+
+## Frequently asked questions
+
+- Currently, parallel execution is supported for queries containing the following operators. {{ product_name }} does not yet support queries with other operators.
+
+    ```
+    sequence scan      
+    bitmap heap scan      
+    append
+    hash join      
+    nestloop join      
+    merge join
+    ```
+
+- Parallel query does not improve query performance in all situations. An excessively high degree of parallelism can cause excessive load, leading to a decrease in performance.
+
+- Enabling parallelism means a multiplied memory overhead, which may lead to "out of memory" errors.

@@ -1,0 +1,245 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>pg_am - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="pg_am"><a class="header" href="#pg_am">pg_am</a></h1>
+<p>The <code>pg_am</code> table stores information about index access methods. There is one row for each index access method supported by the system.</p>
+<div class="table-wrapper"><table><thead><tr><th>column</th><th>type</th><th>references</th><th>description</th></tr></thead><tbody>
+<tr><td><code>oid</code></td><td>oid</td><td> </td><td>Row identifier (hidden attribute; must be explicitly selected)</td></tr>
+<tr><td><code>amname</code></td><td>name</td><td> </td><td>Name of the access method</td></tr>
+<tr><td><code>amstrategies</code></td><td>int2</td><td> </td><td>Number of operator strategies for this access method, or zero if the access method does not have a fixed set of operator strategies</td></tr>
+<tr><td><code>amsupport</code></td><td>int2</td><td> </td><td>Number of support routines for this access method</td></tr>
+<tr><td><code>amcanorder</code></td><td>boolean</td><td> </td><td>Does the access method support ordered scans sorted by the indexed column’s value?</td></tr>
+<tr><td><code>amcanorderbyop</code></td><td>boolean</td><td> </td><td>Does the access method support ordered scans sorted by the result of an operator on the indexed column?</td></tr>
+<tr><td><code>amcanbackward</code></td><td>boolean</td><td> </td><td>Does the access method support backward scanning?</td></tr>
+<tr><td><code>amcanunique</code></td><td>boolean</td><td> </td><td>Does the access method support unique indexes?</td></tr>
+<tr><td><code>amcanmulticol</code></td><td>boolean</td><td> </td><td>Does the access method support multicolumn indexes?</td></tr>
+<tr><td><code>amoptionalkey</code></td><td>boolean</td><td> </td><td>Does the access method support a scan without any constraint for the first index column?</td></tr>
+<tr><td><code>amsearcharray</code></td><td>boolean</td><td> </td><td>Does the access method support <code>ScalarArrayOpExpr</code> searches?</td></tr>
+<tr><td><code>amsearchnulls</code></td><td>boolean</td><td> </td><td>Does the access method support <code>IS NULL/NOT NULL</code> searches?</td></tr>
+<tr><td><code>amstorage</code></td><td>boolean</td><td> </td><td>Can index storage data type differ from column data type?</td></tr>
+<tr><td><code>amclusterable</code></td><td>boolean</td><td> </td><td>Can an index of this type be clustered on?</td></tr>
+<tr><td><code>ampredlocks</code></td><td>boolean</td><td> </td><td>Does an index of this type manage fine-grained predicae locks?</td></tr>
+<tr><td><code>amkeytype</code></td><td>oid</td><td>pg_type.oid</td><td>Type of data stored in index, or zero if not a fixed type</td></tr>
+<tr><td><code>aminsert</code></td><td>regproc</td><td>pg_proc.oid</td><td>“Insert this tuple” function</td></tr>
+<tr><td><code>ambeginscan</code></td><td>regproc</td><td>pg_proc.oid</td><td>“Prepare for index scan” function</td></tr>
+<tr><td><code>amgettuple</code></td><td>regproc</td><td>pg_proc.oid</td><td>“Next valid tuple” function, or zero if none</td></tr>
+<tr><td><code>amgetbitmap</code></td><td>regproc</td><td>pg_proc.oid</td><td>“Fetch all tuples” function, or zero if none</td></tr>
+<tr><td><code>amrescan</code></td><td>regproc</td><td>pg_proc.oid</td><td>“(Re)start index scan” function</td></tr>
+<tr><td><code>amendscan</code></td><td>regproc</td><td>pg_proc.oid</td><td>“Clean up after index scan” function</td></tr>
+<tr><td><code>ammarkpos</code></td><td>regproc</td><td>pg_proc.oid</td><td>“Mark current scan position” function</td></tr>
+<tr><td><code>amrestrpos</code></td><td>regproc</td><td>pg_proc.oid</td><td>“Restore marked scan position” function</td></tr>
+<tr><td><code>ambuild</code></td><td>regproc</td><td>pg_proc.oid</td><td>“Build new index” function</td></tr>
+<tr><td><code>ambuildempty</code></td><td>regproc</td><td>pg_proc.oid</td><td>“Build empty index” function</td></tr>
+<tr><td><code>ambulkdelete</code></td><td>regproc</td><td>pg_proc.oid</td><td>Bulk-delete function</td></tr>
+<tr><td><code>amvacuumcleanup</code></td><td>regproc</td><td>pg_proc.oid</td><td>Post-<code>VACUUM</code> cleanup function</td></tr>
+<tr><td><code>amcanreturn</code></td><td>regproc</td><td>pg_proc.oid</td><td>Function to check whether index supports index-only scans, or zero if none</td></tr>
+<tr><td><code>amcostestimate</code></td><td>regproc</td><td>pg_proc.oid</td><td>Function to estimate cost of an index scan</td></tr>
+<tr><td><code>amoptions</code></td><td>regproc</td><td>pg_proc.oid</td><td>Function to parse and validate <code>reloptions</code> for an index</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/system_catalogs/pg_aggregate.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/system_catalogs/pg_amop.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/system_catalogs/pg_aggregate.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/system_catalogs/pg_amop.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,1270 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Load Data from Object Storage and HDFS &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Load Data from Hive Data Warehouse" href="load-data-from-hive.html" />
+    <link rel="prev" title="Load Data from Kafka Using Kafka FDW" href="load-data-using-kafka-fdw.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="load-data-index.html">Load Data</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="load-data-using-copy.html">Load Data Using COPY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-external-data-source-using-foreign-table.html">Load External Data Using Foreign Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-data-using-kafka-fdw.html">Load Data from Kafka Using Kafka FDW</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Load Data from Object Storage and HDFS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#load-data-from-object-storage">Load data from object storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#load-iceberg-table-data-from-s3-without-an-external-metadata-service">Load Iceberg table data from S3 (without an external metadata service)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prerequisites-configure-the-s3-connection-file">Prerequisites: Configure the S3 connection file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#procedures">Procedures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#limitations-and-notes">Limitations and notes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#read-iceberg-tables-on-s3-via-polaris-catalog">Read Iceberg tables on S3 via Polaris Catalog</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#core-concepts">Core concepts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#procedure-to-read-iceberg-tables-on-s3">Procedure to read Iceberg tables on S3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#complete-example">Complete example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#load-data-from-hdfs-without-authentication">Load data from HDFS without authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#load-data-from-hdfs-using-kerberos-authentication">Load data from HDFS using Kerberos authentication</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Prerequisites</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#read-and-write-csv-files">Read and Write CSV Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#read-iceberg-files">Read Iceberg files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="load-data-from-hive.html">Load Data from Hive Data Warehouse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-data-using-gpfdist.html">Load Data Using <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="load-data-index.html">Load Data</a></li>
+      <li class="breadcrumb-item active">Load Data from Object Storage and HDFS</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="load-data-from-object-storage-and-hdfs">
+<h1>Load Data from Object Storage and HDFS<a class="headerlink" href="#load-data-from-object-storage-and-hdfs" title="Link to this heading"></a></h1>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">datalake_fdw</span></code> extension to load data from an object storage (such as Amazon S3 and other major cloud providers), HDFS, and ORC tables in Hive into SynxDB Elastic for data query and access.</p>
+<p>To install the <code class="docutils literal notranslate"><span class="pre">datalake_fdw</span></code> extension to the database, execute the SQL statement <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTENSION</span> <span class="pre">data_fdw;</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="n">datalake_fdw</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Currently, supported data formats are CSV, TEXT, ORC, and PARQUET.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">datalake_fdw</span></code> does not support loading data in parallel.</p>
+</div>
+<p>For information on how to load tables from Hive into SynxDB Elastic, see <a class="reference internal" href="load-data-from-hive.html#load-data-from-hive-data-warehouse"><span class="std std-ref">Load Data from Hive Data Warehouse</span></a>.</p>
+<section id="load-data-from-object-storage">
+<h2>Load data from object storage<a class="headerlink" href="#load-data-from-object-storage" title="Link to this heading"></a></h2>
+<p>You can load data from major cloud providers like Amazon S3, Google Cloud Storage, and Microsoft Azure Blob Storage into SynxDB Elastic. Follow these steps:</p>
+<ol class="arabic">
+<li><p>Create a foreign table wrapper <code class="docutils literal notranslate"><span class="pre">FOREIGN</span> <span class="pre">DATA</span> <span class="pre">WRAPPER</span></code>. Note that there are no options in the SQL statement below, and you need to execute it exactly as provided.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span>
+<span class="k">HANDLER</span><span class="w"> </span><span class="n">datalake_fdw_handler</span>
+<span class="k">VALIDATOR</span><span class="w"> </span><span class="n">datalake_fdw_validator</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">mpp_execute</span><span class="w"> </span><span class="s1">&#39;all segments&#39;</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create an external server <code class="docutils literal notranslate"><span class="pre">foreign_server</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">foreign_server</span>
+<span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">host</span><span class="w"> </span><span class="s1">&#39;xxx&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">protocol</span><span class="w"> </span><span class="s1">&#39;s3&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">isvirtual</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">ishttps</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The options in the above SQL statement are explained as follows:</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 18.2%" />
+<col style="width: 33.3%" />
+<col style="width: 48.5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option name</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">host</span></code></p></td>
+<td><p>Sets the host information for accessing the object storage.</p></td>
+<td><p>Required: Must be set</p>
+<p>Example:</p>
+<ul class="simple">
+<li><p>Host for private cloud: <code class="docutils literal notranslate"><span class="pre">192.168.1.1:9000</span></code></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">protocol</span></code></p></td>
+<td><p>Specifies the cloud platform for the object storage.</p></td>
+<td><p>Required: Must be set</p>
+<p>Options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">s3</span></code>: Amazon S3 and S3-compatible storage (uses v4 signature)</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">isvirtual</span></code></p></td>
+<td><p>Use <strong>virtual-host-style</strong> or <strong>path-host-style</strong> to parse the host of the object storage.</p></td>
+<td><p>Required: Optional</p>
+<p>Options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">true</span></code>: Uses <strong>virtual-host-style</strong>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">false</span></code>: Uses <strong>path-host-style</strong>.</p></li>
+</ul>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ishttps</span></code></p></td>
+<td><p>Whether to use HTTPS to access the object storage.</p></td>
+<td><p>Required: Optional</p>
+<p>Options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">true</span></code>: Uses HTTPS.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">false</span></code>: Does not use HTTPS.</p></li>
+</ul>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p>Create a user mapping.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">gpadmin</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">foreign_server</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;gpadmin&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">accesskey</span><span class="w"> </span><span class="s1">&#39;xxx&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">secretkey</span><span class="w"> </span><span class="s1">&#39;xxx&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The options in the above SQL statement are explained as follows:</p>
+<table class="longtable docutils align-left">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option name</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Required</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">user</span></code></p></td>
+<td><p>Creates the specific user specified by <code class="docutils literal notranslate"><span class="pre">foreign_server</span></code>.</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">accesskey</span></code></p></td>
+<td><p>The key needed to access the object storage.</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">secretkey</span></code></p></td>
+<td><p>The secret key needed to access the object storage.</p></td>
+<td><p>Yes</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p>Create a foreign table <code class="docutils literal notranslate"><span class="pre">example</span></code>. After creating it, the data on the object storage is loaded into SynxDB Elastic, and you can query this table.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">example</span><span class="p">(</span>
+<span class="n">a</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+<span class="n">b</span><span class="w"> </span><span class="nb">text</span>
+<span class="p">)</span>
+<span class="n">SERVER</span><span class="w"> </span><span class="n">foreign_server</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">filePath</span><span class="w"> </span><span class="s1">&#39;/test/parquet/&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">compression</span><span class="w"> </span><span class="s1">&#39;none&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">enableCache</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">format</span><span class="w"> </span><span class="s1">&#39;parquet&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The options in the SQL statement above are explained as follows:</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 18.2%" />
+<col style="width: 33.3%" />
+<col style="width: 48.5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option name</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">filePath</span></code></p></td>
+<td><p>Sets the specific path for the target foreign table.</p></td>
+<td><ul class="simple">
+<li><p>Required: Must be set</p></li>
+<li><p>Path format should be <code class="docutils literal notranslate"><span class="pre">/bucket/prefix</span></code>.</p></li>
+<li><p>Example:</p>
+<ul>
+<li><p>If the bucket name is <code class="docutils literal notranslate"><span class="pre">test-bucket</span></code> and the path is <code class="docutils literal notranslate"><span class="pre">bucket/test/orc_file_folder/</span></code>, and there are files like <code class="docutils literal notranslate"><span class="pre">0000_0</span></code>, <code class="docutils literal notranslate"><span class="pre">0001_1</span></code>, <code class="docutils literal notranslate"><span class="pre">0002_2</span></code>, then to access file <code class="docutils literal notranslate"><span class="pre">0000_0</span></code>, set <code class="docutils literal notranslate"><span class="pre">filePath</span></code> to <code class="docutils literal notranslate"><span class="pre">filePath</span> <span class="pre">'/test-bucket/test/orc_file_folder/0000_0'</span></code>.</p></li>
+<li><p>To access all files in <code class="docutils literal notranslate"><span class="pre">test/orc_file_folder/</span></code>, set <code class="docutils literal notranslate"><span class="pre">filePath</span></code> to <code class="docutils literal notranslate"><span class="pre">filePath</span> <span class="pre">'/test-bucket/test/orc_file_folder/'</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Note: <code class="docutils literal notranslate"><span class="pre">filePath</span></code> is parsed in the format <code class="docutils literal notranslate"><span class="pre">/bucket/prefix/</span></code>. Incorrect formats might lead to errors, such as:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">filePath</span> <span class="pre">'test-bucket/test/orc_file_folder/'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filePath</span> <span class="pre">'/test-bucket/test/orc_file_folder/0000_0'</span></code></p></li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">compression</span></code></p></td>
+<td><p>Sets the write compression format. Currently supports snappy, gzip, zstd, lz4.</p></td>
+<td><ul class="simple">
+<li><p>Required: Optional</p></li>
+<li><p>Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">none</span></code>: Supports CSV, ORC, TEXT, PARQUET.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gzip</span></code>: Supports CSV, TEXT, PARQUET.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">snappy</span></code>: Supports PARQUET.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zstd</span></code>: Supports PARQUET.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lz4</span></code>: Supports PARQUET.</p></li>
+</ul>
+</li>
+<li><p>Default value: <code class="docutils literal notranslate"><span class="pre">none</span></code>, which means no compression. Not setting this value means no compression.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">enableCache</span></code></p></td>
+<td><p>Specifies whether to use Gopher caching.</p></td>
+<td><ul class="simple">
+<li><p>Required: Optional</p></li>
+<li><p>Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">true</span></code>: Enables Gopher caching.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">false</span></code>: Disables Gopher caching.</p></li>
+</ul>
+</li>
+<li><p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p>Deleting the foreign table does not automatically clear its cache. To clear the cache, you need to manually run a specific SQL function, such as: <code class="docutils literal notranslate"><span class="pre">select</span> <span class="pre">gp_toolkit._gopher_cache_free_relation_name(text);</span></code></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">format</span></code></p></td>
+<td><p>The file format supported by FDW.</p></td>
+<td><ul class="simple">
+<li><p>Required: Must be set</p></li>
+<li><p>Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">csv</span></code>: Read, Write</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">text</span></code>: Read, Write</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">orc</span></code>: Read, Write</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parquet</span></code>: Read, Write</p></li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">insert</span></code> and <code class="docutils literal notranslate"><span class="pre">select</span></code> statements to add data to and query the data from the foreign table <code class="docutils literal notranslate"><span class="pre">example</span></code> like a normal table.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">insert</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">example</span><span class="w"> </span><span class="k">values</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;2&#39;</span><span class="p">);</span>
+
+<span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">example</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="load-iceberg-table-data-from-s3-without-an-external-metadata-service">
+<h2>Load Iceberg table data from S3 (without an external metadata service)<a class="headerlink" href="#load-iceberg-table-data-from-s3-without-an-external-metadata-service" title="Link to this heading"></a></h2>
+<p>This section describes how to configure SynxDB Elastic to directly load Apache Iceberg tables stored on Amazon S3 or other compatible object storage without depending on an external metadata catalog (such as Hive Metastore or a REST Catalog).</p>
+<p>This feature is primarily intended for quick, read-only querying and analysis of existing Iceberg data.</p>
+<section id="prerequisites-configure-the-s3-connection-file">
+<h3>Prerequisites: Configure the S3 connection file<a class="headerlink" href="#prerequisites-configure-the-s3-connection-file" title="Link to this heading"></a></h3>
+<p>To enable this feature, you need to create a configuration file named <code class="docutils literal notranslate"><span class="pre">s3.conf</span></code> on all coordinator nodes of the SynxDB Elastic cluster. This file provides the underlying <code class="docutils literal notranslate"><span class="pre">datalake_agent</span></code> with the necessary connection and authentication information to access S3.</p>
+<ol class="arabic">
+<li><p>Get the Namespace. First, you need to determine the Kubernetes namespace where the SynxDB Elastic cluster is located.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>ns
+</pre></div>
+</div>
+</li>
+<li><p>Edit the <code class="docutils literal notranslate"><span class="pre">connector-config</span></code> ConfigMap. Use the <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">edit</span></code> command to edit <code class="docutils literal notranslate"><span class="pre">connector-config</span></code>. Replace <code class="docutils literal notranslate"><span class="pre">&lt;namespace&gt;</span></code> in the command with the actual namespace obtained in the previous step.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>edit<span class="w"> </span>cm<span class="w"> </span>connector-config<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</pre></div>
+</div>
+</li>
+<li><p>Add the content of <code class="docutils literal notranslate"><span class="pre">s3.conf</span></code> to the <code class="docutils literal notranslate"><span class="pre">ConfigMap</span></code>. After running the command, a text editor (like <code class="docutils literal notranslate"><span class="pre">vi</span></code>) will open. In the <code class="docutils literal notranslate"><span class="pre">data:</span></code> section, following the format of <code class="docutils literal notranslate"><span class="pre">gphdfs.conf</span></code>, add a new key named <code class="docutils literal notranslate"><span class="pre">s3.conf</span></code> and paste the entire content of <code class="docutils literal notranslate"><span class="pre">s3.conf</span></code> as its value. For example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">connector-config</span>
+<span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;namespace&gt;</span>
+<span class="nt">data</span><span class="p">:</span>
+<span class="nt">gphdfs.conf</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">   </span><span class="no">hdfs-cluster-1:</span>
+<span class="w">      </span><span class="no">hdfs_namenode_host: &lt;namenode_ip&gt;</span>
+<span class="w">      </span><span class="no">...</span>
+<span class="c1"># --- Add the key and value for s3.conf here ---</span>
+<span class="nt">s3.conf</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">   </span><span class="no">s3_cluster:</span>
+<span class="w">      </span><span class="no">fs.s3a.endpoint: http://127.0.0.1:8000</span>
+<span class="w">      </span><span class="no">fs.s3a.access.key: admin</span>
+<span class="w">      </span><span class="no">fs.s3a.secret.key: password</span>
+<span class="w">      </span><span class="no">fs.s3a.path.style.access: true</span>
+<span class="w">      </span><span class="no">fs.defaultFS: s3a://</span>
+<span class="w">      </span><span class="no">fs.s3a.impl: org.apache.hadoop.fs.s3a.S3AFileSystem</span>
+</pre></div>
+</div>
+</li>
+<li><p>Save and exit. Save the file and close the editor. Kubernetes will automatically update the <code class="docutils literal notranslate"><span class="pre">ConfigMap</span></code> and mount the new <code class="docutils literal notranslate"><span class="pre">s3.conf</span></code> file into the corresponding Pods.</p></li>
+</ol>
+</section>
+<section id="procedures">
+<h3>Procedures<a class="headerlink" href="#procedures" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Create a foreign data wrapper. You can skip this step if it already exists.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span>
+<span class="k">HANDLER</span><span class="w"> </span><span class="n">datalake_fdw_handler</span>
+<span class="k">VALIDATOR</span><span class="w"> </span><span class="n">datalake_fdw_validator</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">mpp_execute</span><span class="w"> </span><span class="s1">&#39;all segments&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a foreign server pointing to the S3 service. This is a standard S3 server definition.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">s3_server</span>
+<span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">host</span><span class="w"> </span><span class="s1">&#39;your_s3_host&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">protocol</span><span class="w"> </span><span class="s1">&#39;s3&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">host</span></code>: Specifies the host information for accessing the object storage.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">protocol</span></code>: For S3 or compatible storage, set this to <code class="docutils literal notranslate"><span class="pre">s3</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Create a foreign table to map to the Iceberg data on S3.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">iceberg_s3_table</span><span class="w"> </span><span class="p">(</span>
+<span class="w">   </span><span class="c1">-- Define the table columns here, which must match the Iceberg table&#39;s schema.</span>
+<span class="w">   </span><span class="n">id</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+<span class="w">   </span><span class="n">name</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+<span class="w">   </span><span class="n">create_date</span><span class="w"> </span><span class="nb">date</span><span class="w">  </span><span class="c1">-- If it is a partitioned table, the partition key must also be defined as a column.</span>
+<span class="p">)</span>
+<span class="n">SERVER</span><span class="w"> </span><span class="n">s3_server</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">   </span><span class="n">format</span><span class="w"> </span><span class="s1">&#39;iceberg&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">catalog_type</span><span class="w"> </span><span class="s1">&#39;s3&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="k">server_name</span><span class="w"> </span><span class="s1">&#39;s3_cluster&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">filePath</span><span class="w"> </span><span class="s1">&#39;/your_bucket/path/to/warehouse/&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">table_identifier</span><span class="w"> </span><span class="s1">&#39;your_db.your_table&#39;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">format</span></code>: Specifies the file format. For this scenario, it is fixed to <code class="docutils literal notranslate"><span class="pre">'iceberg'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">catalog_type</span></code>: Specifies the catalog type. For S3 scenarios without a catalog, it is fixed to <code class="docutils literal notranslate"><span class="pre">'s3'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">server_name</span></code>: Specifies the name of the cluster configuration defined in the <code class="docutils literal notranslate"><span class="pre">s3.conf</span></code> file. In this example, it is <code class="docutils literal notranslate"><span class="pre">'s3_cluster'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filePath</span></code>: Points to the root path of the Iceberg “warehouse” or the parent directory of the database. The format is <code class="docutils literal notranslate"><span class="pre">/bucket_name/prefix/</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">table_identifier</span></code>: Specifies the identifier of the table to be accessed, in the format <code class="docutils literal notranslate"><span class="pre">&lt;database_name&gt;.&lt;table_name&gt;</span></code>. SynxDB Elastic concatenates this identifier with <code class="docutils literal notranslate"><span class="pre">filePath</span></code> to locate the final table data path.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h3>
+<p>Example 1: Query a non-partitioned table. Assume the path to the Iceberg table on S3 is <code class="docutils literal notranslate"><span class="pre">s3a://ossext-ci-test/warehouse/iceberg/warehouse/default/simple_table</span></code>.</p>
+<ol class="arabic">
+<li><p>Create the foreign table <code class="docutils literal notranslate"><span class="pre">iceberg_simple</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">iceberg_simple</span><span class="w"> </span><span class="p">(</span>
+<span class="w">   </span><span class="n">id</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+<span class="w">   </span><span class="n">name</span><span class="w"> </span><span class="nb">text</span>
+<span class="p">)</span>
+<span class="n">SERVER</span><span class="w"> </span><span class="n">s3_server</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">   </span><span class="n">filePath</span><span class="w"> </span><span class="s1">&#39;/ossext-ci-test/warehouse/iceberg/warehouse/&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">catalog_type</span><span class="w"> </span><span class="s1">&#39;s3&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="k">server_name</span><span class="w"> </span><span class="s1">&#39;s3_cluster&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">table_identifier</span><span class="w"> </span><span class="s1">&#39;default.simple_table&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">format</span><span class="w"> </span><span class="s1">&#39;iceberg&#39;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Query the data:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">iceberg_simple</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Example 2: Query a partitioned table. Assume the Iceberg table <code class="docutils literal notranslate"><span class="pre">partitioned_table</span></code> on S3 is partitioned by the <code class="docutils literal notranslate"><span class="pre">create_date</span></code> field, and its path is <code class="docutils literal notranslate"><span class="pre">s3a://ossext-ci-test/warehouse/iceberg/warehouse/testdb/partitioned_table</span></code>.</p>
+<ol class="arabic">
+<li><p>Create the foreign table <code class="docutils literal notranslate"><span class="pre">iceberg_partitioned</span></code>. Note that the partition key <code class="docutils literal notranslate"><span class="pre">create_date</span></code> must be included in the column definitions.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">iceberg_partitioned</span><span class="w"> </span><span class="p">(</span>
+<span class="w">   </span><span class="n">id</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+<span class="w">   </span><span class="n">name</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+<span class="w">   </span><span class="n">age</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+<span class="w">   </span><span class="n">department</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+<span class="w">   </span><span class="n">create_date</span><span class="w"> </span><span class="nb">date</span>
+<span class="p">)</span>
+<span class="n">SERVER</span><span class="w"> </span><span class="n">s3_server</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">   </span><span class="n">filePath</span><span class="w"> </span><span class="s1">&#39;/ossext-ci-test/warehouse/iceberg/warehouse/&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">catalog_type</span><span class="w"> </span><span class="s1">&#39;s3&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="k">server_name</span><span class="w"> </span><span class="s1">&#39;s3_cluster&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">table_identifier</span><span class="w"> </span><span class="s1">&#39;testdb.partitioned_table&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">format</span><span class="w"> </span><span class="s1">&#39;iceberg&#39;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Query the data:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">department</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">iceberg_partitioned</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">create_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;2025-05-20&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="limitations-and-notes">
+<h3>Limitations and notes<a class="headerlink" href="#limitations-and-notes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Read-only operations: Iceberg foreign tables created using this method only support <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> queries. Write operations such as <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, and <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> are not supported.</p></li>
+<li><p>Authentication method: This feature only uses the <code class="docutils literal notranslate"><span class="pre">s3.conf</span></code> configuration file for authentication. The <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">USER</span> <span class="pre">MAPPING</span></code> method described in the documentation is not applicable to this scenario.</p></li>
+<li><p>Path concatenation: Ensure that <code class="docutils literal notranslate"><span class="pre">filePath</span></code> and <code class="docutils literal notranslate"><span class="pre">table_identifier</span></code> are set correctly. The system locates the table data using the logic <code class="docutils literal notranslate"><span class="pre">filePath</span> <span class="pre">+</span> <span class="pre">table_identifier</span></code>. <code class="docutils literal notranslate"><span class="pre">filePath</span></code> should typically point to the warehouse root directory that contains multiple database directories.</p></li>
+</ul>
+</section>
+</section>
+<section id="read-iceberg-tables-on-s3-via-polaris-catalog">
+<h2>Read Iceberg tables on S3 via Polaris Catalog<a class="headerlink" href="#read-iceberg-tables-on-s3-via-polaris-catalog" title="Link to this heading"></a></h2>
+<p>This section explains how to query Apache Iceberg tables stored on Amazon S3 or other compatible object storage in SynxDB Elastic by connecting to a Polaris Catalog service.</p>
+<p>This feature allows you to use an external, centralized metadata service to manage Iceberg tables while using the powerful query capabilities of SynxDB Elastic for data analysis. Iceberg foreign tables created with this method currently only support <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> queries; write operations like <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, and <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> are not supported.</p>
+<section id="core-concepts">
+<h3>Core concepts<a class="headerlink" href="#core-concepts" title="Link to this heading"></a></h3>
+<p>Unlike accessing the filesystem directly, accessing Iceberg tables via a catalog service requires SynxDB Elastic to communicate with two separate external systems:</p>
+<ul class="simple">
+<li><p>Polaris Catalog Service: A service for storing and managing Iceberg table metadata (such as schema, partition information, and snapshots).</p></li>
+<li><p>S3 Object Storage Service: An external service for storing the actual data files (for example, parquet files).</p></li>
+</ul>
+<p>Therefore, you need to create two independent sets of <code class="docutils literal notranslate"><span class="pre">SERVER</span></code> and <code class="docutils literal notranslate"><span class="pre">USER</span> <span class="pre">MAPPING</span></code> objects to configure and authenticate the connections for these two services respectively.</p>
+</section>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Network connectivity:</p>
+<ul>
+<li><p>Ensure that the SynxDB Elastic cluster has network access to the <code class="docutils literal notranslate"><span class="pre">host</span></code> address of the external S3 service. This may require configuring appropriate firewall outbound rules or network policies. The requirements for accessing S3 are the same as for standard S3 foreign tables.</p></li>
+<li><p>Ensure that the Polaris Catalog service can access the SynxDB Elastic cluster.</p></li>
+</ul>
+</li>
+<li><p>Credentials:</p>
+<ul>
+<li><p>Prepare the authentication credentials (<code class="docutils literal notranslate"><span class="pre">accesskey</span></code> and <code class="docutils literal notranslate"><span class="pre">secretkey</span></code>) required to access the S3 service.</p></li>
+<li><p>Prepare the OAuth2 authentication credentials (<code class="docutils literal notranslate"><span class="pre">client_id</span></code> and <code class="docutils literal notranslate"><span class="pre">client_secret</span></code>) required to access the Polaris Catalog service.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="procedure-to-read-iceberg-tables-on-s3">
+<h3>Procedure to read Iceberg tables on S3<a class="headerlink" href="#procedure-to-read-iceberg-tables-on-s3" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Create the FOREIGN DATA WRAPPER <code class="docutils literal notranslate"><span class="pre">datalake_fdw</span></code>. You can skip this step if it already exists.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">datalake_fdw</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span>
+<span class="k">HANDLER</span><span class="w"> </span><span class="n">datalake_fdw_handler</span>
+<span class="k">VALIDATOR</span><span class="w"> </span><span class="n">datalake_fdw_validator</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">mpp_execute</span><span class="w"> </span><span class="s1">&#39;all segments&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Configure the connection and authentication for the S3 service. Create a <code class="docutils literal notranslate"><span class="pre">SERVER</span></code> object and a corresponding <code class="docutils literal notranslate"><span class="pre">USER</span> <span class="pre">MAPPING</span></code> for the external S3 service.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- 1. Create a server object for the S3 service.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">s3_data_server</span>
+<span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">host</span><span class="w"> </span><span class="s1">&#39;your_s3_host:port&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">protocol</span><span class="w"> </span><span class="s1">&#39;s3&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">ishttps</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">);</span>
+
+<span class="c1">-- 2. Create a user mapping for the S3 server to provide authentication credentials.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">gpadmin</span>
+<span class="n">SERVER</span><span class="w"> </span><span class="n">s3_data_server</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;gpadmin&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">accesskey</span><span class="w"> </span><span class="s1">&#39;YOUR_S3_ACCESS_KEY&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">secretkey</span><span class="w"> </span><span class="s1">&#39;YOUR_S3_SECRET_KEY&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Configure the connection and authentication for the Polaris Catalog service. Similarly, create a dedicated <code class="docutils literal notranslate"><span class="pre">SERVER</span></code> object and <code class="docutils literal notranslate"><span class="pre">USER</span> <span class="pre">MAPPING</span></code> for the internal Polaris Catalog service.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- 1. Create a server object for the Polaris Catalog service.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">polaris_catalog_server</span>
+<span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">polaris_server_url</span><span class="w"> </span><span class="s1">&#39;http://polaris-service-url:8181/api/catalog&#39;</span><span class="p">);</span>
+
+<span class="c1">-- 2. Create a user mapping for the Polaris server to provide OAuth2 authentication credentials.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">gpadmin</span>
+<span class="n">SERVER</span><span class="w"> </span><span class="n">polaris_catalog_server</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">client_id</span><span class="w"> </span><span class="s1">&#39;your_client_id&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">client_secret</span><span class="w"> </span><span class="s1">&#39;your_client_secret&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">scope</span><span class="w"> </span><span class="s1">&#39;PRINCIPAL_ROLE:ALL&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a foreign table to map to the Iceberg table managed by the Polaris Catalog.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">my_iceberg_table</span><span class="w"> </span><span class="p">(</span>
+<span class="w">   </span><span class="n">name</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+<span class="w">   </span><span class="n">score</span><span class="w"> </span><span class="nb">decimal</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">SERVER</span><span class="w"> </span><span class="n">s3_data_server</span><span class="w"> </span><span class="c1">-- Note: The SERVER here points to the S3 data server.</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">   </span><span class="n">format</span><span class="w"> </span><span class="s1">&#39;iceberg&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">catalog_type</span><span class="w"> </span><span class="s1">&#39;polaris&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">table_identifier</span><span class="w"> </span><span class="s1">&#39;polaris.testdb.mytable&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="k">server_name</span><span class="w"> </span><span class="s1">&#39;polaris_catalog_server&#39;</span><span class="p">,</span><span class="w"> </span><span class="c1">-- [Key] Specifies which server to get metadata from.</span>
+<span class="w">   </span><span class="n">filePath</span><span class="w"> </span><span class="s1">&#39;/your-bucket/warehouse/polaris&#39;</span><span class="w"> </span><span class="c1">-- [Key] Still need to specify the data root path on S3.</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">OPTIONS</span></code> parameter details:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">format</span></code>: Specifies the file format. For this scenario, it is fixed to <code class="docutils literal notranslate"><span class="pre">'iceberg'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">catalog_type</span></code>: Specifies the catalog type, fixed to <code class="docutils literal notranslate"><span class="pre">'polaris'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">table_identifier</span></code>: The full identifier of the table in the Polaris Catalog, in the format <code class="docutils literal notranslate"><span class="pre">&lt;catalog_name&gt;.&lt;db_name&gt;.&lt;table_name&gt;</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">server_name</span></code>: [Key] Specifies the name of the Polaris Catalog server used for fetching metadata, which is <code class="docutils literal notranslate"><span class="pre">polaris_catalog_server</span></code> created in Step 3.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filePath</span></code>: [Key] The root or warehouse path on S3 where the Iceberg data files are stored. This parameter is still required.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="complete-example">
+<h3>Complete example<a class="headerlink" href="#complete-example" title="Link to this heading"></a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Step 1: Create FDW.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">datalake_fdw</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span><span class="w"> </span><span class="k">HANDLER</span><span class="w"> </span><span class="n">datalake_fdw_handler</span><span class="w"> </span><span class="k">VALIDATOR</span><span class="w"> </span><span class="n">datalake_fdw_validator</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">mpp_execute</span><span class="w"> </span><span class="s1">&#39;all segments&#39;</span><span class="w"> </span><span class="p">);</span>
+
+<span class="c1">-- Step 2: Configure S3 access.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">s3_server</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">host</span><span class="w"> </span><span class="s1">&#39;192.168.50.102:8002&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">protocol</span><span class="w"> </span><span class="s1">&#39;s3&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">ishttps</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">gpadmin</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">s3_server</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;gpadmin&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">accesskey</span><span class="w"> </span><span class="s1">&#39;0QpV601CpxpfUaVmQm1Y&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">secretkey</span><span class="w"> </span><span class="s1">&#39;daRYWISTvibNnnxCqS8MEgOGZWpFHtL2EkDD5YRv&#39;</span><span class="p">);</span>
+
+<span class="c1">-- Step 3: Configure Polaris Catalog access.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">polaris_server</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">polaris_server_url</span><span class="w"> </span><span class="s1">&#39;http://192.168.50.102:8181/api/catalog&#39;</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">gpadmin</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">polaris_server</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">client_id</span><span class="w"> </span><span class="s1">&#39;root&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">client_secret</span><span class="w"> </span><span class="s1">&#39;secret&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">scope</span><span class="w"> </span><span class="s1">&#39;PRINCIPAL_ROLE:ALL&#39;</span><span class="p">);</span>
+
+<span class="c1">-- Step 4: Create foreign table and query.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">iceberg_rest_table</span><span class="w"> </span><span class="p">(</span>
+<span class="w">   </span><span class="n">name</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+<span class="w">   </span><span class="n">score</span><span class="w"> </span><span class="nb">decimal</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">SERVER</span><span class="w"> </span><span class="n">s3_server</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">   </span><span class="n">filePath</span><span class="w"> </span><span class="s1">&#39;/your-actual-bucket/warehouse/polaris&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">catalog_type</span><span class="w"> </span><span class="s1">&#39;polaris&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">table_identifier</span><span class="w"> </span><span class="s1">&#39;polaris.testdb1.table27&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="k">server_name</span><span class="w"> </span><span class="s1">&#39;polaris_server&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">format</span><span class="w"> </span><span class="s1">&#39;iceberg&#39;</span>
+<span class="p">);</span>
+
+<span class="c1">-- Query data</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">iceberg_rest_table</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="load-data-from-hdfs-without-authentication">
+<h2>Load data from HDFS without authentication<a class="headerlink" href="#load-data-from-hdfs-without-authentication" title="Link to this heading"></a></h2>
+<p>You can load data from HDFS into SynxDB Elastic. The following sections explain how to load data from an HDFS cluster without authentication. SynxDB Elastic also supports loading data from an HDFS HA (High Availability) cluster, which is also explained below.</p>
+<p>Load data from HDFS in the simple mode, which is the basic HDFS mode without using complex security authentication. For details, see the Hadoop documentation: <a class="reference external" href="https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SecureMode.html">Hadoop in Secure Mode</a>. The steps are as follows:</p>
+<ol class="arabic">
+<li><p>Create an external table wrapper <code class="docutils literal notranslate"><span class="pre">FOREIGN</span> <span class="pre">DATA</span> <span class="pre">WRAPPER</span></code>. Note that there are no options in the SQL statement below, and you need to execute the statement exactly as provided.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span>
+<span class="k">HANDLER</span><span class="w"> </span><span class="n">datalake_fdw_handler</span>
+<span class="k">VALIDATOR</span><span class="w"> </span><span class="n">datalake_fdw_validator</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">mpp_execute</span><span class="w"> </span><span class="s1">&#39;all segments&#39;</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create an external server. In this step, you can create an external server for a single-node HDFS or for HA (High Availability) HDFS.</p>
+<ul>
+<li><p>Create an external server <code class="docutils literal notranslate"><span class="pre">foreign_server</span></code> for a single-node HDFS:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">foreign_server</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">protocol</span><span class="w"> </span><span class="s1">&#39;hdfs&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">hdfs_namenodes</span><span class="w"> </span><span class="s1">&#39;xx.xx.xx.xx&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">hdfs_port</span><span class="w"> </span><span class="s1">&#39;9000&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">hdfs_auth_method</span><span class="w"> </span><span class="s1">&#39;simple&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">hadoop_rpc_protection</span><span class="w"> </span><span class="s1">&#39;authentication&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The options in the above SQL statement are explained as follows:</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 25.9%" />
+<col style="width: 18.5%" />
+<col style="width: 55.6%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option name</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">protocol</span></code></p></td>
+<td><p>Specifies the Hadoop platform.</p></td>
+<td><ul class="simple">
+<li><p>Required: Must be set</p></li>
+<li><p>Setting: Fixed as <code class="docutils literal notranslate"><span class="pre">hdfs</span></code>, which means Hadoop platform, cannot be changed.</p></li>
+<li><p>Default value: <code class="docutils literal notranslate"><span class="pre">hdfs</span></code></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hdfs_namenodes</span></code></p></td>
+<td><p>Specifies the namenode host for accessing HDFS.</p></td>
+<td><ul class="simple">
+<li><p>Required: Must be set</p></li>
+<li><p>Example: For example, <code class="docutils literal notranslate"><span class="pre">hdfs_namenodes</span> <span class="pre">'192.168.178.95:9000'</span></code></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hdfs_auth_method</span></code></p></td>
+<td><p>Specifies the authentication mode for accessing HDFS.</p></td>
+<td><ul class="simple">
+<li><p>Required: Must be set</p></li>
+<li><p>Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">simple</span></code>: Uses Simple authentication to access HDFS.</p></li>
+</ul>
+</li>
+<li><p>Note: To access in Simple mode, set the value to <code class="docutils literal notranslate"><span class="pre">simple</span></code>, for example, <code class="docutils literal notranslate"><span class="pre">hdfs_auth_method</span> <span class="pre">'simple'</span></code>.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hadoop_rpc_protection</span></code></p></td>
+<td><p>Configures the authentication mechanism for setting up a SASL connection.</p></td>
+<td><ul class="simple">
+<li><p>Required: Must be set</p></li>
+<li><p>Options: Three values are available: <code class="docutils literal notranslate"><span class="pre">authentication</span></code>, <code class="docutils literal notranslate"><span class="pre">integrity</span></code>, and <code class="docutils literal notranslate"><span class="pre">privacy</span></code>.</p></li>
+<li><p>Note: This option must match the <code class="docutils literal notranslate"><span class="pre">hadoop.rpc.protection</span></code> setting in the HDFS configuration file <code class="docutils literal notranslate"><span class="pre">core-site.xml</span></code>. For more details, see the Hadoop documentation <a class="reference external" href="https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/core-site.xml">Explanation of core-site.xml</a>.</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p>Create an external server for a multi-node HA cluster. The HA cluster supports node failover. For more information about HDFS high availability, see the Hadoop documentation <a class="reference external" href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSHighAvailabilityWithQJM.html">HDFS High Availability Using the Quorum Journal Manager</a>.</p>
+<p>To load an HDFS HA cluster, you can create an external server using the following template:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">foreign_server</span>
+<span class="w">        </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span>
+<span class="w">        </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">        </span><span class="n">protocol</span><span class="w"> </span><span class="s1">&#39;hdfs&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">hdfs_namenodes</span><span class="w"> </span><span class="s1">&#39;mycluster&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">hdfs_auth_method</span><span class="w"> </span><span class="s1">&#39;simple&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">hadoop_rpc_protection</span><span class="w"> </span><span class="s1">&#39;authentication&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">is_ha_supported</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">dfs_nameservices</span><span class="w"> </span><span class="s1">&#39;mycluster&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">dfs_ha_namenodes</span><span class="w"> </span><span class="s1">&#39;nn1,nn2,nn3&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">dfs_namenode_rpc_address</span><span class="w"> </span><span class="s1">&#39;192.168.178.95:9000,192.168.178.160:9000,192.168.178.186:9000&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">dfs_client_failover_proxy_provider</span><span class="w"> </span><span class="s1">&#39;org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In the above SQL statement, <code class="docutils literal notranslate"><span class="pre">protocol</span></code>, <code class="docutils literal notranslate"><span class="pre">hdfs_namenodes</span></code>, <code class="docutils literal notranslate"><span class="pre">hdfs_auth_method</span></code>, and <code class="docutils literal notranslate"><span class="pre">hadoop_rpc_protection</span></code> are the same as in the single-node example. The HA-specific options are explained as follows:</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 28.6%" />
+<col style="width: 23.8%" />
+<col style="width: 47.6%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option name</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">is_ha_supported</span></code></p></td>
+<td><p>Specifies whether to access the HDFS HA service (high availability).</p></td>
+<td><ul class="simple">
+<li><p>Required: Must be set</p></li>
+<li><p>Setting: Set to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+<li><p>Default value: /</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dfs_nameservices</span></code></p></td>
+<td><p>When <code class="docutils literal notranslate"><span class="pre">is_ha_supported</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code>, specify the name of the HDFS HA service to access.</p></td>
+<td><ul class="simple">
+<li><p>Required: If using an HDFS HA cluster, must be set.</p></li>
+<li><p>Matches the <code class="docutils literal notranslate"><span class="pre">dfs.ha.namenodes.mycluster</span></code> item in the HDFS config file <code class="docutils literal notranslate"><span class="pre">hdfs-site.xml</span></code>.</p></li>
+<li><p>Note: For example, if <code class="docutils literal notranslate"><span class="pre">dfs.ha.namenodes.mycluster</span></code> is <code class="docutils literal notranslate"><span class="pre">cluster</span></code>, set this option as <code class="docutils literal notranslate"><span class="pre">dfs_nameservices</span> <span class="pre">'mycluster'</span></code>.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dfs_ha_namenodes</span></code></p></td>
+<td><p>When <code class="docutils literal notranslate"><span class="pre">is_ha_supported</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code>, specify the accessible nodes for HDFS HA.</p></td>
+<td><ul class="simple">
+<li><p>Required: If using an HDFS HA cluster, must be set.</p></li>
+<li><p>Setting: Matches the value of the <code class="docutils literal notranslate"><span class="pre">dfs.ha.namenodes.mycluster</span></code> item in the HDFS config file <code class="docutils literal notranslate"><span class="pre">hdfs-site.xml</span></code>.</p></li>
+<li><p>Note: For example, <code class="docutils literal notranslate"><span class="pre">dfs_ha_namenodes</span> <span class="pre">'nn1,nn2,nn3'</span></code>.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dfs_namenode_rpc_address</span></code></p></td>
+<td><p>When <code class="docutils literal notranslate"><span class="pre">is_ha_supported</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code>, specifies the IP addresses of the high availability nodes in HDFS HA.</p></td>
+<td><ul>
+<li><p>Required: If using an HDFS HA cluster, must be set.</p></li>
+<li><p>Setting: Refer to the <code class="docutils literal notranslate"><span class="pre">dfs.ha_namenodes</span></code> configuration in the HDFS <code class="docutils literal notranslate"><span class="pre">hdfs-site.xml</span></code> file. The node address matches the <code class="docutils literal notranslate"><span class="pre">namenode</span></code> address in the configuration.</p></li>
+<li><p>Note: For example, if <code class="docutils literal notranslate"><span class="pre">dfs.ha.namenodes.mycluster</span></code> has three namenodes named <code class="docutils literal notranslate"><span class="pre">nn1</span></code>, <code class="docutils literal notranslate"><span class="pre">nn2</span></code>, <code class="docutils literal notranslate"><span class="pre">nn3</span></code>, find their addresses from the HDFS configuration file and enter them into this field.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dfs_namenode_rpc_address</span> <span class="s1">&#39;192.168.178.95:9000,192.168.178.160:9000,192.168.178.186:9000&#39;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dfs_client_failover_proxy</span></code></p></td>
+<td><p>Specifies whether HDFS HA has failover enabled.</p></td>
+<td><ul class="simple">
+<li><p>Required: If using an HDFS HA cluster, must be set.</p></li>
+<li><p>Setting: Set to the default value: <code class="docutils literal notranslate"><span class="pre">dfs_client_failover_proxy_provider</span> <span class="pre">'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'</span></code>.</p></li>
+<li><p>Default value: /</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+<li><p>Create a user mapping.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">gpadmin</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">foreign_server</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;gpadmin&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In the above statement, the <code class="docutils literal notranslate"><span class="pre">user</span></code> option specifies the specific user for <code class="docutils literal notranslate"><span class="pre">foreign_server</span></code> and must be set.</p>
+</li>
+<li><p>Create the foreign table <code class="docutils literal notranslate"><span class="pre">example</span></code>. After creating it, the data from object storage is already loaded into SynxDB Elastic, and you can query this table.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">example</span><span class="p">(</span>
+<span class="n">a</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+<span class="n">b</span><span class="w"> </span><span class="nb">text</span>
+<span class="p">)</span>
+<span class="n">SERVER</span><span class="w"> </span><span class="n">foreign_server</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">filePath</span><span class="w"> </span><span class="s1">&#39;/test/parquet/&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">compression</span><span class="w"> </span><span class="s1">&#39;none&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">enableCache</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">format</span><span class="w"> </span><span class="s1">&#39;parquet&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The options in the above SQL statement are explained as follows:</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 15.4%" />
+<col style="width: 17.3%" />
+<col style="width: 67.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option name</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">filePath</span></code></p></td>
+<td><p>Sets the specific path of the target foreign table.</p></td>
+<td><ul>
+<li><p>Required: Must be set</p></li>
+<li><p>Setting: The path format should be <code class="docutils literal notranslate"><span class="pre">/bucket/prefix</span></code>.</p>
+<p>Example: If the bucket name is <code class="docutils literal notranslate"><span class="pre">test-bucket</span></code> and the path is <code class="docutils literal notranslate"><span class="pre">bucket/test/orc_file_folder/</span></code>, and there are multiple files like <code class="docutils literal notranslate"><span class="pre">0000_0</span></code>, <code class="docutils literal notranslate"><span class="pre">0001_1</span></code>, <code class="docutils literal notranslate"><span class="pre">0002_2</span></code> in that path, you can access the <code class="docutils literal notranslate"><span class="pre">0000_0</span></code> file by setting <code class="docutils literal notranslate"><span class="pre">filePath</span> <span class="pre">'/test-bucket/test/orc_file_folder/0000_0'</span></code>. To access all files in <code class="docutils literal notranslate"><span class="pre">test/orc_file_folder/</span></code>, set <code class="docutils literal notranslate"><span class="pre">filePath</span> <span class="pre">'/test-bucket/test/orc_file_folder/'</span></code>.</p>
+</li>
+<li><p>Note: <code class="docutils literal notranslate"><span class="pre">filePath</span></code> should follow the <code class="docutils literal notranslate"><span class="pre">/bucket/prefix/</span></code> format. Incorrect formats might lead to errors, such as:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">filePath</span> <span class="pre">'test-bucket/test/orc_file_folder/'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filePath</span> <span class="pre">'/test-bucket/test/orc_file_folder/0000_0'</span></code></p></li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">compression</span></code></p></td>
+<td><p>Sets the compression format for writing. Currently supports snappy, gzip, zstd, lz4 formats.</p></td>
+<td><ul class="simple">
+<li><p>Required: Optional</p></li>
+<li><p>Setting:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">none</span></code>: Supports CSV, ORC, TEXT, PARQUET formats.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gzip</span></code>: Supports CSV, TEXT, PARQUET formats.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">snappy</span></code>: Supports PARQUET formats.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zstd</span></code>: Supports PARQUET format.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lz4</span></code>: Supports PARQUET format.</p></li>
+</ul>
+</li>
+<li><p>Default value: <code class="docutils literal notranslate"><span class="pre">none</span></code>, which means no compression. Not setting this value also means no compression.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">enableCache</span></code></p></td>
+<td><p>Specifies whether to use the Gopher cache.</p></td>
+<td><ul>
+<li><p>Required: Optional</p></li>
+<li><p>Setting:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">true</span></code>: Enables Gopher cache.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">false</span></code>: Disables Gopher cache.</p></li>
+</ul>
+</li>
+<li><p>Default: <code class="docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p>Note: Deleting a foreign table does not automatically clear the cache. To clear the cache for this table, you need to manually run a specific SQL function, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">gp_toolkit</span><span class="o">.</span><span class="n">_gopher_cache_free_relation_name</span><span class="p">(</span><span class="n">text</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">format</span></code></p></td>
+<td><p>The file format supported by FDW.</p></td>
+<td><ul class="simple">
+<li><p>Required: Must be set</p></li>
+<li><p>Setting:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">csv</span></code>: Readable, writable</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">text</span></code>: Readable, writable</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">orc</span></code>: Readable, writable</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parquet</span></code>: Readable, writable</p></li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</section>
+<section id="load-data-from-hdfs-using-kerberos-authentication">
+<h2>Load data from HDFS using Kerberos authentication<a class="headerlink" href="#load-data-from-hdfs-using-kerberos-authentication" title="Link to this heading"></a></h2>
+<p>This section provides instructions for establishing secure data integration between SynxDB Elastic and HDFS using Kerberos authentication. The document covers the following integration scenarios:</p>
+<ol class="arabic simple">
+<li><p>Reading CSV files from HDFS with Kerberos authentication</p></li>
+<li><p>Writing data to CSV files in HDFS with Kerberos authentication</p></li>
+<li><p>Reading Apache Iceberg format files from HDFS with Kerberos authentication</p></li>
+</ol>
+<section id="id1">
+<h3>Prerequisites<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>The following configurations must be completed in your SynxDB Elastic cluster:</p>
+<ul class="simple">
+<li><p>Configure <code class="docutils literal notranslate"><span class="pre">hdfs.keytab</span></code></p></li>
+<li><p>Configure <code class="docutils literal notranslate"><span class="pre">krb5.conf</span></code></p></li>
+<li><p>Configure <code class="docutils literal notranslate"><span class="pre">coredns</span></code></p></li>
+<li><p>Configure <code class="docutils literal notranslate"><span class="pre">gphdfs.conf</span></code> (required only for Iceberg format configuration)</p></li>
+<li><p>Complete Kerberos Authentication</p></li>
+</ul>
+<section id="step-1-prepare-required-files-from-hadoop-cluster">
+<h4>Step 1: Prepare required files from Hadoop cluster<a class="headerlink" href="#step-1-prepare-required-files-from-hadoop-cluster" title="Link to this heading"></a></h4>
+<p>On the Hadoop cluster, locate and copy the following files:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Locates the files</span>
+ls<span class="w"> </span>/opt/hadoop-3.1.4/etc/hadoop/hdfs.keytab
+ls<span class="w"> </span>/etc/krb5.conf
+
+<span class="c1"># Copies the files to the SynxDB cluster</span>
+scp<span class="w"> </span>/opt/hadoop-3.1.4/etc/hadoop/hdfs.keytab<span class="w"> </span>root@&lt;synxdb_ip&gt;:~/
+scp<span class="w"> </span>/etc/krb5.conf<span class="w"> </span>root@&lt;synxdb_ip&gt;:~/
+</pre></div>
+</div>
+</section>
+<section id="step-2-configure-product-name-cluster">
+<h4>Step 2: Configure SynxDB Elastic cluster<a class="headerlink" href="#step-2-configure-product-name-cluster" title="Link to this heading"></a></h4>
+<p>Perform the following configurations on your SynxDB Elastic cluster:</p>
+<section id="configure-hdfs-keytab">
+<h5>1. Configure hdfs.keytab<a class="headerlink" href="#configure-hdfs-keytab" title="Link to this heading"></a></h5>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># On SynxDB cluster, retrieve the namespace information</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>ns
+
+<span class="c1"># Updates the kerberos-keytab secret with the hdfs.keytab file</span>
+kubectl<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>kerberos-keytab<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+jq<span class="w"> </span>--arg<span class="w"> </span>new_value<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>base64<span class="w"> </span>-i<span class="w"> </span>hdfs.keytab<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="s1">&#39;.data[&quot;hdfs.keytab&quot;] = $new_value&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+kubectl<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-
+</pre></div>
+</div>
+</section>
+<section id="configure-krb5-conf">
+<h5>2. Configure krb5.conf<a class="headerlink" href="#configure-krb5-conf" title="Link to this heading"></a></h5>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># On SynxDB cluster, access the kerberos configuration</span>
+kubectl<span class="w"> </span>edit<span class="w"> </span>cm<span class="w"> </span>kerberos-config<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+
+<span class="c1"># Implements the following configuration</span>
+<span class="o">[</span>logging<span class="o">]</span>
+<span class="w"> </span><span class="nv">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>FILE:/var/log/krb5libs.log
+<span class="w"> </span><span class="nv">kdc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>FILE:/var/log/krb5kdc.log
+<span class="w"> </span><span class="nv">admin_server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>FILE:/var/log/kadmind.log
+
+<span class="o">[</span>libdefaults<span class="o">]</span>
+<span class="w"> </span><span class="nv">dns_lookup_realm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span>
+<span class="w"> </span><span class="nv">ticket_lifetime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>24h
+<span class="w"> </span><span class="nv">renew_lifetime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>7d
+<span class="w"> </span><span class="nv">forwardable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span>
+<span class="w"> </span><span class="nv">rdns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span>
+<span class="w"> </span><span class="nv">pkinit_anchors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>FILE:/etc/pki/tls/certs/ca-bundle.crt
+<span class="w"> </span><span class="nv">default_realm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>EXAMPLE.COM
+
+<span class="o">[</span>realms<span class="o">]</span>
+<span class="w"> </span>EXAMPLE.COM<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="nv">kdc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>&lt;kdc_ip&gt;
+<span class="w">  </span><span class="nv">admin_server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>&lt;admin_server_ip&gt;
+<span class="w"> </span><span class="o">}</span>
+
+<span class="o">[</span>domain_realm<span class="o">]</span>
+<span class="w"> </span>.example.com<span class="w"> </span><span class="o">=</span><span class="w"> </span>EXAMPLE.COM
+<span class="w"> </span>example.com<span class="w"> </span><span class="o">=</span><span class="w"> </span>EXAMPLE.COM
+</pre></div>
+</div>
+</section>
+<section id="configure-coredns">
+<h5>3. Configure CoreDNS<a class="headerlink" href="#configure-coredns" title="Link to this heading"></a></h5>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># On SynxDB cluster, access the CoreDNS configuration</span>
+kubectl<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>edit<span class="w"> </span>cm<span class="w"> </span>coredns
+
+<span class="c1"># Implements the Hadoop cluster IP address and domain name mapping</span>
+data:
+<span class="w">  </span>Corefile:<span class="w"> </span><span class="p">|</span>
+<span class="w">    </span>.:53<span class="w"> </span><span class="o">{</span>
+<span class="w">        </span>errors
+<span class="w">        </span>health<span class="w"> </span><span class="o">{</span>
+<span class="w">           </span>lameduck<span class="w"> </span>5s
+<span class="w">        </span><span class="o">}</span>
+<span class="w">        </span>ready
+<span class="w">        </span>hosts<span class="w"> </span><span class="o">{</span>
+<span class="w">            </span>&lt;hadoop_ip&gt;<span class="w"> </span>&lt;hadoop_hostname&gt;
+<span class="w">            </span>fallthrough
+<span class="w">        </span><span class="o">}</span>
+<span class="w">        </span>kubernetes<span class="w"> </span>cluster.local<span class="w"> </span><span class="k">in</span>-addr.arpa<span class="w"> </span>ip6.arpa<span class="w"> </span><span class="o">{</span>
+<span class="w">            </span>pods<span class="w"> </span>insecure
+<span class="w">            </span>fallthrough<span class="w"> </span><span class="k">in</span>-addr.arpa<span class="w"> </span>ip6.arpa
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="c1"># Restart the CoreDNS service</span>
+kubectl<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>scale<span class="w"> </span>deploy<span class="w"> </span>coredns<span class="w"> </span>--replicas<span class="o">=</span><span class="m">0</span>
+kubectl<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>scale<span class="w"> </span>deploy<span class="w"> </span>coredns<span class="w"> </span>--replicas<span class="o">=</span><span class="m">2</span>
+</pre></div>
+</div>
+</section>
+<section id="configure-gphdfs-conf">
+<h5>4. Configure gphdfs.conf<a class="headerlink" href="#configure-gphdfs-conf" title="Link to this heading"></a></h5>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># On SynxDB cluster, access the connector configuration</span>
+kubectl<span class="w"> </span>edit<span class="w"> </span>cm<span class="w"> </span>connector-config<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+
+<span class="c1"># Implement the following configuration</span>
+hdfs-cluster-1:
+<span class="w">    </span>hdfs_namenode_host:<span class="w"> </span>&lt;namenode_ip&gt;
+<span class="w">    </span>hdfs_namenode_port:<span class="w"> </span><span class="m">9000</span>
+<span class="w">    </span>hdfs_auth_method:<span class="w"> </span>kerberos
+<span class="w">    </span>krb_principal:<span class="w"> </span>hdfs/&lt;namenode_ip&gt;@EXAMPLE.COM
+<span class="w">    </span>krb_principal_keytab:<span class="w"> </span>/etc/kerberos/keytab/hdfs.keytab
+<span class="w">    </span>krb_service_principal:<span class="w"> </span>hdfs/&lt;namenode_ip&gt;@EXAMPLE.COM
+<span class="w">    </span>hadoop_rpc_protection:<span class="w"> </span>authentication
+<span class="w">    </span>data_transfer_protection:<span class="w"> </span>privacy
+<span class="w">    </span>data_transfer_protocol:<span class="w"> </span><span class="nb">true</span>
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>The default port for the <code class="docutils literal notranslate"><span class="pre">data_lake</span></code> agent has been changed from <code class="docutils literal notranslate"><span class="pre">5888</span></code> to <code class="docutils literal notranslate"><span class="pre">3888</span></code> to avoid conflict with PXF.</p>
+</div>
+</section>
+<section id="complete-kerberos-authentication">
+<h5>5. Complete Kerberos authentication<a class="headerlink" href="#complete-kerberos-authentication" title="Link to this heading"></a></h5>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># On SynxDB cluster, access the namespace</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>cloudberry-proxy-0<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--<span class="w"> </span>bash
+
+<span class="c1"># Installs the required Kerberos client tools</span>
+sudo<span class="w"> </span>su
+yum<span class="w"> </span>-y<span class="w"> </span>install<span class="w"> </span>krb5-libs<span class="w"> </span>krb5-workstation
+<span class="nb">exit</span>
+
+<span class="c1"># Initializes the Kerberos ticket</span>
+kinit<span class="w"> </span>-k<span class="w"> </span>-t<span class="w"> </span>/etc/kerberos/keytab/hdfs.keytab<span class="w"> </span>hdfs/&lt;namenode_ip&gt;@EXAMPLE.COM
+
+<span class="c1"># Verifies the Kerberos ticket</span>
+klist
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="read-and-write-csv-files">
+<h3>Read and Write CSV Files<a class="headerlink" href="#read-and-write-csv-files" title="Link to this heading"></a></h3>
+<section id="step-1-prepare-data-in-hdfs">
+<h4>Step 1: Prepare data in HDFS<a class="headerlink" href="#step-1-prepare-data-in-hdfs" title="Link to this heading"></a></h4>
+<p>On the Hadoop cluster, create and verify the CSV data:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creates sample CSV data</span>
+hdfs<span class="w"> </span>dfs<span class="w"> </span>-cat<span class="w"> </span>/tmp/hdfs_hd_csv/*
+<span class="m">1</span>,lightning
+<span class="m">2</span>,cloudberry
+<span class="m">3</span>,synxml
+</pre></div>
+</div>
+</section>
+<section id="step-2-configure-product-name-for-csv-access">
+<h4>Step 2: Configure SynxDB Elastic for CSV access<a class="headerlink" href="#step-2-configure-product-name-for-csv-access" title="Link to this heading"></a></h4>
+<p>On the SynxDB Elastic cluster, configure the external table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Initializes the foreign data wrapper extension</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="n">datalake_fdw</span><span class="p">;</span>
+
+<span class="c1">-- Configures the HDFS foreign data wrapper</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">hdfs_fdw</span>
+<span class="w">    </span><span class="k">HANDLER</span><span class="w"> </span><span class="n">datalake_fdw_handler</span>
+<span class="w">    </span><span class="k">VALIDATOR</span><span class="w"> </span><span class="n">datalake_fdw_validator</span>
+<span class="w">    </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">mpp_execute</span><span class="w"> </span><span class="s1">&#39;all segments&#39;</span><span class="p">);</span>
+
+<span class="c1">-- Establishes the HDFS server connection</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">hdfs_server</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">hdfs_fdw</span>
+<span class="w">    </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">        </span><span class="n">Protocol</span><span class="w"> </span><span class="s1">&#39;hdfs&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">hdfs_namenodes</span><span class="w"> </span><span class="s1">&#39;&lt;namenode_ip&gt;&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">hdfs_port</span><span class="w"> </span><span class="s1">&#39;9000&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">hdfs_auth_method</span><span class="w"> </span><span class="s1">&#39;kerberos&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">krb_principal</span><span class="w"> </span><span class="s1">&#39;hdfs/&lt;namenode_ip&gt;@EXAMPLE.COM&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">krb_principal_keytab</span><span class="w"> </span><span class="s1">&#39;/etc/kerberos/keytab/hdfs.keytab&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">hadoop_rpc_protection</span><span class="w"> </span><span class="s1">&#39;authentication&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">data_transfer_protocol</span><span class="w"> </span><span class="s1">&#39;true&#39;</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="c1">-- Configures user mapping</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">gpadmin</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">hdfs_server</span>
+<span class="w">    </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;gpadmin&#39;</span><span class="p">);</span>
+
+<span class="c1">-- Creates the external table definition</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">ext_t_hdfs</span><span class="p">(</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+<span class="w">    </span><span class="n">b</span><span class="w"> </span><span class="nb">text</span>
+<span class="p">)</span>
+<span class="n">SERVER</span><span class="w"> </span><span class="n">hdfs_server</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">filePath</span><span class="w"> </span><span class="s1">&#39;/tmp/hdfs_hd_csv&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">compression</span><span class="w"> </span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">enableCache</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">format</span><span class="w"> </span><span class="s1">&#39;csv&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">delimiter</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">NULL</span><span class="w"> </span><span class="n">E</span><span class="s1">&#39;\\N&#39;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="step-3-read-and-write-data">
+<h4>Step 3: Read and write data<a class="headerlink" href="#step-3-read-and-write-data" title="Link to this heading"></a></h4>
+<p>On the SynxDB Elastic cluster, perform data operations:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Execute a data retrieval query</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">ext_t_hdfs</span><span class="p">;</span>
+<span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">|</span><span class="w">     </span><span class="n">b</span>
+<span class="c1">---+------------</span>
+<span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">lightning</span>
+<span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">cloudberry</span>
+<span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">synxml</span>
+<span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+
+<span class="c1">-- Perform data insertion</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">ext_t_hdfs</span><span class="w"> </span><span class="k">VALUES</span>
+<span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;enterprise&#39;</span><span class="p">),</span>
+<span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;public cloud&#39;</span><span class="p">);</span>
+
+<span class="c1">-- Verify the data operation</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">ext_t_hdfs</span><span class="p">;</span>
+<span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">|</span><span class="w">      </span><span class="n">b</span>
+<span class="c1">---+--------------</span>
+<span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">lightning</span>
+<span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">cloudberry</span>
+<span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">synxml</span>
+<span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">cloud</span>
+<span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">enterprise</span>
+<span class="p">(</span><span class="mi">5</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-4-verify-data-in-hdfs">
+<h4>Step 4: Verify data in HDFS<a class="headerlink" href="#step-4-verify-data-in-hdfs" title="Link to this heading"></a></h4>
+<p>On the Hadoop cluster, verify the written data:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Verify the data</span>
+hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>/tmp/hdfs_hd_csv/
+hdfs<span class="w"> </span>dfs<span class="w"> </span>-cat<span class="w"> </span>/tmp/hdfs_hd_csv/*
+</pre></div>
+</div>
+</section>
+</section>
+<section id="read-iceberg-files">
+<h3>Read Iceberg files<a class="headerlink" href="#read-iceberg-files" title="Link to this heading"></a></h3>
+<section id="step-1-create-iceberg-table-in-hdfs">
+<h4>Step 1: Create Iceberg table in HDFS<a class="headerlink" href="#step-1-create-iceberg-table-in-hdfs" title="Link to this heading"></a></h4>
+<p>On the Hadoop cluster, create and populate the Iceberg table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Initialize the Iceberg table in Spark SQL</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">default</span><span class="p">.</span><span class="n">tab_iceberg</span><span class="p">(</span><span class="n">col1</span><span class="w"> </span><span class="nb">int</span><span class="p">)</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">iceberg</span><span class="p">;</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">default</span><span class="p">.</span><span class="n">tab_iceberg</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-configure-product-name-for-iceberg-access">
+<h4>Step 2: Configure SynxDB Elastic for Iceberg access<a class="headerlink" href="#step-2-configure-product-name-for-iceberg-access" title="Link to this heading"></a></h4>
+<p>On the SynxDB Elastic cluster, configure the external table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Initializes the required extensions</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">datalake_fdw</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">hive_connector</span><span class="p">;</span>
+
+<span class="c1">-- Configures the Iceberg foreign data wrapper</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">hdfs_fdw_iceberg</span>
+<span class="w">    </span><span class="k">HANDLER</span><span class="w"> </span><span class="n">datalake_fdw_handler</span>
+<span class="w">    </span><span class="k">VALIDATOR</span><span class="w"> </span><span class="n">datalake_fdw_validator</span>
+<span class="w">    </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">mpp_execute</span><span class="w"> </span><span class="s1">&#39;all segments&#39;</span><span class="p">);</span>
+
+<span class="c1">-- Creates the foreign server</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">create_foreign_server</span><span class="p">(</span><span class="s1">&#39;iceberg_server_t&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;gpadmin&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;hdfs_fdw_iceberg&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;hdfs-cluster-1&#39;</span><span class="p">);</span>
+
+<span class="c1">-- Defines the external table</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">ext_t_hdfs_iceberg</span><span class="p">(</span>
+<span class="w">    </span><span class="n">col1</span><span class="w"> </span><span class="nb">int</span>
+<span class="p">)</span>
+<span class="n">server</span><span class="w"> </span><span class="n">iceberg_server_t</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">filePath</span><span class="w"> </span><span class="s1">&#39;/user/hive/warehouse&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">catalog_type</span><span class="w"> </span><span class="s1">&#39;hadoop&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">server_name</span><span class="w"> </span><span class="s1">&#39;hdfs-cluster-1&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">hdfs_cluster_name</span><span class="w"> </span><span class="s1">&#39;hdfs-cluster-1&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">table_identifier</span><span class="w"> </span><span class="s1">&#39;default.tab_iceberg&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">format</span><span class="w"> </span><span class="s1">&#39;iceberg&#39;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="step-3-read-data">
+<h4>Step 3: Read data<a class="headerlink" href="#step-3-read-data" title="Link to this heading"></a></h4>
+<p>On the SynxDB Elastic cluster, query the Iceberg data:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Executes a data retrieval query</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">ext_t_hdfs_iceberg</span><span class="p">;</span>
+<span class="w"> </span><span class="n">col1</span>
+<span class="c1">------</span>
+<span class="w">    </span><span class="mi">1</span>
+<span class="w">    </span><span class="mi">2</span>
+<span class="w">    </span><span class="mi">3</span>
+<span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="load-data-from-hive.html" class="btn btn-neutral float-right" title="Load Data from Hive Data Warehouse" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="load-data-using-kafka-fdw.html" class="btn btn-neutral float-left" title="Load Data from Kafka Using Kafka FDW" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

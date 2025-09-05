@@ -1,0 +1,450 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Planning SynxDB System Expansion - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="planning-synxdb-system-expansion"><a class="header" href="#planning-synxdb-system-expansion">Planning SynxDB System Expansion</a></h1>
+<p>Careful planning will help to ensure a successful SynxDB expansion project.</p>
+<p>The topics in this section help to ensure that you are prepared to perform a system expansion.</p>
+<ul>
+<li><a href="#topic4">System Expansion Checklist</a> is a checklist you can use to prepare for and perform the system expansion process.</li>
+<li><a href="#topic5">Planning New Hardware Platforms</a> covers planning for acquiring and setting up the new hardware.</li>
+<li><a href="#topic6">Planning New Segment Initialization</a> provides information about planning to initialize new segment hosts with <code>gpexpand</code>.</li>
+<li><a href="#topic10">Planning Table Redistribution</a> provides information about planning the data redistribution after the new segment hosts have been initialized.</li>
+</ul>
+<blockquote>
+<p><strong>Important</strong> When expanding a SynxDB system, you must deactivate SynxDB interconnect proxies before adding new hosts and segment instances to the system, and you must update the <code>gp_interconnect_proxy_addresses</code> parameter with the newly-added segment instances before you re-enable interconnect proxies. For example, these commands deactivate SynxDB interconnect proxies by setting the interconnect to the default (<code>UDPIFC</code>) and reloading the <code>postgresql.conf</code> file to update the SynxDB system configuration.</p>
+</blockquote>
+<pre><code>gpconfig -r gp_interconnect_type
+gpstop -u
+</code></pre>
+<p>For information about SynxDB interconnect proxies, see <a href="../managing/proxy-ic.html">Configuring Proxies for the SynxDB Interconnect</a>.</p>
+<h2 id="system-expansion-checklist"><a class="header" href="#system-expansion-checklist"><a id="topic4"></a>System Expansion Checklist</a></h2>
+<p>This checklist summarizes the tasks for a SynxDB system expansion.</p>
+<table class="table frame-all" id="topic4__table_pvq_yzl_2r"><caption><span class="table--title-label">Table 1. </span><span class="title">SynxDB System Expansion Checklist</span></caption><colgroup><col style="width:11.173184357541901%"><col style="width:88.82681564245812%"></colgroup><tbody class="tbody">
+              <tr class="row">
+                <td class="entry" colspan="2"><p class="p"><strong class="ph b">Online Pre-Expansion Tasks</strong></p>
+                  <span class="ph">* System is up and available</span>
+                </td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_gr2_s1m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry">Plan for ordering, building, and networking new hardware
+                  platforms, or provisioning cloud resources. </td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_ryl_s1m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry">Devise a database expansion plan. Map the number of segments per host,
+                  schedule the downtime period for testing performance and creating the expansion
+                  schema, and schedule the intervals for table redistribution.</td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_e2s_s1m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry">Perform a complete schema dump.</td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_yq5_s1m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry">Install SynxDB binaries on new hosts. </td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_vxw_s1m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry">Copy SSH keys to the new hosts (<code class="ph codeph">gpssh-exkeys</code>).</td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_qkb_t1m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry">Validate disk I/O and memory bandwidth of the new hardware or cloud resources
+                    (<code class="ph codeph">gpcheckperf</code>).</td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_ojd_t1m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry">Validate that the master data directory has no extremely large files in the
+                    <code class="ph codeph">log</code> directory.</td>
+              </tr>
+              <tr class="row">
+                <td class="entry" colspan="2"><p class="p"><strong class="ph b">Offline Pre-Expansion Tasks</strong></p>
+                  <span class="ph">* The system is unavailable to all user activity during this process.</span>
+                </td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_wch_t1m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry">Validate that there are no catalog issues
+                  (<code class="ph codeph">gpcheckcat</code>).</td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_q3q_t1m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry">Validate disk I/O and memory bandwidth of the combined existing and new
+                  hardware or cloud resources (<code class="ph codeph">gpcheckperf</code>). </td>
+              </tr>
+              <tr class="row">
+                <td class="entry" colspan="2"><p class="p"><strong class="ph b">Online Segment Instance
+                    Initialization</strong></p><span class="ph">* System is up and available</span>
+                </td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_ct3_t1m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry">Prepare an expansion input file (<code class="ph codeph">gpexpand</code>). </td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_rcs_t1m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry">Initialize new segments into the system and create an expansion schema
+                    (<code class="ph codeph">gpexpand -i <var class="keyword varname">input_file</var></code>).</td>
+              </tr>
+              <tr class="row">
+                <td class="entry" colspan="2"><p class="p"><strong class="ph b">Online Expansion and Table
+                    Redistribution</strong></p>
+                  <span class="ph">* System is up and available</span>
+                </td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_jzy_t1m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry">Before you start table redistribution, stop any automated snapshot processes
+                  or other processes that consume disk space.</td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_aq1_51m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry">Redistribute tables through the expanded system
+                  (<code class="ph codeph">gpexpand</code>).</td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_xjc_51m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry">Remove expansion schema (<code class="ph codeph">gpexpand -c</code>).</td>
+              </tr>
+              <tr class="row">
+                <td class="entry">
+                  <img class="image" id="topic4__image_sk2_51m_2r" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28">
+                </td>
+                <td class="entry"><strong class="ph b">Important:</strong> Run <code class="ph codeph">analyze</code> to update distribution
+                    statistics.<p class="p">During the expansion, use <code class="ph codeph">gpexpand -a</code>, and
+                    post-expansion, use <code class="ph codeph">analyze</code>.</p></td>
+              </tr>
+              <tr class="row">
+                <td class="entry" colspan="2"><p class="p"><strong class="ph b">Back Up Databases</strong></p><span class="ph">* System is up
+                    and available</span></td>
+              </tr>
+              <tr class="row">
+                <td class="entry"><img class="image" id="topic4__image_ogk_mj4_lhb" src="../graphics/green-checkbox.jpg" alt="Checkbox" width="29" height="28"></td>
+                <td class="entry">Back up databases using the <code class="ph codeph">gpbackup</code> utility. Backups you
+                  created before you began the system expansion cannot be restored to the newly
+                  expanded system because the <code class="ph codeph">gprestore</code> utility can only restore
+                  backups to a SynxDB system with the same number of segments.</td>
+              </tr>
+            </tbody></table>
+<h2 id="planning-new-hardware-platforms"><a class="header" href="#planning-new-hardware-platforms"><a id="topic5"></a>Planning New Hardware Platforms</a></h2>
+<p>A deliberate, thorough approach to deploying compatible hardware greatly minimizes risk to the expansion process.</p>
+<p>Hardware resources and configurations for new segment hosts should match those of the existing hosts.</p>
+<p>The steps to plan and set up new hardware platforms vary for each deployment. Some considerations include how to:</p>
+<ul>
+<li>Prepare the physical space for the new hardware; consider cooling, power supply, and other physical factors.</li>
+<li>Determine the physical networking and cabling required to connect the new and existing hardware.</li>
+<li>Map the existing IP address spaces and developing a networking plan for the expanded system.</li>
+<li>Capture the system configuration (users, profiles, NICs, and so on) from existing hardware to use as a detailed list for ordering new hardware.</li>
+<li>Create a custom build plan for deploying hardware with the desired configuration in the particular site and environment.</li>
+</ul>
+<p>After selecting and adding new hardware to your network environment, ensure you perform the tasks described in <a href="expand-nodes.html">Preparing and Adding Hosts</a>.</p>
+<h2 id="planning-new-segment-initialization"><a class="header" href="#planning-new-segment-initialization"><a id="topic6"></a>Planning New Segment Initialization</a></h2>
+<p>Expanding SynxDB can be performed when the system is up and available. Run <code>gpexpand</code> to initialize new segment instances into the system and create an expansion schema.</p>
+<p>The time required depends on the number of schema objects in the SynxDB system and other factors related to hardware performance. In most environments, the initialization of new segments requires less than thirty minutes offline.</p>
+<p>These utilities cannot be run while <code>gpexpand</code> is performing segment initialization.</p>
+<ul>
+<li><code>gpbackup</code></li>
+<li><code>gpcheckcat</code></li>
+<li><code>gpconfig</code></li>
+<li><code>gprestore</code></li>
+</ul>
+<blockquote>
+<p><strong>Important</strong> After you begin initializing new segments, you can no longer restore the system using backup files created for the pre-expansion system. When initialization successfully completes, the expansion is committed and cannot be rolled back.</p>
+</blockquote>
+<h3 id="planning-mirror-segments"><a class="header" href="#planning-mirror-segments"><a id="topic7"></a>Planning Mirror Segments</a></h3>
+<p>If your existing system has mirror segments, the new segments must have mirroring configured. If there are no mirrors configured for existing segments, you cannot add mirrors to new hosts with the <code>gpexpand</code> utility. For more information about segment mirroring configurations that are available during system initialization, see <a href="../highavail/topics/g-overview-of-segment-mirroring.html#mirror_configs">About Segment Mirroring Configurations</a>.</p>
+<p>For SynxDB systems with mirror segments, ensure you add enough new host machines to accommodate new mirror segments. The number of new hosts required depends on your mirroring strategy:</p>
+<ul>
+<li><strong>Group Mirroring</strong> — Add at least two new hosts so the mirrors for the first host can reside on the second host, and the mirrors for the second host can reside on the first. This is the default type of mirroring if you enable segment mirroring during system initialization.</li>
+<li><strong>Spread Mirroring</strong> — Add at least one more host to the system than the number of segments per host. The number of separate hosts must be greater than the number of segment instances per host to ensure even spreading. You can specify this type of mirroring during system initialization or when you enable segment mirroring for an existing system.</li>
+<li><strong>Block Mirroring</strong> — Adding one or more blocks of host systems. For example add a block of four or eight hosts. Block mirroring is a custom mirroring configuration. For more information about block mirroring, see <a href="../../best_practices/ha.html#topic_ngz_qf4_tt">Segment Mirroring Configurations</a>.</li>
+</ul>
+<h3 id="increasing-segments-per-host"><a class="header" href="#increasing-segments-per-host"><a id="topic8"></a>Increasing Segments Per Host</a></h3>
+<p>By default, new hosts are initialized with as many primary segments as existing hosts have. You can increase the segments per host or add new segments to existing hosts.</p>
+<p>For example, if existing hosts currently have two segments per host, you can use <code>gpexpand</code> to initialize two additional segments on existing hosts for a total of four segments and initialize four new segments on new hosts.</p>
+<p>The interactive process for creating an expansion input file prompts for this option; you can also specify new segment directories manually in the input configuration file. For more information, see <a href="expand-initialize.html">Creating an Input File for System Expansion</a>.</p>
+<h3 id="about-the-expansion-schema"><a class="header" href="#about-the-expansion-schema"><a id="topic9"></a>About the Expansion Schema</a></h3>
+<p>At initialization, the <code>gpexpand</code> utility creates an expansion schema named <em>gpexpand</em> in the postgres database.</p>
+<p>The expansion schema stores metadata for each table in the system so its status can be tracked throughout the expansion process. The expansion schema consists of two tables and a view for tracking expansion operation progress:</p>
+<ul>
+<li><em>gpexpand.status</em></li>
+<li><em>gpexpand.status_detail</em></li>
+<li><em>gpexpand.expansion_progress</em></li>
+</ul>
+<p>Control expansion process aspects by modifying <em>gpexpand.status_detail</em>. For example, removing a record from this table prevents the system from expanding the table across new segments. Control the order in which tables are processed for redistribution by updating the <code>rank</code> value for a record. For more information, see <a href="expand-redistribute.html">Ranking Tables for Redistribution</a>.</p>
+<h2 id="planning-table-redistribution"><a class="header" href="#planning-table-redistribution"><a id="topic10"></a>Planning Table Redistribution</a></h2>
+<p>Table redistribution is performed while the system is online. For many SynxDB systems, table redistribution completes in a single <code>gpexpand</code> session scheduled during a low-use period. Larger systems may require multiple sessions and setting the order of table redistribution to minimize performance impact. Complete the table redistribution in one session if possible.</p>
+<blockquote>
+<p><strong>Important</strong> To perform table redistribution, your segment hosts must have enough disk space to temporarily hold a copy of your largest table. All tables are unavailable for read and write operations during redistribution.</p>
+</blockquote>
+<p>The performance impact of table redistribution depends on the size, storage type, and partitioning design of a table. For any given table, redistributing it with <code>gpexpand</code> takes as much time as a <code>CREATE TABLE AS SELECT</code> operation would. When redistributing a terabyte-scale fact table, the expansion utility can use much of the available system resources, which could affect query performance or other database workloads.</p>
+<h3 id="table-redistribution-method"><a class="header" href="#table-redistribution-method"><a id="tabred"></a>Table Redistribution Method</a></h3>
+<p>SynxDB uses a <em>rebuild</em> table distribution method to redistribute data during an expansion. SynxDB:</p>
+<ol>
+<li>Creates a new table.</li>
+<li>Copies all of the data from the old table to the new table.</li>
+<li>Replaces the old table.</li>
+</ol>
+<p>The rebuild method is similar to creating a new table with a <code>CREATE TABLE AS SELECT</code> command. During data redistribution, SynxDB acquires an <code>ACCESS EXCLUSIVE</code> lock on the table.</p>
+<h3 id="managing-redistribution-in-large-scale-synxdb-systems"><a class="header" href="#managing-redistribution-in-large-scale-synxdb-systems"><a id="topic11"></a>Managing Redistribution in Large-Scale SynxDB Systems</a></h3>
+<p>When planning the redistribution phase, consider the impact of the <code>ACCESS EXCLUSIVE</code> lock taken on each table. User activity on a table can delay its redistribution, but also tables are unavailable for user activity during redistribution.</p>
+<p>You can manage the order in which tables are redistributed by adjusting their ranking. See <a href="expand-redistribute.html">Ranking Tables for Redistribution</a>. Manipulating the redistribution order can help adjust for limited disk space and restore optimal query performance for high-priority queries sooner.</p>
+<h4 id="systems-with-abundant-free-disk-space"><a class="header" href="#systems-with-abundant-free-disk-space"><a id="systs"></a>Systems with Abundant Free Disk Space</a></h4>
+<p>In systems with abundant free disk space (required to store a copy of the largest table), you can focus on restoring optimum query performance as soon as possible by first redistributing important tables that queries use heavily. Assign high ranking to these tables, and schedule redistribution operations for times of low system usage. Run one redistribution process at a time until large or critical tables have been redistributed.</p>
+<h4 id="systems-with-limited-free-disk-space"><a class="header" href="#systems-with-limited-free-disk-space"><a id="systslim"></a>Systems with Limited Free Disk Space</a></h4>
+<p>If your existing hosts have limited disk space, you may prefer to first redistribute smaller tables (such as dimension tables) to clear space to store a copy of the largest table. Available disk space on the original segments increases as each table is redistributed across the expanded system. When enough free space exists on all segments to store a copy of the largest table, you can redistribute large or critical tables. Redistribution of large tables requires exclusive locks; schedule this procedure for off-peak hours.</p>
+<p>Also consider the following:</p>
+<ul>
+<li>Run multiple parallel redistribution processes during off-peak hours to maximize available system resources.</li>
+<li>When running multiple processes, operate within the connection limits for your SynxDB system. For information about limiting concurrent connections, see <a href="../client_auth.html">Limiting Concurrent Connections</a>.</li>
+</ul>
+<h3 id="redistributing-append-optimized-and-compressed-tables"><a class="header" href="#redistributing-append-optimized-and-compressed-tables"><a id="topic13"></a>Redistributing Append-Optimized and Compressed Tables</a></h3>
+<p><code>gpexpand</code> redistributes append-optimized and compressed append-optimized tables at different rates than heap tables. The CPU capacity required to compress and decompress data tends to increase the impact on system performance. For similar-sized tables with similar data, you may find overall performance differences like the following:</p>
+<ul>
+<li>Uncompressed append-optimized tables expand 10% faster than heap tables.</li>
+<li>Append-optimized tables that are defined to use data compression expand at a significantly slower rate than uncompressed append-optimized tables, potentially up to 80% slower.</li>
+<li>Systems with data compression such as ZFS/LZJB take longer to redistribute.</li>
+</ul>
+<blockquote>
+<p><strong>Important</strong> If your system hosts use data compression, use identical compression settings on the new hosts to avoid disk space shortage.</p>
+</blockquote>
+<h3 id="redistributing-partitioned-tables"><a class="header" href="#redistributing-partitioned-tables"><a id="topic16"></a>Redistributing Partitioned Tables</a></h3>
+<p>Because the expansion utility can process each individual partition on a large table, an efficient partition design reduces the performance impact of table redistribution. Only the child tables of a partitioned table are set to a random distribution policy. The read/write lock for redistribution applies to only one child table at a time.</p>
+<h3 id="redistributing-indexed-tables"><a class="header" href="#redistributing-indexed-tables"><a id="topic_qq2_x3r_g4"></a>Redistributing Indexed Tables</a></h3>
+<p>Because the <code>gpexpand</code> utility must re-index each indexed table after redistribution, a high level of indexing has a large performance impact. Systems with intensive indexing have significantly slower rates of table redistribution.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/expand/expand-overview.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/expand/expand-nodes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/expand/expand-overview.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/expand/expand-nodes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

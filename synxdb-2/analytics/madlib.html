@@ -1,0 +1,684 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Machine Learning and Deep Learning using MADlib - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="machine-learning-and-deep-learning-using-madlib"><a class="header" href="#machine-learning-and-deep-learning-using-madlib">Machine Learning and Deep Learning using MADlib</a></h1>
+<p>Apache MADlib is an open-source library for scalable in-database analytics. The SynxDB MADlib extension provides the ability to run machine learning and deep learning workloads in a SynxDB.</p>
+<p>You can install it as an extension in a SynxDB system you can run data-parallel implementations of mathematical, statistical, graph, machine learning, and deep learning methods on structured and unstructured data. For SynxDB and MADlib version compatibility, refer to <a href="https://cwiki.apache.org/confluence/display/MADLIB/FAQ">MADlib FAQ</a>.</p>
+<p>MADlib’s suite of SQL-based algorithms run at scale within a single SynxDB engine without needing to transfer data between the database and other tools.</p>
+<p>MADlib is part of the database fabric with no changes to the SynxDB architecture. This makes it easy for database administrators to deploy and manage since it is not a separate daemon or separate software running outside the database.</p>
+<p><img src="graphics/gp_synxdb_diagram.png" alt="SynxDB with MADlib" title="SynxDB MADlib Analytics Architecture" /></p>
+<h2 id="machine-learning"><a class="header" href="#machine-learning"><a id="section_lmf_pv1_rqb"></a>Machine Learning</a></h2>
+<p>Apache MADlib consists of methods to support the full spectrum of data science activities. This includes data transformation and feature engineering, using methods in descriptive and inferential statistics, pivoting, sessionization and encoding categorical variables. There is also a comprehensive library of graph, supervised learning and unsupervised learning methods.</p>
+<p>In the area of model selection, MADlib supports cross validation and the most common prediction metrics for evaluating the quality of predictions of a model. Please refer to the <a href="http://madlib.apache.org/docs/latest/index.html">MADlib user guide</a> for more information on these methods.</p>
+<h2 id="deep-learning"><a class="header" href="#deep-learning"><a id="section_hrn_pv1_rqb"></a>Deep Learning</a></h2>
+<p>Starting in Apache MADlib release 1.16, SynxDB supports using Keras and TensorFlow for deep learning. You can review the <a href="https://cwiki.apache.org/confluence/display/MADLIB/Deep+Learning">supported libraries and configuration instructions</a> on the Apache MADlib pages as well as user documentation for <a href="http://madlib.apache.org/docs/latest/group__grp__dl.html">Keras API</a> using the Tensorflow backend. Note that it is not supported with RHEL 6.</p>
+<p>MADlib supports Keras with a TensorFlow backend, with or without Graphics Processing Units (GPUs). GPUs can significantly accelerate the training of deep neural networks so they are typically used for enterprise level workloads. For further GPU information, visit the MADlib wiki, <a href="https://cwiki.apache.org/confluence/display/MADLIB/Deep+Learning">https://cwiki.apache.org/confluence/display/MADLIB/Deep+Learning</a>.</p>
+<h2 id="pivotalr"><a class="header" href="#pivotalr"><a id="section_wp5_pv1_rqb"></a>PivotalR</a></h2>
+<p>MADlib can be used with PivotalR, an R client package that enables users to interact with data resident in the SynxDB. PivotalR can be considered as a wrapper around MADlib that translates R code into SQL to run on MPP databases and is designed for users familiar with R but with data sets that are too large for R.</p>
+<p>The R language is an open-source language that is used for statistical computing. PivotalR is an R package that enables users to interact with data resident in SynxDB using the R client. Using PivotalR requires that MADlib is installed on the SynxDB.</p>
+<p>PivotalR allows R users to leverage the scalability and performance of in-database analytics without leaving the R command line. The computational work is run in-database, while the end user benefits from the familiar R interface. Compared with respective native R functions, there is an increase in scalability and a decrease in running time. Furthermore, data movement, which can take hours for very large data sets, is eliminated with PivotalR.</p>
+<p>Key features of the PivotalR package:</p>
+<ul>
+<li>Explore and manipulate data in the database with R syntax. SQL translation is performed by PivotalR.</li>
+<li>Use the familiar R syntax for predictive analytics algorithms, for example linear and logistic regression. PivotalR accesses the MADlib in-database analytics function calls.</li>
+<li>Comprehensive documentation package with examples in standard R format accessible from an R client.</li>
+<li>The PivotalR package also supports access to the MADlib functionality.</li>
+</ul>
+<p>For information about PivotalR, including supported MADlib functionality, see <a href="https://cwiki.apache.org/confluence/display/MADLIB/PivotalR">https://cwiki.apache.org/confluence/display/MADLIB/PivotalR</a>.</p>
+<p>The archived packages for PivotalR can be found at <a href="https://cran.r-project.org/src/contrib/Archive/PivotalR/">https://cran.r-project.org/src/contrib/Archive/PivotalR/</a>.</p>
+<h2 id="prerequisites"><a class="header" href="#prerequisites"><a id="prereq"></a>Prerequisites</a></h2>
+<blockquote>
+<p><strong>Important</strong> SynxDB supports MADlib version 2.x for SynxDB 2 on RHEL8 platforms only. Upgrading from MADlib version 1.x to version 2.x is not supported.</p>
+</blockquote>
+<p>MADlib requires the <code>m4</code> macro processor version 1.4.13 or later. Ensure that you have access to, or superuser permissions to install, this package on each SynxDB host.</p>
+<p>MADlib 2.x requires Python 3. If you are installing version 2.x, you must also set up the Python 3 environment by registering the <code>python3u</code> extension in all databases that will use MADlib:</p>
+<pre><code>CREATE EXTENSION python3u;
+</code></pre>
+<p>You must register the extension before you install MADlib 2.x.</p>
+<h2 id="installing-madlib"><a class="header" href="#installing-madlib"><a id="topic3"></a>Installing MADlib</a></h2>
+<p>To install MADlib on SynxDB, you first install a compatible SynxDB MADlib package and then install the MADlib function libraries on all databases that will use MADlib.</p>
+<p>If you have GPUs installed on some or across all hosts in the cluster, then the segments residing on those hosts can benefit from GPU acceleration. GPUs and deep learning libraries such as Keras, TensorFlow, cudNN, and CUDA are managed separately from MADlib. For more information see the <a href="https://cwiki.apache.org/confluence/display/MADLIB/Deep+Learning">MADlib wiki instructions for deep learning</a> and the <a href="http://madlib.apache.org/docs/latest/group__grp__dl.html">MADlib user documentation for deep learning</a> .</p>
+<h3 id="installing-the-synxdb-madlib-package"><a class="header" href="#installing-the-synxdb-madlib-package"><a id="topic4"></a>Installing the SynxDB MADlib Package</a></h3>
+<p>Before you install the MADlib package, make sure that your SynxDB is running, you have sourced <code>synxdb_path.sh</code>, and that the <code>$MASTER_DATA_DIRECTORY</code> and <code>$GPHOME</code> environment variables are set.</p>
+<ol>
+<li>
+<p>Download the MADlib extension package.</p>
+</li>
+<li>
+<p>Copy the MADlib package to the SynxDB master host.</p>
+</li>
+<li>
+<p>Unpack the MADlib distribution package. For example:</p>
+<p>To unpack version 1.21:</p>
+<pre><code>$ tar xzvf madlib-1.21.0+1-gp6-rhel7-x86_64.tar.gz
+</code></pre>
+<p>To unpack version 2.1.0:</p>
+<pre><code>$ tar xzvf madlib-2.1.0-gp6-rhel8-x86_64.tar.gz
+</code></pre>
+</li>
+<li>
+<p>Install the software package by running the <code>gppkg</code> command. For example:</p>
+<p>To install version 1.21:</p>
+<pre><code>$ gppkg -i ./madlib-1.21.0+1-gp6-rhel7-x86_64/madlib-1.21.0+1-gp6-rhel7-x86_64.gppkg
+</code></pre>
+<p>To install version 2.1.0:</p>
+<pre><code>$ gppkg -i ./madlib-2.1.0-gp6-rhel8-x86_64/madlib-2.1.0-gp6-rhel8-x86_64.gppkg
+</code></pre>
+</li>
+</ol>
+<h3 id="adding-madlib-functions-to-a-database"><a class="header" href="#adding-madlib-functions-to-a-database"><a id="topic5"></a>Adding MADlib Functions to a Database</a></h3>
+<p>After installing the MADlib package, run the <code>madpack</code> command to add MADlib functions to SynxDB. <code>madpack</code> is in <code>$GPHOME/madlib/bin</code>.</p>
+<pre><code>$ madpack [-s &lt;schema_name&gt;] -p greenplum -c &lt;user&gt;@&lt;host&gt;:&lt;port&gt;/&lt;database&gt; install
+</code></pre>
+<p>For example, this command creates MADlib functions in the SynxDB <code>testdb</code> running on server <code>mdw</code> on port <code>5432</code>. The <code>madpack</code> command logs in as the user <code>gpadmin</code> and prompts for password. The target schema is <code>madlib</code>.</p>
+<pre><code>$ madpack -s madlib -p greenplum -c gpadmin@mdw:5432/testdb install
+</code></pre>
+<p>After installing the functions, The SynxDB <code>gpadmin</code> superuser role should grant all privileges on the target schema (in the example <code>madlib</code>) to users who will be accessing MADlib functions. Users without access to the functions will get the error <code>ERROR: permission denied for schema MADlib</code>.</p>
+<p>The madpack <code>install-check</code> option runs test using Madlib modules to check the MADlib installation:</p>
+<pre><code>$ madpack -s madlib -p greenplum -c gpadmin@mdw:5432/testdb install-check
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> The command <code>madpack -h</code> displays information for the utility.</p>
+</blockquote>
+<h2 id="upgrading-madlib"><a class="header" href="#upgrading-madlib"><a id="topic_eqm_klx_hw"></a>Upgrading MADlib</a></h2>
+<blockquote>
+<p><strong>Important</strong> SynxDB does not support directly upgrading from MADlib 1.x to version 2.x. You must back up your MADlib models, uninstall version 1.x, install version 2.x, and reload the models.</p>
+</blockquote>
+<p>You upgrade an installed MADlib version 1.x or 2.x package with the SynxDB <code>gppkg</code> utility and the MADlib <code>madpack</code> command.</p>
+<p>For information about the upgrade paths that MADlib supports, see the MADlib support and upgrade matrix in the <a href="https://cwiki.apache.org/confluence/display/MADLIB/FAQ">MADlib FAQ page</a>.</p>
+<h3 id="upgrading-a-madlib-1x-package"><a class="header" href="#upgrading-a-madlib-1x-package"><a id="topic_tb3_2gd_3w"></a>Upgrading a MADlib 1.x Package</a></h3>
+<blockquote>
+<p><strong>Important</strong> SynxDB does not support upgrading from MADlib version 1.x to version 2.x. Use this procedure to upgrade from an older MADlib version 1.x release to a newer version 1.x release.</p>
+</blockquote>
+<p>To upgrade MADlib, run the <code>gppkg</code> utility with the <code>-u</code> option. This command upgrades an installed MADlib 1.x package to MADlib 1.21.0+1.</p>
+<pre><code>$ gppkg -u madlib-1.21.0+1-gp6-rhel7-x86_64.gppkg
+</code></pre>
+<h3 id="upgrading-a-madlib-2x-package"><a class="header" href="#upgrading-a-madlib-2x-package"><a id="topic_tb3_2gd_3xx"></a>Upgrading a MADlib 2.x Package</a></h3>
+<blockquote>
+<p><strong>Important</strong> SynxDB does not support upgrading from MADlib version 1.x to version 2.x. Use this procedure to upgrade from an older MADlib version 2.x release to a newer version 2.x release.</p>
+</blockquote>
+<p>To upgrade MADlib, run the <code>gppkg</code> utility with the <code>-u</code> option. This command upgrades an installed MADlib 2.0.x package to MADlib 2.1.0:</p>
+<pre><code>$ gppkg -u madlib-2.1.0-gp6-rhel8-x86_64.gppkg
+</code></pre>
+<h3 id="upgrading-madlib-functions"><a class="header" href="#upgrading-madlib-functions"><a id="topic_bql_bgd_3w"></a>Upgrading MADlib Functions</a></h3>
+<p>After you upgrade the MADlib package from one minor version to another, run <code>madpack upgrade</code> to upgrade the MADlib functions in a database schema.</p>
+<blockquote>
+<p><strong>Note</strong> Use <code>madpack upgrade</code> only if you upgraded a minor MADlib package version, for example from 1.19.0 to 1.21.0, or from 2.0.0 to 2.1.0. You do not need to update the functions within a patch version upgrade, for example from 1.16+1 to 1.16+3.</p>
+</blockquote>
+<p>This example command upgrades the MADlib functions in the schema <code>madlib</code> of the SynxDB <code>test</code>.</p>
+<pre><code>madpack -s madlib -p greenplum -c gpadmin@mdw:5432/testdb upgrade
+</code></pre>
+<h2 id="uninstalling-madlib"><a class="header" href="#uninstalling-madlib"><a id="topic6"></a>Uninstalling MADlib</a></h2>
+<ul>
+<li><a href="#topic7">Remove MADlib objects from the database</a></li>
+<li><a href="#topic8">Uninstall the SynxDB MADlib Package</a></li>
+</ul>
+<p>When you remove MADlib support from a database, routines that you created in the database that use MADlib functionality will no longer work.</p>
+<h3 id="remove-madlib-objects-from-the-database"><a class="header" href="#remove-madlib-objects-from-the-database"><a id="topic7"></a>Remove MADlib objects from the database</a></h3>
+<p>Use the <code>madpack uninstall</code> command to remove MADlib objects from a SynxDB. For example, this command removes MADlib objects from the database <code>testdb</code>.</p>
+<pre><code>$ madpack  -s madlib -p greenplum -c gpadmin@mdw:5432/testdb uninstall
+</code></pre>
+<h3 id="uninstall-the-synxdb-madlib-package"><a class="header" href="#uninstall-the-synxdb-madlib-package"><a id="topic8"></a>Uninstall the SynxDB MADlib Package</a></h3>
+<p>If no databases use the MADlib functions, use the SynxDB <code>gppkg</code> utility with the <code>-r</code> option to uninstall the MADlib package. When removing the package you must specify the package and version. For example:</p>
+<p>To uninstall MADlib package version 1.21.0:</p>
+<pre><code>$ gppkg -r madlib-1.21.0+1-gp6-rhel7-x86_64
+</code></pre>
+<p>To uninstall MADlib package version 2.1.0:</p>
+<pre><code>$ gppkg -r madlib-2.1.0-gp6-rhel8-x86_64
+</code></pre>
+<p>You can run the <code>gppkg</code> utility with the options <code>-q --all</code> to list the installed extensions and their versions.</p>
+<p>After you uninstall the package, restart the database.</p>
+<pre><code>$ gpstop -r
+</code></pre>
+<h2 id="examples"><a class="header" href="#examples"><a id="topic9"></a>Examples</a></h2>
+<p>Following are examples using the SynxDB MADlib extension:</p>
+<ul>
+<li><a href="#mlogr">Linear Regression</a></li>
+<li><a href="#assoc_rules">Association Rules</a></li>
+<li><a href="#naive_bayes">Naive Bayes Classification</a></li>
+</ul>
+<p>See the MADlib documentation for additional examples.</p>
+<h3 id="linear-regression"><a class="header" href="#linear-regression"><a id="mlogr"></a>Linear Regression</a></h3>
+<p>This example runs a linear regression on the table <code>regr_example</code>. The dependent variable data are in the <code>y</code> column and the independent variable data are in the <code>x1</code> and <code>x2</code> columns.</p>
+<p>The following statements create the <code>regr_example</code> table and load some sample data:</p>
+<pre><code>DROP TABLE IF EXISTS regr_example;
+CREATE TABLE regr_example (
+   id int,
+   y int,
+   x1 int,
+   x2 int
+);
+INSERT INTO regr_example VALUES
+   (1,  5, 2, 3),
+   (2, 10, 7, 2),
+   (3,  6, 4, 1),
+   (4,  8, 3, 4);
+</code></pre>
+<p>The MADlib <code>linregr_train()</code> function produces a regression model from an input table containing training data. The following <code>SELECT</code> statement runs a simple multivariate regression on the <code>regr_example</code> table and saves the model in the <code>reg_example_model</code> table.</p>
+<pre><code>SELECT madlib.linregr_train (
+   'regr_example',         -- source table
+   'regr_example_model',   -- output model table
+   'y',                    -- dependent variable
+   'ARRAY[1, x1, x2]'      -- independent variables
+);
+
+</code></pre>
+<p>The <code>madlib.linregr_train()</code> function can have additional arguments to set grouping columns and to calculate the heteroskedasticity of the model.</p>
+<blockquote>
+<p><strong>Note</strong> The intercept is computed by setting one of the independent variables to a constant <code>1</code>, as shown in the preceding example.</p>
+</blockquote>
+<p>Running this query against the <code>regr_example</code> table creates the <code>regr_example_model</code> table with one row of data:</p>
+<pre><code>SELECT * FROM regr_example_model;
+-[ RECORD 1 ]------------+------------------------
+coef                     | {0.111111111111127,1.14814814814815,1.01851851851852}
+r2                       | 0.968612680477111
+std_err                  | {1.49587911309236,0.207043331249903,0.346449758034495}
+t_stats                  | {0.0742781352708591,5.54544858420156,2.93987366103776}
+p_values                 | {0.952799748147436,0.113579771006374,0.208730790695278}
+condition_no             | 22.650203241881
+num_rows_processed       | 4
+num_missing_rows_skipped | 0
+variance_covariance      | {{2.23765432098598,-0.257201646090342,-0.437242798353582},
+                            {-0.257201646090342,0.042866941015057,0.0342935528120456},
+                            {-0.437242798353582,0.0342935528120457,0.12002743484216}}
+</code></pre>
+<p>The model saved in the <code>regr_example_model</code> table can be used with the MADlib linear regression prediction function, <code>madlib.linregr_predict()</code>, to view the residuals:</p>
+<pre><code>SELECT regr_example.*,
+        madlib.linregr_predict ( ARRAY[1, x1, x2], m.coef ) as predict,
+        y - madlib.linregr_predict ( ARRAY[1, x1, x2], m.coef ) as residual
+FROM regr_example, regr_example_model m;
+ id | y  | x1 | x2 |     predict      |      residual
+----+----+----+----+------------------+--------------------
+  1 |  5 |  2 |  3 | 5.46296296296297 | -0.462962962962971
+  3 |  6 |  4 |  1 | 5.72222222222224 |  0.277777777777762
+  2 | 10 |  7 |  2 | 10.1851851851852 | -0.185185185185201
+  4 |  8 |  3 |  4 | 7.62962962962964 |  0.370370370370364
+(4 rows)
+</code></pre>
+<h3 id="association-rules"><a class="header" href="#association-rules"><a id="assoc_rules"></a>Association Rules</a></h3>
+<p>This example demonstrates the association rules data mining technique on a transactional data set. Association rule mining is a technique for discovering relationships between variables in a large data set. This example considers items in a store that are commonly purchased together. In addition to market basket analysis, association rules are also used in bioinformatics, web analytics, and other fields.</p>
+<p>The example analyzes purchase information for seven transactions that are stored in a table with the MADlib function <code>MADlib.assoc_rules</code>. The function assumes that the data is stored in two columns with a single item and transaction ID per row. Transactions with multiple items consist of multiple rows with one row per item.</p>
+<p>These commands create the table.</p>
+<pre><code>DROP TABLE IF EXISTS test_data;
+CREATE TABLE test_data (
+   trans_id INT,
+   product text
+);
+</code></pre>
+<p>This <code>INSERT</code> command adds the data to the table.</p>
+<pre><code>INSERT INTO test_data VALUES
+   (1, 'beer'),
+   (1, 'diapers'),
+   (1, 'chips'),
+   (2, 'beer'),
+   (2, 'diapers'),
+   (3, 'beer'),
+   (3, 'diapers'),
+   (4, 'beer'),
+   (4, 'chips'),
+   (5, 'beer'),
+   (6, 'beer'),
+   (6, 'diapers'),
+   (6, 'chips'),
+   (7, 'beer'),
+   (7, 'diapers');
+</code></pre>
+<p>The MADlib function <code>madlib.assoc_rules()</code> analyzes the data and determines association rules with the following characteristics.</p>
+<ul>
+<li>A support value of at least .40. Support is the ratio of transactions that contain X to all transactions.</li>
+<li>A confidence value of at least .75. Confidence is the ratio of transactions that contain X to transactions that contain Y. One could view this metric as the conditional probability of X given Y.</li>
+</ul>
+<p>This <code>SELECT</code> command determines association rules, creates the table <code>assoc_rules</code>, and adds the statistics to the table.</p>
+<pre><code>SELECT * FROM madlib.assoc_rules (
+   .40,          -- support
+   .75,          -- confidence
+   'trans_id',   -- transaction column
+   'product',    -- product purchased column
+   'test_data',  -- table name
+   'public',     -- schema name
+   false);       -- display processing details
+</code></pre>
+<p>This is the output of the <code>SELECT</code> command. There are two rules that fit the characteristics.</p>
+<pre><code>
+ output_schema | output_table | total_rules | total_time
+--------------+--------------+-------------+-----------------  
+public        | assoc_rules  |           2 | 00:00:01.153283
+(1 row)
+</code></pre>
+<p>To view the association rules, you can run this <code>SELECT</code> command.</p>
+<pre><code>SELECT pre, post, support FROM assoc_rules
+   ORDER BY support DESC;
+</code></pre>
+<p>This is the output. The <code>pre</code> and <code>post</code> columns are the itemsets of left and right hand sides of the association rule respectively.</p>
+<pre><code>    pre    |  post  |      support
+-----------+--------+-------------------
+ {diapers} | {beer} | 0.714285714285714
+ {chips}   | {beer} | 0.428571428571429
+(2 rows)
+</code></pre>
+<p>Based on the data, beer and diapers are often purchased together. To increase sales, you might consider placing beer and diapers closer together on the shelves.</p>
+<h3 id="naive-bayes-classification"><a class="header" href="#naive-bayes-classification"><a id="naive_bayes"></a>Naive Bayes Classification</a></h3>
+<p>Naive Bayes analysis predicts the likelihood of an outcome of a class variable, or category, based on one or more independent variables, or attributes. The class variable is a non-numeric categorial variable, a variable that can have one of a limited number of values or categories. The class variable is represented with integers, each integer representing a category. For example, if the category can be one of “true”, “false”, or “unknown,” the values can be represented with the integers 1, 2, or 3.</p>
+<p>The attributes can be of numeric types and non-numeric, categorical, types. The training function has two signatures – one for the case where all attributes are numeric and another for mixed numeric and categorical types. Additional arguments for the latter identify the attributes that should be handled as numeric values. The attributes are submitted to the training function in an array.</p>
+<p>The MADlib Naive Bayes training functions produce a features probabilities table and a class priors table, which can be used with the prediction function to provide the probability of a class for the set of attributes.</p>
+<p><strong>Naive Bayes Example 1 - Simple All-numeric Attributes</strong></p>
+<p>In the first example, the <code>class</code> variable is either 1 or 2 and there are three integer attributes.</p>
+<ol>
+<li>
+<p>The following commands create the input table and load sample data.</p>
+<pre><code>DROP TABLE IF EXISTS class_example CASCADE;
+CREATE TABLE class_example (
+   id int, class int, attributes int[]);
+INSERT INTO class_example VALUES
+   (1, 1, '{1, 2, 3}'),
+   (2, 1, '{1, 4, 3}'),
+   (3, 2, '{0, 2, 2}'),
+   (4, 1, '{1, 2, 1}'),
+   (5, 2, '{1, 2, 2}'),
+   (6, 2, '{0, 1, 3}');
+</code></pre>
+<p>Actual data in production scenarios is more extensive than this example data and yields better results. Accuracy of classification improves significantly with larger training data sets.</p>
+</li>
+<li>
+<p>Train the model with the <code>create_nb_prepared_data_tables()</code> function.</p>
+<pre><code>SELECT * FROM madlib.create_nb_prepared_data_tables (
+   'class_example',         -- name of the training table
+   'class',                 -- name of the class (dependent) column
+   'attributes',            -- name of the attributes column
+   3,                       -- the number of attributes
+   'example_feature_probs', -- name for the feature probabilities output table
+   'example_priors'         -- name for the class priors output table
+    );
+
+</code></pre>
+</li>
+<li>
+<p>Create a table with data to classify using the model.</p>
+<pre><code>DROP TABLE IF EXISTS class_example_topredict;
+CREATE TABLE class_example_topredict (
+   id int, attributes int[]);
+INSERT INTO class_example_topredict VALUES
+   (1, '{1, 3, 2}'),
+   (2, '{4, 2, 2}'),
+   (3, '{2, 1, 1}');
+</code></pre>
+</li>
+<li>
+<p>Create a classification view using the feature probabilities, class priors, and <code>class_example_topredict</code> tables.</p>
+<pre><code>SELECT madlib.create_nb_probs_view (
+   'example_feature_probs',    -- feature probabilities output table
+   'example_priors',           -- class priors output table
+   'class_example_topredict',  -- table with data to classify
+   'id',                       -- name of the key column
+   'attributes',               -- name of the attributes column
+    3,                         -- number of attributes
+    'example_classified'       -- name of the view to create
+    );
+
+</code></pre>
+</li>
+<li>
+<p>Display the classification results.</p>
+<pre><code>SELECT * FROM example_classified;
+ key | class | nb_prob
+-----+-------+---------
+   1 |     1 |     0.4
+   1 |     2 |     0.6
+   3 |     1 |     0.5
+   3 |     2 |     0.5
+   2 |     1 |    0.25
+   2 |     2 |    0.75
+(6 rows)
+</code></pre>
+</li>
+</ol>
+<p><strong>Naive Bayes Example 2 – Weather and Outdoor Sports</strong></p>
+<p>This example calculates the probability that the user will play an outdoor sport, such as golf or tennis, based on weather conditions.</p>
+<p>The table <code>weather_example</code> contains the example values.</p>
+<p>The identification column for the table is <code>day</code>, an integer type.</p>
+<p>The <code>play</code> column holds the dependent variable and has two classifications:</p>
+<ul>
+<li>0 - No</li>
+<li>1 - Yes</li>
+</ul>
+<p>There are four attributes: outlook, temperature, humidity, and wind. These are categorical variables. The MADlib <code>create_nb_classify_view()</code> function expects the attributes to be provided as an array of <code>INTEGER</code>, <code>NUMERIC</code>, or <code>FLOAT8</code> values, so the attributes for this example are encoded with integers as follows:</p>
+<ul>
+<li><em>outlook</em> may be sunny (1), overcast (2), or rain (3).</li>
+<li><em>temperature</em> may be hot (1), mild (2), or cool (3).</li>
+<li><em>humidity</em> may be high (1) or normal (2).</li>
+<li><em>wind</em> may be strong (1) or weak (2).</li>
+</ul>
+<p>The following table shows the training data, before encoding the variables.</p>
+<pre><code>  day | play | outlook  | temperature | humidity | wind
+-----+------+----------+-------------+----------+--------
+ 2   | No   | Sunny    | Hot         | High     | Strong
+ 4   | Yes  | Rain     | Mild        | High     | Weak
+ 6   | No   | Rain     | Cool        | Normal   | Strong
+ 8   | No   | Sunny    | Mild        | High     | Weak
+10   | Yes  | Rain     | Mild        | Normal   | Weak
+12   | Yes  | Overcast | Mild        | High     | Strong
+14   | No   | Rain     | Mild        | High     | Strong
+ 1   | No   | Sunny    | Hot         | High     | Weak
+ 3   | Yes  | Overcast | Hot         | High     | Weak
+ 5   | Yes  | Rain     | Cool        | Normal   | Weak
+ 7   | Yes  | Overcast | Cool        | Normal   | Strong
+ 9   | Yes  | Sunny    | Cool        | Normal   | Weak
+11   | Yes  | Sunny    | Mild        | Normal   | Strong
+13   | Yes  | Overcast | Hot         | Normal   | Weak
+(14 rows)
+</code></pre>
+<ol>
+<li>
+<p>Create the training table.</p>
+<pre><code>DROP TABLE IF EXISTS weather_example;
+CREATE TABLE weather_example (
+   day int,
+   play int,
+   attrs int[]
+);
+INSERT INTO weather_example VALUES
+   ( 2, 0, '{1,1,1,1}'), -- sunny, hot, high, strong
+   ( 4, 1, '{3,2,1,2}'), -- rain, mild, high, weak
+   ( 6, 0, '{3,3,2,1}'), -- rain, cool, normal, strong
+   ( 8, 0, '{1,2,1,2}'), -- sunny, mild, high, weak
+   (10, 1, '{3,2,2,2}'), -- rain, mild, normal, weak
+   (12, 1, '{2,2,1,1}'), -- etc.
+   (14, 0, '{3,2,1,1}'),
+   ( 1, 0, '{1,1,1,2}'),
+   ( 3, 1, '{2,1,1,2}'),
+   ( 5, 1, '{3,3,2,2}'),
+   ( 7, 1, '{2,3,2,1}'),
+   ( 9, 1, '{1,3,2,2}'),
+   (11, 1, '{1,2,2,1}'),
+   (13, 1, '{2,1,2,2}');
+</code></pre>
+</li>
+<li>
+<p>Create the model from the training table.</p>
+<pre><code>SELECT madlib.create_nb_prepared_data_tables (
+   'weather_example',  -- training source table
+   'play',             -- dependent class column
+   'attrs',            -- attributes column
+   4,                  -- number of attributes
+   'weather_probs',    -- feature probabilities output table
+   'weather_priors'    -- class priors
+   );
+</code></pre>
+</li>
+<li>
+<p>View the feature probabilities:</p>
+<pre><code>SELECT * FROM weather_probs;
+ class | attr | value | cnt | attr_cnt
+-------+------+-------+-----+----------
+     1 |    3 |     2 |   6 |        2
+     1 |    1 |     2 |   4 |        3
+     0 |    1 |     1 |   3 |        3
+     0 |    1 |     3 |   2 |        3
+     0 |    3 |     1 |   4 |        2
+     1 |    4 |     1 |   3 |        2
+     1 |    2 |     3 |   3 |        3
+     1 |    2 |     1 |   2 |        3
+     0 |    2 |     2 |   2 |        3
+     0 |    4 |     2 |   2 |        2
+     0 |    3 |     2 |   1 |        2
+     0 |    1 |     2 |   0 |        3
+     1 |    1 |     1 |   2 |        3
+     1 |    1 |     3 |   3 |        3
+     1 |    3 |     1 |   3 |        2
+     0 |    4 |     1 |   3 |        2
+     0 |    2 |     3 |   1 |        3
+     0 |    2 |     1 |   2 |        3
+     1 |    2 |     2 |   4 |        3
+     1 |    4 |     2 |   6 |        2
+(20 rows)
+</code></pre>
+</li>
+<li>
+<p>To classify a group of records with a model, first load the data into a table. In this example, the table <code>t1</code> has four rows to classify.</p>
+<pre><code>DROP TABLE IF EXISTS t1;
+CREATE TABLE t1 (
+   id integer,
+   attributes integer[]);
+insert into t1 values
+   (1, '{1, 2, 1, 1}'),
+   (2, '{3, 3, 2, 1}'),
+   (3, '{2, 1, 2, 2}'),
+   (4, '{3, 1, 1, 2}');
+</code></pre>
+</li>
+<li>
+<p>Use the MADlib <code>create_nb_classify_view()</code> function to classify the rows in the table.</p>
+<pre><code>SELECT madlib.create_nb_classify_view (
+   'weather_probs',      -- feature probabilities table
+   'weather_priors',     -- classPriorsName
+   't1',                 -- table containing values to classify
+   'id',                 -- key column
+   'attributes',         -- attributes column
+   4,                    -- number of attributes
+   't1_out'              -- output table name
+);
+
+</code></pre>
+<p>The result is four rows, one for each record in the <code>t1</code> table.</p>
+<pre><code>SELECT * FROM t1_out ORDER BY key;
+ key | nb_classification
+-----+-------------------
+ 1 | {0}
+ 2 | {1}
+ 3 | {1}
+ 4 | {0}
+ (4 rows)
+</code></pre>
+</li>
+</ol>
+<h2 id="references"><a class="header" href="#references"><a id="topic10"></a>References</a></h2>
+<p>MADlib web site is at <a href="http://madlib.apache.org/">http://madlib.apache.org/</a>.</p>
+<p>MADlib documentation is at <a href="http://madlib.apache.org/documentation.html">http://madlib.apache.org/documentation.html</a>.</p>
+<p>PivotalR is a first class R package that enables users to interact with data resident in SynxDB and MADLib using an R client.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../analytics/overview.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../analytics/graph.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../analytics/overview.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../analytics/graph.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,332 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Load Data from Kafka Using Kafka FDW &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Load Data from Object Storage and HDFS" href="load-data-from-oss-and-hdfs.html" />
+    <link rel="prev" title="Load External Data Using Foreign Table" href="load-external-data-source-using-foreign-table.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="load-data-index.html">Load Data</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="load-data-using-copy.html">Load Data Using COPY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-external-data-source-using-foreign-table.html">Load External Data Using Foreign Table</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Load Data from Kafka Using Kafka FDW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-usage">Basic usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#supported-data-formats">Supported data formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#query">Query</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#message-producer">Message producer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-import">Data import</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#scheduled-import">Scheduled import</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="load-data-from-oss-and-hdfs.html">Load Data from Object Storage and HDFS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-data-from-hive.html">Load Data from Hive Data Warehouse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-data-using-gpfdist.html">Load Data Using <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="load-data-index.html">Load Data</a></li>
+      <li class="breadcrumb-item active">Load Data from Kafka Using Kafka FDW</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="load-data-from-kafka-using-kafka-fdw">
+<h1>Load Data from Kafka Using Kafka FDW<a class="headerlink" href="#load-data-from-kafka-using-kafka-fdw" title="Link to this heading"></a></h1>
+<p>Kafka Foreign Data Wrapper (FDW) enables SynxDB Elastic to connect directly to Apache Kafka, allowing it to read and operate on Kafka data as external tables. This integration allows SynxDB Elastic users to process real-time Kafka data more efficiently, flexibly, and reliably, greatly boosting data processing and business operations.</p>
+<p>SynxDB Elastic supports using Kafka FDW to create external tables and import data.</p>
+<section id="basic-usage">
+<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h2>
+<ul>
+<li><p>Create the <code class="docutils literal notranslate"><span class="pre">kafka_fdw</span></code> extension:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">postgres</span><span class="o">=#</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="n">kafka_fdw</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create an external server and specify Kafka’s cluster address:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">kafka_server</span>
+<span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">kafka_fdw</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">mpp_execute</span><span class="w"> </span><span class="s1">&#39;all segments&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">brokers</span><span class="w"> </span><span class="s1">&#39;localhost:9092&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create user mapping:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">PUBLIC</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">kafka_server</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create an external table:</p>
+<p>When creating an external table, you need to specify two metadata columns: <code class="docutils literal notranslate"><span class="pre">partition</span></code> and <code class="docutils literal notranslate"><span class="pre">offset</span></code>, which identify the partition and offset of messages in a Kafka topic. Here is an example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">kafka_test</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">part</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">partition</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">offs</span><span class="w"> </span><span class="nb">bigint</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">offset</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">some_int</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+<span class="w">    </span><span class="n">some_text</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+<span class="w">    </span><span class="n">some_date</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span>
+<span class="w">    </span><span class="n">some_time</span><span class="w"> </span><span class="k">timestamp</span>
+<span class="p">)</span>
+<span class="n">SERVER</span><span class="w"> </span><span class="n">kafka_server</span><span class="w"> </span><span class="k">OPTIONS</span>
+<span class="w">    </span><span class="p">(</span><span class="n">format</span><span class="w"> </span><span class="s1">&#39;csv&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">topic</span><span class="w"> </span><span class="s1">&#39;contrib_regress_csv&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">batch_size</span><span class="w"> </span><span class="s1">&#39;1000&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">buffer_delay</span><span class="w"> </span><span class="s1">&#39;1000&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Parameter description:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code>: The size of data read from Kafka at once.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">buffer_delay</span></code>: The timeout for getting data from Kafka.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="supported-data-formats">
+<h2>Supported data formats<a class="headerlink" href="#supported-data-formats" title="Link to this heading"></a></h2>
+<p>Currently, <code class="docutils literal notranslate"><span class="pre">CSV</span></code> and <code class="docutils literal notranslate"><span class="pre">JSON</span></code> data formats are supported.</p>
+</section>
+<section id="query">
+<h2>Query<a class="headerlink" href="#query" title="Link to this heading"></a></h2>
+<p>You can specify the message partition and offset in your query by using the <code class="docutils literal notranslate"><span class="pre">partition</span></code> or <code class="docutils literal notranslate"><span class="pre">offset</span></code> column condition:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">kafka_test</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">offs</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">60</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>You can also specify multiple conditions:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">kafka_test</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="p">(</span><span class="n">part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">offs</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="p">(</span><span class="n">part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">offs</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">300</span><span class="p">)</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="p">(</span><span class="n">part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">offs</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">700</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="message-producer">
+<h2>Message producer<a class="headerlink" href="#message-producer" title="Link to this heading"></a></h2>
+<p>Currently, Kafka FDW supports inserting data into external tables, which acts as a message producer for Kafka. You only need to use the <code class="docutils literal notranslate"><span class="pre">INSERT</span></code> statement.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">kafka_test</span><span class="p">(</span><span class="n">part</span><span class="p">,</span><span class="w"> </span><span class="n">some_int</span><span class="p">,</span><span class="w"> </span><span class="n">some_text</span><span class="p">)</span>
+<span class="k">VALUES</span>
+<span class="w">    </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">5464565</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;some text goes into partition 0&#39;</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5464565</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;some text goes into partition 1&#39;</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">5464565</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;some text goes into partition 0&#39;</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">5464565</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;some text goes into partition 3&#39;</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="k">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">5464565</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;some text goes into partition selected by kafka&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>When inserting data, you can specify <code class="docutils literal notranslate"><span class="pre">partition</span></code> to specify which partition to insert into.</p>
+</section>
+<section id="data-import">
+<h2>Data import<a class="headerlink" href="#data-import" title="Link to this heading"></a></h2>
+<p>To use Kafka FDW for data import, you can create custom functions, such as the <code class="docutils literal notranslate"><span class="pre">INSERT</span> <span class="pre">INTO</span> <span class="pre">SELECT</span></code> statement. The basic principle is to fetch all data from the external table and insert it into the target table sequentially.</p>
+<p>Here is a simple example, which you can modify according to your needs:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">import_kafka_data</span><span class="p">(</span>
+<span class="w">  </span><span class="n">src_table_name</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+<span class="w">  </span><span class="n">dest_table_name</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+<span class="w">  </span><span class="n">dest_table_columns</span><span class="w"> </span><span class="nb">text</span><span class="p">[]</span>
+<span class="p">)</span><span class="w"> </span><span class="k">RETURNS</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+
+<span class="k">DECLARE</span>
+<span class="w">    </span><span class="n">current_row</span><span class="w"> </span><span class="n">RECORD</span><span class="p">;</span>
+<span class="w">    </span><span class="n">current_part</span><span class="w"> </span><span class="nb">integer</span><span class="p">;</span>
+<span class="w">    </span><span class="n">current_offs</span><span class="w"> </span><span class="nb">bigint</span><span class="p">;</span>
+<span class="w">    </span><span class="n">max_off</span><span class="w"> </span><span class="nb">bigint</span><span class="p">;</span>
+<span class="w">    </span><span class="n">import_progress_table_name</span><span class="w"> </span><span class="nb">text</span><span class="p">;</span>
+<span class="w">    </span><span class="n">max_off_result</span><span class="w"> </span><span class="nb">bigint</span><span class="p">;</span>
+<span class="k">BEGIN</span>
+
+<span class="w">    </span><span class="n">import_progress_table_name</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">src_table_name</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;_import_progress&#39;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">-- Creates progress record table.</span>
+<span class="w">    </span><span class="k">EXECUTE</span><span class="w"> </span><span class="n">FORMAT</span><span class="p">(</span><span class="s1">&#39;CREATE TABLE IF NOT EXISTS %I (part integer, offs bigint NOT NULL)&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">import_progress_table_name</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">-- The number of partitions in the topic table might change, so reinitialize before each import.</span>
+<span class="w">    </span><span class="k">EXECUTE</span><span class="w"> </span><span class="n">FORMAT</span><span class="p">(</span><span class="s1">&#39;INSERT INTO %I SELECT DISTINCT part, 0 FROM %I&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">import_progress_table_name</span><span class="p">,</span><span class="w"> </span><span class="n">src_table_name</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">-- Imports data partition by partition.</span>
+<span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="n">current_row</span><span class="w"> </span><span class="k">IN</span>
+<span class="w">        </span><span class="k">EXECUTE</span><span class="w"> </span><span class="n">FORMAT</span><span class="p">(</span><span class="s1">&#39;SELECT part, offs FROM %I&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">import_progress_table_name</span><span class="p">)</span>
+<span class="w">    </span><span class="n">LOOP</span>
+<span class="w">        </span><span class="n">current_part</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">current_row</span><span class="p">.</span><span class="n">part</span><span class="p">;</span>
+<span class="w">        </span><span class="n">current_offs</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">current_row</span><span class="p">.</span><span class="n">offs</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">-- Gets the maximum offset for the current partition.</span>
+<span class="w">        </span><span class="k">EXECUTE</span><span class="w"> </span><span class="n">FORMAT</span><span class="p">(</span><span class="s1">&#39;SELECT MAX(offs) FROM %I WHERE part = %s&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">src_table_name</span><span class="p">,</span><span class="w"> </span><span class="n">current_part</span><span class="p">)</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">max_off_result</span><span class="p">;</span>
+<span class="w">        </span><span class="n">max_off</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">max_off_result</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">-- Skips if there is no new data.</span>
+<span class="w">        </span><span class="k">IF</span><span class="w"> </span><span class="n">max_off</span><span class="o">+</span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current_offs</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">            </span><span class="k">CONTINUE</span><span class="p">;</span>
+<span class="w">        </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">-- Imports data.</span>
+<span class="w">        </span><span class="k">EXECUTE</span><span class="w"> </span><span class="n">FORMAT</span><span class="p">(</span><span class="s1">&#39;</span>
+<span class="s1">            INSERT INTO %I (%s)</span>
+<span class="s1">            SELECT %s</span>
+<span class="s1">            FROM %I</span>
+<span class="s1">            WHERE part = %s AND offs &gt;= %s AND offs &lt;= %s&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">dest_table_name</span><span class="p">,</span>
+<span class="w">            </span><span class="n">array_to_string</span><span class="p">(</span><span class="n">dest_table_columns</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;, &#39;</span><span class="p">),</span>
+<span class="w">            </span><span class="n">array_to_string</span><span class="p">(</span><span class="n">dest_table_columns</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;, &#39;</span><span class="p">),</span>
+<span class="w">            </span><span class="n">src_table_name</span><span class="p">,</span>
+<span class="w">            </span><span class="n">current_part</span><span class="p">,</span>
+<span class="w">            </span><span class="n">current_offs</span><span class="p">,</span>
+<span class="w">            </span><span class="n">max_off</span>
+<span class="w">        </span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">-- Updates import progress.</span>
+<span class="w">        </span><span class="k">EXECUTE</span><span class="w"> </span><span class="n">FORMAT</span><span class="p">(</span><span class="s1">&#39;UPDATE %I SET offs = %s WHERE part = %s&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">import_progress_table_name</span><span class="p">,</span><span class="w"> </span><span class="n">max_off</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">current_part</span><span class="p">);</span>
+<span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">RETURN</span><span class="p">;</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>When executing the query, call this function, passing in the external table name, target table name, and the fields to be imported. Here is an example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">import_kafka_data</span><span class="p">(</span><span class="s1">&#39;kafka_test&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;dest_table_fdw&#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">&#39;some_int&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;some_text&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;some_date&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;some_time&#39;</span><span class="p">]);</span>
+</pre></div>
+</div>
+<section id="scheduled-import">
+<h3>Scheduled import<a class="headerlink" href="#scheduled-import" title="Link to this heading"></a></h3>
+<p>To create a scheduled task to import data in the background, you can use the Task feature in SynxDB Elastic to execute the import function periodically.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">TASK</span><span class="w"> </span><span class="n">import_kafka_data</span><span class="w"> </span><span class="n">schedule</span><span class="w"> </span><span class="s1">&#39;1 seconds&#39;</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span><span class="k">SELECT</span><span class="w"> </span><span class="n">import_kafka_data</span><span class="p">(</span><span class="s1">&#39;kafka_test&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;dest_table_fdw&#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">&#39;some_int&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;some_text&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;some_date&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;some_time&#39;</span><span class="p">]);</span><span class="err">$$</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In the example above, the function to import data is called every second. This setup allows for the continuous use of Kafka FDW to import data from the source external table into the target table.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="load-data-from-oss-and-hdfs.html" class="btn btn-neutral float-right" title="Load Data from Object Storage and HDFS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="load-external-data-source-using-foreign-table.html" class="btn btn-neutral float-left" title="Load External Data Using Foreign Table" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

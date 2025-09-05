@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>pg_class - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="pg_class"><a class="header" href="#pg_class">pg_class</a></h1>
+<p>The system catalog table <code>pg_class</code> catalogs tables and most everything else that has columns or is otherwise similar to a table (also known as <em>relations</em>). This includes indexes (see also <a href="pg_index.html">pg_index</a>), sequences, views, composite types, and TOAST tables. Not all columns are meaningful for all relation types.</p>
+<div class="table-wrapper"><table><thead><tr><th>column</th><th>type</th><th>references</th><th>description</th></tr></thead><tbody>
+<tr><td><code>relname</code></td><td>name</td><td> </td><td>Name of the table, index, view, etc.</td></tr>
+<tr><td><code>relnamespace</code></td><td>oid</td><td>pg_namespace.oid</td><td>The OID of the namespace (schema) that contains this relation</td></tr>
+<tr><td><code>reltype</code></td><td>oid</td><td>pg_type.oid</td><td>The OID of the data type that corresponds to this table’s row type, if any (zero for indexes, which have no pg_type entry)</td></tr>
+<tr><td><code>reloftype</code></td><td>oid</td><td>pg_type.oid</td><td>The OID of an entry in <code>pg_type</code> for an underlying composite type.</td></tr>
+<tr><td><code>relowner</code></td><td>oid</td><td>pg_authid.oid</td><td>Owner of the relation</td></tr>
+<tr><td><code>relam</code></td><td>oid</td><td>pg_am.oid</td><td>If this is an index, the access method used (B-tree, Bitmap, hash, etc.)</td></tr>
+<tr><td><code>relfilenode</code></td><td>oid</td><td> </td><td>Name of the on-disk file of this relation; <code>0</code> if none.</td></tr>
+<tr><td><code>reltablespace</code></td><td>oid</td><td>pg_tablespace.oid</td><td>The tablespace in which this relation is stored. If zero, the database’s default tablespace is implied. (Not meaningful if the relation has no on-disk file.)</td></tr>
+<tr><td><code>relpages</code></td><td>int4</td><td> </td><td>Size of the on-disk representation of this table in pages (of 32K each). This is only an estimate used by the planner. It is updated by <code>VACUUM</code>, <code>ANALYZE</code>, and a few DDL commands.</td></tr>
+<tr><td><code>reltuples</code></td><td>float4</td><td> </td><td>Number of rows in the table. This is only an estimate used by the planner. It is updated by <code>VACUUM</code>, <code>ANALYZE</code>, and a few DDL commands.</td></tr>
+<tr><td><code>relallvisible</code></td><td>int32</td><td> </td><td>Number of all-visible blocks (this value may not be up-to-date).</td></tr>
+<tr><td><code>reltoastrelid</code></td><td>oid</td><td>pg_class.oid</td><td>OID of the TOAST table associated with this table, <code>0</code> if none. The TOAST table stores large attributes “out of line” in a secondary table.</td></tr>
+<tr><td><code>relhasindex</code></td><td>boolean</td><td> </td><td>True if this is a table and it has (or recently had) any indexes. This is set by <code>CREATE INDEX</code>, but not cleared immediately by <code>DROP INDEX</code>. <code>VACUUM</code> will clear if it finds the table has no indexes.</td></tr>
+<tr><td><code>relisshared</code></td><td>boolean</td><td> </td><td>True if this table is shared across all databases in the system. Only certain system catalog tables are shared.</td></tr>
+<tr><td><code>relpersistence</code></td><td>char</td><td> </td><td>The type of object persistence: <code>p</code> = heap or append-optimized table, <code>u</code> = unlogged temporary table, <code>t</code> = temporary table.</td></tr>
+<tr><td><code>relkind</code></td><td>char</td><td> </td><td>The type of object<br/><br/><code>r</code> = heap or append-optimized table, <code>i</code> = index, <code>S</code> = sequence, <code>t</code> = TOAST value, <code>v</code> = view, <code>c</code> = composite type, <code>f</code> = foreign table, <code>u</code> = uncatalogued temporary heap table, <code>o</code> = internal append-optimized segment files and EOFs, <code>b</code> = append-only block directory, <code>M</code> = append-only visibility map</td></tr>
+<tr><td><code>relstorage</code></td><td>char</td><td> </td><td>The storage mode of a table<br/><br/><code>a</code>= append-optimized, <code>c</code>= column-oriented, <code>h</code> = heap, <code>v</code> = virtual, <code>x</code>= external table.</td></tr>
+<tr><td><code>relnatts</code></td><td>int2</td><td> </td><td>Number of user columns in the relation (system columns not counted). There must be this many corresponding entries in pg_attribute.</td></tr>
+<tr><td><code>relchecks</code></td><td>int2</td><td> </td><td>Number of check constraints on the table.</td></tr>
+<tr><td><code>relhasoids</code></td><td>boolean</td><td> </td><td>True if an OID is generated for each row of the relation.</td></tr>
+<tr><td><code>relhaspkey</code></td><td>boolean</td><td> </td><td>True if the table has (or once had) a primary key.</td></tr>
+<tr><td><code>relhasrules</code></td><td>boolean</td><td> </td><td>True if table has rules.</td></tr>
+<tr><td><code>relhastriggers</code></td><td>boolean</td><td> </td><td>True if table has (or once had) triggers.</td></tr>
+<tr><td><code>relhassubclass</code></td><td>boolean</td><td> </td><td>True if table has (or once had) any inheritance children.</td></tr>
+<tr><td><code>relispopulated</code></td><td>boolean</td><td> </td><td>True if relation is populated (this is true for all relations other than some materialized views).</td></tr>
+<tr><td><code>relreplident</code></td><td>char</td><td> </td><td>Columns used to form “replica identity” for rows: d = default (primary key, if any), n = nothing, f = all columns i = index with <code>indisreplident</code> set, or default</td></tr>
+<tr><td><code>relfrozenxid</code></td><td>xid</td><td> </td><td>All transaction IDs before this one have been replaced with a permanent (frozen) transaction ID in this table. This is used to track whether the table needs to be vacuumed in order to prevent transaction ID wraparound or to allow <code>pg_clog</code> to be shrunk.<br/><br/>The value is <code>0</code> (<code>InvalidTransactionId</code>) if the relation is not a table or if the table does not require vacuuming to prevent transaction ID wraparound. The table still might require vacuuming to reclaim disk space.</td></tr>
+<tr><td><code>relminmxid</code></td><td>xid</td><td> </td><td>All multixact IDs before this one have been replaced by a transaction ID in this table. This is used to track whether the table needs to be vacuumed in order to prevent multixact ID wraparound or to allow <code>pg_multixact</code> to be shrunk. Zero (<code>InvalidMultiXactId</code>) if the relation is not a table.</td></tr>
+<tr><td><code>relacl</code></td><td>aclitem[]</td><td> </td><td>Access privileges assigned by <code>GRANT</code> and <code>REVOKE</code>.</td></tr>
+<tr><td><code>reloptions</code></td><td>text[]</td><td> </td><td>Access-method-specific options, as “keyword=value” strings.</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/system_catalogs/pg_cast.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/system_catalogs/pg_compression.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/system_catalogs/pg_cast.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/system_catalogs/pg_compression.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

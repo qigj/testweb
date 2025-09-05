@@ -1,0 +1,314 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Using Indexes in SynxDB - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="using-indexes-in-synxdb"><a class="header" href="#using-indexes-in-synxdb">Using Indexes in SynxDB</a></h1>
+<p>In most traditional databases, indexes can greatly improve data access times. However, in a distributed database such as SynxDB, indexes should be used more sparingly. SynxDB performs very fast sequential scans; indexes use a random seek pattern to locate records on disk. SynxDB data is distributed across the segments, so each segment scans a smaller portion of the overall data to get the result. With table partitioning, the total data to scan may be even smaller. Because business intelligence (BI) query workloads generally return very large data sets, using indexes is not efficient.</p>
+<p>First try your query workload without adding indexes. Indexes are more likely to improve performance for OLTP workloads, where the query is returning a single record or a small subset of data. Indexes can also improve performance on compressed append-optimized tables for queries that return a targeted set of rows, as the optimizer can use an index access method rather than a full table scan when appropriate. For compressed data, an index access method means only the necessary rows are uncompressed.</p>
+<p>SynxDB automatically creates <code>PRIMARY KEY</code> constraints for tables with primary keys. To create an index on a partitioned table, create an index on the partitioned table that you created. The index is propagated to all the child tables created by SynxDB. Creating an index on a table that is created by SynxDB for use by a partitioned table is not supported.</p>
+<p>Note that a <code>UNIQUE CONSTRAINT</code> (such as a <code>PRIMARY KEY CONSTRAINT</code>) implicitly creates a <code>UNIQUE INDEX</code> that must include all the columns of the distribution key and any partitioning key. The <code>UNIQUE CONSTRAINT</code> is enforced across the entire table, including all table partitions (if any).</p>
+<p>Indexes add some database overhead — they use storage space and must be maintained when the table is updated. Ensure that the query workload uses the indexes that you create, and check that the indexes you add improve query performance (as compared to a sequential scan of the table). To determine whether indexes are being used, examine the query <code>EXPLAIN</code> plans. See <a href="../query/topics/query-profiling.html">Query Profiling</a>.</p>
+<p>Consider the following points when you create indexes.</p>
+<ul>
+<li><strong>Your Query Workload.</strong> Indexes improve performance for workloads where queries return a single record or a very small data set, such as OLTP workloads.</li>
+<li>Compressed Tables. Indexes can improve performance on compressed append-optimized tables for queries that return a targeted set of rows. For compressed data, an index access method means only the necessary rows are uncompressed.</li>
+<li><strong>Avoid indexes on frequently updated columns.</strong> Creating an index on a column that is frequently updated increases the number of writes required when the column is updated.</li>
+<li><strong>Create selective B-tree indexes.</strong> Index selectivity is a ratio of the number of distinct values a column has divided by the number of rows in a table. For example, if a table has 1000 rows and a column has 800 distinct values, the selectivity of the index is 0.8, which is considered good. Unique indexes always have a selectivity ratio of 1.0, which is the best possible. SynxDB allows unique indexes only on distribution key columns.</li>
+<li>**Use Bitmap indexes for low selectivity columns.**The SynxDB Bitmap index type is not available in regular PostgreSQL. See <a href="#topic93">About Bitmap Indexes</a>.</li>
+<li><strong>Index columns used in joins.</strong> An index on a column used for frequent joins (such as a foreign key column) can improve join performance by enabling more join methods for the query optimizer to use.</li>
+<li><strong>Index columns frequently used in predicates.</strong> Columns that are frequently referenced in <code>WHERE</code> clauses are good candidates for indexes.</li>
+<li><strong>Avoid overlapping indexes.</strong> Indexes that have the same leading column are redundant.</li>
+<li><strong>Drop indexes for bulk loads.</strong> For mass loads of data into a table, consider dropping the indexes and re-creating them after the load completes. This is often faster than updating the indexes.</li>
+<li><strong>Consider a clustered index.</strong> Clustering an index means that the records are physically ordered on disk according to the index. If the records you need are distributed randomly on disk, the database has to seek across the disk to fetch the records requested. If the records are stored close together, the fetching operation is more efficient. For example, a clustered index on a date column where the data is ordered sequentially by date. A query against a specific date range results in an ordered fetch from the disk, which leverages fast sequential access.</li>
+</ul>
+<h2 id="to-cluster-an-index-in-synxdb"><a class="header" href="#to-cluster-an-index-in-synxdb"><a id="im151772"></a>To cluster an index in SynxDB</a></h2>
+<p>Using the <code>CLUSTER</code> command to physically reorder a table based on an index can take a long time with very large tables. To achieve the same results much faster, you can manually reorder the data on disk by creating an intermediate table and loading the data in the desired order. For example:</p>
+<pre><code>CREATE TABLE new_table (LIKE old_table) 
+       AS SELECT * FROM old_table ORDER BY myixcolumn;
+DROP old_table;
+ALTER TABLE new_table RENAME TO old_table;
+CREATE INDEX myixcolumn_ix ON old_table;
+VACUUM ANALYZE old_table;
+
+</code></pre>
+<h2 id="index-types"><a class="header" href="#index-types"><a id="topic92"></a>Index Types</a></h2>
+<p>SynxDB supports the Postgres index types B-tree, GiST, SP-GiST, and GIN. Hash indexes are not supported. Each index type uses a different algorithm that is best suited to different types of queries. B-tree indexes fit the most common situations and are the default index type. See <a href="https://www.postgresql.org/docs/9.4/indexes-types.html">Index Types</a> in the PostgreSQL documentation for a description of these types.</p>
+<blockquote>
+<p><strong>Note</strong> SynxDB allows unique indexes only if the columns of the index key are the same as (or a superset of) the SynxDB distribution key. Unique indexes are not supported on append-optimized tables. On partitioned tables, a unique index cannot be enforced across all child table partitions of a partitioned table. A unique index is supported only within a partition.</p>
+</blockquote>
+<h3 id="about-bitmap-indexes"><a class="header" href="#about-bitmap-indexes"><a id="topic93"></a>About Bitmap Indexes</a></h3>
+<p>SynxDB provides the Bitmap index type. Bitmap indexes are best suited to data warehousing applications and decision support systems with large amounts of data, many ad hoc queries, and few data modification (DML) transactions.</p>
+<p>An index provides pointers to the rows in a table that contain a given key value. A regular index stores a list of tuple IDs for each key corresponding to the rows with that key value. Bitmap indexes store a bitmap for each key value. Regular indexes can be several times larger than the data in the table, but bitmap indexes provide the same functionality as a regular index and use a fraction of the size of the indexed data.</p>
+<p>Each bit in the bitmap corresponds to a possible tuple ID. If the bit is set, the row with the corresponding tuple ID contains the key value. A mapping function converts the bit position to a tuple ID. Bitmaps are compressed for storage. If the number of distinct key values is small, bitmap indexes are much smaller, compress better, and save considerable space compared with a regular index. The size of a bitmap index is proportional to the number of rows in the table times the number of distinct values in the indexed column.</p>
+<p>Bitmap indexes are most effective for queries that contain multiple conditions in the <code>WHERE</code> clause. Rows that satisfy some, but not all, conditions are filtered out before the table is accessed. This improves response time, often dramatically.</p>
+<h4 id="when-to-use-bitmap-indexes"><a class="header" href="#when-to-use-bitmap-indexes"><a id="topic94"></a>When to Use Bitmap Indexes</a></h4>
+<p>Bitmap indexes are best suited to data warehousing applications where users query the data rather than update it. Bitmap indexes perform best for columns that have between 100 and 100,000 distinct values and when the indexed column is often queried in conjunction with other indexed columns. Columns with fewer than 100 distinct values, such as a gender column with two distinct values (male and female), usually do not benefit much from any type of index. On a column with more than 100,000 distinct values, the performance and space efficiency of a bitmap index decline.</p>
+<p>Bitmap indexes can improve query performance for ad hoc queries. <code>AND</code> and <code>OR</code> conditions in the <code>WHERE</code> clause of a query can be resolved quickly by performing the corresponding Boolean operations directly on the bitmaps before converting the resulting bitmap to tuple ids. If the resulting number of rows is small, the query can be answered quickly without resorting to a full table scan.</p>
+<h4 id="when-not-to-use-bitmap-indexes"><a class="header" href="#when-not-to-use-bitmap-indexes"><a id="topic95"></a>When Not to Use Bitmap Indexes</a></h4>
+<p>Do not use bitmap indexes for unique columns or columns with high cardinality data, such as customer names or phone numbers. The performance gains and disk space advantages of bitmap indexes start to diminish on columns with 100,000 or more unique values, regardless of the number of rows in the table.</p>
+<p>Bitmap indexes are not suitable for OLTP applications with large numbers of concurrent transactions modifying the data.</p>
+<p>Use bitmap indexes sparingly. Test and compare query performance with and without an index. Add an index only if query performance improves with indexed columns.</p>
+<h2 id="creating-an-index"><a class="header" href="#creating-an-index"><a id="topic96"></a>Creating an Index</a></h2>
+<p>The <code>CREATE INDEX</code> command defines an index on a table. A B-tree index is the default index type. For example, to create a B-tree index on the column <em>gender</em> in the table <em>employee</em>:</p>
+<pre><code>CREATE INDEX gender_idx ON employee (gender);
+
+</code></pre>
+<p>To create a bitmap index on the column <em>title</em> in the table <em>films</em>:</p>
+<pre><code>CREATE INDEX title_bmp_idx ON films USING bitmap (title);
+
+</code></pre>
+<h3 id="indexes-on-expressions"><a class="header" href="#indexes-on-expressions"><a id="topic_tfz_3vz_4fb"></a>Indexes on Expressions</a></h3>
+<p>An index column need not be just a column of the underlying table, but can be a function or scalar expression computed from one or more columns of the table. This feature is useful to obtain fast access to tables based on the results of computations.</p>
+<p>Index expressions are relatively expensive to maintain, because the derived expressions must be computed for each row upon insertion and whenever it is updated. However, the index expressions are not recomputed during an indexed search, since they are already stored in the index. In both of the following examples, the system sees the query as just <code>WHERE indexedcolumn = 'constant'</code> and so the speed of the search is equivalent to any other simple index query. Thus, indexes on expressions are useful when retrieval speed is more important than insertion and update speed.</p>
+<p>The first example is a common way to do case-insensitive comparisons with the <code>lower</code> function:</p>
+<pre><code>SELECT * FROM test1 WHERE lower(col1) = 'value';
+</code></pre>
+<p>This query can use an index if one has been defined on the result of the <code>lower(col1)</code> function:</p>
+<pre><code>CREATE INDEX test1_lower_col1_idx ON test1 (lower(col1));
+</code></pre>
+<p>This example assumes the following type of query is performed often.</p>
+<pre><code>SELECT * FROM people WHERE (first_name || ' ' || last_name) = 'John Smith';
+</code></pre>
+<p>The query might benefit from the following index.</p>
+<pre><code>CREATE INDEX people_names ON people ((first_name || ' ' || last_name));
+</code></pre>
+<p>The syntax of the <code>CREATE INDEX</code> command normally requires writing parentheses around index expressions, as shown in the second example. The parentheses can be omitted when the expression is just a function call, as in the first example.</p>
+<h2 id="examining-index-usage"><a class="header" href="#examining-index-usage"><a id="topic97"></a>Examining Index Usage</a></h2>
+<p>SynxDB indexes do not require maintenance and tuning. You can check which indexes are used by the real-life query workload. Use the <code>EXPLAIN</code> command to examine index usage for a query.</p>
+<p>The query plan shows the steps or <em>plan nodes</em> that the database will take to answer a query and time estimates for each plan node. To examine the use of indexes, look for the following query plan node types in your <code>EXPLAIN</code> output:</p>
+<ul>
+<li><strong>Index Scan</strong> - A scan of an index.</li>
+<li><strong>Bitmap Heap Scan</strong> - Retrieves all</li>
+<li>from the bitmap generated by BitmapAnd, BitmapOr, or BitmapIndexScan and accesses the heap to retrieve the relevant rows.</li>
+<li><strong>Bitmap Index Scan</strong> - Compute a bitmap by OR-ing all bitmaps that satisfy the query predicates from the underlying index.</li>
+<li><strong>BitmapAnd</strong> or <strong>BitmapOr</strong> - Takes the bitmaps generated from multiple BitmapIndexScan nodes, ANDs or ORs them together, and generates a new bitmap as its output.</li>
+</ul>
+<p>You have to experiment to determine the indexes to create. Consider the following points.</p>
+<ul>
+<li>Run <code>ANALYZE</code> after you create or update an index. <code>ANALYZE</code> collects table statistics. The query optimizer uses table statistics to estimate the number of rows returned by a query and to assign realistic costs to each possible query plan.</li>
+<li>Use real data for experimentation. Using test data for setting up indexes tells you what indexes you need for the test data, but that is all.</li>
+<li>Do not use very small test data sets as the results can be unrealistic or skewed.</li>
+<li>Be careful when developing test data. Values that are similar, completely random, or inserted in sorted order will skew the statistics away from the distribution that real data would have.</li>
+<li>You can force the use of indexes for testing purposes by using run-time parameters to turn off specific plan types. For example, turn off sequential scans (<code>enable_seqscan</code>) and nested-loop joins (<code>enable_nestloop</code>), the most basic plans, to force the system to use a different plan. Time your query with and without indexes and use the <code>EXPLAIN ANALYZE</code> command to compare the results.</li>
+</ul>
+<h2 id="managing-indexes"><a class="header" href="#managing-indexes"><a id="topic98"></a>Managing Indexes</a></h2>
+<p>Use the <code>REINDEX</code> command to rebuild a poorly-performing index. <code>REINDEX</code> rebuilds an index using the data stored in the index’s table, replacing the old copy of the index.</p>
+<h3 id="to-rebuild-all-indexes-on-a-table"><a class="header" href="#to-rebuild-all-indexes-on-a-table"><a id="im143476"></a>To rebuild all indexes on a table</a></h3>
+<pre><code>REINDEX my_table;
+
+</code></pre>
+<pre><code>REINDEX my_index;
+
+</code></pre>
+<h2 id="dropping-an-index"><a class="header" href="#dropping-an-index"><a id="topic99"></a>Dropping an Index</a></h2>
+<p>The <code>DROP INDEX</code> command removes an index. For example:</p>
+<pre><code>DROP INDEX title_idx;
+
+</code></pre>
+<p>When loading data, it can be faster to drop all indexes, load, then recreate the indexes.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/ddl/ddl-sequence.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/ddl/ddl-view.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/ddl/ddl-sequence.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/ddl/ddl-view.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

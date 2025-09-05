@@ -1,0 +1,344 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>The gpperfmon Database - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="the-gpperfmon-database"><a class="header" href="#the-gpperfmon-database">The gpperfmon Database</a></h1>
+<p>The <code>gpperfmon</code> database is a dedicated database where data collection agents on SynxDB segment hosts save query and system statistics.</p>
+<p>The <code>gpperfmon</code> database is created using the <code>gpperfmon_install</code> command-line utility. The utility creates the database and the <code>gpmon</code> database role and enables the data collection agents on the master and segment hosts. See the <code>gpperfmon_install</code> reference in the <em>SynxDB Utility Guide</em> for information about using the utility and configuring the data collection agents.</p>
+<blockquote>
+<p><strong>NOTE</strong>
+<code>gpperfrmon_install</code> is not supported on Red Hat Linux 8.</p>
+</blockquote>
+<p>The <code>gpperfmon</code> database consists of three sets of tables that capture query and system status information at different stages.</p>
+<ul>
+<li><code>_now</code> tables store current system metrics such as active queries.</li>
+<li><code>_tail</code> tables are used to stage data before it is saved to the <code>_history</code> tables. The <code>_tail</code> tables are for internal use only and not to be queried by users.</li>
+<li><code>_history</code> tables store historical metrics.</li>
+</ul>
+<p>The data for <code>_now</code> and <code>_tail</code> tables are stored as text files on the master host file system, and are accessed in the <code>gpperfmon</code> database via external tables. The <code>history</code> tables are regular heap database tables in the <code>gpperfmon</code> database. History is saved only for queries that run for a minimum number of seconds, 20 by default. You can set this threshold to another value by setting the <code>min_query_time</code> parameter in the <code>$MASTER_DATA_DIRECTORY/gpperfmon/conf/gpperfmon.conf</code> configuration file. Setting the value to 0 saves history for all queries.</p>
+<blockquote>
+<p><strong>Note</strong> <code>gpperfmon</code> does not support SQL <code>ALTER</code> commands. <code>ALTER</code> queries are not recorded in the <code>gpperfmon</code> query history tables.</p>
+</blockquote>
+<p>The <code>history</code> tables are partitioned by month. See <a href="#section_et2_wmt_n1b">History Table Partition Retention</a> for information about removing old partitions.</p>
+<p>The database contains the following categories of tables:</p>
+<ul>
+<li>The <a href="db-database.html">database_*</a> tables store query workload information for a SynxDB instance.</li>
+<li>The <a href="db-diskspace.html">diskspace_*</a> tables store diskspace metrics.</li>
+<li>The <a href="db-log-alert.html">log_alert_*</a> tables store error and warning messages from <code>pg_log</code>.</li>
+<li>The <a href="db-queries.html">queries_*</a> tables store high-level query status information.</li>
+<li>The <a href="db-segment.html">segment_*</a> tables store memory allocation statistics for the SynxDB segment instances.</li>
+<li>The <a href="db-socket-stats.html">socket_stats_*</a> tables store statistical metrics about socket usage for a SynxDB instance. These tables are in place for future use and are not currently populated.</li>
+<li>The <a href="db-system.html">system_*</a> tables store system utilization metrics.</li>
+</ul>
+<p>The <code>gpperfmon</code> database also contains the following views:</p>
+<ul>
+<li>The <a href="db-dynamic-memory-info.html">dynamic_memory_info</a> view shows an aggregate of all the segments per host and the amount of dynamic memory used per host.</li>
+<li>The <a href="db-memory-info.html">memory_info</a> view shows per-host memory information from the <code>system_history</code> and <code>segment_history</code> tables.</li>
+</ul>
+<h2 id="history-table-partition-retention"><a class="header" href="#history-table-partition-retention"><a id="section_et2_wmt_n1b"></a>History Table Partition Retention</a></h2>
+<p>The <code>history</code> tables in the <code>gpperfmon</code> database are partitioned by month. Partitions are automatically added in two month increments as needed.</p>
+<p>The <code>partition_age</code> parameter in the <code>$MASTER_DATA_DIRECTORY/gpperfmon/conf/gpperfmon.conf</code> file can be set to the maximum number of monthly partitions to keep. Partitions older than the specified value are removed automatically when new partitions are added.</p>
+<p>The default value for <code>partition_age</code> is <code>0</code>, which means that administrators must manually remove unneeded partitions.</p>
+<h2 id="alert-log-processing-and-log-rotation"><a class="header" href="#alert-log-processing-and-log-rotation"><a id="section_ok2_wd1_41b"></a>Alert Log Processing and Log Rotation</a></h2>
+<p>When the <code>gp_enable_gpperfmon</code> server configuration parameter is set to true, the SynxDB syslogger writes alert messages to a <code>.csv</code> file in the <code>$MASTER_DATA_DIRECTORY/gpperfmon/logs</code> directory.</p>
+<p>The level of messages written to the log can be set to <code>none</code>, <code>warning</code>, <code>error</code>, <code>fatal</code>, or <code>panic</code> by setting the <code>gpperfmon_log_alert_level</code> server configuration parameter in <code>postgresql.conf</code>. The default message level is <code>warning</code>.</p>
+<p>The directory where the log is written can be changed by setting the <code>log_location</code> configuration variable in the <code>$MASTER_DATA_DIRECTORY/gpperfmon/conf/gpperfmon.conf</code> configuration file.</p>
+<p>The syslogger rotates the alert log every 24 hours or when the current log file reaches or exceeds 1MB.</p>
+<p>A rotated log file can exceed 1MB if a single error message contains a large SQL statement or a large stack trace. Also, the syslogger processes error messages in chunks, with a separate chunk for each logging process. The size of a chunk is OS-dependent; on Red Hat Enterprise Linux, for example, it is 4096 bytes. If many SynxDB sessions generate error messages at the same time, the log file can grow significantly before its size is checked and log rotation is triggered.</p>
+<h2 id="gpperfmon-data-collection-process"><a class="header" href="#gpperfmon-data-collection-process"><a id="rotation"></a>gpperfmon Data Collection Process</a></h2>
+<p>When SynxDB starts up with gpperfmon support enabled, it forks a <code>gpmmon</code> agent process. <code>gpmmon</code> then starts a <code>gpsmon</code> agent process on the master host and every segment host in the SynxDB cluster. The SynxDB postmaster process monitors the <code>gpmmon</code> process and restarts it if needed, and the <code>gpmmon</code> process monitors and restarts <code>gpsmon</code> processes as needed.</p>
+<p>The <code>gpmmon</code> process runs in a loop and at configurable intervals retrieves data accumulated by the <code>gpsmon</code> processes, adds it to the data files for the <code>_now</code> and <code>_tail</code> external database tables, and then into the <code>_history</code> regular heap database tables.</p>
+<blockquote>
+<p><strong>Note</strong> The <code>log_alert</code> tables in the <code>gpperfmon</code> database follow a different process, since alert messages are delivered by the SynxDB system logger instead of through <code>gpsmon</code>. See <a href="#section_ok2_wd1_41b">Alert Log Processing and Log Rotation</a> for more information.</p>
+</blockquote>
+<p>Two configuration parameters in the <code>$MASTER_DATA_DIRECTORY/gpperfmon/conf/gpperfmon.conf</code> configuration file control how often <code>gpmmon</code> activities are triggered:</p>
+<ul>
+<li>The <code>quantum</code> parameter is how frequently, in seconds, <code>gpmmon</code> requests data from the <code>gpsmon</code> agents on the segment hosts and adds retrieved data to the <code>_now</code> and <code>_tail</code> external table data files. Valid values for the <code>quantum</code> parameter are 10, 15, 20, 30, and 60. The default is 15.</li>
+<li>The <code>harvest_interval</code> parameter is how frequently, in seconds, data in the <code>_tail</code> tables is moved to the <code>_history</code> tables. The <code>harvest_interval</code> must be at least 30. The default is 120.</li>
+</ul>
+<p>See the <code>gpperfmon_install</code> management utility reference in the <em>SynxDB Utility Guide</em> for the complete list of gpperfmon configuration parameters.</p>
+<p>The following steps describe the flow of data from SynxDB into the <code>gpperfmon</code> database when gpperfmon support is enabled.</p>
+<ol>
+<li>While executing queries, the SynxDB query dispatcher and query executor processes send out query status messages in UDP datagrams. The <code>gp_gpperfmon_send_interval</code> server configuration variable determines how frequently the database sends these messages. The default is every second.</li>
+<li>The <code>gpsmon</code> process on each host receives the UDP packets, consolidates and summarizes the data they contain, and adds additional host metrics, such as CPU and memory usage.</li>
+<li>The <code>gpsmon</code> processes continue to accumulate data until they receive a dump command from <code>gpmmon</code>.</li>
+<li>The <code>gpsmon</code> processes respond to a dump command by sending their accumulated status data and log alerts to a listening <code>gpmmon</code> event handler thread.</li>
+<li>The <code>gpmmon</code> event handler saves the metrics to <code>.txt</code> files in the <code>$MASTER_DATA_DIRECTORY/gpperfmon/data</code> directory on the master host.</li>
+</ol>
+<p>At each <code>quantum</code> interval (15 seconds by default), <code>gpmmon</code> performs the following steps:</p>
+<ol>
+<li>
+<p>Sends a dump command to the <code>gpsmon</code> processes.</p>
+</li>
+<li>
+<p>Gathers and converts the <code>.txt</code> files saved in <code>the $MASTER_DATA_DIRECTORY/gpperfmon/data</code> directory into <code>.dat</code> external data files for the <code>_now</code> and <code>_tail</code> external tables in the <code>gpperfmon</code> database.</p>
+<p>For example, disk space metrics are added to the <code>diskspace_now.dat</code> and <code>_diskspace_tail.dat</code> delimited text files. These text files are accessed via the <code>diskspace_now</code> and <code>_diskspace_tail</code> tables in the <code>gpperfmon</code> database.</p>
+</li>
+</ol>
+<p>At each <code>harvest_interval</code> (120 seconds by default), <code>gpmmon</code> performs the following steps for each <code>_tail</code> file:</p>
+<ol>
+<li>
+<p>Renames the <code>_tail</code> file to a <code>_stage</code> file.</p>
+</li>
+<li>
+<p>Creates a new <code>_tail</code> file.</p>
+</li>
+<li>
+<p>Appends data from the <code>_stage</code> file into the <code>_tail</code> file.</p>
+</li>
+<li>
+<p>Runs a SQL command to insert the data from the <code>_tail</code> external table into the corresponding <code>_history</code> table.</p>
+<p>For example, the contents of the <code>_database_tail</code> external table is inserted into the <code>database_history</code> regular (heap) table.</p>
+</li>
+<li>
+<p>Deletes the <code>_tail</code> file after its contents have been loaded into the database table.</p>
+</li>
+<li>
+<p>Gathers all of the <code>gpdb-alert-*.csv</code> files in the <code>$MASTER_DATA_DIRECTORY/gpperfmon/logs</code> directory (except the most recent, which the syslogger has open and is writing to) into a single file, <code>alert_log_stage</code>.</p>
+</li>
+<li>
+<p>Loads the <code>alert_log_stage</code> file into the <code>log_alert_history</code> table in the <code>gpperfmon</code> database.</p>
+</li>
+<li>
+<p>Truncates the <code>alert_log_stage</code> file.</p>
+</li>
+</ol>
+<p>The following topics describe the contents of the tables in the <code>gpperfmon</code> database.</p>
+<ul>
+<li>
+<p><strong><a href="../gpperfmon/db-database.html">database_*</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../gpperfmon/db-diskspace.html">diskspace_*</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../gpperfmon/db-interface-stats.html">interface_stats_*</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../gpperfmon/db-log-alert.html">log_alert_*</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../gpperfmon/db-queries.html">queries_*</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../gpperfmon/db-segment.html">segment_*</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../gpperfmon/db-socket-stats.html">socket_stats_*</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../gpperfmon/db-system.html">system_*</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../gpperfmon/db-dynamic-memory-info.html">dynamic_memory_info</a></strong></p>
+</li>
+<li>
+<p><strong><a href="../gpperfmon/db-memory-info.html">memory_info</a></strong></p>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/gp_toolkit.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/gpperfmon/db-database.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/gp_toolkit.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/gpperfmon/db-database.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

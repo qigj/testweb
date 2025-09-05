@@ -1,0 +1,240 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Use RuntimeFilter to Optimize Join Queries &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Use RuntimeFilter to Optimize Join Queries</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="use-runtimefilter-to-optimize-join-queries">
+<h1>Use RuntimeFilter to Optimize Join Queries<a class="headerlink" href="#use-runtimefilter-to-optimize-join-queries" title="Link to this heading"></a></h1>
+<p>When performing join queries on large tables, the SQL optimizer of SynxDB Elastic often uses the HashJoin operator. HashJoin builds a hash table based on the join key to match the join key, which might cause a memory access bottleneck and disk bottleneck. RuntimeFilter is an optimization technique that generates filters in real-time during HashJoin operations, which can pre-filter data before executing HashJoin to speed up HashJoin operations. In some scenarios, the RuntimeFilter optimization can double execution efficiency.</p>
+<p>HashJoin is commonly used for joining a smaller table with a larger table. In SynxDB Elastic, when performing HashJoin, a hash table is typically built based on the smaller table to be joined. Then, by iterating over the tuples in the larger table, it finds matches in the hash table to perform the join. The smaller table used to build the hash table is called the inner table, while the other table used for iterative matching is called the outer table.</p>
+<p>The main bottlenecks in executing the HashJoin operator are:</p>
+<ul class="simple">
+<li><p>Memory Access: For each tuple in the outer table, a matching tuple in the hash table needs to be found, involving one or more memory accesses.</p></li>
+<li><p>Disk I/O: If the inner table is too large to fit in memory, it must be processed in batches using disk storage, causing significant disk I/O.</p></li>
+</ul>
+<p>With RuntimeFilter optimization enabled, SynxDB Elastic builds a RuntimeFilter alongside the hash table. This means filtering the tuples of the larger table before executing HashJoin. During the process, a Bloom Filter is used to implement the RuntimeFilter, occupying much less memory space than the hash table. When the Bloom Filter can be fully stored in the L3 cache, its filtering efficiency is twice that of HashJoin, greatly reducing memory access costs.</p>
+<p>The optimization will determine whether to generate a RuntimeFilter operator based on the filtering rate of the connection conditions of HashJoin and the size of the inner table. If the data volume deviates too much from the estimated result during the actual execution, SynxDB Elastic will also stop using RuntimeFilter in time.</p>
+<section id="applicable-scenarios">
+<h2>Applicable scenarios<a class="headerlink" href="#applicable-scenarios" title="Link to this heading"></a></h2>
+<p>If your scenario meets all the following conditions, you can consider using RuntimeFilter optimization in HashJoin operations:</p>
+<ul class="simple">
+<li><p>The size of the inner table in a single segment is within 16 million rows.</p></li>
+<li><p>The original HashJoin join key has a selection rate lower than 60%, which means the result set meeting the Hash join condition is less than 60% of the outer table. This can also be understood as a filter rate greater than 40%.</p></li>
+</ul>
+<p>In the above scenarios, the size of the Bloom Filter built by SynxDB Elastic through RuntimeFilter is within 2 MB. It can be fully stored in the L3 cache, enabling the filtration of 40% of the tuples in the outer table with minimal overhead, thus yielding a positive impact. In certain scenarios, if the selectivity of the HashJoin join key is below 10%, the efficiency of execution can be doubled by optimizing with RuntimeFilter.</p>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading"></a></h2>
+<p><strong>Currently, RuntimeFilter is only supported when the estimated number of rows in the inner table is less than 16 million.</strong></p>
+<p>This limitation is to prevent the Bloom Filter from occupying too much memory, which might cause slower execution speeds or reduced filtering efficiency. In future updates, there might be support for using RuntimeFilter in scenarios with very large inner tables to avoid disk I/O costs associated with batch processing.</p>
+</section>
+<section id="usage-example">
+<h2>Usage example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
+<p>The following is an example of the HashJoin algorithm benefiting from RuntimeFilter:</p>
+<p>This optimization is effective only in the PostgreSQL optimizer. Therefore, before enabling RuntimeFilter, you need to first disable the GPORCA optimizer and manually turn on the GUC parameter <code class="docutils literal notranslate"><span class="pre">gp_enable_runtime_filter</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Preparation</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">optimizer</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="k">off</span><span class="p">;</span><span class="w"> </span><span class="c1">-- Disables the GPORCA optimizer to use the PostgreSQL optimizer.</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">gp_enable_runtime_filter</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="k">on</span><span class="p">;</span><span class="w"> </span><span class="c1">-- Enables the RuntimeFilter optimization.</span>
+
+<span class="c1">-- Creates the test table.</span>
+<span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">fact</span><span class="p">,</span><span class="w"> </span><span class="n">dim</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">fact</span><span class="w"> </span><span class="p">(</span><span class="n">fid</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span><span class="w"> </span><span class="n">did</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="nb">int</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="p">(</span><span class="n">did</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span><span class="w"> </span><span class="n">proj_id</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span><span class="w"> </span><span class="n">filter_val</span><span class="w"> </span><span class="nb">int</span><span class="p">);</span>
+
+<span class="c1">-- Generates test data, and 80% of fact.did overlaps with dim.did.</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">fact</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">8000</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">100000</span><span class="p">)</span><span class="w"> </span><span class="n">s</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">)</span><span class="w"> </span><span class="n">s</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="k">ANALYZE</span><span class="w"> </span><span class="n">fact</span><span class="p">,</span><span class="w"> </span><span class="n">dim</span><span class="p">;</span>
+
+<span class="c1">-- Checks the execution plan.</span>
+<span class="k">EXPLAIN</span><span class="w"> </span><span class="p">(</span><span class="n">COSTS</span><span class="w"> </span><span class="k">OFF</span><span class="p">)</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fact</span><span class="p">,</span><span class="w"> </span><span class="n">dim</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">fact</span><span class="p">.</span><span class="n">did</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dim</span><span class="p">.</span><span class="n">did</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">proj_id</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">                                </span><span class="n">QUERY</span><span class="w"> </span><span class="n">PLAN</span>
+<span class="c1">---------------------------------------------------------------------------</span>
+<span class="w"> </span><span class="n">Finalize</span><span class="w"> </span><span class="k">Aggregate</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Gather</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span><span class="w">  </span><span class="p">(</span><span class="n">slice1</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">         </span><span class="o">-&gt;</span><span class="w">  </span><span class="k">Partial</span><span class="w"> </span><span class="k">Aggregate</span>
+<span class="w">               </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Hash</span><span class="w"> </span><span class="k">Join</span>
+<span class="w">                     </span><span class="n">Hash</span><span class="w"> </span><span class="n">Cond</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">fact</span><span class="p">.</span><span class="n">did</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dim</span><span class="p">.</span><span class="n">did</span><span class="p">)</span>
+<span class="w">                     </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">RuntimeFilter</span>
+<span class="w">                           </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">fact</span>
+<span class="w">                     </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Hash</span>
+<span class="w">                           </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Broadcast</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="mi">3</span><span class="w">  </span><span class="p">(</span><span class="n">slice2</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">                                 </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">dim</span>
+<span class="w">                                       </span><span class="n">Filter</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">proj_id</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w"> </span><span class="n">Optimizer</span><span class="p">:</span><span class="w"> </span><span class="n">Postgres</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="n">optimizer</span>
+<span class="p">(</span><span class="mi">12</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the execution plan above, you can see the RuntimeFilter operator. If you want to print more information about the execution, use <code class="docutils literal notranslate"><span class="pre">EXPLAIN</span> <span class="pre">ANALYZE</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="o">-&gt;</span><span class="w">  </span><span class="n">RuntimeFilter</span><span class="w"> </span><span class="p">(</span><span class="n">actual</span><span class="w"> </span><span class="k">time</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">047</span><span class="p">..</span><span class="mi">5</span><span class="p">.</span><span class="mi">976</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">6682</span><span class="w"> </span><span class="n">loops</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">       </span><span class="n">Bloom</span><span class="w"> </span><span class="n">Bits</span><span class="p">:</span><span class="w"> </span><span class="mi">1048576</span>
+<span class="w">       </span><span class="n">Extra</span><span class="w"> </span><span class="nb">Text</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">seg1</span><span class="p">)</span><span class="w">   </span><span class="k">Inner</span><span class="w"> </span><span class="n">Processed</span><span class="p">:</span><span class="w"> </span><span class="mi">2000</span><span class="p">,</span><span class="w"> </span><span class="n">Flase</span><span class="w"> </span><span class="n">Positive</span><span class="w"> </span><span class="n">Rate</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">.</span><span class="mi">000000</span>
+</pre></div>
+</div>
+</section>
+<section id="example-of-optimization-effect">
+<h2>Example of optimization effect<a class="headerlink" href="#example-of-optimization-effect" title="Link to this heading"></a></h2>
+<p>Using the tables from the “Usage example”, by joining the <code class="docutils literal notranslate"><span class="pre">fact</span></code> and <code class="docutils literal notranslate"><span class="pre">dim</span></code> tables with the condition that project ID is less than <code class="docutils literal notranslate"><span class="pre">2</span></code>, and using the <code class="docutils literal notranslate"><span class="pre">did</span></code> column as the join key, you can see the effect of using RuntimeFilter in the execution time:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Without RuntimeFilter</span>
+<span class="k">EXPLAIN</span><span class="w"> </span><span class="k">ANALYZE</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fact</span><span class="p">,</span><span class="w"> </span><span class="n">dim</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">fact</span><span class="p">.</span><span class="n">did</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dim</span><span class="p">.</span><span class="n">did</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">proj_id</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+
+<span class="n">Execution</span><span class="w"> </span><span class="k">Time</span><span class="p">:</span><span class="w"> </span><span class="mi">35956</span><span class="p">.</span><span class="mi">436</span><span class="w"> </span><span class="n">ms</span>
+
+<span class="c1">-- With RuntimeFilter</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">gp_enable_runtime_filter</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="k">on</span><span class="p">;</span>
+<span class="k">EXPLAIN</span><span class="w"> </span><span class="k">ANALYZE</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fact</span><span class="p">,</span><span class="w"> </span><span class="n">dim</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">fact</span><span class="p">.</span><span class="n">did</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dim</span><span class="p">.</span><span class="n">did</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">proj_id</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+
+<span class="n">Execution</span><span class="w"> </span><span class="k">Time</span><span class="p">:</span><span class="w"> </span><span class="mi">18276</span><span class="p">.</span><span class="mi">112</span><span class="w"> </span><span class="n">ms</span>
+</pre></div>
+</div>
+<p>The above is a part of the <code class="docutils literal notranslate"><span class="pre">EXPLAIN</span> <span class="pre">ANALYZE</span></code> results. In the full results, the fact table scan produces 100 million tuples. After being filtered by RuntimeFilter, 22 million tuples remain, and finally, exactly 20 million tuples are left after the HashJoin, as expected. The pre-filtering effect is clear, and the time taken is reduced by approximately 50%.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

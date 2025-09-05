@@ -1,0 +1,378 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Roles and Privileges &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Transparent Data Encryption" href="use-tde-to-encrypt-data.html" />
+    <link rel="prev" title="Log Auditing pgAudit" href="use-pgaudit.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="set-security-and-permission-index.html">Configure Security and Permissions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="set-password-profile.html">Set Password Profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-pgcrypto.html">Use pgcrypto for Data Encryption</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-pgaudit.html">Log Auditing pgAudit</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Manage Roles and Privileges</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-new-roles-users">Create new roles (users)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#alter-role-attributes">Alter role attributes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#role-membership">Role membership</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#manage-object-privileges">Manage object privileges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#security-best-practices-for-roles-and-privileges">Security best practices for roles and privileges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#encrypt-data">Encrypt data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="use-tde-to-encrypt-data.html">Transparent Data Encryption</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-anon.html">Data Anonymization Using Anon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configure-row-column-security.html">Configure Row-Level and Column-Level Permissions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+      <li class="breadcrumb-item active">Manage Roles and Privileges</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="manage-roles-and-privileges">
+<h1>Manage Roles and Privileges<a class="headerlink" href="#manage-roles-and-privileges" title="Link to this heading"></a></h1>
+<p>The SynxDB Elastic authorization mechanism stores roles and privileges to access database objects in the database and is administered using SQL statements or command-line utilities.</p>
+<p>SynxDB Elastic manages database access privileges using <em>roles</em>. The concept of roles subsumes the concepts of <em>users</em> and <em>groups</em>. A role can be a database user, a group, or both. Roles can own database objects (for example, tables) and can assign privileges on those objects to other roles to control access to the objects. Roles can be members of other roles, thus a member role can inherit the object privileges of its parent role.</p>
+<p>Every SynxDB Elastic system contains a set of database roles (users and groups). Those roles are separate from the users and groups managed by the operating system on which the server runs. However, for convenience you might want to maintain a relationship between operating system user names and SynxDB Elastic role names, since many of the client applications use the current operating system user name as the default.</p>
+<p>In SynxDB Elastic, users log in and connect through the coordinator instance, which then verifies their role and access privileges. The coordinator then issues commands to the segment instances behind the scenes as the currently logged-in role.</p>
+<p>Roles are defined at the system level, meaning they are valid for all databases in the system.</p>
+<p>To bootstrap the SynxDB Elastic system, a freshly initialized system always contains one predefined <em>superuser</em> role (also referred to as the system user). This role will have the same name as the operating system user that initialized the SynxDB Elastic system. Customarily, this role is named <code class="docutils literal notranslate"><span class="pre">gpadmin</span></code>. In order to create more roles you first have to connect as this initial role.</p>
+<section id="create-new-roles-users">
+<h2>Create new roles (users)<a class="headerlink" href="#create-new-roles-users" title="Link to this heading"></a></h2>
+<p>A user-level role is considered to be a database role that can log in to the database and initiate a database session. Therefore, when you create a new user-level role using the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">ROLE</span></code> command, you must specify the <code class="docutils literal notranslate"><span class="pre">LOGIN</span></code> privilege. For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">jsmith</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">LOGIN</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>A database role might have a number of attributes that define what sort of tasks that role can perform in the database. You can set these attributes when you create the role, or later using the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">ROLE</span></code> command.</p>
+<section id="alter-role-attributes">
+<h3>Alter role attributes<a class="headerlink" href="#alter-role-attributes" title="Link to this heading"></a></h3>
+<p>A database role might have a number of attributes that define what sort
+of tasks that role can perform in the database.</p>
+<table class="docutils align-left">
+<colgroup>
+<col style="width: 36.0%" />
+<col style="width: 64.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Attributes</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SUPERUSER</span></code> or <code class="docutils literal notranslate"><span class="pre">NOSUPERUSER</span></code></p></td>
+<td><p>Determines if the role is a superuser. You must yourself be a superuser to create a new superuser. <code class="docutils literal notranslate"><span class="pre">NOSUPERUSER</span></code> is the default.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CREATEDB</span></code> or <code class="docutils literal notranslate"><span class="pre">NOCREATEDB</span></code></p></td>
+<td><p>Determines if the role is allowed to create databases. <code class="docutils literal notranslate"><span class="pre">NOCREATEDB</span></code> is the default.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CREATEROLE</span></code> or <code class="docutils literal notranslate"><span class="pre">NOCREATEROLE</span></code></p></td>
+<td><p>Determines if the role is allowed to create and manage other roles. <code class="docutils literal notranslate"><span class="pre">NOCREATEROLE</span></code> is the default.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">INHERIT</span></code> or <code class="docutils literal notranslate"><span class="pre">NOINHERIT</span></code></p></td>
+<td><p>Determines whether a role inherits the privileges of roles it is a member. A role with the <code class="docutils literal notranslate"><span class="pre">INHERIT</span></code> attribute can automatically use whatever database privileges have been granted to all roles it is directly or indirectly a member of. <code class="docutils literal notranslate"><span class="pre">INHERIT</span></code> is the default.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">LOGIN</span></code> or <code class="docutils literal notranslate"><span class="pre">NOLOGIN</span></code></p></td>
+<td><p>Determines whether a role is allowed to log in. A role having the <code class="docutils literal notranslate"><span class="pre">LOGIN</span></code> attribute can be thought of as a user. Roles without this attribute are useful for managing database privileges (groups). <code class="docutils literal notranslate"><span class="pre">NOLOGIN</span></code> is the default.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CONNECTION</span> <span class="pre">LIMIT</span> <span class="pre">*connlimit*</span></code></p></td>
+<td><p>If role can log in, this specifies how many concurrent connections the role can make. -1 (the default) means no limit.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CREATEEXTTABLE</span></code> or <code class="docutils literal notranslate"><span class="pre">NOCREATEEXTTABLE</span></code></p></td>
+<td><p>Determines whether a role is allowed to create external tables. <code class="docutils literal notranslate"><span class="pre">NOCREATEEXTTABLE</span></code> is the default. For a role with the <code class="docutils literal notranslate"><span class="pre">CREATEEXTTABLE</span></code> attribute, the default external table <code class="docutils literal notranslate"><span class="pre">type</span></code> is <code class="docutils literal notranslate"><span class="pre">readable</span></code> and the default <code class="docutils literal notranslate"><span class="pre">protocol</span></code> is <code class="docutils literal notranslate"><span class="pre">gpfdist</span></code>. Note that external tables that use the <code class="docutils literal notranslate"><span class="pre">file</span></code> protocol can only be created by superusers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PASSWORD</span> <span class="pre">'*password*'</span></code></p></td>
+<td><p>Sets the role’s password. If you do not plan to use password authentication you can omit this option. If no password is specified, the password will be set to null and password authentication will always fail for that user. A null password can optionally be written explicitly as <code class="docutils literal notranslate"><span class="pre">PASSWORD</span> <span class="pre">NULL</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DENY</span> <span class="pre">deny_interval</span></code> or <code class="docutils literal notranslate"><span class="pre">DENY</span> <span class="pre">deny_point</span></code></p></td>
+<td><p>Restricts access during an interval, specified by day or day and time.</p></td>
+</tr>
+</tbody>
+</table>
+<p>You can set these attributes when you create the role, or later using the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">ROLE</span></code> command. For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">jsmith</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;passwd123&#39;</span><span class="p">;</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">jsmith</span><span class="w"> </span><span class="n">LOGIN</span><span class="p">;</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">jsmith</span><span class="w"> </span><span class="n">DENY</span><span class="w"> </span><span class="k">DAY</span><span class="w"> </span><span class="s1">&#39;Sunday&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>A role can also have role-specific defaults for many of the server configuration settings. For example, to set the default schema search path for a role:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="k">admin</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">search_path</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">myschema</span><span class="p">,</span><span class="w"> </span><span class="k">public</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="role-membership">
+<h2>Role membership<a class="headerlink" href="#role-membership" title="Link to this heading"></a></h2>
+<p>It is frequently convenient to group users together to ease management of object privileges: that way, privileges can be granted to, or revoked from, a group as a whole. In SynxDB Elastic, this is done by creating a role that represents the group, and then granting membership in the group role to individual user roles.</p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">ROLE</span></code> SQL command to create a new group role. For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="k">admin</span><span class="w"> </span><span class="n">CREATEROLE</span><span class="w"> </span><span class="k">CREATEDB</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Once the group role exists, you can add and remove members (user roles) using the <code class="docutils literal notranslate"><span class="pre">GRANT</span></code> and <code class="docutils literal notranslate"><span class="pre">REVOKE</span></code> commands. For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span><span class="w"> </span><span class="k">admin</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">john</span><span class="p">,</span><span class="w"> </span><span class="n">sally</span><span class="p">;</span>
+<span class="k">REVOKE</span><span class="w"> </span><span class="k">admin</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bob</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>For managing object privileges, you would then grant the appropriate privileges to the group-level role only (see <a class="reference internal" href="#manage-object-privileges"><span class="std std-ref">Manage object privileges</span></a>). The member user roles then inherit the object privileges of the group role. For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">mytable</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="k">admin</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="n">myschema</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="k">admin</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">mydb</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="k">admin</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The role attributes <code class="docutils literal notranslate"><span class="pre">LOGIN</span></code>, <code class="docutils literal notranslate"><span class="pre">SUPERUSER</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATEDB</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATEROLE</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATEEXTTABLE</span></code>, and <code class="docutils literal notranslate"><span class="pre">RESOURCE</span> <span class="pre">QUEUE</span></code> are never inherited as ordinary privileges on database objects are. User members must actually <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">ROLE</span></code> to a specific role having one of these attributes in order to make use of the attribute. In the above example, we gave <code class="docutils literal notranslate"><span class="pre">CREATEDB</span></code> and <code class="docutils literal notranslate"><span class="pre">CREATEROLE</span></code> to the <code class="docutils literal notranslate"><span class="pre">admin</span></code> role. If <code class="docutils literal notranslate"><span class="pre">sally</span></code> is a member of <code class="docutils literal notranslate"><span class="pre">admin</span></code>, then <code class="docutils literal notranslate"><span class="pre">sally</span></code> could issue the following command to assume the role attributes of the parent role:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="k">admin</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="manage-object-privileges">
+<h2>Manage object privileges<a class="headerlink" href="#manage-object-privileges" title="Link to this heading"></a></h2>
+<p>When an object (table, view, sequence, database, function, language, schema, or tablespace) is created, it is assigned an owner. The owner is normally the role that ran the creation statement. For most kinds of objects, the initial state is that only the owner (or a superuser) can do anything with the object. To allow other roles to use it, privileges must be granted. SynxDB Elastic supports the following privileges for each object type:</p>
+<table class="docutils align-left">
+<colgroup>
+<col style="width: 40.9%" />
+<col style="width: 59.1%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Object Type</p></th>
+<th class="head"><p>Privileges</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Tables, External Tables, Views</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>, <code class="docutils literal notranslate"><span class="pre">REFERENCES</span></code>, <code class="docutils literal notranslate"><span class="pre">TRIGGER</span></code>, <code class="docutils literal notranslate"><span class="pre">TRUNCATE</span></code>, <code class="docutils literal notranslate"><span class="pre">ALL</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Columns</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">REFERENCES</span></code>, <code class="docutils literal notranslate"><span class="pre">ALL</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Sequences</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">USAGE</span></code>, <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">ALL</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Databases</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CREATE</span></code>, <code class="docutils literal notranslate"><span class="pre">CONNECT</span></code>, <code class="docutils literal notranslate"><span class="pre">TEMPORARY</span></code>, <code class="docutils literal notranslate"><span class="pre">TEMP</span></code>, <code class="docutils literal notranslate"><span class="pre">ALL</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Domains</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">USAGE</span></code>, <code class="docutils literal notranslate"><span class="pre">ALL</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Foreign Data Wrappers</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">USAGE</span></code>, <code class="docutils literal notranslate"><span class="pre">ALL</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Foreign Servers</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">USAGE</span></code>, <code class="docutils literal notranslate"><span class="pre">ALL</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Functions</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">EXECUTE</span></code>, <code class="docutils literal notranslate"><span class="pre">ALL</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Procedural Languages</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">USAGE</span></code>, <code class="docutils literal notranslate"><span class="pre">ALL</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Schemas</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CREATE</span></code>, <code class="docutils literal notranslate"><span class="pre">USAGE</span></code>, <code class="docutils literal notranslate"><span class="pre">ALL</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Tablespaces</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CREATE</span></code>, <code class="docutils literal notranslate"><span class="pre">ALL</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Types</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">USAGE</span></code>, <code class="docutils literal notranslate"><span class="pre">ALL</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Protocols</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">ALL</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You must grant privileges for each object individually. For example, granting <code class="docutils literal notranslate"><span class="pre">ALL</span></code> on a database does not grant full access to the objects within that database. It only grants all of the database-level privileges (<code class="docutils literal notranslate"><span class="pre">CONNECT</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span></code>, <code class="docutils literal notranslate"><span class="pre">TEMPORARY</span></code>) to the database itself.</p>
+</div>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">GRANT</span></code> SQL command to give a specified role privileges on an object. For example, to grant the role named <code class="docutils literal notranslate"><span class="pre">jsmith</span></code> insert privileges on the table named <code class="docutils literal notranslate"><span class="pre">mytable</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">mytable</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">jsmith</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Similarly, to grant <code class="docutils literal notranslate"><span class="pre">jsmith</span></code> select privileges only to the column named <code class="docutils literal notranslate"><span class="pre">col1</span></code> in the table named <code class="docutils literal notranslate"><span class="pre">table2</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="n">col1</span><span class="p">)</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">table2</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">jsmith</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>To revoke privileges, use the <code class="docutils literal notranslate"><span class="pre">REVOKE</span></code> command. For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">REVOKE</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">mytable</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">jsmith</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>You can also use the <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">OWNED</span></code> and <code class="docutils literal notranslate"><span class="pre">REASSIGN</span> <span class="pre">OWNED</span></code> commands for managing objects owned by deprecated roles (Note: only an object’s owner or a superuser can drop an object or reassign ownership). For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">REASSIGN</span><span class="w"> </span><span class="n">OWNED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">sally</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">bob</span><span class="p">;</span>
+<span class="k">DROP</span><span class="w"> </span><span class="n">OWNED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">visitor</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="security-best-practices-for-roles-and-privileges">
+<h2>Security best practices for roles and privileges<a class="headerlink" href="#security-best-practices-for-roles-and-privileges" title="Link to this heading"></a></h2>
+<ul>
+<li><p><strong>Secure the gpadmin system user.</strong></p>
+<p>SynxDB Elastic requires a UNIX user ID to install and initialize the SynxDB Elastic system. This system user is referred to as <code class="docutils literal notranslate"><span class="pre">gpadmin</span></code> in the SynxDB Elastic documentation. This <code class="docutils literal notranslate"><span class="pre">gpadmin</span></code> user is the default database superuser in SynxDB Elastic, as well as the file system owner of the SynxDB Elastic installation and its underlying data files. This default administrator account is fundamental to the design of SynxDB Elastic. The system cannot run without it, and there is no way to limit the access of this gpadmin user ID.</p>
+<p>Use roles to manage who has access to the database for specific purposes. You should only use the <code class="docutils literal notranslate"><span class="pre">gpadmin</span></code> account for system maintenance tasks such as expansion and upgrade. Anyone who logs on to a SynxDB Elastic host as this user ID can read, alter or delete any data, including system catalog data and database access rights. Therefore, it is very important to secure the gpadmin user ID and only provide access to essential system administrators. Administrators should only log in to SynxDB Elastic as <code class="docutils literal notranslate"><span class="pre">gpadmin</span></code> when performing certain system maintenance tasks (such as upgrade or expansion). Database users should never log on as <code class="docutils literal notranslate"><span class="pre">gpadmin</span></code>, and ETL or production workloads should never run as <code class="docutils literal notranslate"><span class="pre">gpadmin</span></code>.</p>
+</li>
+<li><p><strong>Assign a distinct role to each user that logs in.</strong></p>
+<p>For logging and auditing purposes, each user that is allowed to log in to SynxDB Elastic should be given their own database role. For applications or web services, consider creating a distinct role for each application or service. See <a class="reference internal" href="#create-new-roles-users"><span class="std std-ref">Create New Roles (Users)</span></a>.</p>
+</li>
+<li><p><strong>Use groups to manage access privileges.</strong></p>
+<p>See <a class="reference internal" href="#role-membership"><span class="std std-ref">Role membership</span></a>.</p>
+</li>
+<li><p><strong>Limit users who have the SUPERUSER role attribute.</strong></p>
+<p>Roles that are superusers bypass all access privilege checks in SynxDB Elastic, as well as resource queuing. Only system administrators should be given superuser rights. See <a class="reference internal" href="#alter-role-attributes"><span class="std std-ref">Alter Role Attributes</span></a>.</p>
+</li>
+</ul>
+</section>
+<section id="encrypt-data">
+<h2>Encrypt data<a class="headerlink" href="#encrypt-data" title="Link to this heading"></a></h2>
+<p>SynxDB Elastic is installed with an optional module of encryption/decryption functions called <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code>. The <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> functions allow database administrators to store certain columns of data in encrypted form. This adds an extra layer of protection for sensitive data, as data stored in SynxDB Elastic in encrypted form cannot be read by anyone who does not have the encryption key, nor can it be read directly from the disks.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> functions run inside the database server, which means that all the data and passwords move between <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> and the client application in clear-text.</p>
+</div>
+<p>To use <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> functions, register the <code class="docutils literal notranslate"><span class="pre">pgcrypto</span></code> extension in each database in which you want to use the functions. For example:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>CREATE<span class="w"> </span>EXTENSION<span class="w"> </span>pgcrypto<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="use-tde-to-encrypt-data.html" class="btn btn-neutral float-right" title="Transparent Data Encryption" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="use-pgaudit.html" class="btn btn-neutral float-left" title="Log Auditing pgAudit" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

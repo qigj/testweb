@@ -1,0 +1,378 @@
+.. raw:: latex
+
+   \newpage
+
+Anonymize Data Using Anon
+=========================
+
+Anon is a |product_name| extension based on `PostgreSQL Anonymizer <https://postgresql-anonymizer.readthedocs.io/en/stable/>`__. It provides data masking features for |product_name| to prevent sensitive data leakage.
+
+Data masking, also known as data anonymization, refers to the process of removing sensitive information from data. This sensitive information includes personal names, phone numbers, addresses, ID numbers, and so on. Anon uses the `SECURITY LABEL <https://www.postgresql.org/docs/current/sql-security-label.html>`__ feature provided by PostgreSQL to specify masking rules and applies these rules to designated database objects to achieve data masking. For example, an original phone number ``0609110911`` becomes ``06******11`` after data masking.
+
+How it works
+------------
+
+Anon primarily uses PostgreSQL's SECURITY LABEL feature to store masking rules. It creates corresponding views for tables in the original schema under a new schema. When a user who needs sensitive data hidden connects, they are actually using the views with the same names in the new schema instead of the tables in the original schema. This is how masking rules are applied to specified database objects.
+
+Install Anon
+-------------
+
+1. Install using the gppkg package.
+
+   .. code:: bash
+
+      # Install
+      gppkg -i anon-*.gppkg
+
+      # Uninstall
+      gppkg -r anon*
+
+2. Verification. After installation, if the extension is created successfully via ``psql``, the installation is successful.
+
+   .. code:: bash
+
+      # Command
+      psql postgres -c "ALTER DATABASE postgres SET session_preload_libraries = 'anon';"
+      psql postgres -c "CREATE EXTENSION IF NOT EXISTS anon CASCADE;"
+
+      # Expected result
+      NOTICE:  installing required extension "pgcrypto"
+      WARNING:  referential integrity (FOREIGN KEY) constraints are not supported in |product_name|, will not be enforced
+      CREATE EXTENSION
+
+User guide
+----------
+
+Anon's main feature is dynamic masking. The following section briefly introduces how to use dynamic masking and lists the available masking functions.
+
+.. warning::
+
+   Anon also provides a static masking feature, but this feature is very "dangerous" because it directly updates the database with the masked data, causing the loss of original data. Therefore, it is not recommended to use this feature in a production environment.
+
+   However, this feature is useful for testing scenarios, and many existing tests use static masking. The relevant functions are ``anon.anonymize_database()``, ``anon.anonymize_table()``, and ``anon.anonymize_column()``.
+
+Dynamic masking
+~~~~~~~~~~~~~~~
+
+Dynamic masking hides sensitive information for specified users. Here is a specific example.
+
+1. Specify the shared libraries to be loaded at the start of a connection. Note: After setting this parameter, you must open a new connection for it to take effect.
+
+   .. code:: sql
+
+      ALTER DATABASE :DBNAME SET session_preload_libraries = 'anon';
+
+2. Create the extension and initialize it.
+
+   .. code:: sql
+
+      CREATE EXTENSION IF NOT EXISTS pgcrypto;
+      CREATE EXTENSION IF NOT EXISTS anon CASCADE;
+      SELECT anon.init();
+
+3. Create a table for testing.
+
+   .. code:: sql
+
+      CREATE TABLE people ( id TEXT, firstname TEXT, lastname TEXT, phone TEXT); 
+      INSERT INTO people VALUES ('T1','Sarah', 'Conor','0609110911');
+
+4. Specify masking rules for the columns of the people table.
+
+   .. code:: sql
+
+      SECURITY LABEL FOR anon ON COLUMN people.lastname IS 'MASKED WITH FUNCTION anon.fake_last_name()';
+      SECURITY LABEL FOR anon ON COLUMN people.phone IS 'MASKED WITH FUNCTION anon.partial(phone,2,$$******$$,2)';
+
+5. Create a new user and designate them as "MASKED".
+
+   .. code:: sql
+
+      CREATE ROLE skynet LOGIN;
+      ALTER ROLE skynet WITH PASSWORD '123456';
+      SECURITY LABEL FOR anon ON ROLE skynet IS 'MASKED';
+
+6. Start dynamic masking.
+
+   .. code:: sql
+
+      SELECT anon.start_dynamic_masking();
+
+7. Switch to the new user to view the masked data.
+
+   .. code:: none
+
+      \c - skynet
+      SELECT * FROM people;
+
+      -- The test result is as follows
+      dynamic_masking=> SELECT * FROM people;
+      id | firstname | lastname |   phone
+      ----+-----------+----------+------------
+      T1 | Sarah     | Watsica  | 06******11
+      (1 row)
+
+.. attention::
+
+   If a function like ``anon.fake_last_name()`` is specified for masking, you must disable the ORCA optimizer before querying the data.
+
+   .. code-block::
+
+      set optimizer to off;
+
+   This is because the ``fake_last_name`` function queries a data table, which is not currently supported. If your custom masking function has similar behavior, you also need to disable the ORCA optimizer when querying.
+
+As you can see, apart from common operations like creating and initializing the extension, the basic steps for dynamic masking are: specify masking rules for the database objects you want to mask (for example, a column), designate a user as "MASKED", and start dynamic masking. Finally, when that user logs in, the data they see will be masked.
+
+Masking functions
+~~~~~~~~~~~~~~~~
+
+Anon provides the following categories of masking functions. Different functions can be used for different data types.
+
+Destruction
+^^^^^^^^^^^
+
+In many cases, the best way to hide the content of a column is to replace all its values with a static value. For example, you can replace an entire column with the word "CONFIDENTIAL".
+
+.. code:: sql
+
+   SECURITY LABEL FOR anon
+     ON COLUMN users.address
+     IS 'MASKED WITH VALUE ''CONFIDENTIAL'' ';
+
+Adding noise
+^^^^^^^^^^^^
+
+This series of functions adds a certain proportion or value of **deviation** to the original value. For example, adding a +/-10% deviation to the salary column.
+
+-  ``anon.noise(original_value,ratio)``: ``original_value`` can be of type integer, bigint, or double precision.
+-  ``anon.dnoise(original_value, interval)``: ``original_value`` can be of type date, timestamp, or time.
+
+Note: A user might try to deduce the original value by making multiple attempts and averaging the results.
+
+Randomization
+^^^^^^^^^^^^^
+
+Anon provides a large number of functions to generate completely random data.
+
+Basic random values
+'''''''''''''''''''
+
+====================== ======================================
+Function               Description
+====================== ======================================
+anon.random_date()     Returns a date.
+anon.random_string(n)  Returns a TEXT value with n characters.
+anon.random_zip()      Returns a five-digit code.
+anon.random_phone(p)   Returns an eight-digit phone number with p as the prefix.
+anon.random_hash(seed) Given a seed, returns a hash of a random string.
+====================== ======================================
+
+Random between
+''''''''''''''
+
+================================= ==================================
+Function                          Description
+================================= ==================================
+anon.random_date_between(d1,d2)   Returns a date between d1 and d2.
+anon.random_int_between(i1,i2)    Returns an integer between i1 and i2.
+anon.random_bigint_between(b1,b2) Returns a bigint between b1 and b2.
+================================= ==================================
+
+Note that the values returned by these functions are inclusive of the boundaries. For example, ``anon.random_int_between(1,3)`` can return 1, 2, or 3.
+
+Random in array
+'''''''''''''''
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+
+   * - Function
+     - Description
+   * - ``random_in``
+     - Returns an element from the given array. For example, ``anon.random_in(ARRAY[1,2,3])`` returns an int between ``1`` and ``3``.
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+Random in enum
+''''''''''''''
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+
+   * - Function
+     - Description
+   * - ``anon.random_in_enum(variable_of_an_enum_type)``
+     - Returns any value from the range of the specified enum type.
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+Random in range
+'''''''''''''''
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+
+   * - Function
+     - Description
+   * - ``anon.random_in_int4range('[5,6)')``
+     - Returns 5 of type INT.
+   * - ``anon.random_in_int8range('(6,7]')``
+     - Returns 7 of type BIGINT.
+   * - ``anon.random_in_numrange('[0.1,0.9]')``
+     - Returns a NUMERIC value between 0.1 and 0.9.
+   * - ``anon.random_in_daterange('[2001-01-01,2001-12-31)')``
+     - Returns a date in the year 2001.
+   * - ``anon.random_in_tsrange('[2022-10-01,2022-10-31]')``
+     - Returns a timestamp in October 2022.
+   * - ``anon.random_in_tstzrange('[2022-10-01,2022-10-31]')``
+     - Returns a timestamp with time zone in October 2022.
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+Faking
+^^^^^^
+
+Faking also generates random content, but unlike Randomization, Faking generates data that looks plausible. Before using this series of functions, you must first call the ``anon.init()`` function to import the random dataset.
+
+This type of function includes:
+
+-  ``anon.fake_address()``
+-  ``anon.fake_city()``
+-  ``anon.fake_country()``
+-  ``anon.fake_company()``
+-  ``anon.fake_email()``
+-  ``anon.fake_first_name()``
+-  ``anon.fake_iban()``
+-  ``anon.fake_last_name()``
+-  ``anon.fake_postcode()``
+-  ``anon.fake_siret()``
+
+For columns of type TEXT and VARCHAR, you can also use the classic `Lorem Ipsum <https://lipsum.com/>`__ generator:
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+
+   * - Function
+     - Description
+   * - ``anon.lorem_ipsum(5)``
+     - Returns 5 paragraphs of text.
+   * - ``anon.lorem_ipsum(2)``
+     - Returns 2 paragraphs of text.
+   * - ``anon.lorem_ipsum(paragraphs := 4)``
+     - Returns 4 paragraphs of text.
+   * - ``anon.lorem_ipsum(words := 20)``
+     - Returns 20 words.
+   * - ``anon.lorem_ipsum(characters := 7)``
+     - Returns 7 characters.
+   * - ``anon.lorem_ipsum(characters := LENGTH(table.column))``
+     - Returns a string of the same length as the original string.
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+Pseudonymization
+^^^^^^^^^^^^^^^^
+
+Pseudonymization is similar to Faking, but Pseudonymization generates deterministic values, meaning that given a seed and a salt, it will always generate the same value. You also need to call the ``anon.init()`` function before using this category of functions.
+
+-  ``anon.pseudo_first_name('seed','salt')``
+-  ``anon.pseudo_last_name('seed','salt')``
+-  ``anon.pseudo_email('seed','salt')``
+-  ``anon.pseudo_city('seed','salt')``
+-  ``anon.pseudo_country('seed','salt')``
+-  ``anon.pseudo_company('seed','salt')``
+-  ``anon.pseudo_iban('seed','salt')``
+-  ``anon.pseudo_siret('seed','salt')``
+
+The second parameter, ``salt``, is optional. If no ``salt`` is given, a random one will be chosen.
+
+Generic hashing
+^^^^^^^^^^^^^^^
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+
+   * - Function
+     - Description
+   * - ``anon.hash(value)``
+     - Returns the hash of a given value based on a salt and a hash algorithm.
+   * - ``anon.digest(value, salt, algorithm)``
+     - Choose a salt and a hash algorithm from a predefined list.
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+A random salt is generated when the extension is initialized, and the default hash algorithm is sha512. You can change these two values with the following two functions.
+
+-  ``anon.set_secret_salt(value)``
+-  ``anon.set_algorithm(value)`` Possible values are: md5, sha1, sha224, sha256, sha384, or sha512.
+
+Note: The salt and the hash algorithm used should be stored with the same level of security as the original dataset, otherwise attackers might be able to calculate the original data from these values. Generally, it is more recommended to use ``anon.hash()``, because the salt does not appear directly in the masking rule.
+
+Partial scrambling
+^^^^^^^^^^^^^^^^^^
+
+Partial scrambling ignores a part of the data. For example, a credit card number can be replaced with ``40XX XXXX XXXX XX96``.
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. table::
+   :align: left
+
+   ======================================= =======================
+   Function                                Description
+   ======================================= =======================
+   anon.partial('abcdefgh',1,'xxxx',3)     returns 'axxxxfgh'.
+   anon.partial_email('daamien@gmail.com') becomes 'da*@gm**.com'.
+   ======================================= =======================
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+Generalization
+^^^^^^^^^^^^^^
+
+Generalization refers to replacing a precise value with a range. For example, if Lin Qian'ge's actual age is 21, you can say that her age is between 20 and 30. Generalization will change the data type of the column, so the related functions cannot be used with dynamic masking. The related functions are as follows:
+
+-  ``generalize_int4range(value, step)``
+-  ``generalize_int8range(value, step)``
+-  ``generalize_numrange(value, step)``
+
+Value is the data to be generalized, and step is the size of each range.

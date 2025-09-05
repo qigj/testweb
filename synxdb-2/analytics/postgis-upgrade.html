@@ -1,0 +1,300 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Upgrading PostGIS 2.1.5 or 2.5.4 - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="upgrading-postgis-215-or-254"><a class="header" href="#upgrading-postgis-215-or-254">Upgrading PostGIS 2.1.5 or 2.5.4</a></h1>
+<p>For SynxDB 2, you can upgrade from PostGIS 2.1.5 to 2.5.4, or from a PostGIS 2.5.4 package to a newer PostGIS 2.5.4 package.</p>
+<ul>
+<li><a href="#topic_zgw_v5x_3mb">Upgrading from PostGIS 2.1.5 to the PostGIS 2.5.4 pivotal.3 (and later) Package</a></li>
+<li><a href="#topic_k4x_dp3_kmb">Upgrade a PostGIS 2.5.4 Package from pivotal.1 or pivotal.2 to pivotal.3 (and later)</a></li>
+<li><a href="#topic_yzz_l3h_kmb">Checking the PostGIS Version</a></li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> For SynxDB 2, you can upgrade from PostGIS 2.1.5 to 2.5.4, or from a PostGIS 2.5.4 package to a newer PostGIS 2.5.4 package using the <code>postgis_manager.sh</code> script described in the upgrade instructions.</p>
+</blockquote>
+<p>Upgrading PostGIS using the <code>postgis_manager.sh</code> script does not require you to remove PostGIS support and re-enable it.</p>
+<p>Removing PostGIS support from a database drops PostGIS database objects from the database without warning. Users accessing PostGIS objects might interfere with the dropping of PostGIS objects. See the Notes section in <a href="postGIS.html">Removing PostGIS Support</a>.</p>
+<h2 id="upgrading-from-postgis-215-to-the-postgis-254-pivotal3-and-later-package"><a class="header" href="#upgrading-from-postgis-215-to-the-postgis-254-pivotal3-and-later-package"><a id="topic_zgw_v5x_3mb"></a>Upgrading from PostGIS 2.1.5 to the PostGIS 2.5.4 pivotal.3 (and later) Package</a></h2>
+<p>A PostGIS 2.5.4 <code>pivotal.3</code> (and later) package contains PostGIS 2.5.4. Also, the PostGIS 2.5.4 <code>pivotal.3</code> (and later) package supports using the <code>CREATE EXTENSION</code> command and the <code>DROP EXTENSION</code> command to enable and remove PostGIS support in a database. See <a href="#topic_hm5_3zk_jmb">Notes</a>.</p>
+<p>After upgrading the SynxDB PostGIS package, you can remove the PostGIS 2.1.5 package (<code>gppkg</code>) from the SynxDB system. See <a href="#topic_unj_v5n_kmb">Removing the PostGIS 2.1.5 package</a>.</p>
+<ol>
+<li>
+<p>Confirm you have a PostGIS 2.1.5 package such as <code>postgis-2.1.5+pivotal.1</code> installed in a SynxDB system. See <a href="#topic_yzz_l3h_kmb">Checking the PostGIS Version</a>.</p>
+</li>
+<li>
+<p>Install the PostGIS 2.5.4 package into the SynxDB system with the <code>gppkg</code> utility.</p>
+<pre><code>gppkg -i postgis-2.5.4+pivotal.3.build.1-gp6-rhel7-x86_64.gppkg
+</code></pre>
+<p>Run the <code>gppkg -q --all</code> command to verify the updated package version is installed in the SynxDB system.</p>
+</li>
+<li>
+<p>For all databases with PostGIS enabled, run the PostGIS 2.5.4 <code>postgis_manager.sh</code> script in the directory <code>$GPHOME/share/postgresql/contrib/postgis-2.5</code> to upgrade PostGIS in that database. This command upgrades PostGIS that is enabled in the database <code>mytest</code> in the SynxDB system.</p>
+<pre><code>$GPHOME/share/postgresql/contrib/postgis-2.5/postgis_manager.sh mytest upgrade
+</code></pre>
+</li>
+<li>
+<p>After running the script, you can verify that PostGIS 2.5.4 is installed and enabled as an extension in a database with this query.</p>
+<pre><code># SELECT * FROM pg_available_extensions WHERE name = 'postgis' ;
+</code></pre>
+</li>
+<li>
+<p>You can validate that PostGIS 2.5 is enabled in the database with the <code>postgis_version()</code> function.</p>
+</li>
+</ol>
+<p>After you have completed the upgrade to PostGIS 2.5.4 <code>pivotal.3</code> or later for the SynxDB system and all the databases with PostGIS enabled, you enable PostGIS in a new database with the <code>CREATE EXTENSION postgis</code> command. To remove PostGIS support, use the <code>DROP EXTENSION postgis CASCADE</code> command.</p>
+<h3 id="removing-the-postgis-215-package"><a class="header" href="#removing-the-postgis-215-package"><a id="topic_unj_v5n_kmb"></a>Removing the PostGIS 2.1.5 package</a></h3>
+<p>After upgrading the databases in the SynxDB system, you can remove the PostGIS 2.1.5 package from the system. This command removes the <code>postgis-2.1.5+pivotal.2</code> package from a SynxDB system.</p>
+<pre><code>gppkg -r postgis-2.1.5+pivotal.2
+</code></pre>
+<p>Run the <code>gppkg -q --all</code> command to list the installed SynxDB packages.</p>
+<h2 id="upgrade-a-postgis-254-package-from-pivotal1-or-pivotal2-to-pivotal3-or-later"><a class="header" href="#upgrade-a-postgis-254-package-from-pivotal1-or-pivotal2-to-pivotal3-or-later"><a id="topic_k4x_dp3_kmb"></a>Upgrade a PostGIS 2.5.4 Package from pivotal.1 or pivotal.2 to pivotal.3 (or later)</a></h2>
+<p>You can upgrade the installed PostGIS 2.5.4 package from <code>pivotal.1</code> or <code>pivotal.2</code> to <code>pivotal.3</code> or later (a minor release upgrade). The upgrade updates the PostGIS 2.5.4 package to the minor release (<code>pivotal.3</code>\ or later) that uses the same PostGIS version (2.5.4).</p>
+<p>The <code>pivotal.3</code> minor release and later support using the <code>CREATE EXTENSION</code> command and the <code>DROP EXTENSION</code> command to enable and remove PostGIS support in a database. See <a href="#topic_hm5_3zk_jmb">Notes</a>.</p>
+<ol>
+<li>
+<p>Confirm you have a PostGIS 2.5.4 package <code>postgis-2.5.4+**pivotal.1**</code> or <code>postgis-2.5.4+**pivotal.2**</code> installed in a SynxDB system. See <a href="#topic_yzz_l3h_kmb">Checking the PostGIS Version</a>.</p>
+</li>
+<li>
+<p>Upgrade the PostGIS package in the SynxDB system using the <code>gppkg</code> option <code>-u</code>. The following command updates the package to the <code>postgis-2.5.4+pivotal.3.build.1</code> package.</p>
+<pre><code>gppkg -u postgis-2.5.4+pivotal.3.build.1-gp6-rhel7-x86_64.gppkg
+</code></pre>
+</li>
+<li>
+<p>Run the <code>gppkg -q --all</code> command to verify the updated package version is installed in the SynxDB system.</p>
+</li>
+<li>
+<p>For all databases with PostGIS enabled, upgrade PostGIS with the PostGIS 2.5.4 <code>postgis_manager.sh</code> script that is in the directory <code>$GPHOME/share/postgresql/contrib/postgis-2.5</code> to upgrade PostGIS in that database. This command upgrades PostGIS that is enabled in the database <code>mytest</code> in the SynxDB system.</p>
+<pre><code>$GPHOME/share/postgresql/contrib/postgis-2.5/postgis_manager.sh mytest upgrade
+</code></pre>
+</li>
+</ol>
+<p>After you have completed the upgrade to PostGIS 2.5.4 <code>pivotal.3</code> or later for the SynxDB system and all the databases with PostGIS enabled, you enable PostGIS in a new database with the <code>CREATE EXTENSION postgis</code> command. To remove PostGIS support, use the <code>DROP EXTENSION postgis CASCADE</code> command.</p>
+<h2 id="checking-the-postgis-version"><a class="header" href="#checking-the-postgis-version"><a id="topic_yzz_l3h_kmb"></a>Checking the PostGIS Version</a></h2>
+<p>When upgrading PostGIS you must check the version of the SynxDB PostGIS package installed on the SynxDB system and the version of PostGIS enabled in the database.</p>
+<ul>
+<li>
+<p>Check the installed PostGIS package version with the <code>gppkg</code> utility. This command lists all installed SynxDB packages.</p>
+<pre><code>gppkg -q --all
+</code></pre>
+</li>
+<li>
+<p>Check the enabled PostGIS version in a database with the <code>postgis_version()</code> function. This <code>psql</code> command displays the version PostGIS that is enabled for the database <code>testdb</code>.</p>
+<pre><code>psql -d testdb -c 'select postgis_version();'
+</code></pre>
+<p>If PostGIS is not enabled for the database, SynxDB returns a <code>function does not exist</code> error.</p>
+</li>
+<li>
+<p>For the SynxDB PostGIS package <code>postgis-2.5.4+pivotal.2</code> and later, you can display the PostGIS extension version and state in a database with this query.</p>
+<pre><code># SELECT * FROM pg_available_extensions WHERE name = 'postgis' ;
+</code></pre>
+<p>The query displays the version whether the extension is installed and enabled in a database. If the PostGIS package is not installed, no rows are returned.</p>
+</li>
+</ul>
+<h2 id="notes"><a class="header" href="#notes"><a id="topic_hm5_3zk_jmb"></a>Notes</a></h2>
+<p>Starting with the SynxDB <code>postgis-2.5.4+pivotal.2</code> package, you enable support for PostGIS in a database with the <code>CREATE EXTENSION</code> command. For previous PostGIS 2.5.4 packages and all PostGIS 2.1.5 packages, you use an SQL script.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../analytics/postGIS.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../analytics/text.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../analytics/postGIS.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../analytics/text.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

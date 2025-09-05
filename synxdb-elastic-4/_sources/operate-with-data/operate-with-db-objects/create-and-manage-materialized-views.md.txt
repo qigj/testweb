@@ -1,0 +1,173 @@
+# Create and Manage Materialized Views
+
+In {{ product_name }}, materialized views are similar to views. A materialized view enables you to save a frequently used or complex query and then access the query results in a `SELECT` statement as if they were a table. Materialized views persist the query results in a table-like form.
+
+Although accessing the data stored in a materialized view can be much faster than accessing the underlying tables directly or through a regular view, the data is not always current. The materialized view data cannot be directly updated. To refresh the materialized view data, use the `REFRESH MATERIALIZED VIEW` command.
+
+The query used to create the materialized view is stored in exactly the same way that a view's query is stored. For example, you can create a materialized view that quickly displays a summary of historical sales data for situations where having incomplete data for the current date is acceptable.
+
+```sql
+CREATE MATERIALIZED VIEW sales_summary AS
+  SELECT seller_no, invoice_date, sum(invoice_amt)::numeric(13,2) as sales_amt
+    FROM invoice
+    WHERE invoice_date < CURRENT_DATE
+    GROUP BY seller_no, invoice_date;
+```
+
+The materialized view might be useful for displaying a graph in the dashboard created for salespeople. You can schedule a job to update the summary information each night using the following command:
+
+```sql
+REFRESH MATERIALIZED VIEW sales_summary;
+```
+
+The information about a materialized view in the {{ product_name }} system catalogs is exactly the same as it is for a table or view. A materialized view is a relation, just like a table or a view. When a materialized view is referenced in a query, the data is returned directly from the materialized view, just like from a table. The query in the materialized view definition is only used for populating the materialized view.
+
+If you can tolerate periodically updating the materialized view data, you can get great performance benefits from the view.
+
+One use of a materialized view is to allow faster access to data brought in from an external data source, such as an external table or a foreign data wrapper.
+
+If a subquery is associated with a single query, consider using the `WITH` clause of the `SELECT` command instead of creating a seldom-used materialized view.
+
+## Create materialized views
+
+The `CREATE MATERIALIZED VIEW` command defines a materialized view based on a query.
+
+```sql
+CREATE MATERIALIZED VIEW us_users AS 
+SELECT u.id, u.name, a.zone 
+FROM users u, address a 
+WHERE a.country = 'USA';
+```
+
+:::{note}
+When a materialized view is created with an `ORDER BY` or `SORT` clause, this sorting is applied only at the time of the view's initial creation. Subsequent refreshes of the materialized view do not maintain this order, because the view is essentially a static snapshot of data and does not dynamically update or preserve the sorting with new data insertions.
+:::
+
+### Create asynchronous materialized views
+
+To avoid the performance overhead of maintaining incremental materialized views synchronously during high-frequency data writes, {{ product_name }} allows you to create asynchronous incremental materialized views. The refresh tasks for these views run asynchronously in the background.
+
+You can use the `CREATE INCREMENTAL MATERIALIZED VIEW` statement with the `REFRESH DEFERRED` clause to create an asynchronous incremental materialized view. The syntax is as follows:
+
+```sql
+CREATE INCREMENTAL MATERIALIZED VIEW view_name
+[ REFRESH DEFERRED ]
+[ SCHEDULE 'interval' ]
+AS query;
+```
+
+- `REFRESH DEFERRED`: A mandatory clause that enables the asynchronous refresh mode.
+
+- `SCHEDULE 'interval'`: An optional clause to specify the refresh interval for the background task, for example, `'10 seconds'`. The interval can be set from 1 to 59 seconds. If not specified, it defaults to refreshing after 30 seconds.
+
+For example, to create an asynchronous incremental materialized view that refreshes automatically every 10 seconds:
+
+```sql
+CREATE INCREMENTAL MATERIALIZED VIEW mv_ivm_agg
+REFRESH DEFERRED SCHEDULE '10 seconds'
+AS
+SELECT i, SUM(j), COUNT(*)
+FROM mv_base_a
+WHERE j > 10
+GROUP BY i;
+```
+
+For materialized views that contain aggregate functions (such as `SUM`, `COUNT`, `AVG`, `MIN`, `MAX`), you can also choose to store intermediate aggregate results to optimize refresh performance. This can be achieved using the `WITH (partial_agg = true)` parameter.
+
+```sql
+CREATE INCREMENTAL MATERIALIZED VIEW mv_ivm_agg WITH (partial_agg=true)
+REFRESH DEFERRED SCHEDULE '10 seconds'
+AS ...
+```
+
+### Create materialized views on partitioned tables
+
+{{ product_name }} supports creating materialized views on partitioned tables. When the base table is a partitioned table, the syntax for creating a materialized view is identical to that for a regular table. The database automatically handles interactions with the underlying partitions. This allows you to combine the management benefits of partitioned tables with the query performance advantages of materialized views.
+
+Here is an example of creating an incremental materialized view on a two-level partitioned table.
+
+1. Create a partitioned table. Create a two-level partitioned table `two_level_pt_ivm` that is range-partitioned by columns `b` and `c`.
+
+    ```sql
+    CREATE TABLE two_level_pt_ivm (
+        a int,
+        b int,
+        c int
+    )
+    PARTITION BY RANGE (b)
+        SUBPARTITION BY RANGE (c)
+        SUBPARTITION TEMPLATE (
+            START (11) END (12) EVERY (1)
+        )
+        (
+            START (1) END (2) EVERY (1)
+        );
+    ```
+
+2. Create a materialized view on the partitioned table. Create an asynchronous incremental materialized view `mv_ivm35` based on the partitioned table `two_level_pt_ivm`.
+
+    ```sql
+    CREATE INCREMENTAL MATERIALIZED VIEW mv_ivm35
+    WITH (partial_agg=true) REFRESH DEFERRED
+    AS SELECT b, sum(a) FROM two_level_pt_ivm GROUP BY b;
+    ```
+
+3.  Insert data and refresh. Insert data into the base table, then manually refresh the materialized view to update the aggregate results.
+
+    ```sql
+    INSERT INTO two_level_pt_ivm (a, b, c) VALUES (1, 1, 11);
+    REFRESH MATERIALIZED VIEW mv_ivm35;
+    ```
+
+4. Query the materialized view for fast aggregate results.
+
+    ```sql
+    SELECT * FROM mv_ivm35 ORDER BY 1;
+    ```
+
+5. When dropping the base table, use the `CASCADE` option to automatically drop the dependent materialized view `mv_ivm35`.
+
+    ```sql
+    DROP TABLE two_level_pt_ivm CASCADE;
+    ```
+
+## Refresh or deactivate materialized views
+
+The `REFRESH MATERIALIZED VIEW` command updates the materialized view data.
+
+```sql
+REFRESH MATERIALIZED VIEW us_users;
+```
+
+With the `WITH NO DATA` clause, the current data is removed, no new data is generated, and the materialized view is left in an unscannable state. An error is returned if a query attempts to access an unscannable materialized view.
+
+```sql
+REFRESH MATERIALIZED VIEW us_users WITH NO DATA;
+```
+
+### Refresh incremental materialized views
+
+For incremental materialized views, in addition to the standard `REFRESH MATERIALIZED VIEW` (which performs a full refresh), more fine-grained refresh operations are supported.
+
+- Background auto-refresh: For asynchronous materialized views, a background process automatically applies new data using the `REFRESH INCREMENTAL MATERIALIZED VIEW CONCURRENTLY` command. The `CONCURRENTLY` option ensures that the refresh operation does not block read queries on the materialized view.
+- Manual merge: You can manually execute the following command to merge the intermediate results of an incremental materialized view.
+
+    ```sql
+    COMBINE INCREMENTAL MATERIALIZED VIEW view_name;
+    ```
+
+- Automatic full refresh trigger: It is important to note that when `DELETE`, `UPDATE`, or `TRUNCATE` operations occur on the base table of an incremental materialized view, the system automatically triggers a full refresh (equivalent to executing `REFRESH MATERIALIZED VIEW`) to ensure data consistency.
+
+## Drop materialized views
+
+The `DROP MATERIALIZED VIEW` command removes a materialized view definition and data. For example:
+
+```sql
+DROP MATERIALIZED VIEW us_users;
+```
+
+The `DROP MATERIALIZED VIEW ... CASCADE` command also removes all dependent objects. For example, if another materialized view depends on the materialized view which is about to be dropped, the other materialized view will be dropped as well. Without the `CASCADE` option, the `DROP MATERIALIZED VIEW` command fails.
+
+## Automatically use materialized views for query optimization
+
+{{ product_name }} supports automatically using materialized views during the query planning phase to compute part or all of a query (also known as AQUMV). For more details, see [Automatically Use Materialized Views for Query Optimization](../../optimize-performance/optimize-queries/use-auto-mtv-for-query-optimization.md).

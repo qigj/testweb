@@ -1,0 +1,567 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Managing Roles and Privileges - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="managing-roles-and-privileges"><a class="header" href="#managing-roles-and-privileges">Managing Roles and Privileges</a></h1>
+<p>The SynxDB authorization mechanism stores roles and permissions to access database objects in the database and is administered using SQL statements or command-line utilities.</p>
+<p>SynxDB manages database access permissions using <em>roles</em>. The concept of roles subsumes the concepts of <em>users</em> and <em>groups</em>. A role can be a database user, a group, or both. Roles can own database objects (for example, tables) and can assign privileges on those objects to other roles to control access to the objects. Roles can be members of other roles, thus a member role can inherit the object privileges of its parent role.</p>
+<p>Every SynxDB system contains a set of database roles (users and groups). Those roles are separate from the users and groups managed by the operating system on which the server runs. However, for convenience you may want to maintain a relationship between operating system user names and SynxDB role names, since many of the client applications use the current operating system user name as the default.</p>
+<p>In SynxDB, users log in and connect through the master instance, which then verifies their role and access privileges. The master then issues commands to the segment instances behind the scenes as the currently logged in role.</p>
+<p>Roles are defined at the system level, meaning they are valid for all databases in the system.</p>
+<p>In order to bootstrap the SynxDB system, a freshly initialized system always contains one predefined <em>superuser</em> role (also referred to as the system user). This role will have the same name as the operating system user that initialized the SynxDB system. Customarily, this role is named <code>gpadmin</code>. In order to create more roles you first have to connect as this initial role.</p>
+<h2 id="security-best-practices-for-roles-and-privileges"><a class="header" href="#security-best-practices-for-roles-and-privileges"><a id="topic2"></a>Security Best Practices for Roles and Privileges</a></h2>
+<ul>
+<li><strong>Secure the gpadmin system user.</strong> SynxDB requires a UNIX user id to install and initialize the SynxDB system. This system user is referred to as <code>gpadmin</code> in the SynxDB documentation. This <code>gpadmin</code> user is the default database superuser in SynxDB, as well as the file system owner of the SynxDB installation and its underlying data files. This default administrator account is fundamental to the design of SynxDB. The system cannot run without it, and there is no way to limit the access of this gpadmin user id. Use roles to manage who has access to the database for specific purposes. You should only use the <code>gpadmin</code> account for system maintenance tasks such as expansion and upgrade. Anyone who logs on to a SynxDB host as this user id can read, alter or delete any data; including system catalog data and database access rights. Therefore, it is very important to secure the gpadmin user id and only provide access to essential system administrators. Administrators should only log in to SynxDB as <code>gpadmin</code> when performing certain system maintenance tasks (such as upgrade or expansion). Database users should never log on as <code>gpadmin</code>, and ETL or production workloads should never run as <code>gpadmin</code>.</li>
+<li><strong>Assign a distinct role to each user that logs in.</strong> For logging and auditing purposes, each user that is allowed to log in to SynxDB should be given their own database role. For applications or web services, consider creating a distinct role for each application or service. See <a href="#topic3">Creating New Roles (Users)</a>.</li>
+<li><strong>Use groups to manage access privileges.</strong> See <a href="#topic5">Role Membership</a>.</li>
+<li><strong>Limit users who have the SUPERUSER role attribute.</strong> Roles that are superusers bypass all access privilege checks in SynxDB, as well as resource queuing. Only system administrators should be given superuser rights. See <a href="#topic4">Altering Role Attributes</a>.</li>
+</ul>
+<h2 id="creating-new-roles-users"><a class="header" href="#creating-new-roles-users"><a id="topic3"></a>Creating New Roles (Users)</a></h2>
+<p>A user-level role is considered to be a database role that can log in to the database and initiate a database session. Therefore, when you create a new user-level role using the <code>CREATE ROLE</code> command, you must specify the <code>LOGIN</code> privilege. For example:</p>
+<pre><code>=# CREATE ROLE jsmith WITH LOGIN;
+
+</code></pre>
+<p>A database role may have a number of attributes that define what sort of tasks that role can perform in the database. You can set these attributes when you create the role, or later using the <code>ALTER ROLE</code> command.</p>
+<h3 id="altering-role-attributes"><a class="header" href="#altering-role-attributes"><a id="topic4"></a>Altering Role Attributes</a></h3>
+<p>A database role may have a number of attributes that define what sort of tasks that role can perform in the database.</p>
+<div class="table-wrapper"><table><thead><tr><th>Attributes</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>SUPERUSER</code> or <code>NOSUPERUSER</code></td><td>Determines if the role is a superuser. You must yourself be a superuser to create a new superuser. <code>NOSUPERUSER</code> is the default.</td></tr>
+<tr><td><code>CREATEDB</code> or <code>NOCREATEDB</code></td><td>Determines if the role is allowed to create databases. <code>NOCREATEDB</code> is the default.</td></tr>
+<tr><td><code>CREATEROLE</code> or <code>NOCREATEROLE</code></td><td>Determines if the role is allowed to create and manage other roles. <code>NOCREATEROLE</code> is the default.</td></tr>
+<tr><td><code>INHERIT</code> or <code>NOINHERIT</code></td><td>Determines whether a role inherits the privileges of roles it is a member of. A role with the <code>INHERIT</code> attribute can automatically use whatever database privileges have been granted to all roles it is directly or indirectly a member of. <code>INHERIT</code> is the default.</td></tr>
+<tr><td><code>LOGIN</code> or <code>NOLOGIN</code></td><td>Determines whether a role is allowed to log in. A role having the <code>LOGIN</code> attribute can be thought of as a user. Roles without this attribute are useful for managing database privileges (groups). <code>NOLOGIN</code> is the default.</td></tr>
+<tr><td><code>CONNECTION LIMIT *connlimit*</code></td><td>If role can log in, this specifies how many concurrent connections the role can make. -1 (the default) means no limit.</td></tr>
+<tr><td><code>CREATEEXTTABLE</code> or <code>NOCREATEEXTTABLE</code></td><td>Determines whether a role is allowed to create external tables. <code>NOCREATEEXTTABLE</code> is the default. For a role with the <code>CREATEEXTTABLE</code> attribute, the default external table <code>type</code> is <code>readable</code> and the default <code>protocol</code> is <code>gpfdist</code>. Note that external tables that use the <code>file</code> or <code>execute</code> protocols can only be created by superusers.</td></tr>
+<tr><td><code>PASSWORD '*password*'</code></td><td>Sets the role’s password. If you do not plan to use password authentication you can omit this option. If no password is specified, the password will be set to null and password authentication will always fail for that user. A null password can optionally be written explicitly as <code>PASSWORD NULL</code>.</td></tr>
+<tr><td><code>ENCRYPTED</code> or <code>UNENCRYPTED</code></td><td>Controls whether a new password is stored as a hash string in the <code>pg_authid</code> system catalog. If neither <code>ENCRYPTED</code> nor <code>UNENCRYPTED</code> is specified, the default behavior is determined by the <code>password_encryption</code> configuration parameter, which is <code>on</code> by default. If the supplied <code>*password*</code> string is already in hashed format, it is stored as-is, regardless of whether <code>ENCRYPTED</code> or <code>UNENCRYPTED</code> is specified.<br/><br/>See <a href="#topic9">Protecting Passwords in SynxDB</a> for additional information about protecting login passwords.</td></tr>
+<tr><td><code>VALID UNTIL 'timestamp'</code></td><td>Sets a date and time after which the role’s password is no longer valid. If omitted the password will be valid for all time.</td></tr>
+<tr><td><code>RESOURCE QUEUE queue_name</code></td><td>Assigns the role to the named resource queue for workload management. Any statement that role issues is then subject to the resource queue’s limits. Note that the <code>RESOURCE QUEUE</code> attribute is not inherited; it must be set on each user-level (<code>LOGIN</code>) role.</td></tr>
+<tr><td><code>DENY deny_interval</code> or <code>DENY deny_point</code></td><td>Restricts access during an interval, specified by day or day and time. For more information see <a href="#topic13">Time-based Authentication</a>.</td></tr>
+</tbody></table>
+</div>
+<p>You can set these attributes when you create the role, or later using the <code>ALTER ROLE</code> command. For example:</p>
+<pre><code>=# ALTER ROLE jsmith WITH PASSWORD 'passwd123';
+=# ALTER ROLE admin VALID UNTIL 'infinity';
+=# ALTER ROLE jsmith LOGIN;
+=# ALTER ROLE jsmith RESOURCE QUEUE adhoc;
+=# ALTER ROLE jsmith DENY DAY 'Sunday';
+</code></pre>
+<p>A role can also have role-specific defaults for many of the server configuration settings. For example, to set the default schema search path for a role:</p>
+<pre><code>=# ALTER ROLE admin SET search_path TO myschema, public;
+</code></pre>
+<h2 id="role-membership"><a class="header" href="#role-membership"><a id="topic5"></a>Role Membership</a></h2>
+<p>It is frequently convenient to group users together to ease management of object privileges: that way, privileges can be granted to, or revoked from, a group as a whole. In SynxDB this is done by creating a role that represents the group, and then granting membership in the group role to individual user roles.</p>
+<p>Use the <code>CREATE ROLE</code> SQL command to create a new group role. For example:</p>
+<pre><code>=# CREATE ROLE admin CREATEROLE CREATEDB;
+
+</code></pre>
+<p>Once the group role exists, you can add and remove members (user roles) using the <code>GRANT</code> and <code>REVOKE</code> commands. For example:</p>
+<pre><code>=# GRANT admin TO john, sally;
+=# REVOKE admin FROM bob;
+
+</code></pre>
+<p>For managing object privileges, you would then grant the appropriate permissions to the group-level role only
+. The member user roles then inherit the object privileges of the group role. For example:</p>
+<pre><code>=# GRANT ALL ON TABLE mytable TO admin;
+=# GRANT ALL ON SCHEMA myschema TO admin;
+=# GRANT ALL ON DATABASE mydb TO admin;
+
+</code></pre>
+<p>The role attributes <code>LOGIN</code>, <code>SUPERUSER</code>, <code>CREATEDB</code>, <code>CREATEROLE</code>, <code>CREATEEXTTABLE</code>, and <code>RESOURCE QUEUE</code> are never inherited as ordinary privileges on database objects are. User members must actually <code>SET ROLE</code> to a specific role having one of these attributes in order to make use of the attribute. In the above example, we gave <code>CREATEDB</code> and <code>CREATEROLE</code> to the <code>admin</code> role. If <code>sally</code> is a member of <code>admin</code>, then <code>sally</code> could issue the following command to assume the role attributes of the parent role:</p>
+<pre><code>=&gt; SET ROLE admin;
+
+</code></pre>
+<h2 id="managing-object-privileges"><a class="header" href="#managing-object-privileges"><a id="topic6"></a>Managing Object Privileges</a></h2>
+<p>When an object (table, view, sequence, database, function, language, schema, or tablespace) is created, it is assigned an owner. The owner is normally the role that ran the creation statement. For most kinds of objects, the initial state is that only the owner (or a superuser) can do anything with the object. To allow other roles to use it, privileges must be granted. SynxDB supports the following privileges for each object type:</p>
+<table class="table" id="topic6__iq139925"><caption><span class="table--title-label">Table 2. </span><span class="title">Object Privileges</span></caption><colgroup><col style="width:66.66666666666666%"><col style="width:33.33333333333333%"></colgroup><thead class="thead">
+            <tr class="row">
+              <th class="entry" id="topic6__iq139925__entry__1">Object Type</th>
+              <th class="entry" id="topic6__iq139925__entry__2">Privileges</th>
+            </tr>
+          </thead><tbody class="tbody">
+            <tr class="row">
+              <td class="entry" headers="topic6__iq139925__entry__1">Tables, External Tables, Views</td>
+              <td class="entry" headers="topic6__iq139925__entry__2">
+                <p class="p">
+                <code class="ph codeph">SELECT</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">INSERT</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">UPDATE</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">DELETE</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">REFERENCES</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">TRIGGER</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">TRUNCATE</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">ALL</code>
+                </p>
+              </td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic6__iq139925__entry__1">Columns</td>
+              <td class="entry" headers="topic6__iq139925__entry__2">
+                <p class="p">
+                  <code class="ph codeph">SELECT</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">INSERT</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">UPDATE</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">REFERENCES</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">ALL</code>
+                </p>
+              </td>
+            </tr>
+            <tr class="row">
+                <td class="entry" headers="topic6__iq139925__entry__1">Sequences</td>
+                <td class="entry" headers="topic6__iq139925__entry__2">
+                  <p class="p">
+                    <code class="ph codeph">USAGE</code>
+                  </p>
+                  <p class="p">
+                    <code class="ph codeph">SELECT</code>
+                  </p>
+                  <p class="p">
+                    <code class="ph codeph">UPDATE</code>
+                  </p>
+                  <p class="p">
+                    <code class="ph codeph">ALL</code>
+                  </p>
+                </td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic6__iq139925__entry__1">Databases</td>
+              <td class="entry" headers="topic6__iq139925__entry__2">
+                <p class="p">
+                  <code class="ph codeph">CREATE</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">CONNECT</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">TEMPORARY</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">TEMP</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">ALL</code>
+                </p>
+              </td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic6__iq139925__entry__1">Domains</td>
+              <td class="entry" headers="topic6__iq139925__entry__2">
+                <p class="p">
+                <code class="ph codeph">USAGE</code>
+                </p>
+                <p class="p">
+                <code class="ph codeph">ALL</code>
+                </p>
+              </td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic6__iq139925__entry__1">Foreign Data Wrappers</td>
+              <td class="entry" headers="topic6__iq139925__entry__2">
+                <p class="p">
+                  <code class="ph codeph">USAGE</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">ALL</code>
+                </p>
+              </td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic6__iq139925__entry__1">Foreign Servers</td>
+              <td class="entry" headers="topic6__iq139925__entry__2">
+                <p class="p">
+                  <code class="ph codeph">USAGE</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">ALL</code>
+                </p>
+              </td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic6__iq139925__entry__1">Functions</td>
+              <td class="entry" headers="topic6__iq139925__entry__2">
+                <p class="p">
+                <code class="ph codeph">EXECUTE</code>
+                </p>
+                <p class="p">
+                <code class="ph codeph">ALL</code>
+                </p>
+              </td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic6__iq139925__entry__1">Procedural Languages</td>
+              <td class="entry" headers="topic6__iq139925__entry__2">
+                <p class="p">
+                <code class="ph codeph">USAGE</code>
+                </p>
+                <p class="p">
+                <code class="ph codeph">ALL</code>
+                </p>
+              </td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic6__iq139925__entry__1">Schemas</td>
+              <td class="entry" headers="topic6__iq139925__entry__2">
+                <p class="p">
+                <code class="ph codeph">CREATE</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">USAGE</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">ALL</code>
+                </p>
+              </td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic6__iq139925__entry__1">Tablespaces</td>
+              <td class="entry" headers="topic6__iq139925__entry__2">
+                <p class="p">
+                  <code class="ph codeph">CREATE</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">ALL</code>
+                </p>
+              </td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic6__iq139925__entry__1">Types</td>
+              <td class="entry" headers="topic6__iq139925__entry__2">
+                <p class="p">
+                  <code class="ph codeph">USAGE</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">ALL</code>
+                </p>
+              </td>
+            </tr>
+            <tr class="row">
+              <td class="entry" headers="topic6__iq139925__entry__1">Protocols</td>
+              <td class="entry" headers="topic6__iq139925__entry__2">
+                <p class="p">
+                  <code class="ph codeph">SELECT</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">INSERT</code>
+                </p>
+                <p class="p">
+                  <code class="ph codeph">ALL</code>
+                </p>
+              </td>
+            </tr>
+          </tbody></table>
+<blockquote>
+<p><strong>Note</strong> You must grant privileges for each object individually. For example, granting <code>ALL</code> on a database does not grant full access to the objects within that database. It only grants all of the database-level privileges (<code>CONNECT</code>, <code>CREATE</code>, <code>TEMPORARY</code>) to the database itself.</p>
+</blockquote>
+<p>Use the <code>GRANT</code> SQL command to give a specified role privileges on an object. For example, to grant the role named <code>jsmith</code> insert privileges on the table named <code>mytable</code>:</p>
+<pre><code>=# GRANT INSERT ON mytable TO jsmith;
+</code></pre>
+<p>Similarly, to grant <code>jsmith</code> select privileges only to the column named <code>col1</code> in the table named <code>table2</code>:</p>
+<pre><code>=# GRANT SELECT (col1) on TABLE table2 TO jsmith;
+</code></pre>
+<p>To revoke privileges, use the <code>REVOKE</code> command. For example:</p>
+<pre><code>=# REVOKE ALL PRIVILEGES ON mytable FROM jsmith;
+
+</code></pre>
+<p>You can also use the <code>DROP OWNED</code> and <code>REASSIGN OWNED</code> commands for managing objects owned by deprecated roles. Only an object’s owner or a superuser can drop an object or reassign ownership. For example:</p>
+<pre><code>=# REASSIGN OWNED BY sally TO bob;
+=# DROP OWNED BY visitor;
+
+</code></pre>
+<h3 id="simulating-row-level-access-control"><a class="header" href="#simulating-row-level-access-control"><a id="topic7"></a>Simulating Row Level Access Control</a></h3>
+<p>SynxDB does not support row-level access or row-level, labeled security. You can simulate row-level access by using views to restrict the rows that are selected. You can simulate row-level labels by adding an extra column to the table to store sensitivity information, and then using views to control row-level access based on this column. You can then grant roles access to the views rather than to the base table.</p>
+<h2 id="encrypting-data"><a class="header" href="#encrypting-data"><a id="topic8"></a>Encrypting Data</a></h2>
+<p>SynxDB is installed with an optional module of encryption/decryption functions called <code>pgcrypto</code>. The <code>pgcrypto</code> functions allow database administrators to store certain columns of data in encrypted form. This adds an extra layer of protection for sensitive data, as data stored in SynxDB in encrypted form cannot be read by anyone who does not have the encryption key, nor can it be read directly from the disks.</p>
+<blockquote>
+<p><strong>Note</strong> The <code>pgcrypto</code> functions run inside the database server, which means that all the data and passwords move between <code>pgcrypto</code> and the client application in clear-text. For optimal security, consider also using SSL connections between the client and the SynxDB master server.</p>
+</blockquote>
+<p>To use <code>pgcrypto</code> functions, register the <code>pgcrypto</code> extension in each database in which you want to use the functions. For example:</p>
+<pre><code>$ psql -d testdb -c "CREATE EXTENSION pgcrypto"
+</code></pre>
+<p>See <a href="https://www.postgresql.org/docs/9.4/pgcrypto.html">pgcrypto</a> in the PostgreSQL documentation for more information about individual functions.</p>
+<h2 id="protecting-passwords-in-synxdb"><a class="header" href="#protecting-passwords-in-synxdb"><a id="topic9"></a>Protecting Passwords in SynxDB</a></h2>
+<p>In its default configuration, SynxDB saves MD5 hashes of login users’ passwords in the <a href="../ref_guide/system_catalogs/pg_authid.html">pg_authid</a> system catalog rather than saving clear text passwords. Anyone who is able to view the <code>pg_authid</code> table can see hash strings, but no passwords. This also ensures that passwords are obscured when the database is dumped to backup files.</p>
+<p>SynxDB supports SHA-256 and SCRAM-SHA-256 password hash algorithms as well. The <a href="../ref_guide/config_params/guc-list.html#password_hash_algorithm">password_hash_algorithm</a> server configuration parameter value and pg_hba.conf settings determine how passwords are hashed and what authentication method is in effect.</p>
+<div class="table-wrapper"><table><thead><tr><th>password_hash_algorithm Parameter Value</th><th>pg_hba.conf Authentication Method</th><th>Comments</th></tr></thead><tbody>
+<tr><td>MD5</td><td> md5</td><td>The default SynxDB password hash algorithm.</td></tr>
+<tr><td>SCRAM-SHA-256</td><td> scram-sha-256</td><td>The most secure method.</td></tr>
+<tr><td>SHA-256</td><td> password</td><td>Clear text passwords are sent over the network, SSL-secured client connections are recommended.</td></tr>
+</tbody></table>
+</div>
+<p>The password hash function runs when the password is set by using any of the following commands:</p>
+<ul>
+<li><code>CREATE USER name WITH ENCRYPTED PASSWORD 'password'</code></li>
+<li><code>CREATE ROLE name WITH LOGIN ENCRYPTED PASSWORD 'password'</code></li>
+<li><code>ALTER USER name WITH ENCRYPTED PASSWORD 'password'</code></li>
+<li><code>ALTER ROLE name WITH ENCRYPTED PASSWORD 'password'</code></li>
+</ul>
+<p>The <code>ENCRYPTED</code> keyword may be omitted when the <code>password_encryption</code> system configuration parameter is <code>on</code>, which is the default value. The <code>password_encryption</code> configuration parameter determines whether clear text or hashed passwords are saved when the <code>ENCRYPTED</code> or <code>UNENCRYPTED</code> keyword is not present in the command.</p>
+<blockquote>
+<p><strong>Note</strong> The SQL command syntax and <code>password_encryption</code> configuration variable include the term <em>encrypt</em>, but the passwords are not technically encrypted. They are <em>hashed</em> and therefore cannot be decrypted.</p>
+</blockquote>
+<p>Although it is not recommended, passwords may be saved in clear text in the database by including the <code>UNENCRYPTED</code> keyword in the command or by setting the <code>password_encryption</code> configuration variable to <code>off</code>. Note that changing the configuration value has no effect on existing passwords, only newly-created or updated passwords.</p>
+<p>To set <code>password_encryption</code> globally, run these commands in a shell as the <code>gpadmin</code> user:</p>
+<pre><code>$ gpconfig -c password_encryption -v 'off'
+$ gpstop -u
+</code></pre>
+<p>To set <code>password_encryption</code> in a session, use the SQL <code>SET</code> command:</p>
+<pre><code>=# SET password_encryption = 'on';
+</code></pre>
+<h3 id="about-md5-password-hashing"><a class="header" href="#about-md5-password-hashing"><a id="topic9_default"></a> About MD5 Password Hashing</a></h3>
+<p>In its default configuration, SynxDB saves MD5 hashes of login users’ passwords.</p>
+<p>The hash is calculated on the concatenated clear text password and role name. The MD5 hash produces a 32-byte hexadecimal string prefixed with the characters <code>md5</code>. The hashed password is saved in the <code>rolpassword</code> column of the <code>pg_authid</code> system table.</p>
+<p>The default <code>md5</code> authentication method hashes the password twice before sending it to SynxDB, once on the password and role name and then again with a salt value shared between the client and server, so the clear text password is never sent on the network.</p>
+<h3 id="about-scram-sha-256-password-hashing"><a class="header" href="#about-scram-sha-256-password-hashing"><a id="topic9_scram-sha-256"></a> About SCRAM-SHA-256 Password Hashing</a></h3>
+<p>Passwords may be hashed using the SCRAM-SHA-256 hash algorithm instead of the default MD5 hash algorithm. When a password is encrypted with SCRAM-SHA-256, it has the format:</p>
+<pre><code>SCRAM-SHA-256$&lt;iteration count&gt;:&lt;salt&gt;$&lt;StoredKey&gt;:&lt;ServerKey&gt;
+</code></pre>
+<p>where <code>&lt;salt&gt;</code>, <code>&lt;StoredKey&gt;</code>, and <code>&lt;ServerKey&gt;</code> are in base64-encoded format. This format is the same as that specified by RFC 5803.</p>
+<p>To enable SCRAM-SHA-256 hashing, change the <code>password_hash_algorithm</code> configuration parameter from its default value, <code>MD5</code>, to <code>SCRAM-SHA-256</code>. The parameter can be set either globally or at the session level. To set <code>password_hash_algorithm</code> globally, execute these commands in a shell as the <code>gpadmin</code> user:</p>
+<pre><code>$ gpconfig -c password_hash_algorithm -v 'SCRAM-SHA-256'
+$ gpstop -u
+</code></pre>
+<p>To set <code>password_hash_algorithm</code> in a session, use the SQL <code>SET</code> command:</p>
+<pre><code>=# SET password_hash_algorithm = 'SCRAM-SHA-256';
+</code></pre>
+<h3 id="about-sha-256-password-hashing"><a class="header" href="#about-sha-256-password-hashing"><a id="topic9_sha-256"></a> About SHA-256 Password Hashing</a></h3>
+<p>Passwords may be hashed using the SHA-256 hash algorithm instead of the default MD5 hash algorithm. The algorithm produces a 64-byte hexadecimal string prefixed with the characters <code>sha256</code>.</p>
+<blockquote>
+<p><strong>Note</strong> Although SHA-256 uses a stronger cryptographic algorithm and produces a longer hash string for password hashing, it does not include SHA-256 password hashing over the network during client authentication. To use SHA-256 password hashing, the authentication method must be set to <code>password</code> in the <code>pg_hba.conf</code> configuration file so that clear text passwords are sent to SynxDB. SHA-256 password hashing cannot be used with the <code>md5</code> authentication method. <strong>Because clear text passwords are sent over the network, it is very important to use SSL-secured client connections when you use SHA-256.</strong></p>
+</blockquote>
+<p>To enable SHA-256 hashing, change the <code>password_hash_algorithm</code> configuration parameter from its default value, <code>MD5</code>, to <code>SHA-256</code>. The parameter can be set either globally or at the session level. To set <code>password_hash_algorithm</code> globally, execute these commands in a shell as the <code>gpadmin</code> user:</p>
+<pre><code>$ gpconfig -c password_hash_algorithm -v 'SHA-256'
+$ gpstop -u
+</code></pre>
+<p>To set <code>password_hash_algorithm</code> in a session, use the SQL <code>SET</code> command:</p>
+<pre><code>=# SET password_hash_algorithm = 'SHA-256';
+</code></pre>
+<h2 id="time-based-authentication"><a class="header" href="#time-based-authentication"><a id="topic13"></a>Time-based Authentication</a></h2>
+<p>SynxDB enables the administrator to restrict access to certain times by role. Use the <code>CREATE ROLE</code> or <code>ALTER ROLE</code> commands to specify time-based constraints.</p>
+<p>For details, refer to the <em>SynxDB Security Configuration Guide</em>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../admin_guide/kerberos-win-client.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../admin_guide/access_db/topics/g-accessing-the-database.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../admin_guide/kerberos-win-client.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../admin_guide/access_db/topics/g-accessing-the-database.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

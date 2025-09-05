@@ -1,0 +1,424 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Incremental Materialized View &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Incremental Materialized View</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="incremental-materialized-view">
+<h1>Incremental Materialized View<a class="headerlink" href="#incremental-materialized-view" title="Link to this heading"></a></h1>
+<p>This document introduces the usage scenarios of the incremental materialized view in SynxDB Elastic, how to use it, the restrictions, and the things to note.</p>
+<p>The incremental materialized view is a special form of materialized view. When data changes in a base table in SynxDB Elastic (such as insertion, update, and deletion), the incremental materialized view does not need to recalculate all the data in the entire view. Instead, it only updates the parts that have changed since the last refresh. This can save a lot of computing resources and time, and significantly improve performance, especially when dealing with large datasets.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Comparison between incremental materialized view and regular view:</p>
+<ul class="simple">
+<li><p>Regular view: Regular views do not store data, but dynamically generate results based on the defined SQL statement each time a query is executed. This means that the data on the view needs to be recalculated each time a query is executed, which can be time-consuming when dealing with large amounts of data.</p></li>
+<li><p>Incremental materialized view: Incremental materialized views calculate and store the result set in advance, which reduces the computing workload when executing queries. In addition, because it is an “incremental” update, when the base data changes, it only needs to update the affected part instead of recalculating the entire dataset.</p></li>
+</ul>
+</div>
+<section id="usage-scenarios">
+<h2>Usage scenarios<a class="headerlink" href="#usage-scenarios" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Where intermediate result sets need to be accelerated when executing queries.</p></li>
+<li><p>Where there are many read operations but few write operations.</p></li>
+</ul>
+</section>
+<section id="usage-example">
+<h2>Usage example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
+<p>To create an incremental materialized view, you can use the SQL command <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">INCREMENTAL</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code>. The complete syntax support is as follows:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="p">[</span><span class="n">INCREMENTAL</span><span class="p">]</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="k">table_name</span>
+<span class="w">    </span><span class="p">[</span><span class="w"> </span><span class="p">(</span><span class="k">column_name</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">]</span>
+<span class="w">    </span><span class="p">[</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="k">method</span><span class="w"> </span><span class="p">]</span>
+<span class="w">    </span><span class="p">[</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">storage_parameter</span><span class="w"> </span><span class="p">[</span><span class="o">=</span><span class="w"> </span><span class="n">value</span><span class="p">]</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">]</span>
+<span class="w">    </span><span class="p">[</span><span class="w"> </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="n">tablespace_name</span><span class="w"> </span><span class="p">]</span>
+<span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">query</span>
+<span class="w">    </span><span class="p">[</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">NO</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The following example shows how to create incremental materialized views for tables in SynxDB Elastic.</p>
+<ol class="arabic">
+<li><p>Create tables <code class="docutils literal notranslate"><span class="pre">t0</span></code> and <code class="docutils literal notranslate"><span class="pre">t1</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="nb">int</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="nb">int</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create an incremental materialized view <code class="docutils literal notranslate"><span class="pre">m</span></code> based on the two tables.</p>
+<ul>
+<li><p>Create a simple materialized view. The following statement creates an incremental materialized view <code class="docutils literal notranslate"><span class="pre">m</span></code>. It selects all columns from table <code class="docutils literal notranslate"><span class="pre">t0</span></code> and distributes the data based on the values of column <code class="docutils literal notranslate"><span class="pre">a</span></code>. This means that view <code class="docutils literal notranslate"><span class="pre">m</span></code> stores a snapshot of the data in table <code class="docutils literal notranslate"><span class="pre">t0</span></code> and can be incrementally updated based on the data changes in <code class="docutils literal notranslate"><span class="pre">t0</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">INCREMENTAL</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t0</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a materialized view with join operations. The following statement also creates an incremental materialized view named <code class="docutils literal notranslate"><span class="pre">m</span></code>, but this time by joining tables <code class="docutils literal notranslate"><span class="pre">t0</span></code> and <code class="docutils literal notranslate"><span class="pre">t1</span></code>. It selects all values of <code class="docutils literal notranslate"><span class="pre">t0.a</span></code>, but only if the value of <code class="docutils literal notranslate"><span class="pre">t0.a</span></code> is equal to the value of <code class="docutils literal notranslate"><span class="pre">t1.a</span></code>. Similarly, the view distributes data based on the value of column <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">INCREMENTAL</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">t0</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">t0</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="n">a</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Insert data into the tables. The <code class="docutils literal notranslate"><span class="pre">RETURNING</span> <span class="pre">*</span></code> clause returns the inserted row after the data is inserted.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="n">RETURNING</span><span class="w"> </span><span class="o">*</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Check the structure and data of the materialized view <code class="docutils literal notranslate"><span class="pre">m</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">postgres</span><span class="o">=#</span><span class="w"> </span><span class="err">\</span><span class="n">d</span><span class="o">+</span><span class="w"> </span><span class="n">m</span>
+<span class="w">                                    </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="ss">&quot;public.m&quot;</span>
+<span class="k">Column</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="k">Type</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="k">Collation</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">Nullable</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">Default</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">Storage</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Compression</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Stats</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Description</span>
+<span class="c1">--------+---------+-----------+----------+---------+---------+-------------+--------------+-------------</span>
+<span class="n">a</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="nb">integer</span><span class="w"> </span><span class="o">|</span><span class="w">           </span><span class="o">|</span><span class="w">          </span><span class="o">|</span><span class="w">         </span><span class="o">|</span><span class="w"> </span><span class="n">plain</span><span class="w">   </span><span class="o">|</span><span class="w">             </span><span class="o">|</span><span class="w">              </span><span class="o">|</span>
+<span class="k">VIEW</span><span class="w"> </span><span class="n">definition</span><span class="p">:</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">t0</span><span class="p">.</span><span class="n">a</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">t0</span><span class="p">;</span>
+<span class="k">Access</span><span class="w"> </span><span class="k">method</span><span class="p">:</span><span class="w"> </span><span class="n">heap</span>
+</pre></div>
+</div>
+</li>
+<li><p>View the data in the view <code class="docutils literal notranslate"><span class="pre">m</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">postgres</span><span class="o">=#</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">m</span><span class="p">;</span>
+<span class="n">a</span>
+<span class="c1">---</span>
+<span class="mi">5</span>
+<span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="k">row</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>To debug the statement executions related to incremental materialized views, you can set the value of the system parameter <code class="docutils literal notranslate"><span class="pre">debug_print_ivm</span></code> to <code class="docutils literal notranslate"><span class="pre">ON</span></code>, that is, execute <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">debug_print_ivm</span> <span class="pre">=</span> <span class="pre">ON;</span></code>. The details of this parameter are as follows:</p>
+<table class="docutils align-left">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter name</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head"><p>Is it required?</p></th>
+<th class="head"><p>Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">debug_print_ivm</span></code></p></td>
+<td><p>Whether to enable IVM debugging</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">debug_print_ivm</span> <span class="pre">=</span> <span class="pre">ON;</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="query-performance-comparison-with-regular-view">
+<h2>Query performance comparison with regular view<a class="headerlink" href="#query-performance-comparison-with-regular-view" title="Link to this heading"></a></h2>
+<p>The following example compares the query performance of a regular view and that of an incremental materialized view when processing large datasets in SynxDB Elastic. The following example uses the Query 15 test dataset of TPC-H.</p>
+<section id="with-regular-view">
+<h3>With regular view<a class="headerlink" href="#with-regular-view" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Create a regular view <code class="docutils literal notranslate"><span class="pre">revenue0</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">revenue0</span><span class="w"> </span><span class="p">(</span><span class="n">supplier_no</span><span class="p">,</span><span class="w"> </span><span class="n">total_revenue</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span>
+<span class="w">        </span><span class="k">SELECT</span>
+<span class="w">                </span><span class="n">l_suppkey</span><span class="p">,</span>
+<span class="w">                </span><span class="k">SUM</span><span class="p">(</span><span class="n">l_extendedprice</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">l_discount</span><span class="p">))</span>
+<span class="w">        </span><span class="k">FROM</span>
+<span class="w">                </span><span class="n">lineitem</span>
+<span class="w">        </span><span class="k">WHERE</span>
+<span class="w">                </span><span class="n">l_shipdate</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="s1">&#39;1996-01-01&#39;</span>
+<span class="w">                </span><span class="k">AND</span><span class="w"> </span><span class="n">l_shipdate</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="s1">&#39;1996-01-01&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;3&#39;</span><span class="w"> </span><span class="k">MONTH</span>
+<span class="w">        </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span>
+<span class="w">                </span><span class="n">l_suppkey</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Select the supplier’s details and their maximum revenue from the <code class="docutils literal notranslate"><span class="pre">supplier</span></code> table and the <code class="docutils literal notranslate"><span class="pre">revenue0</span></code> view.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span>
+<span class="w">        </span><span class="n">s_suppkey</span><span class="p">,</span>
+<span class="w">        </span><span class="n">s_name</span><span class="p">,</span>
+<span class="w">        </span><span class="n">s_address</span><span class="p">,</span>
+<span class="w">        </span><span class="n">s_phone</span><span class="p">,</span>
+<span class="w">        </span><span class="n">total_revenue</span>
+<span class="k">FROM</span>
+<span class="w">        </span><span class="n">supplier</span><span class="p">,</span>
+<span class="w">        </span><span class="n">revenue0</span>
+<span class="k">WHERE</span>
+<span class="w">        </span><span class="n">s_suppkey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">supplier_no</span>
+<span class="w">        </span><span class="k">AND</span><span class="w"> </span><span class="n">total_revenue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>
+<span class="w">                </span><span class="k">SELECT</span>
+<span class="w">                        </span><span class="k">MAX</span><span class="p">(</span><span class="n">total_revenue</span><span class="p">)</span>
+<span class="w">                </span><span class="k">FROM</span>
+<span class="w">                        </span><span class="n">revenue0</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">s_suppkey</span><span class="p">;</span>
+
+<span class="n">s_suppkey</span><span class="w"> </span><span class="o">|</span><span class="w">          </span><span class="n">s_name</span><span class="w">           </span><span class="o">|</span><span class="w">     </span><span class="n">s_address</span><span class="w">     </span><span class="o">|</span><span class="w">     </span><span class="n">s_phone</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="n">total_revenue</span>
+<span class="c1">-----------+---------------------------+-------------------+-----------------+---------------</span>
+<span class="w">    </span><span class="mi">8449</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Supplier</span><span class="o">#</span><span class="mi">000008449</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="n">Wp34zim9qYFbVctdW</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">20</span><span class="o">-</span><span class="mi">469</span><span class="o">-</span><span class="mi">856</span><span class="o">-</span><span class="mi">8873</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="mi">1772627</span><span class="p">.</span><span class="mi">2087</span>
+<span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="k">row</span><span class="p">)</span>
+
+<span class="k">Time</span><span class="p">:</span><span class="w"> </span><span class="mi">3040</span><span class="p">.</span><span class="mi">23</span><span class="w"> </span><span class="n">ms</span>
+</pre></div>
+</div>
+<p>In the above query, the result of the view <code class="docutils literal notranslate"><span class="pre">revenue0</span></code> is calculated in real-time, and the query takes 3040.23 ms.</p>
+</li>
+</ol>
+</section>
+<section id="with-incremental-materialized-view">
+<h3>With incremental materialized view<a class="headerlink" href="#with-incremental-materialized-view" title="Link to this heading"></a></h3>
+<p>You can also create an incremental materialized view in the DDL phase, which greatly reduces query time.</p>
+<ol class="arabic">
+<li><p>Create an incremental materialized view <code class="docutils literal notranslate"><span class="pre">revenue0</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">INCREMENTAL</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">revenue0</span><span class="w"> </span><span class="p">(</span><span class="n">supplier_no</span><span class="p">,</span><span class="w"> </span><span class="n">total_revenue</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span>
+<span class="w">        </span><span class="k">SELECT</span>
+<span class="w">                </span><span class="n">l_suppkey</span><span class="p">,</span>
+<span class="w">                </span><span class="k">SUM</span><span class="p">(</span><span class="n">l_extendedprice</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">l_discount</span><span class="p">))</span>
+<span class="w">        </span><span class="k">FROM</span>
+<span class="w">                </span><span class="n">lineitem</span>
+<span class="w">        </span><span class="k">WHERE</span>
+<span class="w">                </span><span class="n">l_shipdate</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="s1">&#39;1996-01-01&#39;</span>
+<span class="w">                </span><span class="k">AND</span><span class="w"> </span><span class="n">l_shipdate</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="s1">&#39;1996-01-01&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;3&#39;</span><span class="w"> </span><span class="k">MONTH</span>
+<span class="w">        </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span>
+<span class="w">                </span><span class="n">l_suppkey</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Select the supplier details and their maximum revenue from the <code class="docutils literal notranslate"><span class="pre">supplier</span></code> table and the <code class="docutils literal notranslate"><span class="pre">revenue0</span></code> view. The query takes only 65 ms.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span>
+<span class="w">        </span><span class="n">s_suppkey</span><span class="p">,</span>
+<span class="w">        </span><span class="n">s_name</span><span class="p">,</span>
+<span class="w">        </span><span class="n">s_address</span><span class="p">,</span>
+<span class="w">        </span><span class="n">s_phone</span><span class="p">,</span>
+<span class="w">        </span><span class="n">total_revenue</span>
+<span class="k">FROM</span>
+<span class="w">        </span><span class="n">supplier</span><span class="p">,</span>
+<span class="w">        </span><span class="n">revenue0</span>
+<span class="k">WHERE</span>
+<span class="w">        </span><span class="n">s_suppkey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">supplier_no</span>
+<span class="w">        </span><span class="k">AND</span><span class="w"> </span><span class="n">total_revenue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>
+<span class="w">                </span><span class="k">SELECT</span>
+<span class="w">                        </span><span class="k">MAX</span><span class="p">(</span><span class="n">total_revenue</span><span class="p">)</span>
+<span class="w">                </span><span class="k">FROM</span>
+<span class="w">                        </span><span class="n">revenue0</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">s_suppkey</span><span class="p">;</span>
+
+<span class="n">s_suppkey</span><span class="w"> </span><span class="o">|</span><span class="w">          </span><span class="n">s_name</span><span class="w">           </span><span class="o">|</span><span class="w">     </span><span class="n">s_address</span><span class="w">     </span><span class="o">|</span><span class="w">     </span><span class="n">s_phone</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="n">total_revenue</span>
+<span class="c1">-----------+---------------------------+-------------------+-----------------+---------------</span>
+<span class="w">    </span><span class="mi">8449</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Supplier</span><span class="o">#</span><span class="mi">000008449</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="n">Wp34zim9qYFbVctdW</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">20</span><span class="o">-</span><span class="mi">469</span><span class="o">-</span><span class="mi">856</span><span class="o">-</span><span class="mi">8873</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="mi">1772627</span><span class="p">.</span><span class="mi">2087</span>
+<span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="k">row</span><span class="p">)</span>
+
+<span class="k">Time</span><span class="p">:</span><span class="w"> </span><span class="mi">65</span><span class="p">.</span><span class="mi">731</span><span class="w"> </span><span class="n">ms</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="tpc-h-comparison">
+<h3>TPC-H comparison<a class="headerlink" href="#tpc-h-comparison" title="Link to this heading"></a></h3>
+<p>We have conducted a TPC-H test to compare the execution time of inserts and queries with regular view and incremental materialized view, respectively, with different data volumes. The result is as follows.</p>
+<table class="docutils align-left">
+<thead>
+<tr class="row-odd"><th class="head"><p>Data volume</p></th>
+<th class="head"><p>Normal inserts</p></th>
+<th class="head"><p>Inserts with incremental materialized view</p></th>
+<th class="head"><p>Queries with regular view</p></th>
+<th class="head"><p>Queries with incremental materialized view</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1 GB</p></td>
+<td><p>2712 ms</p></td>
+<td><p>3777 ms</p></td>
+<td><p>813 ms</p></td>
+<td><p>43 ms</p></td>
+</tr>
+<tr class="row-odd"><td><p>5 GB</p></td>
+<td><p>15681 ms</p></td>
+<td><p>29363 ms</p></td>
+<td><p>3040 ms</p></td>
+<td><p>63 ms</p></td>
+</tr>
+<tr class="row-even"><td><p>10 GB</p></td>
+<td><p>43011 ms</p></td>
+<td><p>73188 ms</p></td>
+<td><p>7057 ms</p></td>
+<td><p>102 ms</p></td>
+</tr>
+</tbody>
+</table>
+<p>From the above table, you can see:</p>
+<ul class="simple">
+<li><p>In different data volumes, queries with incremental materialized views are executed much more quickly than normal queries. The query performance is significantly improved with the incremental materialized view.</p></li>
+<li><p>In different data volumes, inserts with incremental materialized views are not as quick as the normal inserts. This is because after data is inserted into tables, the database needs to update the materialized view synchronously, so incremental materialized views are not suitable for scenarios with frequent writes.</p></li>
+</ul>
+</section>
+</section>
+<section id="restrictions-and-notes">
+<h2>Restrictions and notes<a class="headerlink" href="#restrictions-and-notes" title="Link to this heading"></a></h2>
+<p>Currently, the incremental materialized views on SynxDB Elastic have the following usage restrictions:</p>
+<ul class="simple">
+<li><p>Creating incremental materialized views for Append-Optimized (AO) tables is not supported.</p></li>
+<li><p>Creating incremental materialized views for partitioned tables is not supported.</p></li>
+</ul>
+<ul class="simple">
+<li><p>The following clauses or operations are not supported when defining incremental materialized views.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">min</span></code> and <code class="docutils literal notranslate"><span class="pre">max</span></code> functions, custom aggregation functions</p></li>
+<li><p>Left and right joins, namely <code class="docutils literal notranslate"><span class="pre">LEFT</span> <span class="pre">JOIN</span></code> and <code class="docutils literal notranslate"><span class="pre">OUTER</span> <span class="pre">JOIN</span></code></p></li>
+<li><p>Window functions, <code class="docutils literal notranslate"><span class="pre">HAVING</span></code> clauses</p></li>
+<li><p>Subqueries, CTE queries</p></li>
+<li><p>Set operations (<code class="docutils literal notranslate"><span class="pre">UNION</span></code>, <code class="docutils literal notranslate"><span class="pre">INTERSECT</span></code>, <code class="docutils literal notranslate"><span class="pre">EXCEPT</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DISTINCT</span> <span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span></code>, <code class="docutils literal notranslate"><span class="pre">LIMIT</span></code>, <code class="docutils literal notranslate"><span class="pre">OFFSET</span></code></p></li>
+</ul>
+</li>
+<li><p>Creating incremental materialized views on materialized views is not supported.</p></li>
+</ul>
+<p>In addition, when using incremental materialized views on SynxDB Elastic, you need to pay attention to the following issues:</p>
+<ul class="simple">
+<li><p>Using incremental materialized views will slow down data insertion, deletion, and updates. In addition, a base table might have multiple incremental materialized views, and the performance degradation is proportional to the number of incremental materialized views.</p></li>
+<li><p>Using incremental materialized views will generate temporary files to store calculation delta views, which might take up some storage space.</p></li>
+<li><p>Materialized views might increase storage costs depending on the definition of the view.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

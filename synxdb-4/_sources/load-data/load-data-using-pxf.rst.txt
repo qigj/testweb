@@ -1,0 +1,129 @@
+.. raw:: latex
+
+   \newpage
+
+Load Data Using PXF
+=====================
+
+PXF is an extensible framework that allows |product_name| to query external data files, such as those in Hadoop or cloud object stores, without needing to load them into the database first. The metadata for these files is not managed by the database.
+
+With PXF, you can achieve high-performance parallel data access between your |product_name| cluster and external data sources. It is particularly useful for scenarios where you need to analyze large datasets stored in systems like Hadoop or cloud object stores (for example, Amazon S3) without a separate ETL process.
+
+Typical use cases for PXF include:
+
+-  **Querying data in-place**: Access data in external systems for ad-hoc analysis and data exploration without moving it.
+-  **High-speed data loading**: Use PXF as a parallel pipeline to efficiently ingest large datasets into |product_name|.
+-  **Data federation**: Execute queries that join local tables in |product_name| with data from external sources.
+
+PXF comes with built-in connectors for accessing data from various sources, including:
+
+-  HDFS files
+-  Hive tables
+-  HBase tables
+-  JDBC-accessible databases
+
+You can also create your own connectors to other data storage or processing engines.
+
+This document provides a guide on how to install, configure, and run PXF for use with |product_name|.
+
+Install and configure PXF
+----------------------------
+
+Follow these steps to install and set up PXF. These operations are typically performed on the coordinator node of your |product_name| cluster.
+
+Prerequisites
+~~~~~~~~~~~~~~~~~~
+
+Before installing PXF, ensure the following dependencies are installed on your system:
+
+-  JDK 1.8 or JDK 11
+-  A running |product_name| instance.
+
+Step 1: Install the PXF package
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+First, obtain the PXF RPM package (for example, ``pxf-1.0.0-1.x86_64.rpm``) from Synx Data Labs Technical Support. Then, install it using ``yum`` or ``dnf``.
+
+.. code-block:: bash
+
+   sudo yum install pxf-1.0.0-1.x86_64.rpm
+
+Step 2: Set Up Your Environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+After the installation, you need to configure the necessary environment variables for PXF to function correctly.
+
+1.  Set ``JAVA_HOME``:
+
+   .. code-block:: bash
+
+      export JAVA_HOME=<path_to_your_java_home>
+
+2. Source your |product_name| environment. The path should point to your |product_name| installation directory.
+
+   .. code-block:: bash
+
+      source /usr/local/synxdb/greenplum_path.sh
+
+   .. note::
+
+      The path ``/usr/local/synxdb/`` is an example. Adjust it to match your actual |product_name| installation path.
+
+3.  Set the ``GPHOME``, ``PXF_HOME``, and ``PXF_BASE`` environment variables.
+
+   .. code-block:: bash
+
+      export GPHOME=/usr/local/synxdb
+      export PXF_HOME=/usr/local/pxf-1.0.0
+      export PXF_BASE=${HOME}/pxf-base
+
+   .. important::
+
+      -  ``GPHOME`` must point to your |product_name| installation directory.
+      -  ``PXF_HOME`` should point to the directory created by the RPM installation.
+      -  It is highly recommended to set ``PXF_BASE`` to a location outside of ``PXF_HOME``. If ``PXF_BASE`` is not set, it defaults to ``PXF_HOME``, and server configurations might be deleted upon re-installation.
+
+Step 3: Run PXF
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+After setting up the environment, you need to initialize and start the PXF service.
+
+1. Add the PXF binaries to your ``PATH``. You can add this line to your ``.bashrc`` or ``.zshrc`` profile for convenience.
+
+   .. code-block:: bash
+
+      export PATH=${PXF_HOME}/bin:$PATH
+
+2. Prepare and start the PXF service. The ``pxf prepare`` command initializes the PXF configuration based on your environment. It only needs to be run once.
+
+   .. code-block:: bash
+
+      pxf prepare
+      pxf start
+
+   If the service fails to start due to a port conflict on the default port (``5888``), you can specify a different port. First, add the following line to the ``${PXF_BASE}/conf/pxf-application.properties`` file:
+
+   .. code-block::
+
+      server.port=<new_port_number>
+
+   Then, add the following line to the ``${PXF_BASE}/conf/pxf-env.sh`` file to ensure the new port is used by the control scripts:
+
+   .. code-block::
+
+      export PXF_PORT=<new_port_number>
+
+   After making these changes, run ``pxf start`` again.
+
+After these steps, PXF is running and ready to be used with |product_name| to access external data.
+
+Next steps
+------------------
+
+This guide covers the basic installation of PXF. PXF is a powerful tool with many connectors and configuration options. To learn more about:
+
+-  Configuring PXF for different data sources (including HDFS, Hive, S3)
+-  Using PXF with external tables
+-  Advanced topics and troubleshooting
+
+Refer to `apache/cloudberry-pxf documentation <https://github.com/apache/cloudberry-pxf/tree/main/docs>`_.

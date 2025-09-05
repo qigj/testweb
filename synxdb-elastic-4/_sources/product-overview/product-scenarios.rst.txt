@@ -1,0 +1,53 @@
+User Scenarios
+=================
+
+|product_name| is a cloud-native, high-performance analytical database designed for large-scale data processing. It leverages a storage-compute separation architecture to provide elastic scalability, multi-modal analytics, and optimized performance for diverse workloads. Built on Apache Cloudberry, it extends the capabilities of traditional MPP databases with enhanced high availability, workload isolation, and automatic scaling.
+
+This document describes the key use cases of |product_name|.
+
+Data warehousing
+-------------------
+
+A data warehouse is the crucial system for enterprise data analyses. |product_name| offers comprehensive enterprise-level data storage, management, and analysis capabilities. It supports PB-scale large datasets and complex SQL queries, aiding enterprises in data-driven decision support.
+
+-  Offline batch processing: Supports multiple methods to batch load source data into the data warehouse, creating operational data stores (ODS), data warehouse details (DWD), and data warehouse services (DWS). It builds source models and normalized models, including fact tables and dimension tables.
+-  Data marts: Processes different types of data to provide customized data sets for specific domains or departments.
+-  Business Intelligence (BI) reports and analyses: Handles complex data analyses and query needs, including data aggregation, multi-dimensional analyses, and associative queries. Supports business analyses, report generation, and decision support.
+
+Big data/data lake integration and analyses
+-------------------------------------------
+
+Big data platforms and data lakes are key infrastructures for enterprise data management. They help enterprises effectively integrate and utilize data resources, uncover data value, and support operational optimization and business expansion, making them essential systems for maintaining competitiveness.
+
+|product_name| features a unified lakehouse architecture, serving as an integrated query engine on a big data platform for efficient exploration and analyses of structured, semi-structured, and unstructured data in data lakes.
+
+-  ETL batch processing: Integrates with various mainstream ETL tools for batch extracting, transforming, and loading external data sources.
+-  Lakehouse/multi-source joint analyses: Supports building a unified lakehouse, sharing metadata between data lakes and data warehouses, and enabling efficient data access. Facilitates joint analyses across different data sources for more comprehensive and in-depth insights.
+-  Interactive query analyses: Allows users to interact with data sets in real-time for exploration and analyses.
+-  GIS spatiotemporal data analyses: Analyzes geospatial and time-series data using Geographic Information System (GIS) formats to reveal spatial and temporal relationships.
+-  Log analyses: Stores, processes, and analyzes system log data to monitor and maintain system stability and security, and to optimize performance.
+
+Real-time data analysis
+------------------------
+
+In scenarios like mobile internet, IoT, and financial risk control, where quick responses are essential, data analysis systems must support low-latency decision-making. |product_name| integrates streaming data ingestion with hybrid transactional and analytical processing (HTAP), offering real-time data operations for insertions, deletions, and updates, as well as instant analysis of incremental data. This enables rapid data value extraction and real-time decision-making.
+
+Generative AI data application development
+------------------------------------------
+
+Generative AI (GenAI) can create new content, such as text, charts, based on existing data or specific patterns, offering broad applications and potential value across multiple fields. The |product_name| + SynxML AI solution provides end-to-end capabilities for developing data intelligence applications based on GenAI large models, supporting the entire lifecycle from data storage to AI application deployment. Key capabilities include:
+
+-  Unstructured data management and analysis: Manages and processes unstructured data, including text, images, and audio, in a structured and unified manner.
+-  Vector knowledge base: Supports distributed storage and retrieval of high-dimensional data, building vector-based knowledge bases, and providing efficient retrieval-augmented generation (RAG) services.
+-  Model fine-tuning and post-pretraining: Supports full-parameter fine-tuning and LoRA fine-tuning with multi-machine, multi-GPU setups, and mixed precision with parallel post-pretraining.
+-  Model inference and elastic deployment: Supports inference with multiple large models such as LLaMA, GLM, and DeepSpeed. Implements hybrid deployments of multi-node CPU + GPU servers with automatic scaling based on load.
+-  Large-model data intelligence applications: Supports data intelligence applications using GenAI large models, including natural language interaction analysis, document AI, and enterprise knowledge bases.
+
+Data mining and machine learning
+--------------------------------
+
+|product_name|, combined with SynxML, supports a wide range of data mining and machine learning algorithms. All algorithms run efficiently in a distributed manner within the database, eliminating the need for data movement or cross-platform management. The algorithm platform addresses data analysis needs for enterprise clients, including marketing, customer retention, personalized services, risk control, and supply chain management. Key capabilities include:
+
+-  Data mining: Supports common data mining algorithms such as prediction, clustering, association, text mining, sequence pattern analysis, anomaly detection, and network mining.
+-  Machine learning: Supports popular machine learning algorithms, including supervised learning, unsupervised learning, and reinforcement learning.
+-  Custom function extension: Allows users to write custom functions (UDFs) in languages such as R, Python, Perl, Java, and pgSQL to meet specific business analysis needs.

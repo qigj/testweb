@@ -1,0 +1,554 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Platform Requirements - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="platform-requirements"><a class="header" href="#platform-requirements">Platform Requirements</a></h1>
+<p>This topic describes the SynxDB 2 platform and operating system software requirements for deploying the software to on-premise hardware, or to public cloud services such as AWS, GCP, or Azure.</p>
+<h2 id="operating-system-requirements"><a class="header" href="#operating-system-requirements"><a id="topic13"></a>Operating System Requirements</a></h2>
+<p>SynxDB 2 runs on EL9-compatible, EL8-compatible, or EL7-compatible operating systems. This includes the following platforms:</p>
+<ul>
+<li>Red Hat Enterprise Linux 64-bit 9.x</li>
+<li>Red Hat Enterprise Linux 64-bit 8.7 or later. See the following <a href="#rhel-issues">Note</a>.</li>
+<li>Rocky Linux 9.x</li>
+<li>Rocky Linux 8.7 or later</li>
+<li>Oracle Linux 64-bit 9, using the Red Hat Compatible Kernel (RHCK)</li>
+<li>Oracle Linux 64-bit 8, using the Red Hat Compatible Kernel (RHCK)</li>
+<li>AlmaLinux 9</li>
+<li>AlmaLinux 8</li>
+<li>CentOS 64-bit 7.x</li>
+<li>Red Hat Enterprise Linux 64-bit 7.x</li>
+</ul>
+<p><a id="rhel-issues"></a></p>
+<blockquote>
+<p><strong>Note</strong> If you use endpoint security software on your SynxDB hosts, it may affect database performance and stability. See <a href="../security-guide/topics/preface.html#endpoint_security">About Endpoint Security Sofware</a> for more information.</p>
+</blockquote>
+<blockquote>
+<p><strong>Caution</strong> A kernel issue in Red Hat Enterprise Linux 8.5 and 8.6 can cause I/O freezes and synchronization problems with XFS filesystems. This issue is fixed in RHEL 8.7. See <a href="https://access.redhat.com/solutions/6984334">RHEL8: xfs_buf deadlock between inode deletion and block allocation</a>.</p>
+</blockquote>
+<p>SynxDB server supports TLS version 1.2.</p>
+<h3 id="software-dependencies"><a class="header" href="#software-dependencies"><a id="topic_i4k_nlx_zgb"></a>Software Dependencies</a></h3>
+<p>SynxDB 2 requires the following software packages, which are installed automatically as dependencies when you install the SynxDB RPM package):</p>
+<ul>
+<li>apr</li>
+<li>apr-util</li>
+<li>bash</li>
+<li>bzip2</li>
+<li>curl</li>
+<li>compat-openssl11 (EL 9)</li>
+<li>iproute</li>
+<li>krb5-devel</li>
+<li>libcgroup-tools (EL7 or EL 8)</li>
+<li>libcurl</li>
+<li>libevent (EL7 or EL 8)</li>
+<li>libuuid</li>
+<li>libxml2</li>
+<li>libyaml</li>
+<li>libzstd (EL 9)</li>
+<li>less</li>
+<li>net-tools</li>
+<li>openldap</li>
+<li>openssh</li>
+<li>openssh-client</li>
+<li>openssh-server</li>
+<li>openssl</li>
+<li>openssl-libs (EL7 or EL 8)</li>
+<li>perl</li>
+<li>python3 (EL 9)</li>
+<li>readline</li>
+<li>rsync</li>
+<li>sed</li>
+<li>tar</li>
+<li>which</li>
+<li>zip</li>
+<li>zlib</li>
+</ul>
+<p>SynxDB 2 client software requires these operating system packages:</p>
+<ul>
+<li>apr</li>
+<li>bzip2</li>
+<li>libedit</li>
+<li>libyaml</li>
+<li>libevent (EL7 or EL 8)</li>
+<li>openssh</li>
+<li>zlib</li>
+</ul>
+<p>SynxDB 2 uses Python 2.7.18, which is included with the product installation (and not installed as a package dependency).</p>
+<blockquote>
+<p><strong>Important</strong> SSL is supported only on the SynxDB master host system. It cannot be used on the segment host systems.</p>
+</blockquote>
+<blockquote>
+<p><strong>Important</strong> For all SynxDB host systems, if SELinux is enabled in <code>Enforcing</code> mode then the SynxDB process and users can operate successfully in the default <code>Unconfined</code> context. If increased confinement is required, then you must configure SELinux contexts, policies, and domains based on your security requirements, and test your configuration to ensure there is no functionality or performance impact to SynxDB. Similarly, you should either deactivate or configure firewall software as needed to allow communication between SynxDB hosts. See <a href="prep_os.html">Deactivate or Configure SELinux</a>.</p>
+</blockquote>
+<h3 id="java"><a class="header" href="#java"><a id="topic_xbl_mkx_zgb"></a>Java</a></h3>
+<p>SynxDB 2 supports these Java versions for PL/Java and PXF:</p>
+<ul>
+<li>Open JDK 8 or Open JDK 11, available from <a href="https://adoptopenjdk.net">AdoptOpenJDK</a></li>
+<li>Oracle JDK 8 or Oracle JDK 11</li>
+</ul>
+<h2 id="synxdb-tools-and-extensions-compatibility"><a class="header" href="#synxdb-tools-and-extensions-compatibility"><a id="topic31"></a>SynxDB Tools and Extensions Compatibility</a></h2>
+<h3 id="client-tools"><a class="header" href="#client-tools"><a id="topic32"></a>Client Tools</a></h3>
+<p>Synx Data Labs releases a Clients tool package on various platforms that can be used to access SynxDB from a client system. The SynxDB 2 Clients tool package is supported on the following platforms:</p>
+<ul>
+<li>Enterprise Linux x86_64 7.x (EL 7)</li>
+<li>Enterprise Linux x86_64 8.x (EL 8)</li>
+<li>Enterprise Linux x86_64 9.x (EL 9)</li>
+</ul>
+<p>The SynxDB 2 Clients package includes the client and loader programs plus the addition of database/role/language commands.</p>
+<h3 id="extensions"><a class="header" href="#extensions"><a id="topic_eyc_l2h_zz"></a>Extensions</a></h3>
+<p>This table lists the versions of the SynxDB Extensions that are compatible with this release of SynxDB 2.</p>
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="topic_eyc_l2h_zz__table_b1q_m2h_zz" class="table" frame="border" border="1" rules="all"><caption><span class="tablecap">SynxDB Extensions Compatibility </span></caption><colgroup><col /><col /><col /></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry nocellnorowborder" style="vertical-align:top;" id="d78288e683">Component</th>
+<th class="entry nocellnorowborder" style="vertical-align:top;" id="d78288e686">Component Version</th>
+<th class="entry cell-norowborder" style="vertical-align:top;" id="d78288e689">Additional Information</th>
+</tr>
+</thead>
+<tbody class="tbody">
+<tr class="row">
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e683 "><a class="xref" href="../analytics/pl_java.html">PL/Java</a></td>
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e686 ">2.0.4</td>
+<td class="entry cell-norowborder" style="vertical-align:top;" headers="d78288e689 ">Supports Java 8 and 11.</td>
+</tr>           
+<tr class="row">
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e683 "><a class="xref" href="../install_guide/install_python_dsmod.html">Python Data Science Module Package</a></td>
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e686 ">2.0.6</td>
+<td class="entry cell-norowborder" style="vertical-align:top;" headers="d78288e689 "> </td>
+</tr>
+<tr class="row">
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e683 "><a class="xref" href="../analytics/pl_r.html">PL/R</a></td>
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e686 ">3.0.3</td>
+<td class="entry cell-norowborder" style="vertical-align:top;" headers="d78288e689 ">R 3.3.3
+</td>
+</tr>
+<tr class="row">
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e683 "><a class="xref" href="../install_guide/install_r_dslib.html">R Data Science Library Package</a></td>
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e686 ">2.0.2</td>
+<td class="entry cell-norowborder" style="vertical-align:top;" headers="d78288e689 "> </td>
+</tr>
+<tr class="row">
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e683 "><a class="xref" href="../analytics/pl_container.html">PL/Container</a></td>
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e686 ">2.1.2</td>
+<td class="entry cell-norowborder" style="vertical-align:top;" headers="d78288e689 "> </td>
+</tr>
+<tr class="row">
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e683 ">PL/Container Image for R </td>
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e686 ">2.1.2</td>
+<td class="entry cell-norowborder" style="vertical-align:top;" headers="d78288e689 ">R 3.6.3</td>
+</tr>
+<tr class="row">
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e683 ">PL/Container Images for Python </td>
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e686 ">2.1.2</td>
+<td class="entry cell-norowborder" style="vertical-align:top;" headers="d78288e689 ">Python 2.7.18<p class="p">Python 3.7</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e683 ">PL/Container Beta</td>
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e686 ">3.0.0-beta</td>
+<td class="entry cell-norowborder" style="vertical-align:top;" headers="d78288e689 "> </td>
+</tr>
+<tr class="row">
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e683 ">PL/Container Beta Image for R </td>
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e686 ">3.0.0-beta</td>
+<td class="entry cell-norowborder" style="vertical-align:top;" headers="d78288e689 ">R 3.4.4</td>
+</tr>
+<tr class="row">
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e683 "><a class="xref" href="../analytics/madlib.html">MADlib Machine Learning</a></td>
+<td class="entry nocellnorowborder" style="vertical-align:top;" headers="d78288e686 ">2.1, 2.0, 1.21, 1.20, 1.19, 1.18, 1.17, 1.16</td>
+<td class="entry cell-norowborder" style="vertical-align:top;" headers="d78288e689 ">Support matrix at <a class="xref" href="https://cwiki.apache.org/confluence/display/MADLIB/FAQ" target="_blank">MADlib FAQ</a>.</td>
+</tr>
+<tr class="row">
+<td class="entry row-nocellborder" style="vertical-align:top;" headers="d78288e683 "><a class="xref" href="../analytics/postGIS.html">PostGIS Spatial and Geographic Objects</a></td>
+<td class="entry row-nocellborder" style="vertical-align:top;" headers="d78288e686 ">2.5.4, 2.1.5</td>
+<td class="entry cellrowborder" style="vertical-align:top;" headers="d78288e689 "> </td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For information about the Oracle Compatibility Functions, see <a href="../ref_guide/modules/orafce_ref.html">Oracle Compatibility Functions</a>.</p>
+<p>These SynxDB extensions are installed with SynxDB</p>
+<ul>
+<li>Fuzzy String Match Extension</li>
+<li>PL/Python Extension</li>
+<li>pgcrypto Extension</li>
+</ul>
+<h3 id="data-connectors"><a class="header" href="#data-connectors"><a id="topic_xpf_25b_hbb"></a>Data Connectors</a></h3>
+<p>SynxDB Platform Extension Framework (PXF) provides access to Hadoop, object store, and SQL external data stores. Refer to <a href="../admin_guide/external/pxf-overview.html">Accessing External Data with PXF</a> in the <em>SynxDB Administrator Guide</em> for PXF configuration and usage information.</p>
+<h2 id="hardware-requirements"><a class="header" href="#hardware-requirements"><a id="topic_tnl_3mx_zgb"></a>Hardware Requirements</a></h2>
+<p>The following table lists minimum recommended specifications for hardware servers intended to support SynxDB on Linux systems in a production environment. All host servers in your SynxDB system must have the same hardware and software configuration. SynxDB also provides hardware build guides for its certified hardware platforms. It is recommended that you work with a SynxDB Systems Engineer to review your anticipated environment to ensure an appropriate hardware configuration for SynxDB.</p>
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="topic_tnl_3mx_zgb__ji162790" class="table" frame="border" border="1" rules="all"><caption><span class="tablecap">Minimum Hardware Requirements</span></caption><colgroup><col style="width:120pt" /><col style="width:255pt" /></colgroup><tbody class="tbody">
+<tr class="row">
+<td class="entry nocellnorowborder" style="vertical-align:top;">Minimum CPU</td>
+<td class="entry cell-norowborder" style="vertical-align:top;">Any x86_64 compatible CPU</td>
+</tr>
+<tr class="row">
+<td class="entry nocellnorowborder" style="vertical-align:top;">Minimum Memory</td>
+<td class="entry cell-norowborder" style="vertical-align:top;">16 GB RAM per server</td>
+</tr>
+<tr class="row">
+<td class="entry nocellnorowborder" style="vertical-align:top;">Disk Space Requirements</td>
+<td class="entry cell-norowborder" style="vertical-align:top;">
+<ul class="ul" id="topic_tnl_3mx_zgb__ul_us1_b4n_r4">
+<li class="li">150MB per host for SynxDB installation</li>
+<li class="li">Approximately 300MB per segment instance for metadata</li>
+<li class="li">Cap disk capacity at 70% full to accommodate temporary files and prevent performance degradation</li>
+</ul>
+</td>
+</tr>
+<tr class="row">
+<td class="entry row-nocellborder" style="vertical-align:top;">Network Requirements</td>
+<td class="entry cellrowborder" style="vertical-align:top;">10 Gigabit Ethernet within the array<p class="p">NIC bonding is
+                  recommended when multiple interfaces are present</p>
+<p class="p">SynxDB can use
+                  either IPV4 or IPV6 protocols.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="synxdb-on-dca-systems"><a class="header" href="#synxdb-on-dca-systems"><a id="topic_elb_4ss_n4b"></a>SynxDB on DCA Systems</a></h3>
+<p>You must run SynxDB Version 1 on Dell EMC DCA systems, with software version 4.2.0.0 and later.</p>
+<h2 id="storage"><a class="header" href="#storage"><a id="topic_pnz_5zd_xs"></a>Storage</a></h2>
+<p>The only file system supported for running SynxDB is the XFS file system. All other file systems are explicitly <em>not</em> supported by Synx Data Labs.</p>
+<p>SynxDB is supported on network or shared storage if the shared storage is presented as a block device to the servers running SynxDB and the XFS file system is mounted on the block device. Network file systems are <em>not</em> supported. When using network or shared storage, SynxDB mirroring must be used in the same way as with local storage, and no modifications may be made to the mirroring scheme or the recovery scheme of the segments.</p>
+<p>Other features of the shared storage such as de-duplication and/or replication are not directly supported by SynxDB, but may be used with support of the storage vendor as long as they do not interfere with the expected operation of SynxDB at the discretion of Synx Data Labs.</p>
+<p>SynxDB can be deployed to virtualized systems only if the storage is presented as block devices and the XFS file system is mounted for the storage of the segment directories.</p>
+<p>SynxDB is supported on Amazon Web Services (AWS) servers using either Amazon instance store (Amazon uses the volume names <code>ephemeral[0-23]</code>) or Amazon Elastic Block Store (Amazon EBS) storage. If using Amazon EBS storage the storage should be RAID of Amazon EBS volumes and mounted with the XFS file system for it to be a supported configuration.</p>
+<h2 id="hadoop-distributions"><a class="header" href="#hadoop-distributions"><a id="topic36"></a>Hadoop Distributions</a></h2>
+<p>SynxDB provides access to HDFS with the <a href="../pxf/overview_pxf.html">SynxDB Platform Extension Framework (PXF)</a>.</p>
+<p>PXF can use Cloudera, Hortonworks Data Platform, MapR, and generic Apache Hadoop distributions. PXF bundles all of the JAR files on which it depends, including the following Hadoop libraries:</p>
+<div class="table-wrapper"><table><thead><tr><th>PXF Version</th><th>Hadoop Version</th><th>Hive Server Version</th><th>HBase Server Version</th></tr></thead><tbody>
+<tr><td>6.x, 5.15.x, 5.14.0, 5.13.0, 5.12.0, 5.11.1, 5.10.1</td><td>2.x, 3.1+</td><td>1.x, 2.x, 3.1+</td><td>1.3.2</td></tr>
+<tr><td>5.8.2</td><td>2.x</td><td>1.x</td><td>1.3.2</td></tr>
+<tr><td>5.8.1</td><td>2.x</td><td>1.x</td><td>1.3.2</td></tr>
+</tbody></table>
+</div>
+<blockquote>
+<p><strong>Note</strong> If you plan to access JSON format data stored in a Cloudera Hadoop cluster, PXF requires a Cloudera version 5.8 or later Hadoop distribution.</p>
+</blockquote>
+<h2 id="public-cloud-requirements"><a class="header" href="#public-cloud-requirements"><a id="public-cloud"></a>Public Cloud Requirements</a></h2>
+<h3 id="operating-system"><a class="header" href="#operating-system"><a id="cd-os"></a>Operating System</a></h3>
+<p>The operating system parameters for cloud deployments are the same as on-premise, but with these modifications:</p>
+<p>Add the following line to <code>sysctl.conf</code>:</p>
+<pre><code>net.ipv4.ip_local_reserved_ports=65330
+</code></pre>
+<p>AWS requires loading network drivers and also altering the Amazon Machine Image (AMI) to use the faster networking capabilities.  More information on this is provided in the AWS documentation.</p>
+<h3 id="storage-1"><a class="header" href="#storage-1"><a id="cd-storage"></a>Storage</a></h3>
+<p>The disk settings for cloud deployments are the same as on-premise, but with these modifications:</p>
+<ul>
+<li>Mount options:
+<pre><code>rw,noatime,nobarrier,nodev,inode64
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> The <code>nobarrier</code> option is not supported EL 8 nodes.</p>
+</blockquote>
+</li>
+<li>Use mq-deadline instead of the deadline scheduler for the R5 series instance type in AWS</li>
+<li>Use a swap disk per VM (32GB size works well)</li>
+</ul>
+<h3 id="amazon-web-services-aws"><a class="header" href="#amazon-web-services-aws"><a id="aws"></a>Amazon Web Services (AWS)</a></h3>
+<h4 id="virtual-machine-type"><a class="header" href="#virtual-machine-type"><a id="aws-vm-type"></a>Virtual Machine Type</a></h4>
+<p>AWS provides a wide variety of virtual machine types and sizes to address virtually every use case.  Testing in AWS has found that the optimal instance types for SynxDB are “Memory Optimized”.  These provide the ideal balance of Price, Memory, Network, and Storage throughput, and Compute capabilities.</p>
+<p>Price, Memory, and number of cores typically increase in a linear fashion, but the network speed and disk throughput limits do not.  You may be tempted to use the largest instance type to get the highest network and disk speed possible per VM, but better overall performance for the same spend on compute resources can be obtained by using more VMs that are smaller in size.</p>
+<h5 id="compute"><a class="header" href="#compute"><a id="aws-compute"></a>Compute</a></h5>
+<p>AWS uses Hyperthreading when reporting the number of vCPUs, therefore 2 vCPUs equates to 1 Core.  The processor types are frequently getting faster so using the latest instance type will be not only faster, but usually less expensive.  For example, the R5 series provides faster cores at a lower cost compared to R4.</p>
+<h5 id="memory"><a class="header" href="#memory"><a id="aws-memory"></a>Memory</a></h5>
+<p>This variable is pretty simple.  SynxDB needs at least 8GB of RAM per segment process to work optimally.  More RAM per segment helps with concurrency and also helps hide disk performance deficiencies.</p>
+<h5 id="network"><a class="header" href="#network"><a id="aws-network"></a>Network</a></h5>
+<p>AWS provides 25Gbit network performance on the largest instance types, but the network is typically not the bottleneck in AWS. The “up to 10Gbit” network is sufficient in AWS.</p>
+<p>Installing network drivers in the VM is also required in AWS, and depends on the instance type.  Some instance types use an Intel driver while others use an Amazon ENA driver.  Loading the driver requires modifying the machine image (AMI) to take advantage of the driver.</p>
+<h4 id="storage-2"><a class="header" href="#storage-2"><a id="storage"></a>Storage</a></h4>
+<h5 id="elastic-block-storage-ebs"><a class="header" href="#elastic-block-storage-ebs"><a id="aws-ebs"></a>Elastic Block Storage (EBS)</a></h5>
+<p>The AWS default disk type is General Performance (GP2) which is ideal for IOP dependent applications. GP2 uses SSD disks and relative to other disk types in AWS, is expensive.  The operating system and swap volumes are ideal for GP2 disks because of the size and higher random I/O needs.</p>
+<p>Throughput Optimized Disks (ST1) are a disk type designed for high throughput needs such as SynxDB.  These disks are based on HDD rather than SSD, and are less expensive than GP2.  Use this disk type for the optimal performance of loading and querying data in AWS.</p>
+<p>Cold Storage (SC1) provides the best value for EBS storage in AWS.  Using multiple 2TB or larger disks provides enough disk throughput to reach the throughput limit of many different instance types. Therefore, it is possible to reach the throughput limit of a VM by using SC1 disks.</p>
+<p>EBS storage is durable so data is not lost when a virtual machine is stopped.  EBS also provides infrastructure snapshot capabilities that can be used to create volume backups.  These snapshots can be copied to different regions to provide a disaster recovery solution.  The SynxDB Cloud utility <code>gpsnap</code>, available in the AWS Cloud Marketplace, automates backup, restore, delete, and copy functions using EBS snapshots.</p>
+<p>Storage can be grown in AWS with “gpgrow”.  This tool is included with the SynxDB on AWS deployment and allows you to grow the storage independently of compute.  This is an online operation in AWS too.</p>
+<h5 id="ephemeral"><a class="header" href="#ephemeral"><a id="aws-ephemeral"></a>Ephemeral</a></h5>
+<p>Ephemeral Storage is directly attached to VMs, but has many drawbacks:</p>
+<ul>
+<li>Data loss when stopping a VM with ephemeral storage</li>
+<li>Encryption is not supported</li>
+<li>No Snapshots</li>
+<li>Same speed can be achieved with EBS storage</li>
+<li>Not recommended</li>
+</ul>
+<h5 id="aws-recommendations"><a class="header" href="#aws-recommendations"><a id="aws-recommend"></a>AWS Recommendations</a></h5>
+<h6 id="master"><a class="header" href="#master">Master</a></h6>
+<div class="table-wrapper"><table><thead><tr><th>Instance Type</th><th>Memory</th><th>vCPUs</th><th>Data Disks</th></tr></thead><tbody>
+<tr><td>r5.xlarge</td><td>32</td><td>4</td><td>1</td></tr>
+<tr><td>r5.2xlarge</td><td>64</td><td>8</td><td>1</td></tr>
+<tr><td>r5.4xlarge</td><td>128</td><td>16</td><td>1</td></tr>
+</tbody></table>
+</div>
+<h6 id="segments"><a class="header" href="#segments">Segments</a></h6>
+<div class="table-wrapper"><table><thead><tr><th>Instance Type</th><th>Memory</th><th>vCPUs</th><th>Data Disks</th></tr></thead><tbody>
+<tr><td>r5.4xlarge</td><td>128</td><td>16</td><td>3</td></tr>
+</tbody></table>
+</div>
+<p>Performance testing has indicated that the Master node can be deployed on the smallest r5.xlarge instance type to save money without a measurable difference in performance.  Testing was performed using the TPC-DS benchmark.</p>
+<p>The Segment instances run optimally on the r5.4xlarge instance type.  This provides the highest performance given the cost of the AWS resources.</p>
+<h3 id="google-compute-platform-gcp"><a class="header" href="#google-compute-platform-gcp"><a id="gcp"></a>Google Compute Platform (GCP)</a></h3>
+<h4 id="virtual-machine-type-1"><a class="header" href="#virtual-machine-type-1"><a id="gcp-vm-type"></a>Virtual Machine Type</a></h4>
+<p>The two most common instance types in GCP are “Standard” or “HighMem” instance types. The only difference is the ratio of Memory to Cores.  Each offer 1 to 64 vCPUs per VM.</p>
+<h5 id="compute-1"><a class="header" href="#compute-1"><a id="gcp-compute"></a>Compute</a></h5>
+<p>Like AWS, GCP uses Hyperthreading, so 2 vCPUs equates to 1 Core.  The CPU clock speed is determined by the region in which you deploy.</p>
+<h5 id="memory-1"><a class="header" href="#memory-1"><a id="gcp-memory"></a>Memory</a></h5>
+<p>Instance type n1-standard-8 has 8 vCPUs with 30GB of RAM while n1-highmem-8 also has 8 vCPUs with 52GB of RAM.  There is also a HighCPU instance type that generally isn’t ideal for SynxDB.  Like AWS and Azure, the machines with more vCPUs will have more RAM.</p>
+<h5 id="network-1"><a class="header" href="#network-1"><a id="gcp-network"></a>Network</a></h5>
+<p>GCP network speeds are dependent on the instance type but the maximum network performance is possible (10Gbit) with a virtual machine as small as only 8 vCPUs.</p>
+<h4 id="storage-3"><a class="header" href="#storage-3"><a id="gcp-storage"></a>Storage</a></h4>
+<p>Standard (HDD) and SSD disks are available in GCP.  SSD is slightly faster in terms of throughput but comes at a premium.  The size of the disk does not impact performance.</p>
+<p>The biggest obstacle to maximizing storage performance is the throughput limit placed on every virtual machine.  Unlike AWS and Azure, the storage throughput limit is relatively low, consistent across all instance types, and only a single disk is needed to reach the VM limit.</p>
+<p><img src="./graphics/gcp-disk-rates.png" alt="GCP disk read/write rates" /></p>
+<h4 id="gcp-recommendations"><a class="header" href="#gcp-recommendations"><a id="gcp-recommend"></a>GCP Recommendations</a></h4>
+<p>Testing has revealed that <em>while using the same number of vCPUs</em>, a cluster using a large instance type like n1-highmem-64 (64 vCPUs) will have lower performance than a cluster using more of the smaller instance types like n1-highmem-8 (8 vCPUs).  In general, use 8x more nodes in GCP than you would in another environment like AWS while using the 8 vCPU instance types.</p>
+<p>The HighMem instance type is slightly faster for higher concurrency.  Furthermore, SSD disks are slightly faster also but come at a cost.</p>
+<h6 id="master-and-segment-instances"><a class="header" href="#master-and-segment-instances">Master and Segment Instances</a></h6>
+<div class="table-wrapper"><table><thead><tr><th>Instance Type</th><th>Memory</th><th>vCPUs</th><th>Data Disks</th></tr></thead><tbody>
+<tr><td>n1-standard-8</td><td>30</td><td>8</td><td>1</td></tr>
+<tr><td>n1-highmem-8</td><td>52</td><td>8</td><td>1</td></tr>
+</tbody></table>
+</div>
+<h3 id="azure"><a class="header" href="#azure"><a id="azure"></a>Azure</a></h3>
+<blockquote>
+<p><strong>Note</strong> On the Azure platform, in addition to bandwidth, the number of network connections present on a VM at any given moment can affect the VM’s network performance. The Azure networking stack maintains the state for each direction of a TCP/UDP connection in a data structures called a <em>flow</em>. A typical TCP/UDP connection will have 2 flows created: one for the inbound direction and another for the outbound direction. The number of network flows on Azure is limited to an upper bound.  See <a href="https://docs.microsoft.com/bs-latn-ba/azure/virtual-network/virtual-machine-network-throughput">Virtual machine network bandwidth</a> in the Azure documentation for more details.  In practice this can present scalability challenges for workloads based on the number of concurrent queries, and on the complexity of those queries.  Always test your workload on Azure to validate that you are within the Azure limits, and be advised that if your workload increases you may hit Azure flow count boundaries at which point your workload may fail.  Synx Data Labs recommends using the UDP interconnect, and not the TCP interconnect, when using Azure.  A connection pooler and resource group settings can also be used to help keep flow counts at a lower level.</p>
+</blockquote>
+<h4 id="virtual-machine-type-2"><a class="header" href="#virtual-machine-type-2"><a id="az-vm-type"></a>Virtual Machine Type</a></h4>
+<p>Each VM type has limits on disk throughput so picking a VM that doesn’t have a limit that is too low is essential.  Most of Azure is designed for OLTP or Application workloads, which limits the choices for databases like SynxDB where throughput is more important.  Disk type also plays a part in the throughput cap, so that needs to be considered too.</p>
+<h4 id="compute-2"><a class="header" href="#compute-2"><a id="az-compute"></a>Compute</a></h4>
+<p>Most instance types in Azure have hyperthreading enabled, which means 1 vCPU equates to 2 cores.  However, not all instance types have this feature, so for these others, 1 vCPU equates to 1 core.</p>
+<p>The High Performance Compute (HPC) instance types have the fastest cores in Azure.</p>
+<h4 id="memory-2"><a class="header" href="#memory-2"><a id="az-memory"></a>Memory</a></h4>
+<p>In general, the larger the virtual machine type, the more memory the VM will have.</p>
+<h4 id="network-2"><a class="header" href="#network-2"><a id="az-network"></a>Network</a></h4>
+<p>The Accelerated Networking option offloads CPU cycles for networking to “FPGA-based SmartNICs”.  Virtual machine types either support this or do not, but most do support it.  Testing of SynxDB hasn’t shown much difference and this is probably because of Azure’s preference for TCP over UDP.  Despite this, UDPIFC interconnect is the ideal protocol to use in Azure.</p>
+<p>There is an undocumented process in Azure that periodically runs on the host machines on UDP port 65330.  When a query runs using UDP port 65330 and this undocumented process runs, the query will fail after one hour with an interconnect timeout error.  This is fixed by reserving port 65330 so that SynxDB doesn’t use it.</p>
+<h4 id="storage-4"><a class="header" href="#storage-4"><a id="az-storage"></a>Storage</a></h4>
+<p>Storage in Azure is either Premium (SSD) or Regular Storage (HDD).  The available sizes are the same and max out at 4TB.  Instance types either do or do not support Premium but, interestingly, the instance types that do support Premium storage, have a <em>lower</em> throughput limit.  For example:</p>
+<ul>
+<li>Standard_E32s_v3 has a limit of 768 MB/s.</li>
+<li>Standard_E32_v3 was tested with <code>gpcheckperf</code> to have 1424 write and 1557 read MB/s performance.</li>
+</ul>
+<p>To get the maximum throughput from a VM in Azure, you have to use multiple disks.  For larger instance types, you have to use upwards of 32 disks to reach the limit of a VM.  Unfortunately, the memory and CPU constraints on these machines means that you have to run fewer segments than you have disks, so you have to use software RAID to utilize all of these disks.  Performance takes a hit with software RAID, too, so you have to try multiple configurations to optimize.</p>
+<p>The size of the disk also impacts performance, but not by much.</p>
+<p>Software RAID not only is a little bit slower, but it also requires <code>umount</code> to take a snapshot. This greatly lengthens the time it takes to take a snapshot backup.</p>
+<p>Disks use the same network as the VMs so you start running into the Azure limits in bigger clusters when using big virtual machines with 32 disks on each one.  The overall throughput drops as you hit this limit and is most noticeable during concurrency testing.</p>
+<h4 id="azure-recommendations"><a class="header" href="#azure-recommendations"><a id="az-recommend"></a>Azure Recommendations</a></h4>
+<p>The best instance type to use in Azure is “Standard_H8” which is one of the High Performance Compute instance types.  This instance series is the only one utilizing InfiniBand, but this does not include IP traffic. Because this instance type is n0t available in all regions, the “Standard_D13_v2” is also available.</p>
+<h6 id="master-1"><a class="header" href="#master-1">Master</a></h6>
+<div class="table-wrapper"><table><thead><tr><th>Instance Type</th><th>Memory</th><th>vCPUs</th><th>Data Disks</th></tr></thead><tbody>
+<tr><td>D13_v2</td><td>56</td><td>8</td><td>1</td></tr>
+<tr><td>H8</td><td>56</td><td>8</td><td>1</td></tr>
+</tbody></table>
+</div>
+<h6 id="segments-1"><a class="header" href="#segments-1">Segments</a></h6>
+<div class="table-wrapper"><table><thead><tr><th>Instance Type</th><th>Memory</th><th>vCPUs</th><th>Data Disks</th></tr></thead><tbody>
+<tr><td>D13_v2</td><td>56</td><td>8</td><td>2</td></tr>
+<tr><td>H8</td><td>56</td><td>8</td><td>2</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../install_guide/install_guide.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../install_guide/capacity_planning.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../install_guide/install_guide.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../install_guide/capacity_planning.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

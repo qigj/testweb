@@ -1,0 +1,279 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Use Parallel Queries Execution &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Use Parallel Queries Execution</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="use-parallel-queries-execution">
+<h1>Use Parallel Queries Execution<a class="headerlink" href="#use-parallel-queries-execution" title="Link to this heading"></a></h1>
+<p>This document introduces the usage scenarios, usage examples, restrictions, and common issues of parallel query execution in SynxDB Elastic. When SynxDB Elastic executes a query, multiple CPU cores are used to process a single query, thereby improving query performance. The database dynamically adjusts the number of computing nodes (including the <code class="docutils literal notranslate"><span class="pre">SeqScan</span></code> operator) according to the data volume change.</p>
+<section id="applicable-scenarios">
+<h2>Applicable scenarios<a class="headerlink" href="#applicable-scenarios" title="Link to this heading"></a></h2>
+<p>Suitable for the scenario where a few segments are deployed on a single physical machine. Using parallel query execution in this scenario can dynamically adjust parallel sessions, spare the need to deploy more segments, and improve performance.</p>
+<p>When the host CPU and disk load are not high, enabling parallel sessions for operators can bring better performance.</p>
+</section>
+<section id="how-to-use">
+<h2>How to use<a class="headerlink" href="#how-to-use" title="Link to this heading"></a></h2>
+<p>SynxDB Elastic supports parallel query execution on AO/AOCO and heap tables.</p>
+<section id="parallel-queries-on-heap-tables">
+<h3>Parallel queries on heap tables<a class="headerlink" href="#parallel-queries-on-heap-tables" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Before enabling parallel queries, you need to turn off the GPORCA optimizer.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">enable_parallel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">;</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">optimizer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">OFF</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Set the maximum value for the parallel session.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- When setting this parameter</span>
+<span class="c1">-- you need to consider the number of CPU cores and segments.</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">max_parallel_workers_per_gather</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Query example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="p">(</span><span class="n">c1</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span><span class="n">c2</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span><span class="w"> </span><span class="n">c3</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span><span class="w"> </span><span class="n">c4</span><span class="w"> </span><span class="n">box</span><span class="p">);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">box</span><span class="p">(</span><span class="s1">&#39;6,6,6,6&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1000000</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">t1</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="parallel-queries-on-ao-aoco-tables">
+<h3>Parallel queries on AO/AOCO tables<a class="headerlink" href="#parallel-queries-on-ao-aoco-tables" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Before enabling parallel queries, you need to turn off the GPORCA optimizer.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">enable_parallel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">;</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">optimizer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">OFF</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Set the maximum value for the parallel session.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- When setting this parameter</span>
+<span class="c1">-- you need to consider the number of CPU cores and segments.</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">max_parallel_workers_per_gather</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+
+<span class="c1">-- Sets how many files the data will be inserted into in a transaction.</span>
+<span class="c1">-- Larger values might lead to performance degradation, especially for AOCO tables.</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">gp_appendonly_insert_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+
+<span class="c1">-- Switches to the next file to insert data every 100,000 rows.</span>
+<span class="c1">-- This number of rows can be adjusted,</span>
+<span class="c1">-- to make the data as evenly distributed as possible across multiple files.</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">gp_appendonly_insert_files_tuples_range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100000</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Insert data and run a query.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">ao</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="nb">INT</span><span class="p">)</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">ao_row</span><span class="p">;</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">ao</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1000000</span><span class="p">)</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="c1">-- It is recommended to update statistics first.</span>
+<span class="k">ANALYZE</span><span class="w"> </span><span class="n">ao</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">ao</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="parameter-description">
+<h2>Parameter description<a class="headerlink" href="#parameter-description" title="Link to this heading"></a></h2>
+<table class="docutils align-left">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter name</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head"><p>Is it required?</p></th>
+<th class="head"><p>Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">enable_parallel</span></code></p></td>
+<td><p>Determines whether to enable parallel execution.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">enable_parallel</span> <span class="pre">=</span> <span class="pre">ON;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">optimizer</span></code></p></td>
+<td><p>Determines whether to enable the GPORCA optimizer.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">optimizer</span> <span class="pre">=</span> <span class="pre">OFF;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gp_appendonly_insert_files</span></code></p></td>
+<td><p>Specifies how many files the data will be inserted into in a transaction.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">4</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">gp_appendonly_insert_files</span> <span class="pre">=</span> <span class="pre">8;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gp_appendonly_insert_files_tuples_range</span></code></p></td>
+<td><p>Specifies the threshold of rows in a file, beyond which data will be inserted into a new file.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">100000</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">gp_appendonly_insert_files_tuples_range</span> <span class="pre">=</span> <span class="pre">100000;</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="frequently-asked-questions">
+<h2>Frequently asked questions<a class="headerlink" href="#frequently-asked-questions" title="Link to this heading"></a></h2>
+<ul>
+<li><p>Currently, SynxDB Elastic supports executing queries in parallel that contain the following operators. If a query contains other operators, it will not be executed in parallel.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">sequence</span><span class="w"> </span><span class="n">scan</span>
+<span class="n">bitmap</span><span class="w"> </span><span class="n">heap</span><span class="w"> </span><span class="n">scan</span>
+<span class="n">append</span>
+<span class="n">hash</span><span class="w"> </span><span class="k">join</span>
+<span class="n">nestloop</span><span class="w"> </span><span class="k">join</span>
+<span class="n">merge</span><span class="w"> </span><span class="k">join</span>
+</pre></div>
+</div>
+</li>
+<li><p>Parallel queries do not always improve query performance. Too many parallel sessions can cause overload and lead to performance degradation.</p></li>
+<li><p>Enabling parallel sessions for a query means a significant increase in memory overhead, which might cause errors due to insufficient memory.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

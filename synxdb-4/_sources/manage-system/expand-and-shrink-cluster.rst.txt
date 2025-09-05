@@ -1,0 +1,172 @@
+Expand and Shrink a Cluster
+=====================================
+
+|product_name| achieves elastic scaling through ``gpshrink`` and ``gpexpand``, which are the tools for shrinking and expanding a cluster.
+
+-  When cluster resources are idle, for example, if disk space usage is consistently below 20% or CPU/memory utilization remains low, you can use ``gpshrink`` to shrink the cluster and save server resources.
+-  When cluster resources are under pressure, for example, if disk space usage is consistently above 80% or CPU/memory utilization remains high, you can use ``gpexpand`` to expand the cluster and add server resources.
+
+For cluster expansion, users add server resources and then use the ``gpexpand`` tool to add new segments on the new servers. For cluster shrinking, users can use the ``gpshrink`` tool to remove segments from redundant servers.
+
+Both ``gpshrink`` and ``gpexpand`` execute in two phases:
+
+-  In the preparation phase, it collects information about all user tables in the database that require redistribution.
+-  In the data redistribution phase, it redistributes the data of all tables in the database cluster to the expanded or shrunken database.
+
+Shrink a cluster using gpshrink
+--------------------------------
+
+1. Create a three-node cluster.
+
+   .. code:: bash
+
+      make create-demo-cluster
+
+2. Create a test table named `test` and check the status before shrinking.
+
+   .. code:: sql
+
+      -- Creates a table and inserts data.
+      CREATE TABLE test(a INT); 
+      INSERT INTO test SELECT i FROM generate_series(1,100) i;
+      -- Views the data distribution of the test table.
+      SELECT gp_segment_id, COUNT(*) FROM test GROUP BY gp_segment_id;
+      -- Views the metadata status.
+      SELECT * FROM gp_distribution_policy;
+      SELECT * FROM gp_segment_configuration;
+
+3. Create a ``shrinktest`` file and write the information of the segments to be removed into it.
+
+   .. code:: bash
+
+      touch shrinktest
+
+   The format for segment information is ``hostname|address|port|datadir|dbid|content|role``. The information for each segment must include both the primary and the mirror, as shown below. If removing multiple segments, list the one with the higher ``content`` ID first. Ensure that the preferred role matches the role, listing ``p`` before ``m``.
+
+   .. code:: bash
+
+      # Example for removing one segment, showing the primary and mirror information
+      i-thd001y0|i-thd001y0|7004|/home/gpadmin/cloudberrydb/gpAux/gpdemo/datadirs/dbfast3/demoDataDir2|4|2|p
+      i-thd001y0|i-thd001y0|7007|/home/gpadmin/cloudberrydb/gpAux/gpdemo/datadirs/dbfast_mirror3/demoDataDir2|7|2|m
+
+4. Execute the ``gpshrink`` command twice.
+
+   .. code:: bash
+
+      # Preparation phase
+      gpshrink -i shrinktest
+      # Redistribution phase
+      gpshrink -i shrinktest
+
+   .. list-table::
+      :header-rows: 1
+      :align: left
+
+      * - Main parameter
+        - Description
+      * - -i
+        - Specifies the input file listing the segments to be removed.
+      * - -c
+        - Cleans up the collected table information.
+      * - -a
+        - Collects statistics for the tables after redistribution.
+      * - -d
+        - Sets a maximum execution duration. The process will be terminated if it times out. Used in the redistribution phase.
+
+   ``gpshrink`` is implemented in two main phases:
+
+      -  The first ``gpshrink -i shrinktest`` command completes the preparation work for shrinking: based on the ``shrinktest`` input file, it reads the segments to be removed, creates the corresponding tables ``gpshrink.status`` (to record the status of ``gpshrink``) and ``gpshrink.status_detail`` (to record the status of each table), and gets all tables that need redistribution.
+
+      -  The second ``gpshrink -i shrinktest`` command completes the data redistribution work for shrinking: it calculates the new segment size after removal, runs ``gpshrink`` for each table to redistribute data, and finally removes the corresponding segments from ``gp_segment_configuration``. During the redistribution phase, it is not recommended to create new tables, as they cannot be redistributed in the shrunken cluster. Some statements might also fail because certain tables are locked.
+
+      -  If the first ``gpshrink -i shrinktest`` command fails, it might be due to an error in the ``shrinktest`` file causing an interruption. In this case, simply run ``gpshrink -c`` to clear the collected data and then re-run ``gpshrink -i shrinktest``.
+      -  If the second ``gpshrink -i shrinktest`` command fails, you need to log in to the database, check the status of the tables, and perform further data redistribution or rollback.
+
+5. After shrinking, check the status of the ``test`` table again.
+
+   .. code:: sql
+
+      -- Views the data distribution of the test table.
+      SELECT gp_segment_id, COUNT(*) FROM test GROUP BY gp_segment_id;
+      -- Views the metadata status.
+      SELECT * FROM gp_distribution_policy;
+      SELECT * FROM gp_segment_configuration;
+
+Expand a cluster using gpexpand
+----------------------------------
+
+1. Create a three-node cluster.
+
+   .. code:: bash
+
+      make create-demo-cluster
+
+2. Create a test table `test` and check the status before expansion.
+
+   .. code:: sql
+
+      -- Creates a table and inserts data.
+      CREATE TABLE test(a INT); 
+      INSERT INTO test SELECT i FROM generate_series(1,100) i;
+      -- Views the data distribution of the test table.
+      SELECT gp_segment_id, COUNT(*) FROM test GROUP BY gp_segment_id;
+      -- Views the metadata status.
+      SELECT * FROM gp_distribution_policy;
+      SELECT * FROM gp_segment_configuration;
+
+3. Create an ``expandtest`` file and write the information of the segments to be added into it.
+
+   .. code:: shell
+
+      touch expandtest
+
+   The format for segment information is ``hostname|address|port|datadir|dbid|content|mode``. The information for each segment must include both the primary and the mirror. The following example adds two nodes:
+
+   .. code:: bash
+
+      # Example for adding two segments, showing the primary and mirror information
+      i-thd001y0|i-thd001y0|7008|/home/gpadmin/cloudberrydb/gpAux/gpdemo/datadirs/dbfast4/demoDataDir3|9|3|p
+      i-thd001y0|i-thd001y0|7009|/home/gpadmin/cloudberrydb/gpAux/gpdemo/datadirs/dbfast_mirror4/demoDataDir3|10|3|m
+      i-thd001y0|i-thd001y0|7010|/home/gpadmin/cloudberrydb/gpAux/gpdemo/datadirs/dbfast5/demoDataDir4|11|4|p
+      i-thd001y0|i-thd001y0|7011|/home/gpadmin/cloudberrydb/gpAux/gpdemo/datadirs/dbfast_mirror5/demoDataDir4|12|4|m
+
+4. Execute the ``gpexpand`` command twice.
+
+   .. code:: bash
+
+      # Preparation phase
+      gpexpand -i expandtest
+      # Redistribution phase
+      gpexpand -i expandtest
+
+   .. list-table::
+      :header-rows: 1
+
+      * - Parameter
+        - Description
+      * - -i
+        - Specifies the input file that lists the segments to be added.
+      * - -c
+        - Cleans up the collected table information.
+      * - -a
+        - Collects statistics for the tables.
+      * - -d
+        - Sets a maximum execution duration. The process is terminated if it times out. This is used in the redistribution phase.
+
+   ``gpexpand`` is implemented in two main phases:
+
+   -  The first ``gpexpand -i expandtest`` command completes the preparation work for expansion: based on the ``expandtest`` input file, it copies necessary packages and tablespace statuses to the new segment hosts, starts the new segments, adds them to ``gp_segment_configuration``, and creates the related status tables ``gpexpand.status`` (to record the status of gpexpand) and ``gpexpand.status_detail`` (to record the status of each table).
+   -  The second ``gpexpand -i expandtest`` command completes the data redistribution work for expansion: it will run ``alter table $table_name expand table`` for each table, using a process pool to accelerate execution. During the redistribution phase, it is not recommended to create new tables, as they will not be redistributed in the expanded cluster. Some statements might also fail because certain tables are locked.
+
+   -  If the first ``gpexpand -i expandtest`` command fails, it might be due to an error in the ``expandtest`` file. In this case, simply run ``gpexpand -c`` to clear the collected data and then re-run ``gpexpand -i expandtest``.
+   -  If the second ``gpexpand -i expandtest`` command fails, you need to log in to the database, check the status of the tables, and perform further data redistribution or rollback.
+
+5. After expansion, check the status of the ``test`` table again.
+
+   .. code:: sql
+
+      -- Views the data distribution of the test table.
+      SELECT gp_segment_id, COUNT(*) FROM test GROUP BY gp_segment_id;
+      -- Views the metadata status.
+      SELECT * FROM gp_distribution_policy;
+      SELECT * FROM gp_segment_configuration;

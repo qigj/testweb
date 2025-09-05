@@ -1,0 +1,7 @@
+Choose Table Storage Model
+****************************
+
+.. toctree:: 
+   :maxdepth: 2
+
+   heap-and-ao-storage-table-formats

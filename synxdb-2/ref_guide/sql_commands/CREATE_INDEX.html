@@ -1,0 +1,315 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>CREATE INDEX - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="create-index"><a class="header" href="#create-index">CREATE INDEX</a></h1>
+<p>Defines a new index.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code class="language-{#sql_command_synopsis}">CREATE [UNIQUE] INDEX [&lt;name&gt;] ON &lt;table_name&gt; [USING &lt;method&gt;]
+       ( {&lt;column_name&gt; | (&lt;expression&gt;)} [COLLATE &lt;parameter&gt;] [&lt;opclass&gt;] [ ASC | DESC ] [ NULLS { FIRST | LAST } ] [, ...] )
+       [ WITH ( &lt;storage_parameter&gt; = &lt;value&gt; [, ... ] ) ]
+       [ TABLESPACE &lt;tablespace&gt; ]
+       [ WHERE &lt;predicate&gt; ]
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p><code>CREATE INDEX</code> constructs an index on the specified column(s) of the specified table or materialized view. Indexes are primarily used to enhance database performance (though inappropriate use can result in slower performance).</p>
+<p>The key field(s) for the index are specified as column names, or alternatively as expressions written in parentheses. Multiple fields can be specified if the index method supports multicolumn indexes.</p>
+<p>An index field can be an expression computed from the values of one or more columns of the table row. This feature can be used to obtain fast access to data based on some transformation of the basic data. For example, an index computed on <code>upper(col)</code> would allow the clause <code>WHERE upper(col) = 'JIM'</code> to use an index.</p>
+<p>SynxDB provides the index methods B-tree, bitmap, GiST, SP-GiST, and GIN. Users can also define their own index methods, but that is fairly complicated.</p>
+<p>When the <code>WHERE</code> clause is present, a partial index is created. A partial index is an index that contains entries for only a portion of a table, usually a portion that is more useful for indexing than the rest of the table. For example, if you have a table that contains both billed and unbilled orders where the unbilled orders take up a small fraction of the total table and yet is most often selected, you can improve performance by creating an index on just that portion.</p>
+<p>The expression used in the <code>WHERE</code> clause may refer only to columns of the underlying table, but it can use all columns, not just the ones being indexed. Subqueries and aggregate expressions are also forbidden in <code>WHERE</code>. The same restrictions apply to index fields that are expressions.</p>
+<p>All functions and operators used in an index definition must be immutable. Their results must depend only on their arguments and never on any outside influence (such as the contents of another table or a parameter value). This restriction ensures that the behavior of the index is well-defined. To use a user-defined function in an index expression or <code>WHERE</code> clause, remember to mark the function <code>IMMUTABLE</code> when you create it.</p>
+<h2 id="parameters"><a class="header" href="#parameters"><a id="section4"></a>Parameters</a></h2>
+<h3 id="unique"><a class="header" href="#unique">UNIQUE</a></h3>
+<p>Checks for duplicate values in the table when the index is created and each time data is added. Duplicate entries will generate an error. Unique indexes only apply to B-tree indexes. In SynxDB, unique indexes are allowed only if the columns of the index key are the same as (or a superset of) the SynxDB distribution key. On partitioned tables, a unique index is only supported within an individual partition - not across all partitions.</p>
+<h3 id="name"><a class="header" href="#name">name</a></h3>
+<p>The name of the index to be created. The index is always created in the same schema as its parent table. If the name is omitted, SynxDB chooses a suitable name based on the parent table’s name and the indexed column name(s).</p>
+<h3 id="table_name"><a class="header" href="#table_name">table_name</a></h3>
+<p>The name (optionally schema-qualified) of the table to be indexed.</p>
+<h3 id="method"><a class="header" href="#method">method</a></h3>
+<p>The name of the index method to be used. Choices are <code>btree</code>, <code>bitmap</code>, <code>gist</code>, <code>spgist</code>, and <code>gin</code>. The default method is <code>btree</code>.</p>
+<h3 id=""><a class="header" href="#"></a></h3>
+<p>Currently, only the B-tree, GiST, and GIN index methods support multicolumn indexes. Up to 32 fields can be specified by default. Only B-tree currently supports unique indexes.</p>
+<h3 id="-1"><a class="header" href="#-1"></a></h3>
+<p>GPORCA supports only B-tree, bitmap, GiST, and GIN indexes. GPORCA ignores indexes created with unsupported indexing methods.</p>
+<h3 id="column_name"><a class="header" href="#column_name">column_name</a></h3>
+<p>The name of a column of the table on which to create the index. Only the B-tree, bitmap, GiST, and GIN index methods support multicolumn indexes.</p>
+<h3 id="expression"><a class="header" href="#expression">expression</a></h3>
+<p>An expression based on one or more columns of the table. The expression usually must be written with surrounding parentheses, as shown in the syntax. However, the parentheses may be omitted if the expression has the form of a function call.</p>
+<h3 id="collation"><a class="header" href="#collation">collation</a></h3>
+<p>The name of the collation to use for the index. By default, the index uses the collation declared for the column to be indexed or the result collation of the expression to be indexed. Indexes with non-default collations can be useful for queries that involve expressions using non-default collations.</p>
+<h3 id="opclass"><a class="header" href="#opclass">opclass</a></h3>
+<p>The name of an operator class. The operator class identifies the operators to be used by the index for that column. For example, a B-tree index on four-byte integers would use the <code>int4_ops</code> class (this operator class includes comparison functions for four-byte integers). In practice the default operator class for the column’s data type is usually sufficient. The main point of having operator classes is that for some data types, there could be more than one meaningful ordering. For example, a complex-number data type could be sorted by either absolute value or by real part. We could do this by defining two operator classes for the data type and then selecting the proper class when making an index.</p>
+<h3 id="asc"><a class="header" href="#asc">ASC</a></h3>
+<p>Specifies ascending sort order (which is the default).</p>
+<h3 id="desc"><a class="header" href="#desc">DESC</a></h3>
+<p>Specifies descending sort order.</p>
+<h3 id="nulls-first"><a class="header" href="#nulls-first">NULLS FIRST</a></h3>
+<p>Specifies that nulls sort before non-nulls. This is the default when <code>DESC</code> is specified.</p>
+<h3 id="nulls-last"><a class="header" href="#nulls-last">NULLS LAST</a></h3>
+<p>Specifies that nulls sort after non-nulls. This is the default when <code>DESC</code> is not specified.</p>
+<h3 id="storage_parameter"><a class="header" href="#storage_parameter">storage_parameter</a></h3>
+<p>The name of an index-method-specific storage parameter. Each index method has its own set of allowed storage parameters.</p>
+<p><code>FILLFACTOR</code> - B-tree, bitmap, GiST, and SP-GiST index methods all accept this parameter. The <code>FILLFACTOR</code> for an index is a percentage that determines how full the index method will try to pack index pages. For B-trees, leaf pages are filled to this percentage during initial index build, and also when extending the index at the right (adding new largest key values). If pages subsequently become completely full, they will be split, leading to gradual degradation in the index’s efficiency. B-trees use a default fillfactor of 90, but any integer value from 10 to 100 can be selected. If the table is static then fillfactor 100 is best to minimize the index’s physical size, but for heavily updated tables a smaller fillfactor is better to minimize the need for page splits. The other index methods use fillfactor in different but roughly analogous ways; the default fillfactor varies between methods.</p>
+<p><code>BUFFERING</code> - In addition to <code>FILLFACTOR</code>, GiST indexes additionally accept the <code>BUFFERING</code> parameter. <code>BUFFERING</code> determines whether SynxDB builds the index using the buffering build technique described in <a href="https://www.postgresql.org/docs/9.4/gist-implementation.html">GiST buffering build</a> in the PostgreSQL documentation. With <code>OFF</code> it is deactivated, with <code>ON</code> it is enabled, and with <code>AUTO</code> it is initially deactivated, but turned on on-the-fly once the index size reaches <a href="../config_params/guc-list.html">effective-cache-size</a>. The default is <code>AUTO</code>.</p>
+<p><code>FASTUPDATE</code> - The GIN index method accepts the <code>FASTUPDATE</code> storage parameter. <code>FASTUPDATE</code> is a Boolean parameter that deactivates or enables the GIN index fast update technique. A value of ON enables fast update (the default), and OFF deactivates it. See <a href="https://www.postgresql.org/docs/9.4/gin-implementation.html#GIN-FAST-UPDATE">GIN fast update technique</a> in the PostgreSQL documentation for more information.</p>
+<pre><code>&gt; **Note** Turning `FASTUPDATE` off via `ALTER INDEX` prevents future insertions from going into the list of pending index entries, but does not in itself flush previous entries. You might want to VACUUM the table afterward to ensure the pending list is emptied.
+</code></pre>
+<h3 id="tablespace_name"><a class="header" href="#tablespace_name">tablespace_name</a></h3>
+<p>The tablespace in which to create the index. If not specified, the default tablespace is used, or <a href="../config_params/guc-list.html">temp_tablespaces</a> for indexes on temporary tables.</p>
+<h3 id="predicate"><a class="header" href="#predicate">predicate</a></h3>
+<p>The constraint expression for a partial index.</p>
+<h2 id="notes"><a class="header" href="#notes"><a id="section5"></a>Notes</a></h2>
+<p>An <em>operator class</em> can be specified for each column of an index. The operator class identifies the operators to be used by the index for that column. For example, a B-tree index on four-byte integers would use the int4_ops class; this operator class includes comparison functions for four-byte integers. In practice the default operator class for the column’s data type is usually sufficient. The main point of having operator classes is that for some data types, there could be more than one meaningful ordering. For example, we might want to sort a complex-number data type either by absolute value or by real part. We could do this by defining two operator classes for the data type and then selecting the proper class when making an index.</p>
+<p>For index methods that support ordered scans (currently, only B-tree), the optional clauses <code>ASC</code>, <code>DESC</code>, <code>NULLS FIRST</code>, and/or <code>NULLS LAST</code> can be specified to modify the sort ordering of the index. Since an ordered index can be scanned either forward or backward, it is not normally useful to create a single-column <code>DESC</code> index — that sort ordering is already available with a regular index. The value of these options is that multicolumn indexes can be created that match the sort ordering requested by a mixed-ordering query, such as <code>SELECT ... ORDER BY x ASC, y DESC</code>. The <code>NULLS</code> options are useful if you need to support “nulls sort low” behavior, rather than the default “nulls sort high”, in queries that depend on indexes to avoid sorting steps.</p>
+<p>For most index methods, the speed of creating an index is dependent on the setting of <code>maintenance_work_mem</code>. Larger values will reduce the time needed for index creation, so long as you don’t make it larger than the amount of memory really available, which would drive the machine into swapping.</p>
+<p>When an index is created on a partitioned table, the index is propagated to all the child tables created by SynxDB. Creating an index on a table that is created by SynxDB for use by a partitioned table is not supported.</p>
+<p><code>UNIQUE</code> indexes are allowed only if the index columns are the same as (or a superset of) the SynxDB distribution key columns.</p>
+<p><code>UNIQUE</code> indexes are not allowed on append-optimized tables.</p>
+<p>A <code>UNIQUE</code> index can be created on a partitioned table. However, uniqueness is enforced only within a partition; uniqueness is not enforced between partitions. For example, for a partitioned table with partitions that are based on year and a subpartitions that are based on quarter, uniqueness is enforced only on each individual quarter partition. Uniqueness is not enforced between quarter partitions</p>
+<p>Indexes are not used for <code>IS NULL</code> clauses by default. The best way to use indexes in such cases is to create a partial index using an <code>IS NULL</code> predicate.</p>
+<p><code>bitmap</code> indexes perform best for columns that have between 100 and 100,000 distinct values. For a column with more than 100,000 distinct values, the performance and space efficiency of a bitmap index decline. The size of a bitmap index is proportional to the number of rows in the table times the number of distinct values in the indexed column.</p>
+<p>Columns with fewer than 100 distinct values usually do not benefit much from any type of index. For example, a gender column with only two distinct values for male and female would not be a good candidate for an index.</p>
+<p>Prior releases of SynxDB also had an R-tree index method. This method has been removed because it had no significant advantages over the GiST method. If <code>USING rtree</code> is specified, <code>CREATE INDEX</code> will interpret it as <code>USING gist</code>.</p>
+<p>For more information on the GiST index type, refer to the <a href="https://www.postgresql.org/docs/9.4/indexes-types.html">PostgreSQL documentation</a>.</p>
+<p>The use of hash indexes has been deactivated in SynxDB.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section6"></a>Examples</a></h2>
+<p>To create a B-tree index on the column <code>title</code> in the table <code>films</code>:</p>
+<pre><code>CREATE UNIQUE INDEX title_idx ON films (title);
+</code></pre>
+<p>To create a bitmap index on the column <code>gender</code> in the table <code>employee</code>:</p>
+<pre><code>CREATE INDEX gender_bmp_idx ON employee USING bitmap 
+(gender);
+</code></pre>
+<p>To create an index on the expression <code>lower(title)</code>, allowing efficient case-insensitive searches:</p>
+<pre><code>CREATE INDEX ON films ((lower(title)));
+</code></pre>
+<p>(In this example we have chosen to omit the index name, so the system will choose a name, typically <code>films_lower_idx</code>.)</p>
+<p>To create an index with non-default collation:</p>
+<pre><code>CREATE INDEX title_idx_german ON films (title COLLATE "de_DE");
+</code></pre>
+<p>To create an index with non-default fill factor:</p>
+<pre><code>CREATE UNIQUE INDEX title_idx ON films (title) WITH 
+(fillfactor = 70);
+</code></pre>
+<p>To create a GIN index with fast updates deactivated:</p>
+<pre><code>CREATE INDEX gin_idx ON documents_table USING gin (locations) WITH (fastupdate = off);
+</code></pre>
+<p>To create an index on the column <code>code</code> in the table <code>films</code> and have the index reside in the tablespace <code>indexspace</code>:</p>
+<pre><code>CREATE INDEX code_idx ON films(code) TABLESPACE indexspace;
+</code></pre>
+<p>To create a GiST index on a point attribute so that we can efficiently use box operators on the result of the conversion function:</p>
+<pre><code>CREATE INDEX pointloc ON points USING gist (box(location,location));
+SELECT * FROM points WHERE box(location,location) &amp;&amp; '(0,0),(1,1)'::box;
+</code></pre>
+<h2 id="compatibility"><a class="header" href="#compatibility"><a id="section7"></a>Compatibility</a></h2>
+<p><code>CREATE INDEX</code> is a SynxDB language extension. There are no provisions for indexes in the SQL standard.</p>
+<p>SynxDB does not support the concurrent creation of indexes (<code>CONCURRENTLY</code> keyword not supported).</p>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section8"></a>See Also</a></h2>
+<p><a href="ALTER_INDEX.html">ALTER INDEX</a>, <a href="DROP_INDEX.html">DROP INDEX</a>, <a href="CREATE_TABLE.html">CREATE TABLE</a>, <a href="CREATE_OPERATOR_CLASS.html">CREATE OPERATOR CLASS</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/sql_commands/CREATE_GROUP.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/sql_commands/CREATE_LANGUAGE.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/sql_commands/CREATE_GROUP.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/sql_commands/CREATE_LANGUAGE.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Using the SynxDB Parallel File Server (gpfdist) - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="using-the-synxdb-parallel-file-server-gpfdist"><a class="header" href="#using-the-synxdb-parallel-file-server-gpfdist">Using the SynxDB Parallel File Server (gpfdist)</a></h1>
+<p>The gpfdist protocol is used in a <code>CREATE EXTERNAL TABLE</code> SQL command to access external data served by the SynxDB <code>gpfdist</code> file server utility. When external data is served by gpfdist, all segments in the SynxDB system can read or write external table data in parallel.</p>
+<p>This topic describes the setup and management tasks for using gpfdist with external tables.</p>
+<ul>
+<li><a href="#topic_xkt_vjy_4bb">About gpfdist and External Tables</a></li>
+<li><a href="#topic14">About gpfdist Setup and Performance</a></li>
+<li><a href="#topic15">Controlling Segment Parallelism</a></li>
+<li><a href="#topic16">Installing gpfdist</a></li>
+<li><a href="#topic17">Starting and Stopping gpfdist</a></li>
+<li><a href="#topic18">Troubleshooting gpfdist</a></li>
+</ul>
+<h2 id="about-gpfdist-and-external-tables"><a class="header" href="#about-gpfdist-and-external-tables"><a id="topic_xkt_vjy_4bb"></a>About gpfdist and External Tables</a></h2>
+<p>The <code>gpfdist</code> file server utility is located in the <code>$GPHOME/bin</code> directory on your SynxDB master host and on each segment host. When you start a <code>gpfdist</code> instance you specify a listen port and the path to a directory containing files to read or where files are to be written. For example, this command runs <code>gpfdist</code> in the background, listening on port 8801, and serving files in the <code>/home/gpadmin/external_files</code> directory:</p>
+<pre><code>$ gpfdist -p 8801 -d /home/gpadmin/external_files &amp;
+</code></pre>
+<p>The <code>CREATE EXTERNAL TABLE</code> command <code>LOCATION</code> clause connects an external table definition to one or more <code>gpfdist</code> instances. If the external table is readable, the <code>gpfdist</code> server reads data records from files from in specified directory, packs them into a block, and sends the block in a response to a SynxDB segment’s request. The segments unpack rows they receive and distribute them according to the external table’s distribution policy. If the external table is a writable table, segments send blocks of rows in a request to gpfdist and gpfdist writes them to the external file.</p>
+<p>External data files can contain rows in CSV format or any delimited text format supported by the <code>FORMAT</code> clause of the <code>CREATE EXTERNAL TABLE</code> command. In addition, <code>gpfdist</code> can be configured with a YAML-formatted file to transform external data files between a supported text format and another format, for example XML or JSON. See &lt;ref&gt; for an example that shows how to use <code>gpfdist</code> to read external XML files into a SynxDB readable external table.</p>
+<p>For readable external tables, <code>gpfdist</code> uncompresses <code>gzip</code> (<code>.gz</code>), <code>bzip2</code> (.<code>bz2</code>), and <code>zstd</code> (<code>.zst</code>)  files automatically. You can use the wildcard character (*) or other C-style pattern matching to denote multiple files to read. External files are assumed to be relative to the directory specified when you started the <code>gpfdist</code> instance.</p>
+<h2 id="about-gpfdist-setup-and-performance"><a class="header" href="#about-gpfdist-setup-and-performance"><a id="topic14"></a>About gpfdist Setup and Performance</a></h2>
+<p>You can run <code>gpfdist</code> instances on multiple hosts and you can run multiple <code>gpfdist</code> instances on each host. This allows you to deploy <code>gpfdist</code> servers strategically so that you can attain fast data load and unload rates by utilizing all of the available network bandwidth and SynxDB’s parallelism.</p>
+<ul>
+<li>Allow network traffic to use all ETL host network interfaces simultaneously. Run one instance of gpfdist for each interface on the ETL host, then declare the host name of each NIC in the <code>LOCATION</code> clause of your external table definition (see <a href="g-creating-external-tables---examples.html">Examples for Creating External Tables</a>).</li>
+</ul>
+<p><img src="../graphics/ext_tables_multinic.jpg" alt="External Table Using Single gpfdist Instance with Multiple NICs" title="External Table Using Single gpfdist Instance with Multiple NICs" /></p>
+<ul>
+<li>Divide external table data equally among multiple gpfdist instances on the ETL host. For example, on an ETL system with two NICs, run two gpfdist instances (one on each NIC) to optimize data load performance and divide the external table data files evenly between the two gpfdist servers.</li>
+</ul>
+<p><img src="../graphics/ext_tables.jpg" alt="External Tables Using Multiple gpfdist Instances with Multiple NICs" title="External Tables Using Multiple gpfdist Instances with Multiple NICs" /></p>
+<blockquote>
+<p><strong>Note</strong> Use pipes (|) to separate formatted text when you submit files to gpfdist. SynxDB encloses comma-separated text strings in single or double quotes. gpfdist has to remove the quotes to parse the strings. Using pipes to separate formatted text avoids the extra step and improves performance.</p>
+</blockquote>
+<h2 id="controlling-segment-parallelism"><a class="header" href="#controlling-segment-parallelism"><a id="topic15"></a>Controlling Segment Parallelism</a></h2>
+<p>The <code>gp_external_max_segs</code> server configuration parameter controls the number of segment instances that can access a single gpfdist instance simultaneously. 64 is the default. You can set the number of segments such that some segments process external data files and some perform other database processing. Set this parameter in the <code>postgresql.conf</code> file of your master instance.</p>
+<h2 id="installing-gpfdist"><a class="header" href="#installing-gpfdist"><a id="topic16"></a>Installing gpfdist</a></h2>
+<p>gpfdist is installed in <code>$GPHOME/bin</code> of your SynxDB master host installation. Run gpfdist on a machine other than the SynxDB master or standby master, such as on a machine devoted to ETL processing. Running gpfdist on the master or standby master can have a performance impact on query execution. To install gpfdist on your ETL server, get it from the <em>SynxDB Clients</em> package and follow its installation instructions.</p>
+<h2 id="starting-and-stopping-gpfdist"><a class="header" href="#starting-and-stopping-gpfdist"><a id="topic17"></a>Starting and Stopping gpfdist</a></h2>
+<p>You can start gpfdist in your current directory location or in any directory that you specify. The default port is <code>8080</code>.</p>
+<p>From your current directory, type:</p>
+<pre><code>gpfdist &amp;
+</code></pre>
+<p>From a different directory, specify the directory from which to serve files, and optionally, the HTTP port to run on.</p>
+<p>To start gpfdist in the background and log output messages and errors to a log file:</p>
+<pre><code>$ gpfdist -d /var/load_files -p 8081 -l /home/`gpadmin`/log &amp;
+
+</code></pre>
+<p>For multiple gpfdist instances on the same ETL host, use a different base directory and port for each instance. For example:</p>
+<pre><code>$ gpfdist -d /var/load_files1 -p 8081 -l /home/`gpadmin`/log1 &amp;
+$ gpfdist -d /var/load_files2 -p 8082 -l /home/`gpadmin`/log2 &amp;
+
+</code></pre>
+<p>To stop gpfdist when it is running in the background:</p>
+<p>First find its process id:</p>
+<pre><code>$ ps -ef | grep gpfdist
+</code></pre>
+<p>Then stop the process, for example (where 3456 is the process ID in this example):</p>
+<pre><code>$ kill 3456
+
+</code></pre>
+<h2 id="troubleshooting-gpfdist"><a class="header" href="#troubleshooting-gpfdist"><a id="topic18"></a>Troubleshooting gpfdist</a></h2>
+<p>The segments access gpfdist at runtime. Ensure that the SynxDB segment hosts have network access to gpfdist. gpfdist is a web server: test connectivity by running the following command from each host in the SynxDB array (segments and master):</p>
+<pre><code>$ wget http://&lt;gpfdist_hostname&gt;:&lt;port&gt;/&lt;filename&gt;
+         
+</code></pre>
+<p>The <code>CREATE EXTERNAL TABLE</code> definition must have the correct host name, port, and file names for gpfdist. Specify file names and paths relative to the directory from which gpfdist serves files (the directory path specified when gpfdist started). See <a href="g-creating-external-tables---examples.html">Examples for Creating External Tables</a>.</p>
+<p>If you start gpfdist on your system and IPv6 networking is deactivated, gpfdist displays this warning message when testing for an IPv6 port.</p>
+<pre><code>[WRN gpfdist.c:2050] Creating the socket failed
+
+</code></pre>
+<p>If the corresponding IPv4 port is available, gpfdist uses that port and the warning for IPv6 port can be ignored. To see information about the ports that gpfdist tests, use the <code>-V</code> option.</p>
+<p>For information about IPv6 and IPv4 networking, see your operating system documentation.</p>
+<p>When reading or writing data with the <code>gpfdist</code> or <code>gfdists</code> protocol, the <code>gpfdist</code> utility rejects HTTP requests that do not include <code>X-GP-PROTO</code> in the request header. If <code>X-GP-PROTO</code> is not detected in the header request <code>gpfist</code> returns a 400 error in the status line of the HTTP response header: <code>400 invalid request (no gp-proto)</code>.</p>
+<p>SynxDB includes <code>X-GP-PROTO</code> in the HTTP request header to indicate that the request is from SynxDB.</p>
+<p>If the <code>gpfdist</code> utility hangs with no read or write activity occurring, you can generate a core dump the next time a hang occurs to help debug the issue. Set the environment variable <code>GPFDIST_WATCHDOG_TIMER</code> to the number of seconds of no activity to wait before <code>gpfdist</code> is forced to exit. When the environment variable is set and <code>gpfdist</code> hangs, the utility stops after the specified number of seconds, creates a core dump, and sends relevant information to the log file.</p>
+<p>This example sets the environment variable on a Linux system so that <code>gpfdist</code> exits after 300 seconds (5 minutes) of no activity.</p>
+<pre><code>export GPFDIST_WATCHDOG_TIMER=300
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/external/g-devel-fdw.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/load/topics/g-loading-and-unloading-data.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/external/g-devel-fdw.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/load/topics/g-loading-and-unloading-data.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick-Start Guide &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=529101c1"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Perform TPC-DS Benchmark Testing" href="tpc-ds-benchmarking.html" />
+    <link rel="prev" title="Tutorials" href="tutorials-index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials-index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Quick-Start Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#access-the-console-and-log-in">Access the console and log in</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-resources">Create resources</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#create-an-account">Create an account</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-a-user">Create a user</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-a-warehouse">Create a warehouse</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#connect-to-the-database">Connect to the database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#query-sample-data">Query sample data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#method-1-use-a-client">Method 1: Use a client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#method-2-use-the-worksheet-in-the-console">Method 2: Use the worksheet in the console</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#load-and-query-external-data">Load and query external data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#explore-the-unique-advantages-of-the-data-warehouse">Explore the unique advantages of the data warehouse</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#multiple-warehouses-accessing-shared-storage">Multiple warehouses accessing shared storage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#warehouse-elastic-scaling-in-and-scaling-out">Warehouse elastic scaling-in and scaling-out</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tpc-ds-benchmarking.html">Perform TPC-DS Benchmark Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tutorials-index.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Quick-Start Guide</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quick-start-guide">
+<h1>Quick-Start Guide<a class="headerlink" href="#quick-start-guide" title="Link to this heading"></a></h1>
+<p>This guide is designed to help you quickly get started with SynxDB Elastic. By following this guide, you will learn how to access the SynxDB Elastic console, create necessary resources (such as accounts, users, and warehouses), run SQL queries via the client or console, load external data, and scale clusters.</p>
+<p>SynxDB Elastic is a cloud-native, distributed analytical database that offers enterprises efficient, flexible, and scalable solutions for data management and analysis. It supports high-performance SQL queries, making it ideal for large-scale data analysis tasks. This guide aims to provide you with clear, step-by-step instructions, ensuring that even first-time users can easily complete the basic operations and lay a foundation for more advanced learning.</p>
+<section id="access-the-console-and-log-in">
+<h2>Access the console and log in<a class="headerlink" href="#access-the-console-and-log-in" title="Link to this heading"></a></h2>
+<p>Before creating resources and running queries in SynxDB Elastic, you need to access and log into the console. Follow these steps to get started:</p>
+<ol class="arabic simple">
+<li><p>Open your browser and access the console login page.</p></li>
+<li><p>Fill in the organization name, user name, and password.</p></li>
+<li><p>Click <strong>Login</strong>.</p></li>
+</ol>
+<p>After login, you are now ready to start creating resources.</p>
+</section>
+<section id="create-resources">
+<h2>Create resources<a class="headerlink" href="#create-resources" title="Link to this heading"></a></h2>
+<p>Before you start querying sample data, you need to create a few basic resources, including:</p>
+<ul class="simple">
+<li><p>Account: The basic organizational unit in SynxDB Elastic, and all subsequent operations will depend on it.</p></li>
+<li><p>User: Required to connect to and manage databases.</p></li>
+<li><p>Warehouse: The core resource for running SQL queries. Each warehouse can contain multiple segment nodes.</p></li>
+</ul>
+<section id="create-an-account">
+<h3>Create an account<a class="headerlink" href="#create-an-account" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Click the avatar in the top-right corner, and then click <strong>Accounts</strong> in the menu to enter the account page.</p></li>
+<li><p>Click <strong>Create Account</strong> in the top-right corner to open the <strong>Create Account</strong> dialog.</p></li>
+<li><p>Enter an account name, choose the cloud provider and region. Then click <strong>OK</strong>.</p></li>
+<li><p>Return to the <strong>Accounts</strong> page. Click <strong>Switch account</strong> in the top-right corner and select the newly created account from the dropdown list.</p></li>
+</ol>
+<p>Once the account is created, you can go on creating other resources.</p>
+</section>
+<section id="create-a-user">
+<h3>Create a user<a class="headerlink" href="#create-a-user" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Click the SynxDB logo in the top-left corner of the console to access the <strong>Dashboard</strong> page.</p></li>
+<li><p>Click <strong>Users</strong> in the left navigation bar to access the user page.</p></li>
+<li><p>Click <strong>+ Create User</strong> in the top-right corner to open the user creation dialog.</p></li>
+<li><p>Enter a user name and password, select a database role (the <strong>login</strong> role is mandatory), and click <strong>OK</strong>.</p></li>
+</ol>
+<p>Once completed, the newly created user and its role information will appear in the user list.</p>
+</section>
+<section id="create-a-warehouse">
+<h3>Create a warehouse<a class="headerlink" href="#create-a-warehouse" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>In the left navigation bar, click <strong>Warehouses</strong> to access the warehouse page.</p></li>
+<li><p>Click <strong>+ Create Warehouse</strong> in the top-right corner to open the warehouse creation dialog.</p></li>
+<li><p>Enter a warehouse name (for example <code class="docutils literal notranslate"><span class="pre">warehouse1</span></code>), set the number of segments (2 is recommended), select the previously created user, and click OK.</p></li>
+<li><p>Return to the <strong>Warehouses</strong> page and wait for a moment. Refresh the page until the warehouse status shows <strong>Running</strong>.</p></li>
+</ol>
+<p>Once the warehouse is created, you are ready to connect to the database.</p>
+</section>
+</section>
+<section id="connect-to-the-database">
+<h2>Connect to the database<a class="headerlink" href="#connect-to-the-database" title="Link to this heading"></a></h2>
+<p>After creating the necessary resources, you can connect to the SynxDB Elastic database using the psql client. Open a terminal and run the following command (replace the placeholders with your values), then enter the password you have set when creating the user:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>psql<span class="w"> </span>-h<span class="w"> </span>&lt;host_address&gt;<span class="w"> </span>-U<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-d<span class="w"> </span>postgres
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<ul class="simple">
+<li><p>To get <code class="docutils literal notranslate"><span class="pre">&lt;host_address&gt;</span></code>, click the avatar in the top-right corner of the console and select <strong>Accounts</strong>. On the <strong>Accounts</strong> page, find the host address associated with your account.</p></li>
+<li><p>To get <code class="docutils literal notranslate"><span class="pre">&lt;user&gt;</span></code>, click <strong>Users</strong> in the left navigation bar of the console. Find the target user name on the user list page.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">postgres</span></code>: A built-in database created with the data warehouse.</p></li>
+</ul>
+</div>
+<p>Once connected successfully, you can start executing SQL queries.</p>
+</section>
+<section id="query-sample-data">
+<h2>Query sample data<a class="headerlink" href="#query-sample-data" title="Link to this heading"></a></h2>
+<p>After connecting to the database, you can explore SynxDB Elastic by querying, creating tables, and inserting data. This section introduces two methods: querying data using a client or using the SQL editor in the console.</p>
+<section id="method-1-use-a-client">
+<h3>Method 1: Use a client<a class="headerlink" href="#method-1-use-a-client" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Open the terminal. Connect to the SynxDB Elastic database via the <code class="docutils literal notranslate"><span class="pre">psql</span></code> client.</p></li>
+<li><p>Check the current tables in the database:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="err">\</span><span class="n">dt</span>
+</pre></div>
+</div>
+</li>
+<li><p>Before executing SQL operations, bind the task to a warehouse <code class="docutils literal notranslate"><span class="pre">warehouse1</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">warehouse</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">warehouse1</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a sample table employees to store sample data:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">employees</span><span class="w"> </span><span class="p">(</span>
+<span class="w">   </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="p">,</span>
+<span class="w">   </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">   </span><span class="k">position</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">   </span><span class="n">salary</span><span class="w"> </span><span class="nb">NUMERIC</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Insert sample data into the employees table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">employees</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="k">position</span><span class="p">,</span><span class="w"> </span><span class="n">salary</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Engineer&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">120000</span><span class="p">.</span><span class="mi">00</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Query the table data:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">employees</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="method-2-use-the-worksheet-in-the-console">
+<h3>Method 2: Use the worksheet in the console<a class="headerlink" href="#method-2-use-the-worksheet-in-the-console" title="Link to this heading"></a></h3>
+<p>If you prefer operations on a graphical interface, you can use the built-in SQL editor in the SynxDB Elastic console to execute SQL operations. The built-in SQL editor allows you to operate the database quickly and view results intuitively.</p>
+<ol class="arabic">
+<li><p>In the left navigation bar of the console, click <strong>Worksheets</strong>.</p></li>
+<li><p>In the worksheet list, click worksheet to open the built-in SQL editor.</p></li>
+<li><p>Click the <strong>Select a warehouse</strong> dropdown menu and select <code class="docutils literal notranslate"><span class="pre">warehouse1</span></code> you have created.</p></li>
+<li><p>In the editor, enter and execute the following SQL statement to create the employees table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">employees</span><span class="w"> </span><span class="p">(</span>
+<span class="w">   </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="p">,</span>
+<span class="w">   </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">   </span><span class="k">position</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">   </span><span class="n">salary</span><span class="w"> </span><span class="nb">NUMERIC</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Insert sample data into the <code class="docutils literal notranslate"><span class="pre">employees</span></code> table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">employees</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="k">position</span><span class="p">,</span><span class="w"> </span><span class="n">salary</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Engineer&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">120000</span><span class="p">.</span><span class="mi">00</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Query the table data:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">employees</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="load-and-query-external-data">
+<h2>Load and query external data<a class="headerlink" href="#load-and-query-external-data" title="Link to this heading"></a></h2>
+<p>You can load sample data from cloud object storage into SynxDB Elastic by following these steps.</p>
+<ol class="arabic">
+<li><p>Create a file named <code class="docutils literal notranslate"><span class="pre">employees.csv</span></code> on your local machine, and add the following sample data to the file:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>employee_id,first_name,last_name,department_id,hire_date
+101,John,Doe,10,2020-01-15
+102,Jane,Smith,20,2019-03-22
+103,Emily,Davis,10,2021-07-01
+104,Michael,Brown,30,2018-11-05
+105,Sarah,Johnson,20,2022-02-14
+</pre></div>
+</div>
+</li>
+<li><p>Upload the <code class="docutils literal notranslate"><span class="pre">employees.csv</span></code> file to the Amazon S3 service in the <code class="docutils literal notranslate"><span class="pre">us-west-1</span></code> region. Set the bucket policies correctly, granting appropriate permissions to ensure accessibility. Refer to the <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html">Amazon S3 user documentation</a> for detailed instructions.</p></li>
+<li><p>Open the SynxDB Elastic console and navigate to the SQL editor, or connect to SynxDB Elastic using the <code class="docutils literal notranslate"><span class="pre">psql</span></code> client.</p></li>
+<li><p>Execute the following statement to create a foreign data wrapper:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span>
+<span class="k">HANDLER</span><span class="w"> </span><span class="n">datalake_fdw_handler</span>
+<span class="k">VALIDATOR</span><span class="w"> </span><span class="n">datalake_fdw_validator</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">mpp_execute</span><span class="w"> </span><span class="s1">&#39;all segments&#39;</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a foreign server. When executing the following statement, replace <code class="docutils literal notranslate"><span class="pre">&lt;hostname&gt;</span></code> with the object storage host information (for example, <code class="docutils literal notranslate"><span class="pre">https://&lt;bucket&gt;.&lt;region&gt;.s3.amazonaws.com</span></code>) and <code class="docutils literal notranslate"><span class="pre">&lt;protocol&gt;</span></code> with the protocol for the cloud platform s3.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">foreign_server</span>
+<span class="k">FOREIGN</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">WRAPPER</span><span class="w"> </span><span class="n">datalake_fdw</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">host</span><span class="w"> </span><span class="s1">&#39;&lt;hostname&gt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">protocol</span><span class="w"> </span><span class="s1">&#39;&lt;protocol&gt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">isvirtual</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">,</span><span class="n">ishttps</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a user mapping. When executing the following statement, replace <code class="docutils literal notranslate"><span class="pre">&lt;access_key&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;secret_key&gt;</span></code> with the actual credentials. Refer to <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-iam.html">Amazon S3 Documentation - Identity and Access Management for Amazon S3</a> for obtaining these credentials.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">gpadmin</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">foreign_server</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;gpadmin&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">accesskey</span><span class="w"> </span><span class="s1">&#39;&lt;access_key&gt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">secretkey</span><span class="w"> </span><span class="s1">&#39;&lt;secret_key&gt;&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create the external table. When executing the following statement, replace <code class="docutils literal notranslate"><span class="pre">&lt;file_path&gt;</span></code> with the actual path to the <code class="docutils literal notranslate"><span class="pre">employees.csv</span></code> file in object storage (for example, <code class="docutils literal notranslate"><span class="pre">/example-cloud-doc/</span></code>).</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">example</span><span class="p">(</span>
+<span class="w">   </span><span class="n">employee_id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="w">   </span><span class="n">first_name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">   </span><span class="n">last_name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">   </span><span class="n">department_id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="w">   </span><span class="n">hire_date</span><span class="w"> </span><span class="nb">DATE</span><span class="p">)</span>
+<span class="n">SERVER</span><span class="w"> </span><span class="n">foreign_server</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">filePath</span><span class="w"> </span><span class="s1">&#39;&lt;file_path&gt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">compression</span><span class="w"> </span><span class="s1">&#39;none&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">enableCache</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">format</span><span class="w"> </span><span class="s1">&#39;csv&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Now you can query the data in the external table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">example</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="explore-the-unique-advantages-of-the-data-warehouse">
+<h2>Explore the unique advantages of the data warehouse<a class="headerlink" href="#explore-the-unique-advantages-of-the-data-warehouse" title="Link to this heading"></a></h2>
+<section id="multiple-warehouses-accessing-shared-storage">
+<h3>Multiple warehouses accessing shared storage<a class="headerlink" href="#multiple-warehouses-accessing-shared-storage" title="Link to this heading"></a></h3>
+<p>SynxDB Elastic supports shared data storage across multiple warehouses. For instance, tables created in warehouse1 can be accessed by warehouse2. Follow these steps to explore this feature:</p>
+<ol class="arabic">
+<li><p>Create a new warehouse named <code class="docutils literal notranslate"><span class="pre">warehouse2</span></code> by following the steps for creating a warehouse.</p></li>
+<li><p>Open the built-in SQL editor by following the steps for querying data using the console.</p></li>
+<li><p>Click the <code class="docutils literal notranslate"><span class="pre">Select</span> <span class="pre">a</span> <span class="pre">warehouse</span></code> dropdown menu and select <code class="docutils literal notranslate"><span class="pre">warehouse2</span></code>.</p></li>
+<li><p>Query the <code class="docutils literal notranslate"><span class="pre">employees</span></code> table created on <code class="docutils literal notranslate"><span class="pre">warehouse1</span></code> from <code class="docutils literal notranslate"><span class="pre">warehouse2</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">employees</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>You can query the table data created on <code class="docutils literal notranslate"><span class="pre">warehouse1</span></code> directly from the <code class="docutils literal notranslate"><span class="pre">warehouse2</span></code> cluster.</p>
+</li>
+</ol>
+</section>
+<section id="warehouse-elastic-scaling-in-and-scaling-out">
+<h3>Warehouse elastic scaling-in and scaling-out<a class="headerlink" href="#warehouse-elastic-scaling-in-and-scaling-out" title="Link to this heading"></a></h3>
+<p>You can elastically scale warehouses to meet dynamic business workloads. Here is an example of scaling <code class="docutils literal notranslate"><span class="pre">warehouse1</span></code>:</p>
+<ol class="arabic simple">
+<li><p>Open the SynxDB Elastic console and click <strong>Warehouses</strong> in the left navigation bar to access the warehouse page.</p></li>
+<li><p>Locate <code class="docutils literal notranslate"><span class="pre">warehouse1</span></code> and click <strong>Edit Warehouse</strong> in its row.</p></li>
+<li><p>Adjust segment count in the <strong>Edit Warehouse</strong> dialog. Increase the value for scaling out or decrease it for scaling in based on your requirements.</p></li>
+<li><p>Click <strong>OK</strong> and wait for the changes to take effect.</p></li>
+</ol>
+</section>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading"></a></h2>
+<p>Congratulations! In this quick-start guide, you have completed the following tasks:</p>
+<ul class="simple">
+<li><p>Registered and accessed the SynxDB Elastic console.</p></li>
+<li><p>Created essential resources (accounts, users, and warehouses).</p></li>
+<li><p>Run SQL queries using a client or the console.</p></li>
+<li><p>Loaded and queried external data.</p></li>
+<li><p>Explored the unique advantages of SynxDB Elastic, such as shared storage and elastic scaling.</p></li>
+</ul>
+<p>These steps have introduced you to the core features of SynxDB Elastic and laid a foundation for further exploration and usage.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="tpc-ds-benchmarking.html" class="btn btn-neutral float-right" title="Perform TPC-DS Benchmark Testing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="tutorials-index.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+Routine Maintenance Operations
+=====================================
+
+This document describes routine maintenance operations that you can perform on |product_name|.
+
+View the definition of an object
+---------------------------------
+
+To see the definition of an object, such as a table or view, you can use the ``\d+`` meta-command when working in ``psql``. For example, to see the definition of a table:
+
+.. code-block:: none
+
+   \d+ t2
+
+                                             Table "public.t2"
+
+   Column |  Type   | Collation | Nullable | Default | Storage | Compression | Stats target | Description 
+   --------+---------+-----------+----------+---------+---------+-------------+--------------+-------------
+   c1     | integer |           |          |         | plain   |             |              | 
+   c2     | integer |           |          |         | plain   |             |              | 
+   Tablespace: "default_tablespace"
+
+View session memory usage information
+-------------------------------------
+
+You can create and use the ``session_level_memory_consumption`` view that provides information about the current memory utilization for sessions that are running queries on |product_name|. The view contains session information and information such as the database that the session is connected to, the query that the session is currently running, and memory consumed by the session processes.
+
+-  Create the ``session_level_memory_consumption`` view
+-  About the ``session_level_memory_consumption`` view
+
+Create the ``session_level_memory_consumption`` view
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To create the ``session_state.session_level_memory_consumption`` view in a |product_name|, run the command ``CREATE EXTENSION gp_internal_tools;`` once for each database. For example, to install the view in the database ``testdb``, use this command:
+
+.. code:: sql
+
+   CREATE EXTENSION gp_internal_tools;
+
+About the ``session_level_memory_consumption`` view
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``session_state.session_level_memory_consumption`` view provides information about memory consumption and idle time for sessions that are running SQL queries.
+
+When resource queue-based resource management is active, the column ``is_runaway`` indicates whether |product_name| considers the session a runaway session based on the\ ``vmem`` memory consumption of the session's queries. Under the resource queue-based resource management scheme, |product_name| considers the session a runaway when the queries consume an excessive amount of memory. The |product_name| server configuration parameter ``runaway_detector_activation_percent`` controls the conditions under which |product_name| considers a session a runaway session.
+
+View and log per-process memory usage information
+-------------------------------------------------
+
+|product_name| allocates all memory within memory contexts. Memory contexts are a convenient way to manage memory that needs to live for differing amounts of time. Destroying a context releases all of the memory that was allocated in it.
+
+Tracking the amount of memory used by a server process or a long-running query can help detect the source of a potential out-of-memory condition. |product_name| provides a system view and administration functions that you can use for this purpose.
+
+About the ``pg_backend_memory_contexts`` view
+----------------------------------------------
+
+To display the memory usage of all active memory contexts in the server process attached to the current session, use the ``pg_backend_memory_contexts`` system view. This view is restricted to superusers, but access might be granted to other roles.
+
+.. code:: sql
+
+   SELECT * FROM pg_backend_memory_contexts;
+
+About the memory context admin functions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can use the system administration function ``pg_log_backend_memory_contexts()`` to instruct |product_name| to dump the memory usage of other sessions running on the coordinator host into the server log. Execution of this function is restricted to superusers only, and cannot be granted to other roles.
+
+The signature of ``pg_log_backend_memory_contexts()`` function follows:
+
+.. code:: 
+
+   pg_log_backend_memory_contexts( pid integer )
+
+where ``pid`` identifies the process whose memory contexts you want dumped.
+
+``pg_log_backend_memory_contexts()`` returns ``t`` when memory context logging is successfully activated for the process on the local host. When logging is activated, |product_name| writes one message to the log for each memory context at the ``LOG`` message level. The log messages appear in the server log based on the log configuration set; refer to `Error Reporting and Logging <https://www.postgresql.org/docs/14/runtime-config-logging.html>`_ in the PostgreSQL documentation for more information. *The memory context log messages are not sent to the client*.
+
+
+The command triggered the dumping of the following (subset of) memory context messages to the local server log file:
+
+.. code:: sql
+
+   SELECT pg_log_backend_memory_contexts( pg_backend_pid() );
+
+.. code:: sql
+
+   2025-03-20 16:45:57.228512 UTC,"gpadmin","testdb",p16389,th-557447104,"[local]",,2025-03-20 15:57:32 UTC,0,,cmd10,seg-1,,,,sx1,"LOG","00000","logging memory contexts of PID 16389",,,,,,"SELECT pg_log_backend_memory_contexts(pg_backend_pid());",0,,"mcxt.c",1278,
+   2025-03-20 16:45:57.229275 UTC,"gpadmin","testdb",p16389,th-557447104,"[local]",,2025-03-20 15:57:32 UTC,0,,cmd10,seg-1,,,,sx1,"LOG","00000","level: 0; TopMemoryContext: 108384 total in 6 blocks; 23248 free (21 chunks); 85136 used",,,,,,,0,,"mcxt.c",884,
+   2025-03-20 16:45:57.229822 UTC,"gpadmin","testdb",p16389,th-557447104,"[local]",,2025-03-20 15:57:32 UTC,0,,cmd10,seg-1,,,,sx1,"LOG","00000","level: 1; pgstat TabStatusArray lookup hash table: 8192 total in 1 blocks; 1416 free (0 chunks); 6776 used",,,,,,,0,,"mcxt.c",884,
+   2025-03-20 16:45:57.230387 UTC,"gpadmin","testdb",p16389,th-557447104,"[local]",,2025-03-20 15:57:32 UTC,0,,cmd10,seg-1,,,,sx1,"LOG","00000","level: 1; TopTransactionContext: 8192 total in 1 blocks; 7576 free (1 chunks); 616 used",,,,,,,0,,"mcxt.c",884,
+   2025-03-20 16:45:57.230961 UTC,"gpadmin","testdb",p16389,th-557447104,"[local]",,2025-03-20 15:57:32 UTC,0,,cmd10,seg-1,,,,sx1,"LOG","00000","level: 1; TableSpace cache: 8192 total in 1 blocks; 2056 free (0 chunks); 6136 used",,,,,,,0,,"mcxt.c",884,

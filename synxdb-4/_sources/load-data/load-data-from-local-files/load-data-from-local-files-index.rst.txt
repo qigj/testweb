@@ -1,0 +1,10 @@
+Load Data from Local Files
+****************************
+
+.. toctree::
+   :maxdepth: 2
+
+   load-data-using-copy
+   load-data-using-gpfdist
+   load-data-using-file-protocal
+   load-data-using-gpload

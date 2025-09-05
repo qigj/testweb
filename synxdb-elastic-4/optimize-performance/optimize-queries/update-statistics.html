@@ -1,0 +1,234 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Update Statistics &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Query Hints" href="query-hints.html" />
+    <link rel="prev" title="What’s New in GPORCA Optimizer" href="use-orca/whats-new-in-orca.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../operate-with-data/operate-with-data-index.html">Operate with Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../optimize-performance-index.html">Optimize Performance</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="optimize-queries-index.html">Optimize Query Performance</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="optimize-query-performance-overview.html">Query Performance Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="use-orca/use-orca-index.html">Use GPORCA Optimizer</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Update Statistics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#check-whether-statistics-are-updated">Check whether statistics are updated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#selectively-generate-statistics">Selectively generate statistics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#improve-statistics-quality">Improve statistics quality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#when-to-run-analyze">When to run ANALYZE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configure-automatic-statistics-collection">Configure automatic statistics collection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="query-hints.html">Query Hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="use-auto-mtv-for-query-optimization.html">Automatically Use Materialized Views for Query Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="push-down-agg-operators.html">Push Down Aggregation Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="execute-queries-in-parallel.html">Execute Queries in Parallel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto-clustering.html">Auto-Clustering Tables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../optimize-performance-index.html">Optimize Performance</a></li>
+          <li class="breadcrumb-item"><a href="optimize-queries-index.html">Optimize Query Performance</a></li>
+      <li class="breadcrumb-item active">Update Statistics</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="update-statistics">
+<h1>Update Statistics<a class="headerlink" href="#update-statistics" title="Link to this heading"></a></h1>
+<p>Accurate statistics are crucial for good query performance. Using the <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> statement to update statistics allows the query optimizer to generate optimal query plans. When SynxDB Elastic analyzes a table, the relevant data information is stored in the system catalog tables. If this stored information becomes outdated, the query optimizer may generate inefficient query plans.</p>
+<section id="check-whether-statistics-are-updated">
+<h2>Check whether statistics are updated<a class="headerlink" href="#check-whether-statistics-are-updated" title="Link to this heading"></a></h2>
+<p>To check whether a table’s statistics are up-to-date, you can use the <code class="docutils literal notranslate"><span class="pre">pg_stat_all_tables</span></code> system view. The <code class="docutils literal notranslate"><span class="pre">last_analyze</span></code> column in this view shows the last time the table was manually analyzed, while the <code class="docutils literal notranslate"><span class="pre">last_autoanalyze</span></code> column shows the last time it was auto-analyzed. The timestamps in both columns are updated when an <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> statement is executed.</p>
+<p>For example, to check whether the statistics for the <code class="docutils literal notranslate"><span class="pre">test_analyze</span></code> table are updated, you can execute the following query:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">schemaname</span><span class="p">,</span><span class="w"> </span><span class="n">relname</span><span class="p">,</span><span class="w"> </span><span class="n">last_analyze</span><span class="p">,</span><span class="w"> </span><span class="n">last_autoanalyze</span><span class="w"> </span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_all_tables</span><span class="w"> </span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">relname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;test_analyze&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="selectively-generate-statistics">
+<h2>Selectively generate statistics<a class="headerlink" href="#selectively-generate-statistics" title="Link to this heading"></a></h2>
+<p>Executing <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> without any arguments updates the statistics for all tables in the database. This is a very time-consuming process and is not recommended. It is advisable to selectively run <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> on tables when data has changed, or to use the <code class="docutils literal notranslate"><span class="pre">analyzedb</span></code> utility.</p>
+<p>Running <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> on a large table can take a long time. If you cannot run <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> on all columns of a large table, you can generate statistics for specific columns only using <code class="docutils literal notranslate"><span class="pre">ANALYZE</span> <span class="pre">table(column,</span> <span class="pre">...)</span></code>. Make sure to include columns that are used in joins, <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> clauses, <code class="docutils literal notranslate"><span class="pre">SORT</span></code> clauses, <code class="docutils literal notranslate"><span class="pre">GROUP</span> <span class="pre">BY</span></code> clauses, or <code class="docutils literal notranslate"><span class="pre">HAVING</span></code> clauses.</p>
+<p>For partitioned tables, you can run <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> only on the partitions that have changed, for example, when a new partition is added. Note that for a partitioned table, you can run <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> on the root partition table or on a leaf partition (the file that actually stores the data and statistics). In SynxDB Elastic, running <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> on a single partition of a partitioned table also updates the statistics of the root table, which means collecting statistics on one partition can affect the optimizer statistics for the entire partitioned table. You can use the <code class="docutils literal notranslate"><span class="pre">pg_partition_tree()</span></code> function to find the names of the leaf partitions.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_partition_tree</span><span class="p">(</span><span class="w"> </span><span class="s1">&#39;parent_table&#39;</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="improve-statistics-quality">
+<h2>Improve statistics quality<a class="headerlink" href="#improve-statistics-quality" title="Link to this heading"></a></h2>
+<p>There is a trade-off between the time it takes to generate statistics and the quality or accuracy of those statistics. You need to find a balance.</p>
+<p>To analyze large tables in a reasonable amount of time, <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> takes a random sample of the table contents rather than checking every row. To increase the number of sample values for all columns on a table, you can adjust the <code class="docutils literal notranslate"><span class="pre">default_statistics_target</span></code> configuration parameter. The target value for this parameter ranges from <code class="docutils literal notranslate"><span class="pre">1</span></code> to <code class="docutils literal notranslate"><span class="pre">10000</span></code>, with a default value of <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p>
+<p>By default, the <code class="docutils literal notranslate"><span class="pre">default_statistics_target</span></code> parameter applies to all columns and specifies how many values are stored in the list of most common values. A larger target value can improve the quality of the query planner’s estimates, especially for columns with irregular data patterns.</p>
+<p>You can set <code class="docutils literal notranslate"><span class="pre">default_statistics_target</span></code> at the session level using the <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">default_statistics_target</span></code> statement. To set the default value for this parameter, you need to set it in the <code class="docutils literal notranslate"><span class="pre">postgresql.conf</span></code> configuration file and then reload the file.</p>
+</section>
+<section id="when-to-run-analyze">
+<h2>When to run ANALYZE<a class="headerlink" href="#when-to-run-analyze" title="Link to this heading"></a></h2>
+<p>Run <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> in the following situations:</p>
+<ul class="simple">
+<li><p>After loading data</p></li>
+<li><p>After performing <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, and <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> operations that significantly change the underlying data</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> only requires a read lock on the table, so it can be run in parallel with other database operations. However, for performance reasons, it is not recommended to run <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> at the same time as loading, <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, and <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> operations.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>SynxDB Elastic has optimized the behavior of running <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> on partitioned tables. When statistics are explicitly collected on a leaf partition (e.g., <code class="docutils literal notranslate"><span class="pre">ANALYZE</span> <span class="pre">sales_1_prt_p2023</span></code>), the system no longer automatically updates the statistics of the root table or other partitions. Only when <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> is explicitly run on the root table (e.g., <code class="docutils literal notranslate"><span class="pre">ANALYZE</span> <span class="pre">sales</span></code>) will the statistics for the entire table, including all sub-partitions, be updated.</p>
+<p>This behavioral improvement provides greater control over statistics management and avoids unnecessary statistical refreshes. In practice, it is recommended to selectively analyze specific partitions or the entire table based on data changes.</p>
+</div>
+</section>
+<section id="configure-automatic-statistics-collection">
+<h2>Configure automatic statistics collection<a class="headerlink" href="#configure-automatic-statistics-collection" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">gp_autostats_mode</span></code> configuration parameter, in conjunction with <code class="docutils literal notranslate"><span class="pre">gp_autostats_on_change_threshold</span></code>, determines when to trigger an automatic analysis operation. When automatic statistics collection is triggered, the optimizer adds an <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code> step to the query.</p>
+<p>By default, the value of <code class="docutils literal notranslate"><span class="pre">gp_autostats_mode</span></code> is <code class="docutils literal notranslate"><span class="pre">none</span></code>. If this parameter is set to <code class="docutils literal notranslate"><span class="pre">on_no_stats</span></code>, statistics collection will be triggered for <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span> <span class="pre">AS</span> <span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, or <code class="docutils literal notranslate"><span class="pre">COPY</span></code> operations on tables that have no existing statistics, when performed by the table owner.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">gp_autostats_mode</span></code> is set to <code class="docutils literal notranslate"><span class="pre">on_change</span></code>, statistics are collected only when the number of affected rows exceeds the threshold set by <code class="docutils literal notranslate"><span class="pre">gp_autostats_on_change_threshold</span></code>. The default value for this threshold is <code class="docutils literal notranslate"><span class="pre">2147483647</span></code>. Automatic statistics collection is triggered when the number of affected rows in <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span> <span class="pre">AS</span> <span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>, <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, and <code class="docutils literal notranslate"><span class="pre">COPY</span></code> operations, performed by the table owner, exceeds this threshold.</p>
+<p>In addition, if the <code class="docutils literal notranslate"><span class="pre">gp_autostats_allow_nonowner</span></code> server configuration parameter is set to <code class="docutils literal notranslate"><span class="pre">true</span></code>, SynxDB Elastic will perform automatic statistics collection on a table in the following case:</p>
+<ul class="simple">
+<li><p>When <code class="docutils literal notranslate"><span class="pre">gp_autostats_mode</span></code> is set to <code class="docutils literal notranslate"><span class="pre">on_no_stats</span></code>, and a non-owner user is the first to perform an <code class="docutils literal notranslate"><span class="pre">INSERT</span></code> or <code class="docutils literal notranslate"><span class="pre">COPY</span></code> operation on the table.</p></li>
+</ul>
+<p>Setting <code class="docutils literal notranslate"><span class="pre">gp_autostats_mode</span></code> to <code class="docutils literal notranslate"><span class="pre">none</span></code> disables automatic statistics collection.</p>
+<p>For partitioned tables, inserting data into the top-level parent table does not trigger automatic statistics collection. However, if data is inserted directly into a leaf table of the partitioned table (where the data is actually stored), automatic statistics collection will be triggered.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="query-hints.html" class="btn btn-neutral float-right" title="Query Hints" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="use-orca/whats-new-in-orca.html" class="btn btn-neutral float-left" title="What’s New in GPORCA Optimizer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

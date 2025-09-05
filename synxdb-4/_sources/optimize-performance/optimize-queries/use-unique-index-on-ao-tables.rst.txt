@@ -1,0 +1,119 @@
+.. raw:: latex
+
+   \newpage
+
+Use Unique Indexes on AO Tables
+=================================
+
+You can add a unique index to an Append-Optimized (AO) or AOCS table in |product_name|. With a unique index, |product_name| enforces uniqueness constraints when inserting data into an AO table, thereby ensuring data uniqueness. This also allows the optimizer to optimize specific queries, improving database query performance. However, this comes with some overhead for maintaining the unique index, especially during data insertion.
+
+How it works
+------------
+
+In scenarios where a unique index exists, when inserting data into an AO table, |product_name| inserts a placeholder into the BlockDirectory, which is an auxiliary index structure of the AO table. This blocks the insertion of the same key, thus implementing the unique index.
+
+How to add a unique index to an AO table
+------------------------------------------
+
+There are two ways to add a unique index to an AO table. You can choose based on your business needs:
+
+-  Specify a unique key or constraint when creating the table:
+
+   .. code:: sql
+
+      CREATE TABLE foo(i int UNIQUE) USING ao_row;
+      CREATE TABLE bar(i int UNIQUE) USING ao_column;
+      CREATE TABLE foo2(i int, CONSTRAINT iuniq UNIQUE(i));
+
+-  Add a unique index or constraint separately after creating the table:
+
+   .. code:: sql
+
+      CREATE TABLE baz(i int) with (appendonly=true);
+      CREATE UNIQUE INDEX on baz(i);
+
+      CREATE TABLE foobar(i int) USING ao_row;
+      ALTER TABLE foobar ADD CONSTRAINT unique_i UNIQUE (i);
+
+Usage examples
+--------------
+
+1. Create an example AO table with a unique constraint.
+
+   .. code:: sql
+
+      postgres=# CREATE TABLE foo(i int UNIQUE) USING ao_row;
+      CREATE TABLE
+
+      postgres=# \d foo
+                      Table "public.foo"
+      Column |  Type   | Collation | Nullable | Default 
+      --------+---------+-----------+----------+---------
+      i      | integer |           |          | 
+      Compression Type: None
+      Compression Level: 0
+      Block Size: 32768
+      Checksum: t
+      Indexes:
+          "foo_i_key" UNIQUE CONSTRAINT, btree (i)
+      Distributed by: (i)
+
+2. Inserting the same key value into the table will return a ``duplicate key`` error.
+
+   .. code:: sql
+
+      postgres=# INSERT INTO foo VALUES(1);
+      INSERT 0 1
+
+      postgres=# INSERT INTO foo VALUES(1);
+      ERROR:  duplicate key value violates unique constraint "foo_i_key"  (seg1 127.0.1.1:8003 pid=557)
+      DETAIL:  Key (i)=(1) already exists.
+
+Example of concurrent data insertion: At the ``READ COMMITTED`` transaction level, two transactions concurrently insert the same value into the same AO table. One succeeds, and the other is blocked.
+
+1. If one transaction succeeds, the other insertion fails.
+
+   .. code:: sql
+
+      -- Session 1.
+      postgres=# BEGIN;
+      BEGIN
+
+      postgres=*# INSERT INTO foo VALUES(1);
+      INSERT 0 1  -- Insertion successful
+
+      postgres=*# COMMIT;
+      COMMIT
+
+   .. code:: sql
+
+      -- Session 2.
+      postgres=# BEGIN;
+      BEGIN
+
+      postgres=*# INSERT INTO foo VALUES(1);
+      ERROR:  duplicate key value violates unique constraint "foo_i_key"  (seg1 127.0.1.1:8003 pid=2726)
+      DETAIL:  Key (i)=(1) already exists.  -- Insertion failed
+
+      postgres=!# END;
+      ROLLBACK
+
+2. If one transaction fails, the other transaction will succeed.
+
+   .. code:: sql
+
+      postgres=# BEGIN;
+      BEGIN
+      postgres=*# INSERT INTO foo VALUES(1);
+      INSERT 0 1
+      postgres=*# ROLLBACK;
+      ROLLBACK
+
+   .. code:: sql
+
+      postgres=# BEGIN;
+      BEGIN
+      postgres=*# INSERT INTO foo VALUES(1);
+      INSERT 0 1
+      postgres=*# COMMIT;
+      COMMIT

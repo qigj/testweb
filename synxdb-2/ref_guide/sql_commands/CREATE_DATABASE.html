@@ -1,0 +1,263 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>CREATE DATABASE - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="create-database"><a class="header" href="#create-database">CREATE DATABASE</a></h1>
+<p>Creates a new database.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code class="language-{#sql_command_synopsis}">CREATE DATABASE name [ [WITH] [OWNER [=] &lt;user_name&gt;]
+                     [TEMPLATE [=] &lt;template&gt;]
+                     [ENCODING [=] &lt;encoding&gt;]
+                     [LC_COLLATE [=] &lt;lc_collate&gt;]
+                     [LC_CTYPE [=] &lt;lc_ctype&gt;]
+                     [TABLESPACE [=] &lt;tablespace&gt;]
+                     [CONNECTION LIMIT [=] connlimit ] ]
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p><code>CREATE DATABASE</code> creates a new database. To create a database, you must be a superuser or have the special <code>CREATEDB</code> privilege.</p>
+<p>The creator becomes the owner of the new database by default. Superusers can create databases owned by other users by using the <code>OWNER</code> clause. They can even create databases owned by users with no special privileges. Non-superusers with <code>CREATEDB</code> privilege can only create databases owned by themselves.</p>
+<p>By default, the new database will be created by cloning the standard system database <code>template1</code>. A different template can be specified by writing <code>TEMPLATE name</code>. In particular, by writing <code>TEMPLATE template0</code>, you can create a clean database containing only the standard objects predefined by SynxDB. This is useful if you wish to avoid copying any installation-local objects that may have been added to <code>template1</code>.</p>
+<h2 id="parameters"><a class="header" href="#parameters"><a id="section4"></a>Parameters</a></h2>
+<h3 id="name"><a class="header" href="#name">name</a></h3>
+<p>The name of a database to create.</p>
+<h3 id="user_name"><a class="header" href="#user_name">user_name</a></h3>
+<p>The name of the database user who will own the new database, or <code>DEFAULT</code> to use the default owner (the user running the command).</p>
+<h3 id="template"><a class="header" href="#template">template</a></h3>
+<p>The name of the template from which to create the new database, or <code>DEFAULT</code> to use the default template (template1).</p>
+<h3 id="encoding"><a class="header" href="#encoding">encoding</a></h3>
+<p>Character set encoding to use in the new database. Specify a string constant (such as <code>'SQL_ASCII'</code>), an integer encoding number, or <code>DEFAULT</code> to use the default encoding. For more information, see <a href="../character_sets.html">Character Set Support</a>.</p>
+<h3 id="lc_collate"><a class="header" href="#lc_collate">lc_collate</a></h3>
+<p>The collation order (<code>LC_COLLATE</code>) to use in the new database. This affects the sort order applied to strings, e.g. in queries with <code>ORDER BY</code>, as well as the order used in indexes on text columns. The default is to use the collation order of the template database. See the Notes section for additional restrictions.</p>
+<h3 id="lc_ctype"><a class="header" href="#lc_ctype">lc_ctype</a></h3>
+<p>The character classification (<code>LC_CTYPE</code>) to use in the new database. This affects the categorization of characters, e.g. lower, upper and digit. The default is to use the character classification of the template database. See below for additional restrictions.</p>
+<h3 id="tablespace"><a class="header" href="#tablespace">tablespace</a></h3>
+<p>The name of the tablespace that will be associated with the new database, or <code>DEFAULT</code> to use the template database’s tablespace. This tablespace will be the default tablespace used for objects created in this database.</p>
+<h3 id="connlimit"><a class="header" href="#connlimit">connlimit</a></h3>
+<p>The maximum number of concurrent connections possible. The default of -1 means there is no limitation.</p>
+<h2 id="notes"><a class="header" href="#notes"><a id="section5"></a>Notes</a></h2>
+<p><code>CREATE DATABASE</code> cannot be run inside a transaction block.</p>
+<p>When you copy a database by specifying its name as the template, no other sessions can be connected to the template database while it is being copied. New connections to the template database are locked out until <code>CREATE DATABASE</code> completes.</p>
+<p>The <code>CONNECTION LIMIT</code> is not enforced against superusers.</p>
+<p>The character set encoding specified for the new database must be compatible with the chosen locale settings (<code>LC_COLLATE</code> and <code>LC_CTYPE</code>). If the locale is <code>C</code> (or equivalently <code>POSIX</code>), then all encodings are allowed, but for other locale settings there is only one encoding that will work properly. <code>CREATE DATABASE</code> will allow superusers to specify <code>SQL_ASCII</code> encoding regardless of the locale settings, but this choice is deprecated and may result in misbehavior of character-string functions if data that is not encoding-compatible with the locale is stored in the database.</p>
+<p>The encoding and locale settings must match those of the template database, except when <code>template0</code> is used as template. This is because <code>COLLATE</code> and <code>CTYPE</code> affect the ordering in indexes, so that any indexes copied from the template database would be invalid in the new database with different settings. <code>template0</code>, however, is known to not contain any data or indexes that would be affected.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section6"></a>Examples</a></h2>
+<p>To create a new database:</p>
+<pre><code>CREATE DATABASE gpdb;
+</code></pre>
+<p>To create a database <code>sales</code> owned by user <code>salesapp</code> with a default tablespace of <code>salesspace</code>:</p>
+<pre><code>CREATE DATABASE sales OWNER salesapp TABLESPACE salesspace;
+</code></pre>
+<p>To create a database <code>music</code> which supports the ISO-8859-1 character set:</p>
+<pre><code>CREATE DATABASE music ENCODING 'LATIN1' TEMPLATE template0;
+</code></pre>
+<p>In this example, the <code>TEMPLATE template0</code> clause would only be required if <code>template1</code>’s encoding is not ISO-8859-1. Note that changing encoding might require selecting new <code>LC_COLLATE</code> and <code>LC_CTYPE</code> settings as well.</p>
+<h2 id="compatibility"><a class="header" href="#compatibility"><a id="section7"></a>Compatibility</a></h2>
+<p>There is no <code>CREATE DATABASE</code> statement in the SQL standard. Databases are equivalent to catalogs, whose creation is implementation-defined.</p>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section8"></a>See Also</a></h2>
+<p><a href="ALTER_DATABASE.html">ALTER DATABASE</a>, <a href="DROP_DATABASE.html">DROP DATABASE</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/sql_commands/CREATE_CONVERSION.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/sql_commands/CREATE_DOMAIN.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/sql_commands/CREATE_CONVERSION.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/sql_commands/CREATE_DOMAIN.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

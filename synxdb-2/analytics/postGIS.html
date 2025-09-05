@@ -1,0 +1,555 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Geospatial Analytics - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="geospatial-analytics"><a class="header" href="#geospatial-analytics">Geospatial Analytics</a></h1>
+<p>This chapter contains the following information:</p>
+<ul>
+<li><a href="#topic2">About PostGIS</a></li>
+<li><a href="#topic3">SynxDB PostGIS Extension</a></li>
+<li><a href="#topic_b2l_hzw_q1b">Enabling and Removing PostGIS Support</a></li>
+<li><a href="#topic7">Usage</a></li>
+<li><a href="#postgis_support">PostGIS Extension Support and Limitations</a></li>
+</ul>
+<p>For information about upgrading PostGIS on SynxDB 2 systems, see <a href="postgis-upgrade.html">Upgrading PostGIS 2.1.5 or 2.5.4</a></p>
+<h2 id="about-postgis"><a class="header" href="#about-postgis"><a id="topic2"></a>About PostGIS</a></h2>
+<p>PostGIS is a spatial database extension for PostgreSQL that allows GIS (Geographic Information Systems) objects to be stored in the database. The SynxDB PostGIS extension includes support for GiST-based R-Tree spatial indexes, and functions for analysis and processing of GIS objects.</p>
+<p>The SynxDB PostGIS extension supports some PostGIS optional extensions and includes support for the PostGIS <code>raster</code> data type. With the PostGIS Raster objects, PostGIS <code>geometry</code> data type offers a single set of overlay SQL functions (such as <code>ST_Intersects</code>) operating seamlessly on vector and raster geospatial data. PostGIS Raster uses the GDAL (Geospatial Data Abstraction Library) translator library for raster geospatial data formats that presents a <a href="https://gdal.org/user/raster_data_model.html">single raster abstract data model</a> to a calling application.</p>
+<p>For information about SynxDB PostGIS extension support, see <a href="#postgis_support">PostGIS Extension Support and Limitations</a>.</p>
+<p>For information about PostGIS, see <a href="https://postgis.net/">https://postgis.net/</a></p>
+<p>For information about GDAL, see <a href="https://gdal.org/">https://gdal.org/</a>.</p>
+<h2 id="synxdb-postgis-extension"><a class="header" href="#synxdb-postgis-extension"><a id="topic3"></a>SynxDB PostGIS Extension</a></h2>
+<p>The SynxDB PostGIS extension is provided as a separate package. You can install the package using the SynxDB Package Manager (<code>gppkg</code>). For details, see <a href="../utility_guide/ref/gppkg.html"><code>gppkg</code></a> in the <em>SynxDB Utility Guide</em>.</p>
+<p>SynxDB supports the following PostGIS extension versions and components:</p>
+<ul>
+<li>PostGIS 2.5.4, and components Proj 4.8.0, Geos 3.10.2, GDAL 1.11.1, Json 0.12, Expat 2.4.4</li>
+<li>PostGIS 2.1.5, and components Proj 4.8.0, Geos 3.4.2, GDAL 1.11.1, Json 0.12, Expat 2.1.0</li>
+</ul>
+<p>For information about the supported SynxDB extension packages and software versions, see <a href="../install_guide/platform-requirements-overview.html">Extensions</a> in the <em>SynxDB Tools and Extensions Compatibility</em> topic.</p>
+<p>There are significant changes in PostGIS 2.5.4 compared with 2.1.5. For a list of new and enhanced functions in PostGIS 2.5, see the PostGIS documentation <a href="https://postgis.net/docs/manual-2.5/PostGIS_Special_Functions_Index.html">PostGIS Functions new or enhanced in 2.5</a> and <a href="https://postgis.net/docs/manual-2.5/release_notes.html">Release 2.5.4</a>.</p>
+<blockquote>
+<p><strong>Note</strong> To upgrade PostGIS refer to  <a href="./postgis-upgrade.html">Upgrading PostGIS 2.1.5 or 2.5.4</a>.</p>
+</blockquote>
+<p>This table lists the PostGIS extensions support by SynxDB PostGIS.</p>
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="topic3__table_owt_4ml_xlb" class="table" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="table--title-label">Table 1. </span>SynxDB PostGIS Extensions</span></caption><colgroup><col style="width:32.786885245901644%" /><col style="width:67.21311475409836%" /></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry cellrowborder" style="vertical-align:top;" id="d47208e208">PostGIS Extension</th>
+<th class="entry cellrowborder" style="vertical-align:top;" id="d47208e211">SynxDB PostGIS Notes</th>
+</tr>
+</thead>
+<tbody class="tbody">
+<tr class="row">
+<td class="entry cellrowborder" style="vertical-align:top;" headers="d47208e208 "><code class="ph codeph">postgis</code><p dir="ltr" class="p">PostGIS and PostGIS Raster
+                support</p>
+</td>
+<td class="entry cellrowborder" style="vertical-align:top;" headers="d47208e211 ">Supported. Both PostGIS and PostGIS Raster are enabled when the SynxDB
+                  <code class="ph codeph">postgis</code> extension is enabled.</td>
+</tr>
+<tr class="row">
+<td class="entry cellrowborder" style="vertical-align:top;" headers="d47208e208 "><code class="ph codeph">postgis_tiger_geocoder</code><p class="p">The US TIGER geocoder</p>
+</td>
+<td class="entry cellrowborder" style="vertical-align:top;" headers="d47208e211 ">Supported. Installed with SynxDB PostGIS. <p class="p">Requires the
+                    <code class="ph codeph">postgis</code> and <code class="ph codeph">fuzzystrmatch</code>
+                  extensions.</p>
+<p class="p">The US TIGER geocoder converts addresses (like a street address)
+                  to geographic coordinates.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry cellrowborder" style="vertical-align:top;" headers="d47208e208 "><code class="ph codeph">address_standardizer</code><p class="p">Rule-based address
+                standardizer</p>
+</td>
+<td class="entry cellrowborder" style="vertical-align:top;" headers="d47208e211 ">Supported. Installed but not enabled with SynxDB PostGIS. <p class="p">Can be used
+                  with TIGER geocoder.</p>
+<p class="p">A single line address parser that takes an input
+                  address and normalizes it based on a set of rules stored in a table and helper
+                    <code class="ph codeph">lex</code> and <code class="ph codeph">gaz</code> tables.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry cellrowborder" style="vertical-align:top;" headers="d47208e208 "><code class="ph codeph">address_standardizer_data_us</code><p class="p">Sample rules tables for US
+                  address data</p>
+</td>
+<td class="entry cellrowborder" style="vertical-align:top;" headers="d47208e211 ">Supported. Installed but not enabled with SynxDB PostGIS.<p class="p">Can be used with
+                  the address standardizer.</p>
+<p class="p">The extension contains <code class="ph codeph">gaz</code>,
+                    <code class="ph codeph">lex</code>, and <code class="ph codeph">rules</code> tables for US address data. If
+                  you are using other types of tables, see <a class="xref" href="#topic_wy2_rkb_3p">PostGIS Extension Limitations</a>.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry cellrowborder" style="vertical-align:top;" headers="d47208e208 "><code class="ph codeph">fuzzystrmatch</code><p class="p">Fuzzy string matching</p>
+</td>
+<td class="entry cellrowborder" style="vertical-align:top;" headers="d47208e211 ">Supported. This extension is bundled but not enabled with SynxDB
+                  Database.<p class="p">Required for the PostGIS TIGER geocoder.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p><strong>Note</strong> The PostGIS topology extension <code>postgis_topology</code> and the PostGIS 3D and geoprocessing extension <code>postgis_sfcgal</code> are not supported by SynxDB PostGIS and are not included in the SynxDB PostGIS extension package.</p>
+</blockquote>
+<p>For information about the PostGIS extensions, see the <a href="https://postgis.net/documentation/">PostGIS 2.5 documentation</a>.</p>
+<p>For information about SynxDB PostGIS feature support, see <a href="#postgis_support">PostGIS Extension Support and Limitations</a>.</p>
+<h2 id="enabling-and-removing-postgis-support"><a class="header" href="#enabling-and-removing-postgis-support"><a id="topic_b2l_hzw_q1b"></a>Enabling and Removing PostGIS Support</a></h2>
+<p>This section describes how to enable and remove PostGIS and the supported PostGIS extensions, and how to configure PostGIS Raster.</p>
+<ul>
+<li><a href="#topic_ln5_xcl_r1b">Enabling PostGIS Support</a></li>
+<li><a href="#topic_ydr_q5l_ybb">Enabling GDAL Raster Drivers</a></li>
+<li><a href="#topic_fx2_fpx_llb">Enabling Out-of-Database Rasters</a></li>
+<li><a href="#topic_bgz_vcl_r1b">Removing PostGIS Support</a></li>
+</ul>
+<p>For information about upgrading PostGIS on SynxDB 2 systems, see <a href="postgis-upgrade.html">Upgrading PostGIS 2.1.5 or 2.5.4</a></p>
+<h3 id="enabling-postgis-support"><a class="header" href="#enabling-postgis-support"><a id="topic_ln5_xcl_r1b"></a>Enabling PostGIS Support</a></h3>
+<p>To enable PostGIS support, install the SynxDB PostGIS extension package into the SynxDB system, and then use the <code>CREATE EXTENSION</code> command to enable PostGIS support for an individual database.</p>
+<h4 id="installing-the-synxdb-postgis-extension-package"><a class="header" href="#installing-the-synxdb-postgis-extension-package"><a id="section_dlv_xv1_rqb"></a>Installing the SynxDB PostGIS Extension Package</a></h4>
+<p>Install SynxDB PostGIS extension package with the <code>gppkg</code> utility. For example, this command installs the package for RHEL 7.</p>
+<pre><code>gppkg -i postgis-2.5.4+pivotal.2.build.1-gp6-rhel7-x86_64.gppkg
+</code></pre>
+<p>After installing the package, source the <code>synxdb_path.sh</code> file and restart SynxDB. This command restarts SynxDB.</p>
+<pre><code>gpstop -ra
+</code></pre>
+<p>Installing the SynxDB PostGIS extension package updates the SynxDB system, including installing the supported PostGIS extensions to the system and updating <code>synxdb_path.sh</code> file with these lines for PostGIS Raster support.</p>
+<pre><code>export GDAL_DATA=$GPHOME/share/gdal
+export POSTGIS_ENABLE_OUTDB_RASTERS=0
+export POSTGIS_GDAL_ENABLED_DRIVERS=DISABLE_ALL
+</code></pre>
+<h4 id="using-the-create-extension-command"><a class="header" href="#using-the-create-extension-command"><a id="enable_postgis_cmd"></a>Using the CREATE EXTENSION Command</a></h4>
+<p>These steps enable the PostGIS extension and the extensions that are used with PostGIS.</p>
+<ol>
+<li>
+<p>To enable PostGIS and PostGIS Raster in a database, run this command after logging into the database.</p>
+<pre><code>CREATE EXTENSION postgis ;
+</code></pre>
+<p>To enable PostGIS and PostGIS Raster in a specific schema, create the schema, set the <code>search_path</code> to the PostGIS schema, and then enable the <code>postgis</code> extension with the <code>WITH SCHEMA</code> clause.</p>
+<pre><code>SHOW search_path ; -- display the current search_path
+CREATE SCHEMA &lt;schema_name&gt; ;
+SET search_path TO &lt;schema_name&gt; ;
+CREATE EXTENSION postgis WITH SCHEMA &lt;schema_name&gt; ;
+</code></pre>
+<p>After enabling the extension, reset the <code>search_path</code> and include the PostGIS schema in the <code>search_path</code> if needed.</p>
+</li>
+<li>
+<p>If needed, enable the PostGIS TIGER geocoder after enabling the <code>postgis</code> extension.</p>
+<p>To enable the PostGIS TIGER geocoder, you must enable the <code>fuzzystrmatch</code> extension before enabling <code>postgis_tiger_geocoder</code>. These two commands enable the extensions.</p>
+<pre><code>CREATE EXTENSION fuzzystrmatch ;
+CREATE EXTENSION postgis_tiger_geocoder ;
+</code></pre>
+</li>
+<li>
+<p>If needed, enable the rules-based address standardizer and add rules tables for the standardizer. These commands enable the extensions.</p>
+<pre><code>CREATE EXTENSION address_standardizer ;
+CREATE EXTENSION address_standardizer_data_us ;
+</code></pre>
+</li>
+</ol>
+<h3 id="enabling-gdal-raster-drivers"><a class="header" href="#enabling-gdal-raster-drivers"><a id="topic_ydr_q5l_ybb"></a>Enabling GDAL Raster Drivers</a></h3>
+<p>PostGIS uses GDAL raster drivers when processing raster data with commands such as <code>ST_AsJPEG()</code>. As the default, PostGIS deactivates all raster drivers. You enable raster drivers by setting the value of the <code>POSTGIS_GDAL_ENABLED_DRIVERS</code> environment variable in the <code>synxdb_path.sh</code> file on all SynxDB hosts.</p>
+<p>Alternatively, you can do it at the session level by setting <code>postgis.gdal_enabled_drivers</code>. For a SynxDB session, this example <code>SET</code> command enables three GDAL raster drivers.</p>
+<pre><code>SET postgis.gdal_enabled_drivers TO 'GTiff PNG JPEG';
+</code></pre>
+<p>This <code>SET</code> command sets the enabled drivers to the default for a session.</p>
+<pre><code>SET postgis.gdal_enabled_drivers = default;
+</code></pre>
+<p>To see the list of supported GDAL raster drivers for a SynxDB system, run the <code>raster2pgsql</code> utility with the <code>-G</code> option on the SynxDB master.</p>
+<pre><code>raster2pgsql -G 
+</code></pre>
+<p>The command lists the driver long format name. The <em>GDAL Raster</em> table at <a href="https://gdal.org/drivers/raster/index.html">https://gdal.org/drivers/raster/index.html</a> lists the long format names and the corresponding codes that you specify as the value of the environment variable. For example, the code for the long name Portable Network Graphics is <code>PNG</code>. This example <code>export</code> line enables four GDAL raster drivers.</p>
+<pre><code>export POSTGIS_GDAL_ENABLED_DRIVERS="GTiff PNG JPEG GIF"
+</code></pre>
+<p>The <code>gpstop -r</code> command restarts the SynxDB system to use the updated settings in the <code>synxdb_path.sh</code> file.</p>
+<p>After you have updated the <code>synxdb_path.sh</code> file on all hosts, and have restarted the SynxDB system, you can display the enabled raster drivers with the <code>ST_GDALDrivers()</code> function. This <code>SELECT</code> command lists the enabled raster drivers.</p>
+<pre><code>SELECT short_name, long_name FROM ST_GDALDrivers();
+</code></pre>
+<h3 id="enabling-out-of-database-rasters"><a class="header" href="#enabling-out-of-database-rasters"><a id="topic_fx2_fpx_llb"></a>Enabling Out-of-Database Rasters</a></h3>
+<p>After installing PostGIS, the default setting <code>POSTGIS_ENABLE_OUTDB_RASTERS=0</code> in the <code>synxdb_path.sh</code> file deactivates support for out-of-database rasters. To enable this feature, you can set the value to true (a non-zero value) on all hosts and restart the SynxDB system.</p>
+<p>You can also activate or deactivate this feature for a SynxDB session. For example, this <code>SET</code> command enables the feature for the current session.</p>
+<pre><code>SET postgis.enable_outdb_rasters = true;				
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> When the feature is enabled, the server configuration parameter <code>postgis.gdal_enabled_drivers</code> determines the accessible raster formats.</p>
+</blockquote>
+<h3 id="removing-postgis-support"><a class="header" href="#removing-postgis-support"><a id="topic_bgz_vcl_r1b"></a>Removing PostGIS Support</a></h3>
+<p>You use the <code>DROP EXTENSION</code> command to remove support for the PostGIS extension and the extensions that are used with PostGIS.</p>
+<p>Removing PostGIS support from a database does not remove these PostGIS Raster environment variables from the <code>synxdb_path.sh</code> file: <code>GDAL_DATA</code>, <code>POSTGIS_ENABLE_OUTDB_RASTERS</code>, <code>POSTGIS_GDAL_ENABLED_DRIVERS</code>. The environment variables are removed when you uninstall the PostGIS extension package.</p>
+<blockquote>
+<p><strong>Caution</strong> Removing PostGIS support from a database drops PostGIS database objects from the database without warning. Users accessing PostGIS objects might interfere with the dropping of PostGIS objects. See <a href="#postgis_note">Notes</a>.</p>
+</blockquote>
+<h4 id="using-the-drop-extension-command"><a class="header" href="#using-the-drop-extension-command"><a id="drop_postgis_cmd"></a>Using the DROP EXTENSION Command</a></h4>
+<p>Depending on the extensions you enabled for PostGIS, drop support for the extensions in the database.</p>
+<ol>
+<li>
+<p>If you enabled the address standardizer and sample rules tables, these commands drop support for those extensions from the current database.</p>
+<pre><code>DROP EXTENSION IF EXISTS address_standardizer_data_us;
+DROP EXTENSION IF EXISTS address_standardizer;
+</code></pre>
+</li>
+<li>
+<p>If you enabled the TIGER geocoder and the <code>fuzzystrmatch</code> extension to use the TIGER geocoder, these commands drop support for those extensions.</p>
+<pre><code>DROP EXTENSION IF EXISTS postgis_tiger_geocoder;
+DROP EXTENSION IF EXISTS fuzzystrmatch;
+</code></pre>
+</li>
+<li>
+<p>Drop support for PostGIS and PostGIS Raster. This command drops support for those extensions.</p>
+<pre><code>DROP EXTENSION IF EXISTS postgis;
+</code></pre>
+<p>If you enabled support for PostGIS and specified a specific schema with the <code>CREATE EXTENSION</code> command, you can update the <code>search_path</code> and drop the PostGIS schema if required.</p>
+</li>
+</ol>
+<h4 id="uninstalling-the-synxdb-postgis-extension-package"><a class="header" href="#uninstalling-the-synxdb-postgis-extension-package"><a id="section_wvr_wv1_rqb"></a>Uninstalling the SynxDB PostGIS Extension Package</a></h4>
+<p>After PostGIS support has been removed from all databases in the SynxDB system, you can remove the PostGIS extension package. For example, this <code>gppkg</code> command removes the PostGIS extension package.</p>
+<pre><code>gppkg -r postgis-2.5.4+pivotal.2
+</code></pre>
+<p>After removing the package, ensure that these lines for PostGIS Raster support are removed from the <code>synxdb_path.sh</code> file.</p>
+<pre><code>export GDAL_DATA=$GPHOME/share/gdal
+export POSTGIS_ENABLE_OUTDB_RASTERS=0
+export POSTGIS_GDAL_ENABLED_DRIVERS=DISABLE_ALL
+</code></pre>
+<p>Source the <code>synxdb_path.sh</code> file and restart SynxDB. This command restarts SynxDB.</p>
+<pre><code>gpstop -ra
+</code></pre>
+<h4 id="notes"><a class="header" href="#notes"><a id="postgis_note"></a>Notes</a></h4>
+<p>Removing PostGIS support from a database drops PostGIS objects from the database. Dropping the PostGIS objects cascades to objects that reference the PostGIS objects. Before removing PostGIS support, ensure that no users are accessing the database. Users accessing PostGIS objects might interfere with dropping PostGIS objects.</p>
+<p>For example, this <code>CREATE TABLE</code> command creates a table with column <code>b</code> that is defined with the PostGIS <code>geometry</code> data type.</p>
+<pre><code># CREATE TABLE test(a int, b geometry) DISTRIBUTED RANDOMLY;
+</code></pre>
+<p>This is the table definition in a database with PostGIS enabled.</p>
+<pre><code># \d test
+ Table "public.test"
+ Column |   Type   | Modifiers
+--------+----------+-----------
+ a      | integer  |
+ b      | geometry |
+Distributed randomly
+</code></pre>
+<p>This is the table definition in a database after PostGIS support has been removed.</p>
+<pre><code># \d test
+  Table "public.test"
+ Column |  Type   | Modifiers
+--------+---------+-----------
+ a      | integer |
+Distributed randomly
+</code></pre>
+<h2 id="usage"><a class="header" href="#usage"><a id="topic7"></a>Usage</a></h2>
+<p>The following example SQL statements create non-OpenGIS tables and geometries.</p>
+<pre><code>CREATE TABLE geom_test ( gid int4, geom geometry, 
+  name varchar(25) );
+
+INSERT INTO geom_test ( gid, geom, name )
+  VALUES ( 1, 'POLYGON((0 0 0,0 5 0,5 5 0,5 0 0,0 0 0))', '3D Square');
+INSERT INTO geom_test ( gid, geom, name ) 
+  VALUES ( 2, 'LINESTRING(1 1 1,5 5 5,7 7 5)', '3D Line' );
+INSERT INTO geom_test ( gid, geom, name )
+  VALUES ( 3, 'MULTIPOINT(3 4,8 9)', '2D Aggregate Point' );
+
+SELECT * from geom_test WHERE geom &amp;&amp;
+  Box3D(ST_GeomFromEWKT('LINESTRING(2 2 0, 3 3 0)'));
+</code></pre>
+<p>The following example SQL statements create a table and add a geometry column to the table with a SRID integer value that references an entry in the <code>SPATIAL_REF_SYS</code> table. The <code>INSERT</code> statements add two geopoints to the table.</p>
+<pre><code>CREATE TABLE geotest (id INT4, name VARCHAR(32) );
+SELECT AddGeometryColumn('geotest','geopoint', 4326,'POINT',2);
+
+INSERT INTO geotest (id, name, geopoint)
+  VALUES (1, 'Olympia', ST_GeometryFromText('POINT(-122.90 46.97)', 4326));
+INSERT INTO geotest (id, name, geopoint)
+  VALUES (2, 'Renton', ST_GeometryFromText('POINT(-122.22 47.50)', 4326));
+
+SELECT name,ST_AsText(geopoint) FROM geotest;
+</code></pre>
+<h3 id="spatial-indexes"><a class="header" href="#spatial-indexes"><a id="topic8"></a>Spatial Indexes</a></h3>
+<p>PostgreSQL provides support for GiST spatial indexing. The GiST scheme offers indexing even on large objects. It uses a system of lossy indexing in which smaller objects act as proxies for larger ones in the index. In the PostGIS indexing system, all objects use their bounding boxes as proxies in the index.</p>
+<h4 id="building-a-spatial-index"><a class="header" href="#building-a-spatial-index"><a id="topic9"></a>Building a Spatial Index</a></h4>
+<p>You can build a GiST index as follows:</p>
+<pre><code>CREATE INDEX indexname
+  ON tablename
+  USING GIST ( geometryfield );
+</code></pre>
+<h2 id="postgis-extension-support-and-limitations"><a class="header" href="#postgis-extension-support-and-limitations"><a id="postgis_support"></a>PostGIS Extension Support and Limitations</a></h2>
+<p>This section describes SynxDB PostGIS extension feature support and limitations.</p>
+<ul>
+<li><a href="#topic_g2d_hkb_3p">Supported PostGIS Data Types</a></li>
+<li><a href="#topic_bl3_4vy_d1b">Supported PostGIS Raster Data Types</a></li>
+<li><a href="#topic_y5z_nkb_3p">Supported PostGIS Index</a></li>
+<li><a href="#topic_wy2_rkb_3p">PostGIS Extension Limitations</a></li>
+</ul>
+<p>In general, the SynxDB PostGIS extension does not support the following features:</p>
+<ul>
+<li>The PostGIS topology extension <code>postgis_topology</code></li>
+<li>The PostGIS 3D and geoprocessing extension <code>postgis_sfcgal</code></li>
+<li>A small number of user defined functions and aggregates</li>
+<li>PostGIS long transactions</li>
+</ul>
+<p>For the PostGIS extensions supported by SynxDB PostGIS, see <a href="#topic3">SynxDB PostGIS Extension</a>.</p>
+<h3 id="supported-postgis-data-types"><a class="header" href="#supported-postgis-data-types"><a id="topic_g2d_hkb_3p"></a>Supported PostGIS Data Types</a></h3>
+<p>SynxDB PostGIS extension supports these PostGIS data types:</p>
+<ul>
+<li>box2d</li>
+<li>box3d</li>
+<li>geometry</li>
+<li>geography</li>
+</ul>
+<p>For a list of PostGIS data types, operators, and functions, see the <a href="https://postgis.net/docs/manual-2.5/reference.html">PostGIS reference documentation</a>.</p>
+<h3 id="supported-postgis-raster-data-types"><a class="header" href="#supported-postgis-raster-data-types"><a id="topic_bl3_4vy_d1b"></a>Supported PostGIS Raster Data Types</a></h3>
+<p>SynxDB PostGIS supports these PostGIS Raster data types.</p>
+<ul>
+<li>geomval</li>
+<li>addbandarg</li>
+<li>rastbandarg</li>
+<li>raster</li>
+<li>reclassarg</li>
+<li>summarystats</li>
+<li>unionarg</li>
+</ul>
+<p>For information about PostGIS Raster data Management, queries, and applications, see <a href="https://postgis.net/docs/manual-2.5/using_raster_dataman.html">https://postgis.net/docs/manual-2.5/using_raster_dataman.html</a>.</p>
+<p>For a list of PostGIS Raster data types, operators, and functions, see the <a href="https://postgis.net/docs/manual-2.5/RT_reference.html">PostGIS Raster reference documentation</a>.</p>
+<h3 id="supported-postgis-index"><a class="header" href="#supported-postgis-index"><a id="topic_y5z_nkb_3p"></a>Supported PostGIS Index</a></h3>
+<p>SynxDB PostGIS extension supports the GiST (Generalized Search Tree) index.</p>
+<h3 id="postgis-extension-limitations"><a class="header" href="#postgis-extension-limitations"><a id="topic_wy2_rkb_3p"></a>PostGIS Extension Limitations</a></h3>
+<p>This section lists the SynxDB PostGIS extension limitations for user-defined functions (UDFs), data types, and aggregates.</p>
+<ul>
+<li>
+<p>Data types and functions related to PostGIS topology functionality, such as TopoGeometry, are not supported by SynxDB.</p>
+</li>
+<li>
+<p>These PostGIS aggregates are not supported by SynxDB:</p>
+<ul>
+<li>ST_Collect</li>
+<li>ST_MakeLine</li>
+</ul>
+<p>On a SynxDB with multiple segments, the aggregate might return different answers if it is called several times repeatedly.</p>
+</li>
+<li>
+<p>SynxDB does not support PostGIS long transactions.</p>
+<p>PostGIS relies on triggers and the PostGIS table <code>public.authorization_table</code> for long transaction support. When PostGIS attempts to acquire locks for long transactions, SynxDB reports errors citing that the function cannot access the relation, <code>authorization_table</code>.</p>
+</li>
+<li>
+<p>SynxDB does not support type modifiers for user defined types.</p>
+<p>The workaround is to use the <code>AddGeometryColumn</code> function for PostGIS geometry. For example, a table with PostGIS geometry cannot be created with the following SQL command:</p>
+<pre><code>CREATE TABLE geometries(id INTEGER, geom geometry(LINESTRING));
+</code></pre>
+<p>Use the <code>AddGeometryColumn</code> function to add PostGIS geometry to a table. For example, these following SQL statements create a table and add PostGIS geometry to the table:</p>
+<pre><code>CREATE TABLE geometries(id INTEGER);
+SELECT AddGeometryColumn('public', 'geometries', 'geom', 0, 'LINESTRING', 2);
+</code></pre>
+</li>
+<li>
+<p>The <code>_postgis_index_extent</code> function is not supported on SynxDB 2 due to its dependence on spatial index operations.</p>
+</li>
+<li>
+<p>The <code>&lt;-&gt;</code> operator (<code>geometry &lt;-&gt; geometry</code>) returns the centroid/centroid distance for SynxDB 2.</p>
+</li>
+<li>
+<p>The TIGER geocoder extension is supported. However, upgrading the TIGER geocoder extension is not supported.</p>
+</li>
+<li>
+<p>The <code>standardize_address()</code> function uses <code>lex</code>, <code>gaz</code> or <code>rules</code> tables as parameters. If you are using tables apart from <code>us_lex</code>, <code>us_gaz</code> or <code>us_rules</code>, you should create them with the distribution policy <code>DISTRIBUTED REPLICATED</code> to work for SynxDB.</p>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../analytics/graph.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../analytics/postgis-upgrade.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../analytics/graph.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../analytics/postgis-upgrade.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

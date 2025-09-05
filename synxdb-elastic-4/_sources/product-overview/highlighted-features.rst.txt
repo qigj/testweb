@@ -1,0 +1,36 @@
+Highlighted Features
+=====================
+
+|product_name| stands out in data management and analysis with its robust features.
+
+Elastic architecture with separation of storage and computing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+|product_name|'s separation of storage and computing overcomes traditional MPP database limitations. Its stateless computing clusters can be created on demand, offering high elasticity and intelligent resource scheduling based on business load. Storage and computing can scale independently, eliminating data migration and enabling maintenance without downtime.
+
+Comprehensive security measures
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+With a complete security mechanism, |product_name| ensures data safety through dynamic desensitization, unified authentication, on-demand authorization, and secure storage. It supports multiple encryption and desensitization algorithms to meet diverse security needs across development, testing, and sandbox environments.
+
+Multi-source data and big data integration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+|product_name| delivers robust data integration, empowering enterprises to build a hybrid data ecosystem. It leverages external tables and connectors to virtualize data, supports batch and real-time data collection from multiple sources, and deeply integrates with the big data ecosystem, including Kafka, HDFS and Hive. 
+
+In addition, |product_name| seamlessly integrates with a wide array of data sources, computing engines, data management tools, analysis tools, and programming languages, creating a comprehensive ecosystem. This seamless integration reduces costs and simplifies the adoption of |product_name| 4.0 into existing tech stacks, facilitating a lakehouse integrated platform for multi-source analysis without data migration.
+
+Diverse analytical and computing capabilities
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+|product_name| offers rich analytical functions for descriptive, operational, and predictive analysis. It supports statistical analysis, machine learning, unstructured data analysis, HTAP, deep learning, vector search, spatiotemporal analysis, and UDF custom analysis to meet various business needs.
+
+Containerized deployment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+|product_name| supports containerized deployment with a cloud-native design. Divided into Control and Data Panels, it offers multi-tenant management, multi-dimensional scaling, and multi-platform adaptation. This enhances resource efficiency and deployment flexibility.
+
+Product-level disaster recovery
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+|product_name| uses built-in CDC technology to synchronize metadata and business data remotely, ensuring high availability and disaster recovery. It replays synchronized transactions and Delta files in disaster recovery environments to maintain data consistency and integrity, minimizing data loss risks.

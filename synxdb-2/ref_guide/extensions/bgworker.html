@@ -1,0 +1,248 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Developing a Background Worker Process - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="developing-a-background-worker-process"><a class="header" href="#developing-a-background-worker-process">Developing a Background Worker Process</a></h1>
+<p>SynxDB can be extended to run user-supplied code in separate processes. Such processes are started, stopped, and monitored by <code>postgres</code>, which permits them to have a lifetime closely linked to the server’s status. These processes have the option to attach to SynxDB’s shared memory area and to connect to databases internally; they can also run multiple transactions serially, just like a regular client-connected server process. Also, by linking to <code>libpq</code> they can connect to the server and behave like a regular client application.</p>
+<blockquote>
+<p><strong>Caution</strong> There are considerable robustness and security risks in using background worker processes because, being written in the <code>C</code> language, they have unrestricted access to data. Administrators wishing to enable modules that include background worker processes should exercise extreme caution. Only carefully audited modules should be permitted to run background worker processes.</p>
+</blockquote>
+<p>Background workers can be initialized at the time that SynxDB is started by including the module name in the shared_preload_libraries server configuration parameter. A module wishing to run a background worker can register it by calling <code>RegisterBackgroundWorker(BackgroundWorker *worker)</code> from its <code>_PG_init()</code>. Background workers can also be started after the system is up and running by calling the function <code>RegisterDynamicBackgroundWorker(BackgroundWorker *worker, BackgroundWorkerHandle **handle)</code>. Unlike <code>RegisterBackgroundWorker</code>, which can only be called from within the <code>postmaster</code>, <code>RegisterDynamicBackgroundWorker</code> must be called from a regular backend.</p>
+<p>The structure <code>BackgroundWorker</code> is defined thus:</p>
+<pre><code>
+typedef void (*bgworker_main_type)(Datum main_arg);
+typedef struct BackgroundWorker
+{
+    char        bgw_name[BGW_MAXLEN];
+    int         bgw_flags;
+    BgWorkerStartTime bgw_start_time;
+    int         bgw_restart_time;       /* in seconds, or BGW_NEVER_RESTART */
+    bgworker_main_type bgw_main;
+    char        bgw_library_name[BGW_MAXLEN];   /* only if bgw_main is NULL */
+    char        bgw_function_name[BGW_MAXLEN];  /* only if bgw_main is NULL */
+    Datum       bgw_main_arg;
+    int         bgw_notify_pid;
+} BackgroundWorker;
+
+</code></pre>
+<p><code>bgw_name</code> is a string to be used in log messages, process listings and similar contexts.</p>
+<p><code>bgw_flags</code> is a bitwise-or’d bit mask indicating the capabilities that the module wants. Possible values are <code>BGWORKER_SHMEM_ACCESS</code> (requesting shared memory access) and <code>BGWORKER_BACKEND_DATABASE_CONNECTION</code> (requesting the ability to establish a database connection, through which it can later run transactions and queries). A background worker using <code>BGWORKER_BACKEND_DATABASE_CONNECTION</code> to connect to a database must also attach shared memory using <code>BGWORKER_SHMEM_ACCESS</code>, or worker start-up will fail.</p>
+<p><code>bgw_start_time</code> is the server state during which <code>postgres</code> should start the process; it can be one of <code>BgWorkerStart_PostmasterStart</code> (start as soon as <code>postgres</code> itself has finished its own initialization; processes requesting this are not eligible for database connections), <code>BgWorkerStart_ConsistentState</code> (start as soon as a consistent state has been reached in a hot standby, allowing processes to connect to databases and run read-only queries), and <code>BgWorkerStart_RecoveryFinished</code> (start as soon as the system has entered normal read-write state). Note the last two values are equivalent in a server that’s not a hot standby. Note that this setting only indicates when the processes are to be started; they do not stop when a different state is reached.</p>
+<p><code>bgw_restart_time</code> is the interval, in seconds, that <code>postgres</code> should wait before restarting the process, in case it crashes. It can be any positive value, or <code>BGW_NEVER_RESTART</code>, indicating not to restart the process in case of a crash.</p>
+<p><code>bgw_main</code> is a pointer to the function to run when the process is started. This function must take a single argument of type <code>Datum</code> and return <code>void</code>. <code>bgw_main_arg</code> will be passed to it as its only argument. Note that the global variable <code>MyBgworkerEntry</code> points to a copy of the <code>BackgroundWorker</code> structure passed at registration time. <code>bgw_main</code> may be NULL; in that case, <code>bgw_library_name</code> and <code>bgw_function_name</code> will be used to determine the entry point. This is useful for background workers launched after postmaster startup, where the postmaster does not have the requisite library loaded.</p>
+<p><code>bgw_library_name</code> is the name of a library in which the initial entry point for the background worker should be sought. It is ignored unless <code>bgw_main</code> is NULL. But if <code>bgw_main</code> is NULL, then the named library will be dynamically loaded by the worker process and <code>bgw_function_name</code> will be used to identify the function to be called.</p>
+<p><code>bgw_function_name</code> is the name of a function in a dynamically loaded library which should be used as the initial entry point for a new background worker. It is ignored unless <code>bgw_main</code> is NULL.</p>
+<p><code>bgw_notify_pid</code> is the PID of a SynxDB backend process to which the postmaster should send <code>SIGUSR1</code> when the process is started or exits. It should be 0 for workers registered at postmaster startup time, or when the backend registering the worker does not wish to wait for the worker to start up. Otherwise, it should be initialized to <code>MyProcPid</code>.</p>
+<p>Once running, the process can connect to a database by calling <code>BackgroundWorkerInitializeConnection(</code>char *dbname<code>, </code>char *username<code>)</code>. This allows the process to run transactions and queries using the <code>SPI</code> interface. If dbname is NULL, the session is not connected to any particular database, but shared catalogs can be accessed. If username is NULL, the process will run as the superuser created during <code>initdb</code>. BackgroundWorkerInitializeConnection can only be called once per background process, it is not possible to switch databases.</p>
+<p>Signals are initially blocked when control reaches the <code>bgw_main</code> function, and must be unblocked by it; this is to allow the process to customize its signal handlers, if necessary. Signals can be unblocked in the new process by calling <code>BackgroundWorkerUnblockSignals</code> and blocked by calling <code>BackgroundWorkerBlockSignals</code>.</p>
+<p>If <code>bgw_restart_time</code> for a background worker is configured as <code>BGW_NEVER_RESTART</code>, or if it exits with an exit code of 0 or is terminated by <code>TerminateBackgroundWorker</code>, it will be automatically unregistered by the postmaster on exit. Otherwise, it will be restarted after the time period configured via <code>bgw_restart_time</code>, or immediately if the postmaster reinitializes the cluster due to a backend failure. Backends which need to suspend execution only temporarily should use an interruptible sleep rather than exiting; this can be achieved by calling <code>WaitLatch()</code>. Make sure the <code>WL_POSTMASTER_DEATH</code> flag is set when calling that function, and verify the return code for a prompt exit in the emergency case that <code>postgres</code> itself has terminated.</p>
+<p>When a background worker is registered using the <code>RegisterDynamicBackgroundWorker</code> function, it is possible for the backend performing the registration to obtain information regarding the status of the worker. Backends wishing to do this should pass the address of a <code>BackgroundWorkerHandle *</code> as the second argument to <code>RegisterDynamicBackgroundWorker</code>. If the worker is successfully registered, this pointer will be initialized with an opaque handle that can subsequently be passed to <code>GetBackgroundWorkerPid(</code>BackgroundWorkerHandle *<code>, </code>pid_t *<code>)</code> or <code>TerminateBackgroundWorker(</code>BackgroundWorkerHandle *<code>)</code>. <code>GetBackgroundWorkerPid</code> can be used to poll the status of the worker: a return value of <code>BGWH_NOT_YET_STARTED</code> indicates that the worker has not yet been started by the postmaster; <code>BGWH_STOPPED</code> indicates that it has been started but is no longer running; and <code>BGWH_STARTED</code> indicates that it is currently running. In this last case, the PID will also be returned via the second argument. <code>TerminateBackgroundWorker</code> causes the postmaster to send <code>SIGTERM</code> to the worker if it is running, and to unregister it as soon as it is not.</p>
+<p>In some cases, a process which registers a background worker may wish to wait for the worker to start up. This can be accomplished by initializing <code>bgw_notify_pid</code> to <code>MyProcPid</code> and then passing the <code>BackgroundWorkerHandle *</code> obtained at registration time to <code>WaitForBackgroundWorkerStartup(</code>BackgroundWorkerHandle *handle<code>, </code>pid_t *<code>)</code> function. This function will block until the postmaster has attempted to start the background worker, or until the postmaster dies. If the background runner is running, the return value will <code>BGWH_STARTED</code>, and the PID will be written to the provided address. Otherwise, the return value will be <code>BGWH_STOPPED</code> or <code>BGWH_POSTMASTER_DIED</code>.</p>
+<p>The <code>worker_spi</code> contrib module contains a working example, which demonstrates some useful techniques.</p>
+<p>The maximum number of registered background workers is limited by the <code>max_worker_processes</code> server configuration parameter.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/extensions/srvapi_intro.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/extensions/gppc.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/extensions/srvapi_intro.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/extensions/gppc.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Initializing a SynxDB System - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="initializing-a-synxdb-system"><a class="header" href="#initializing-a-synxdb-system">Initializing a SynxDB System</a></h1>
+<p>Describes how to initialize a SynxDB database system.</p>
+<p>The instructions in this chapter assume you have already prepared your hosts as described in <a href="prep_os.html">Configuring Your Systems</a> and installed the SynxDB software on all of the hosts in the system according to the instructions in <a href="install_gpdb.html">Installing the SynxDB Software</a>.</p>
+<p>This chapter contains the following topics:</p>
+<ul>
+<li><a href="#topic2">Overview</a></li>
+<li><a href="#topic3">Initializing SynxDB</a></li>
+<li><a href="#topic8">Setting SynxDB Environment Variables</a></li>
+<li><a href="#topic9">Next Steps</a></li>
+</ul>
+<h2 id="overview"><a class="header" href="#overview"><a id="topic2"></a>Overview</a></h2>
+<p>Because SynxDB is distributed, the process for initializing a SynxDB management system (DBMS) involves initializing several individual PostgreSQL database instances (called <em>segment instances</em> in SynxDB).</p>
+<p>Each database instance (the master and all segments) must be initialized across all of the hosts in the system in such a way that they can all work together as a unified DBMS. SynxDB provides its own version of <code>initdb</code> called <a href="../utility_guide/ref/gpinitsystem.html">gpinitsystem</a>, which takes care of initializing the database on the master and on each segment instance, and starting each instance in the correct order.</p>
+<p>After the SynxDB database system has been initialized and started, you can then create and manage databases as you would in a regular PostgreSQL DBMS by connecting to the SynxDB master.</p>
+<h2 id="initializing-synxdb"><a class="header" href="#initializing-synxdb"><a id="topic3"></a>Initializing SynxDB</a></h2>
+<p>These are the high-level tasks for initializing SynxDB:</p>
+<ol>
+<li>Make sure you have completed all of the installation tasks described in <a href="prep_os.html">Configuring Your Systems</a> and <a href="install_gpdb.html">Installing the SynxDB Software</a>.</li>
+<li>Create a host file that contains the host addresses of your segments. See <a href="#topic4">Creating the Initialization Host File</a>.</li>
+<li>Create your SynxDB system configuration file. See <a href="#topic5">Creating the SynxDB Configuration File</a>.</li>
+<li>By default, SynxDB will be initialized using the locale of the master host system. Make sure this is the correct locale you want to use, as some locale options cannot be changed after initialization. See <a href="localization.html">Configuring Timezone and Localization Settings</a> for more information.</li>
+<li>Run the SynxDB initialization utility on the master host. See <a href="#topic6">Running the Initialization Utility</a>.</li>
+<li>Set the SynxDB timezone. See <a href="#topic_xkd_d1q_l2b">Setting the SynxDB Timezone</a>.</li>
+<li>Set environment variables for the SynxDB user. See <a href="#topic8">Setting SynxDB Environment Variables</a>.</li>
+</ol>
+<p>When performing the following initialization tasks, you must be logged into the master host as the <code>gpadmin</code> user, and to run SynxDB utilities, you must source the <code>synxdb_path.sh</code> file to set SynxDB environment variables. For example, if you are logged into the master, run these commands.</p>
+<pre><code>$ su - gpadmin
+$ source /usr/local/synxdb/synxdb_path.sh
+</code></pre>
+<h3 id="creating-the-initialization-host-file"><a class="header" href="#creating-the-initialization-host-file"><a id="topic4"></a>Creating the Initialization Host File</a></h3>
+<p>The <a href="../utility_guide/ref/gpinitsystem.html">gpinitsystem</a> utility requires a host file that contains the list of addresses for each segment host. The initialization utility determines the number of segment instances per host by the number host addresses listed per host times the number of data directory locations specified in the <code>gpinitsystem_config</code> file.</p>
+<p>This file should only contain segment host addresses (not the master or standby master). For segment machines with multiple, unbonded network interfaces, this file should list the host address names for each interface — one per line.</p>
+<blockquote>
+<p><strong>Note</strong> The SynxDB segment host naming convention is sdwN where sdw is a prefix and N is an integer. For example, <code>sdw2</code> and so on. If hosts have multiple unbonded NICs, the convention is to append a dash (<code>-</code>) and number to the host name. For example, <code>sdw1-1</code> and <code>sdw1-2</code> are the two interface names for host <code>sdw1</code>. However, NIC bonding is recommended to create a load-balanced, fault-tolerant network.</p>
+</blockquote>
+<h4 id="to-create-the-initialization-host-file"><a class="header" href="#to-create-the-initialization-host-file"><a id="jm138608"></a>To create the initialization host file</a></h4>
+<ol>
+<li>
+<p>Create a file named <code>hostfile_gpinitsystem</code>. In this file add the host address name(s) of your <em>segment</em> host interfaces, one name per line, no extra lines or spaces. For example, if you have four segment hosts with two unbonded network interfaces each:</p>
+<pre><code>sdw1-1
+sdw1-2
+sdw2-1
+sdw2-2
+sdw3-1
+sdw3-2
+sdw4-1
+sdw4-2
+</code></pre>
+</li>
+<li>
+<p>Save and close the file.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong> If you are not sure of the host names and/or interface address names used by your machines, look in the <code>/etc/hosts</code> file.</p>
+</blockquote>
+<h3 id="creating-the-synxdb-configuration-file"><a class="header" href="#creating-the-synxdb-configuration-file"><a id="topic5"></a>Creating the SynxDB Configuration File</a></h3>
+<p>Your SynxDB configuration file tells the <a href="../utility_guide/ref/gpinitsystem.html">gpinitsystem</a> utility how you want to configure your SynxDB system. An example configuration file can be found in <code>$GPHOME/docs/cli_help/gpconfigs/gpinitsystem_config</code>.</p>
+<h4 id="to-create-a-gpinitsystem_config-file"><a class="header" href="#to-create-a-gpinitsystem_config-file"><a id="jm138725"></a>To create a gpinitsystem_config file</a></h4>
+<ol>
+<li>
+<p>Make a copy of the <code>gpinitsystem_config</code> file to use as a starting point. For example:</p>
+<pre><code>$ cp $GPHOME/docs/cli_help/gpconfigs/gpinitsystem_config \
+     /home/gpadmin/gpconfigs/gpinitsystem_config
+</code></pre>
+</li>
+<li>
+<p>Open the file you just copied in a text editor.</p>
+<p>Set all of the required parameters according to your environment. See <a href="../utility_guide/ref/gpinitsystem.html">gpinitsystem</a> for more information. A SynxDB system must contain a master instance and at <em>least two</em> segment instances (even if setting up a single node system).</p>
+<p>The <code>DATA_DIRECTORY</code> parameter is what determines how many segments per host will be created. If your segment hosts have multiple network interfaces, and you used their interface address names in your host file, the number of segments will be evenly spread over the number of available interfaces.</p>
+<p>To specify <code>PORT_BASE</code>, review the port range specified in the <code>net.ipv4.ip_local_port_range</code> parameter in the <code>/etc/sysctl.conf</code> file. See <a href="prep_os.html">Recommended OS Parameters Settings</a>.</p>
+<p>Here is an example of the <em>required</em> parameters in the <code>gpinitsystem_config</code> file:</p>
+<pre><code>SEG_PREFIX=gpseg
+PORT_BASE=6000 
+declare -a DATA_DIRECTORY=(/data1/primary /data1/primary /data1/primary /data2/primary /data2/primary /data2/primary)
+MASTER_HOSTNAME=mdw 
+MASTER_DIRECTORY=/data/master 
+MASTER_PORT=5432 
+TRUSTED SHELL=ssh
+CHECK_POINT_SEGMENTS=8
+ENCODING=UNICODE
+</code></pre>
+</li>
+<li>
+<p>(Optional) If you want to deploy mirror segments, uncomment and set the mirroring parameters according to your environment. To specify <code>MIRROR_PORT_BASE</code>, review the port range specified under the <code>net.ipv4.ip_local_port_range</code> parameter in the <code>/etc/sysctl.conf</code> file. Here is an example of the <em>optional</em> mirror parameters in the <code>gpinitsystem_config</code> file:</p>
+<pre><code>MIRROR_PORT_BASE=7000
+declare -a MIRROR_DATA_DIRECTORY=(/data1/mirror /data1/mirror /data1/mirror /data2/mirror /data2/mirror /data2/mirror)
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> You can initialize your SynxDB system with primary segments only and deploy mirrors later using the <a href="../utility_guide/ref/gpaddmirrors.html">gpaddmirrors</a> utility.</p>
+</blockquote>
+</li>
+<li>
+<p>Save and close the file.</p>
+</li>
+</ol>
+<h3 id="running-the-initialization-utility"><a class="header" href="#running-the-initialization-utility"><a id="topic6"></a>Running the Initialization Utility</a></h3>
+<p>The <a href="../utility_guide/ref/gpinitsystem.html">gpinitsystem</a> utility will create a SynxDB system using the values defined in the configuration file.</p>
+<p>These steps assume you are logged in as the <code>gpadmin</code> user and have sourced the <code>synxdb_path.sh</code> file to set SynxDB environment variables.</p>
+<h4 id="to-run-the-initialization-utility"><a class="header" href="#to-run-the-initialization-utility"><a id="jm138821"></a>To run the initialization utility</a></h4>
+<ol>
+<li>
+<p>Run the following command referencing the path and file name of your initialization configuration file (<code>gpinitsystem_config</code>) and host file (<code>hostfile_gpinitsystem</code>). For example:</p>
+<pre><code>$ cd ~
+$ gpinitsystem -c gpconfigs/gpinitsystem_config -h gpconfigs/hostfile_gpinitsystem
+</code></pre>
+<p>For a fully redundant system (with a standby master and a <em>spread</em> mirror configuration) include the <code>-s</code> and <code>--mirror-mode=spread</code> options. For example:</p>
+<pre><code>$ gpinitsystem -c gpconfigs/gpinitsystem_config -h gpconfigs/hostfile_gpinitsystem \
+  -s &lt;standby_master_hostname&gt; --mirror-mode=spread
+</code></pre>
+<p>During a new cluster creation, you may use the <code>-O output\_configuration\_file</code> option to save the cluster configuration details in a file. For example:</p>
+<pre><code>$ gpinitsystem -c gpconfigs/gpinitsystem_config -O gpconfigs/config_template 
+</code></pre>
+<p>This output file can be edited and used at a later stage as the input file of the <code>-I</code> option, to create a new cluster or to recover from a backup. See <a href="../utility_guide/ref/gpinitsystem.html">gpinitsystem</a> for further details.</p>
+<blockquote>
+<p><strong>Note</strong> Calling <code>gpinitsystem</code> with the <code>-O</code> option does not initialize the SynxDB system; it merely generates and saves a file with cluster configuration details.</p>
+</blockquote>
+</li>
+<li>
+<p>The utility will verify your setup information and make sure it can connect to each host and access the data directories specified in your configuration. If all of the pre-checks are successful, the utility will prompt you to confirm your configuration. For example:</p>
+<pre><code>=&gt; Continue with SynxDB creation? Yy/Nn
+</code></pre>
+</li>
+<li>
+<p>Press <code>y</code> to start the initialization.</p>
+</li>
+<li>
+<p>The utility will then begin setup and initialization of the master instance and each segment instance in the system. Each segment instance is set up in parallel. Depending on the number of segments, this process can take a while.</p>
+</li>
+<li>
+<p>At the end of a successful setup, the utility will start your SynxDB system. You should see:</p>
+<pre><code>=&gt; SynxDB instance successfully created.
+</code></pre>
+</li>
+</ol>
+<h4 id="troubleshooting-initialization-problems"><a class="header" href="#troubleshooting-initialization-problems"><a id="topic7"></a>Troubleshooting Initialization Problems</a></h4>
+<p>If the utility encounters any errors while setting up an instance, the entire process will fail, and could possibly leave you with a partially created system. Refer to the error messages and logs to determine the cause of the failure and where in the process the failure occurred. Log files are created in <code>~/gpAdminLogs</code>.</p>
+<p>Depending on when the error occurred in the process, you may need to clean up and then try the <code>gpinitsystem</code> utility again. For example, if some segment instances were created and some failed, you may need to stop <code>postgres</code> processes and remove any utility-created data directories from your data storage area(s). A backout script is created to help with this cleanup if necessary.</p>
+<h5 id="using-the-backout-script"><a class="header" href="#using-the-backout-script"><a id="jm139087"></a>Using the Backout Script</a></h5>
+<p>If the gpinitsystem utility fails, it will create the following backout script if it has left your system in a partially installed state:</p>
+<p><code>~/gpAdminLogs/backout_gpinitsystem_&lt;user&gt;_&lt;timestamp&gt;</code></p>
+<p>You can use this script to clean up a partially created SynxDB system. This backout script will remove any utility-created data directories, <code>postgres</code> processes, and log files. After correcting the error that caused <code>gpinitsystem</code> to fail and running the backout script, you should be ready to retry initializing your SynxDB array.</p>
+<p>The following example shows how to run the backout script:</p>
+<pre><code>$ bash ~/gpAdminLogs/backout_gpinitsystem_gpadmin_20071031_121053
+</code></pre>
+<h3 id="setting-the-synxdb-timezone"><a class="header" href="#setting-the-synxdb-timezone"><a id="topic_xkd_d1q_l2b"></a>Setting the SynxDB Timezone</a></h3>
+<p>As a best practice, configure SynxDB and the host systems to use a known, supported timezone. SynxDB uses a timezone from a set of internally stored PostgreSQL timezones. Setting the SynxDB timezone prevents SynxDB from selecting a timezone each time the cluster is restarted and sets the timezone for the SynxDB master and segment instances.</p>
+<p>Use the <a href="../utility_guide/ref/gpconfig.html">gpconfig</a> utility to show and set the SynxDB timezone. For example, these commands show the SynxDB timezone and set the timezone to <code>US/Pacific</code>.</p>
+<pre><code>$ gpconfig -s TimeZone
+$ gpconfig -c TimeZone -v 'US/Pacific'
+</code></pre>
+<p>You must restart SynxDB after changing the timezone. The command <code>gpstop -ra</code> restarts SynxDB. The catalog view <code>pg_timezone_names</code> provides SynxDB timezone information.</p>
+<p>For more information about the SynxDB timezone, see <a href="localization.html">Configuring Timezone and Localization Settings</a>.</p>
+<h2 id="setting-synxdb-environment-variables"><a class="header" href="#setting-synxdb-environment-variables"><a id="topic8"></a>Setting SynxDB Environment Variables</a></h2>
+<p>You must set environment variables in the SynxDB user (<code>gpadmin</code>) environment that runs SynxDB on the SynxDB master and standby master hosts. A <code>synxdb_path.sh</code> file is provided in the SynxDB installation directory with environment variable settings for SynxDB.</p>
+<p>The SynxDB management utilities also require that the <code>MASTER_DATA_DIRECTORY</code> environment variable be set. This should point to the directory created by the <code>gpinitsystem</code> utility in the master data directory location.</p>
+<blockquote>
+<p><strong>Note</strong> The <code>synxdb_path.sh</code> script changes the operating environment in order to support running the SynxDB-specific utilities. These same changes to the environment can negatively affect the operation of other system-level utilities, such as <code>ps</code> or <code>yum</code>. Use separate accounts for performing system administration and database administration, instead of attempting to perform both functions as <code>gpadmin</code>.</p>
+</blockquote>
+<p>These steps ensure that the environment variables are set for the <code>gpadmin</code> user after a system reboot.</p>
+<h3 id="to-set-up-the-gpadmin-environment-for-synxdb"><a class="header" href="#to-set-up-the-gpadmin-environment-for-synxdb"><a id="jm144961"></a>To set up the gpadmin environment for SynxDB</a></h3>
+<ol>
+<li>
+<p>Open the <code>gpadmin</code> profile file (such as <code>.bashrc</code>) in a text editor. For example:</p>
+<pre><code>$ vi ~/.bashrc
+</code></pre>
+</li>
+<li>
+<p>Add lines to this file to source the <code>synxdb_path.sh</code> file and set the <code>MASTER_DATA_DIRECTORY</code> environment variable. For example:</p>
+<pre><code>source /usr/local/synxdb/synxdb_path.sh
+export MASTER_DATA_DIRECTORY=/data/master/gpseg-1
+</code></pre>
+</li>
+<li>
+<p>(Optional) You may also want to set some client session environment variables such as <code>PGPORT</code>, <code>PGUSER</code> and <code>PGDATABASE</code> for convenience. For example:</p>
+<pre><code>export PGPORT=5432
+export PGUSER=gpadmin
+export PGDATABASE=gpadmin
+</code></pre>
+</li>
+<li>
+<p>(Optional) If you use RHEL 7 or CentOS 7, add the following line to the end of the <code>.bashrc</code> file to enable using the <code>ps</code> command in the <code>synxdb_path.sh</code> environment:</p>
+<pre><code>export LD_PRELOAD=/lib64/libz.so.1 ps
+</code></pre>
+</li>
+<li>
+<p>Save and close the file.</p>
+</li>
+<li>
+<p>After editing the profile file, source it to make the changes active. For example:</p>
+<pre><code>$ source ~/.bashrc
+
+</code></pre>
+</li>
+<li>
+<p>If you have a standby master host, copy your environment file to the standby master as well. For example:</p>
+<pre><code>$ cd ~
+$ scp .bashrc &lt;standby_hostname&gt;:`pwd`
+</code></pre>
+</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong> The <code>.bashrc</code> file should not produce any output. If you wish to have a message display to users upon logging in, use the <code>.bash_profile</code> file instead.</p>
+</blockquote>
+<h2 id="next-steps"><a class="header" href="#next-steps"><a id="topic9"></a>Next Steps</a></h2>
+<p>After your system is up and running, the next steps are:</p>
+<ul>
+<li><a href="#topic10">Allowing Client Connections</a></li>
+<li><a href="#topic11">Creating Databases and Loading Data</a></li>
+</ul>
+<h3 id="allowing-client-connections"><a class="header" href="#allowing-client-connections"><a id="topic10"></a>Allowing Client Connections</a></h3>
+<p>After a SynxDB is first initialized it will only allow local connections to the database from the <code>gpadmin</code> role (or whatever system user ran <code>gpinitsystem</code>). If you would like other users or client machines to be able to connect to SynxDB, you must give them access. See the <em>SynxDB Administrator Guide</em> for more information.</p>
+<h3 id="creating-databases-and-loading-data"><a class="header" href="#creating-databases-and-loading-data"><a id="topic11"></a>Creating Databases and Loading Data</a></h3>
+<p>After verifying your installation, you may want to begin creating databases and loading data. See <a href="../admin_guide/ddl/ddl.html">Defining Database Objects</a> and <a href="../admin_guide/load/topics/g-loading-and-unloading-data.html">Loading and Unloading Data</a> in the <em>SynxDB Administrator Guide</em> for more information about creating databases, schemas, tables, and other database objects in SynxDB and loading your data.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../install_guide/validate.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../install_guide/data_sci_pkgs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../install_guide/validate.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../install_guide/data_sci_pkgs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

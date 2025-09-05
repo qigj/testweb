@@ -1,0 +1,307 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>About Full Text Search - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="about-full-text-search"><a class="header" href="#about-full-text-search">About Full Text Search</a></h1>
+<p>This topic provides an overview of SynxDB full text search, basic text search expressions, configuring, and customizing text search.</p>
+<p>This section contains the following subtopics:</p>
+<ul>
+<li><a href="#document">What is a Document?</a></li>
+<li><a href="#basic-text-matching">Basic Text Matching</a></li>
+<li><a href="#configurations">Configurations</a></li>
+</ul>
+<p>Full Text Searching (or just “text search”) provides the capability to identify natural-language <em>documents</em> that satisfy a <em>query</em>, and optionally to rank them by relevance to the query. The most common type of search is to find all documents containing given <em>query terms</em> and return them in order of their <em>similarity</em> to the query.</p>
+<p>SynxDB provides a data type <code>tsvector</code> to store preprocessed documents, and a data type <code>tsquery</code> to store processed queries (<a href="../../ref_guide/datatype-textsearch.html">Text Search Data Types</a>). There are many functions and operators available for these data types (<a href="../../ref_guide/function-summary.html">Text Search Functions and Operators</a>), the most important of which is the match operator <code>@@</code>, which we introduce in <a href="#basic-text-matching">Basic Text Matching</a>. Full text searches can be accelerated using indexes (<a href="gist-gin.html">GiST and GIN Indexes for Text Search</a>).</p>
+<p>Notions of query and similarity are very flexible and depend on the specific application. The simplest search considers query as a set of words and similarity as the frequency of query words in the document.</p>
+<p>SynxDB supports the standard text matching operators <code>~</code>, <code>~*</code>, <code>LIKE</code>, and <code>ILIKE</code> for textual data types, but these operators lack many essential properties required for searching documents:</p>
+<ul>
+<li>
+<p>There is no linguistic support, even for English. Regular expressions are not sufficient because they cannot easily handle derived words, e.g., <code>satisfies</code> and <code>satisfy</code>. You might miss documents that contain <code>satisfies</code>, although you probably would like to find them when searching for <code>satisfy</code>. It is possible to use OR to search for multiple derived forms, but this is tedious and error-prone (some words can have several thousand derivatives).</p>
+</li>
+<li>
+<p>They provide no ordering (ranking) of search results, which makes them ineffective when thousands of matching documents are found.</p>
+</li>
+<li>
+<p>They tend to be slow because there is no index support, so they must process all documents for every search.</p>
+</li>
+</ul>
+<p>Full text indexing allows documents to be preprocessed and an index saved for later rapid searching. Preprocessing includes:</p>
+<ul>
+<li><strong>Parsing documents into tokens.</strong> It is useful to identify various classes of tokens, e.g., numbers, words, complex words, email addresses, so that they can be processed differently. In principle token classes depend on the specific application, but for most purposes it is adequate to use a predefined set of classes. SynxDB uses a <em>parser</em> to perform this step. A standard parser is provided, and custom parsers can be created for specific needs.</li>
+<li><strong>Converting tokens into lexemes.</strong> A lexeme is a string, just like a token, but it has been <em>normalized</em> so that different forms of the same word are made alike. For example, normalization almost always includes folding upper-case letters to lower-case, and often involves removal of suffixes (such as s or es in English). This allows searches to find variant forms of the same word, without tediously entering all the possible variants. Also, this step typically eliminates <em>stop words</em>, which are words that are so common that they are useless for searching. (In short, then, tokens are raw fragments of the document text, while lexemes are words that are believed useful for indexing and searching.) SynxDB uses <em>dictionaries</em> to perform this step. Various standard dictionaries are provided, and custom ones can be created for specific needs.</li>
+<li><strong>Storing preprocessed documents optimized for searching.</strong> For example, each document can be represented as a sorted array of normalized lexemes. Along with the lexemes it is often desirable to store positional information to use for <em>proximity ranking</em>, so that a document that contains a more “dense” region of query words is assigned a higher rank than one with scattered query words.</li>
+</ul>
+<p>Dictionaries allow fine-grained control over how tokens are normalized. With appropriate dictionaries, you can:</p>
+<ul>
+<li>Define stop words that should not be indexed.</li>
+<li>Map synonyms to a single word using Ispell.</li>
+<li>Map phrases to a single word using a thesaurus.</li>
+<li>Map different variations of a word to a canonical form using an Ispell dictionary.</li>
+<li>Map different variations of a word to a canonical form using Snowball stemmer rules.</li>
+</ul>
+<h2 id="what-is-a-document"><a class="header" href="#what-is-a-document"><a id="document"></a>What is a Document?</a></h2>
+<p>A <em>document</em> is the unit of searching in a full text search system; for example, a magazine article or email message. The text search engine must be able to parse documents and store associations of lexemes (key words) with their parent document. Later, these associations are used to search for documents that contain query words.</p>
+<p>For searches within SynxDB, a document is normally a textual field within a row of a database table, or possibly a combination (concatenation) of such fields, perhaps stored in several tables or obtained dynamically. In other words, a document can be constructed from different parts for indexing and it might not be stored anywhere as a whole. For example:</p>
+<pre><code>SELECT title || ' ' ||  author || ' ' ||  abstract || ' ' || body AS document
+FROM messages
+WHERE mid = 12;
+
+SELECT m.title || ' ' || m.author || ' ' || m.abstract || ' ' || d.body AS document
+FROM messages m, docs d
+WHERE mid = did AND mid = 12;
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> In these example queries, <code>coalesce</code> should be used to prevent a single <code>NULL</code> attribute from causing a <code>NULL</code> result for the whole document.</p>
+</blockquote>
+<p>Another possibility is to store the documents as simple text files in the file system. In this case, the database can be used to store the full text index and to run searches, and some unique identifier can be used to retrieve the document from the file system. However, retrieving files from outside the database requires superuser permissions or special function support, so this is usually less convenient than keeping all the data inside SynxDB. Also, keeping everything inside the database allows easy access to document metadata to assist in indexing and display.</p>
+<p>For text search purposes, each document must be reduced to the preprocessed <code>tsvector</code> format. Searching and ranking are performed entirely on the tsvector representation of a document — the original text need only be retrieved when the document has been selected for display to a user. We therefore often speak of the <code>tsvector</code> as being the document, but of course it is only a compact representation of the full document.</p>
+<h2 id="basic-text-matching"><a class="header" href="#basic-text-matching"><a id="basic-text-matching"></a>Basic Text Matching</a></h2>
+<p>Full text searching in SynxDB is based on the match operator <code>@@</code>, which returns <code>true</code> if a <code>tsvector</code> (document) matches a <code>tsquery</code> (query). It does not matter which data type is written first:</p>
+<pre><code>SELECT 'a fat cat sat on a mat and ate a fat rat'::tsvector @@ 'cat &amp; rat'::tsquery;
+ ?column?
+----------
+ t
+
+SELECT 'fat &amp; cow'::tsquery @@ 'a fat cat sat on a mat and ate a fat rat'::tsvector;
+ ?column?
+----------
+ f
+</code></pre>
+<p>As the above example suggests, a <code>tsquery</code> is not just raw text, any more than a <code>tsvector</code> is. A <code>tsquery</code> contains search terms, which must be already-normalized lexemes, and may combine multiple terms using AND, OR, and NOT operators. (For details see.) There are functions <code>to_tsquery</code> and <code>plainto_tsquery</code> that are helpful in converting user-written text into a proper <code>tsquery</code>, for example by normalizing words appearing in the text. Similarly, <code>to_tsvector</code> is used to parse and normalize a document string. So in practice a text search match would look more like this:</p>
+<pre><code>SELECT to_tsvector('fat cats ate fat rats') @@ to_tsquery('fat &amp; rat');
+ ?column? 
+----------
+ t
+</code></pre>
+<p>Observe that this match would not succeed if written as</p>
+<pre><code>SELECT 'fat cats ate fat rats'::tsvector @@ to_tsquery('fat &amp; rat');
+ ?column? 
+----------
+ f
+</code></pre>
+<p>since here no normalization of the word <code>rats</code> will occur. The elements of a <code>tsvector</code> are lexemes, which are assumed already normalized, so <code>rats</code> does not match <code>rat</code>.</p>
+<p>The <code>@@</code> operator also supports <code>text</code> input, allowing explicit conversion of a text string to <code>tsvector</code> or <code>tsquery</code> to be skipped in simple cases. The variants available are:</p>
+<pre><code>tsvector @@ tsquery
+tsquery  @@ tsvector
+text @@ tsquery
+text @@ text
+</code></pre>
+<p>The first two of these we saw already. The form <code>text @@ tsquery</code> is equivalent to <code>to_tsvector(x) @@ y</code>. The form <code>text @@ text</code> is equivalent to <code>to_tsvector(x) @@ plainto_tsquery(y)</code>.</p>
+<h2 id="configurations"><a class="header" href="#configurations"><a id="configurations"></a>Configurations</a></h2>
+<p>The above are all simple text search examples. As mentioned before, full text search functionality includes the ability to do many more things: skip indexing certain words (stop words), process synonyms, and use sophisticated parsing, e.g., parse based on more than just white space. This functionality is controlled by <em>text search configurations</em>. SynxDB comes with predefined configurations for many languages, and you can easily create your own configurations. (psql’s <code>\dF</code> command shows all available configurations.)</p>
+<p>During installation an appropriate configuration is selected and <a href="../../ref_guide/config_params/guc-list.html">default_text_search_config</a> is set accordingly in <code>postgresql.conf</code>. If you are using the same text search configuration for the entire cluster you can use the value in <code>postgresql.conf</code>. To use different configurations throughout the cluster but the same configuration within any one database, use<code>ALTER DATABASE ... SET</code>. Otherwise, you can set <code>default_text_search_config</code> in each session.</p>
+<p>Each text search function that depends on a configuration has an optional <code>regconfig</code> argument, so that the configuration to use can be specified explicitly. <code>default_text_search_config</code> is used only when this argument is omitted.</p>
+<p>To make it easier to build custom text search configurations, a configuration is built up from simpler database objects. SynxDB’s text search facility provides four types of configuration-related database objects:</p>
+<ul>
+<li><em>Text search parsers</em> break documents into tokens and classify each token (for example, as words or numbers).</li>
+<li><em>Text search dictionaries</em> convert tokens to normalized form and reject stop words.</li>
+<li><em>Text search templates</em> provide the functions underlying dictionaries. (A dictionary simply specifies a template and a set of parameters for the template.)</li>
+<li><em>Text search configurations</em> select a parser and a set of dictionaries to use to normalize the tokens produced by the parser.</li>
+</ul>
+<p>Text search parsers and templates are built from low-level C functions; therefore it requires C programming ability to develop new ones, and superuser privileges to install one into a database. (There are examples of add-on parsers and templates in the <code>contrib/</code> area of the SynxDB distribution.) Since dictionaries and configurations just parameterize and connect together some underlying parsers and templates, no special privilege is needed to create a new dictionary or configuration. Examples of creating custom dictionaries and configurations appear later in this chapter.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/textsearch/full-text-search.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/textsearch/tables-indexes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/textsearch/full-text-search.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/textsearch/tables-indexes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

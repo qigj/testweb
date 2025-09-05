@@ -1,0 +1,344 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>CREATE ROLE - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="create-role"><a class="header" href="#create-role">CREATE ROLE</a></h1>
+<p>Defines a new database role (user or group).</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code class="language-{#sql_command_synopsis}">CREATE ROLE &lt;name&gt; [[WITH] &lt;option&gt; [ ... ]]
+</code></pre>
+<p>where option can be:</p>
+<pre><code>      SUPERUSER | NOSUPERUSER
+    | CREATEDB | NOCREATEDB
+    | CREATEROLE | NOCREATEROLE
+    | CREATEUSER | NOCREATEUSER
+    | CREATEEXTTABLE | NOCREATEEXTTABLE 
+      [ ( &lt;attribute&gt;='&lt;value&gt;'[, ...] ) ]
+           where &lt;attributes&gt; and &lt;value&gt; are:
+           type='readable'|'writable'
+           protocol='gpfdist'|'http'
+    | INHERIT | NOINHERIT
+    | LOGIN | NOLOGIN
+    | REPLICATION | NOREPLICATION
+    | CONNECTION LIMIT &lt;connlimit&gt;
+    | [ ENCRYPTED | UNENCRYPTED ] PASSWORD '&lt;password&gt;'
+    | VALID UNTIL '&lt;timestamp&gt;' 
+    | IN ROLE &lt;rolename&gt; [, ...]
+    | ROLE &lt;rolename&gt; [, ...]
+    | ADMIN &lt;rolename&gt; [, ...]
+    | USER &lt;rolename&gt; [, ...]
+    | SYSID &lt;uid&gt; [, ...]
+    | RESOURCE QUEUE &lt;queue_name&gt;
+    | RESOURCE GROUP &lt;group_name&gt;
+    | [ DENY &lt;deny_point&gt; ]
+    | [ DENY BETWEEN &lt;deny_point&gt; AND &lt;deny_point&gt;]
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p><code>CREATE ROLE</code> adds a new role to a SynxDB system. A role is an entity that can own database objects and have database privileges. A role can be considered a user, a group, or both depending on how it is used. You must have <code>CREATEROLE</code> privilege or be a database superuser to use this command.</p>
+<p>Note that roles are defined at the system-level and are valid for all databases in your SynxDB system.</p>
+<h2 id="parameters"><a class="header" href="#parameters"><a id="section4"></a>Parameters</a></h2>
+<h3 id="name"><a class="header" href="#name">name</a></h3>
+<p>The name of the new role.</p>
+<h3 id="superusernosuperuser"><a class="header" href="#superusernosuperuser">SUPERUSER<br/>NOSUPERUSER</a></h3>
+<p>If <code>SUPERUSER</code> is specified, the role being defined will be a superuser, who can override all access restrictions within the database. Superuser status is dangerous and should be used only when really needed. You must yourself be a superuser to create a new superuser. <code>NOSUPERUSER</code> is the default.</p>
+<h3 id="createdbnocreatedb"><a class="header" href="#createdbnocreatedb">CREATEDB<br/>NOCREATEDB</a></h3>
+<p>If <code>CREATEDB</code> is specified, the role being defined will be allowed to create new databases. <code>NOCREATEDB</code> (the default) will deny a role the ability to create databases.</p>
+<h3 id="createrolenocreaterole"><a class="header" href="#createrolenocreaterole">CREATEROLE<br/>NOCREATEROLE</a></h3>
+<p>If <code>CREATEROLE</code> is specified, the role being defined will be allowed to create new roles, alter other roles, and drop other roles. <code>NOCREATEROLE</code> (the default) will deny a role the ability to create roles or modify roles other than their own.</p>
+<h3 id="createusernocreateuser"><a class="header" href="#createusernocreateuser">CREATEUSER<br/>NOCREATEUSER</a></h3>
+<p>These clauses are obsolete, but still accepted, spellings of <code>SUPERUSER</code> and <code>NOSUPERUSER</code>. Note that they are not equivalent to the <code>CREATEROLE</code> and <code>NOCREATEROLE</code> clauses.</p>
+<h3 id="createexttablenocreateexttable"><a class="header" href="#createexttablenocreateexttable">CREATEEXTTABLE<br/>NOCREATEEXTTABLE</a></h3>
+<p>If <code>CREATEEXTTABLE</code> is specified, the role being defined is allowed to create external tables. The default <code>type</code> is <code>readable</code> and the default <code>protocol</code> is <code>gpfdist</code>, if not specified. Valid types are <code>gpfdist</code>, <code>gpfdists</code>, <code>http</code>, and <code>https</code>. <code>NOCREATEEXTTABLE</code> (the default type) denies the role the ability to create external tables. Note that external tables that use the <code>file</code> or <code>execute</code> protocols can only be created by superusers.</p>
+<p>Use the <code>GRANT...ON PROTOCOL</code> command to allow users to create and use external tables with a custom protocol type, including the <code>s3</code> and <code>pxf</code> protocols included with SynxDB.</p>
+<h3 id="inheritnoinherit"><a class="header" href="#inheritnoinherit">INHERIT<br/>NOINHERIT</a></h3>
+<p>If specified, <code>INHERIT</code> (the default) allows the role to use whatever database privileges have been granted to all roles it is directly or indirectly a member of. With <code>NOINHERIT</code>, membership in another role only grants the ability to <code>SET ROLE</code> to that other role.</p>
+<h3 id="loginnologin"><a class="header" href="#loginnologin">LOGIN<br/>NOLOGIN</a></h3>
+<p>If specified, <code>LOGIN</code> allows a role to log in to a database. A role having the <code>LOGIN</code> attribute can be thought of as a user. Roles with <code>NOLOGIN</code> are useful for managing database privileges, and can be thought of as groups. If not specified, <code>NOLOGIN</code> is the default, except when <code>CREATE ROLE</code> is invoked through its alternative spelling <a href="CREATE_USER.html">CREATE USER</a>.</p>
+<h3 id="replicationnoreplication"><a class="header" href="#replicationnoreplication">REPLICATION<br/>NOREPLICATION</a></h3>
+<p>These clauses determine whether a role is allowed to initiate streaming replication or put the system in and out of backup mode. A role having the <code>REPLICATION</code> attribute is a very highly privileged role, and should only be used on roles actually used for replication. If not specified, <code>NOREPLICATION</code> is the default .</p>
+<h3 id="connection-limit-connlimit"><a class="header" href="#connection-limit-connlimit">CONNECTION LIMIT connlimit</a></h3>
+<p>The number maximum of concurrent connections this role can make. The default of -1 means there is no limitation.</p>
+<h3 id="password-password"><a class="header" href="#password-password">PASSWORD password</a></h3>
+<p>Sets the user password for roles with the <code>LOGIN</code> attribute. If you do not plan to use password authentication you can omit this option. If no password is specified, the password will be set to null and password authentication will always fail for that user. A null password can optionally be written explicitly as <code>PASSWORD NULL</code>.</p>
+<p>Specifying an empty string will also set the password to null. In earlier versions, an empty string could be used, or not, depending on the authentication method and the exact version, and libpq would refuse to use it in any case.  To avoid the ambiguity, specifying an empty string should be avoided.</p>
+<p>The <code>ENCRYPTED</code> and <code>UNENCRYPTED</code> key words control whether the password is stored encrypted in the system catalogs. (If neither is specified, the default behavior is determined by the configuration parameter <code>password_encryption</code>.) If the presented password string is already in MD5-encrypted or SCRAM-encrypted format, then it is stored encrypted as-is, regardless of whether <code>ENCRYPTED</code> or <code>UNENCRYPTED</code> is specified (since the system cannot decrypt the specified encrypted password string). This allows reloading of encrypted passwords during dump/restore.</p>
+<p>Note that older clients might lack support for the SCRAM authentication mechanism.</p>
+<h3 id="valid-until-timestamp"><a class="header" href="#valid-until-timestamp">VALID UNTIL ‘timestamp’</a></h3>
+<p>The VALID UNTIL clause sets a date and time after which the role’s password is no longer valid. If this clause is omitted the password will never expire.</p>
+<h3 id="in-role-rolename"><a class="header" href="#in-role-rolename">IN ROLE rolename</a></h3>
+<p>Adds the new role as a member of the named roles. Note that there is no option to add the new role as an administrator; use a separate <code>GRANT</code> command to do that.</p>
+<h3 id="role-rolename"><a class="header" href="#role-rolename">ROLE rolename</a></h3>
+<p>Adds the named roles as members of this role, making this new role a group.</p>
+<h3 id="admin-rolename"><a class="header" href="#admin-rolename">ADMIN rolename</a></h3>
+<p>The <code>ADMIN</code> clause is like <code>ROLE</code>, but the named roles are added to the new role <code>WITH ADMIN OPTION</code>, giving them the right to grant membership in this role to others.</p>
+<h3 id="resource-group-group_name"><a class="header" href="#resource-group-group_name">RESOURCE GROUP group_name</a></h3>
+<p>The name of the resource group to assign to the new role. The role will be subject to the concurrent transaction, memory, and CPU limits configured for the resource group. You can assign a single resource group to one or more roles.</p>
+<p>If you do not specify a resource group for a new role, the role is automatically assigned the default resource group for the role’s capability, <code>admin_group</code> for <code>SUPERUSER</code> roles, <code>default_group</code> for non-admin roles.</p>
+<p>You can assign the <code>admin_group</code> resource group to any role having the <code>SUPERUSER</code> attribute.</p>
+<p>You can assign the <code>default_group</code> resource group to any role.</p>
+<p>You cannot assign a resource group that you create for an external component to a role.</p>
+<h3 id="resource-queue-queue_name"><a class="header" href="#resource-queue-queue_name">RESOURCE QUEUE queue_name</a></h3>
+<p>The name of the resource queue to which the new user-level role is to be assigned. Only roles with <code>LOGIN</code> privilege can be assigned to a resource queue. The special keyword <code>NONE</code> means that the role is assigned to the default resource queue. A role can only belong to one resource queue.</p>
+<p>Roles with the <code>SUPERUSER</code> attribute are exempt from resource queue limits. For a superuser role, queries always run immediately regardless of limits imposed by an assigned resource queue.</p>
+<h3 id="deny-deny_pointdeny-between-deny_point-and-deny_point"><a class="header" href="#deny-deny_pointdeny-between-deny_point-and-deny_point">DENY deny_point<br/>DENY BETWEEN deny_point AND deny_point</a></h3>
+<p>The <code>DENY</code> and <code>DENY BETWEEN</code> keywords set time-based constraints that are enforced at login. <code>DENY</code> sets a day or a day and time to deny access. <code>DENY BETWEEN</code> sets an interval during which access is denied. Both use the parameter deny_point that has the following format:</p>
+<pre><code>DAY day [ TIME 'time' ]
+</code></pre>
+<p>The two parts of the <code>deny_point</code> parameter use the following formats:</p>
+<p>For <code>day</code>:</p>
+<pre><code>{'Sunday' | 'Monday' | 'Tuesday' |'Wednesday' | 'Thursday' | 'Friday' | 
+'Saturday' | 0-6 }
+</code></pre>
+<p>For <code>time</code>:</p>
+<pre><code>{ 00-23 : 00-59 | 01-12 : 00-59 { AM | PM }}
+</code></pre>
+<p>The <code>DENY BETWEEN</code> clause uses two deny_point parameters:</p>
+<pre><code>DENY BETWEEN &lt;deny_point&gt; AND &lt;deny_point&gt;
+</code></pre>
+<p>For more information and examples about time-based constraints, see “Managing Roles and Privileges” in the <em>SynxDB Administrator Guide</em>.</p>
+<h2 id="notes"><a class="header" href="#notes"><a id="section5"></a>Notes</a></h2>
+<p>The preferred way to add and remove role members (manage groups) is to use <a href="GRANT.html">GRANT</a> and <a href="REVOKE.html">REVOKE</a>.</p>
+<p>The <code>VALID UNTIL</code> clause defines an expiration time for a password only, not for the role. The expiration time is not enforced when logging in using a non-password-based authentication method.</p>
+<p>The <code>INHERIT</code> attribute governs inheritance of grantable privileges (access privileges for database objects and role memberships). It does not apply to the special role attributes set by <code>CREATE ROLE</code> and <code>ALTER ROLE</code>. For example, being a member of a role with <code>CREATEDB</code> privilege does not immediately grant the ability to create databases, even if <code>INHERIT</code> is set. These privileges/attributes are never inherited: <code>SUPERUSER</code>, <code>CREATEDB</code>, <code>CREATEROLE</code>, <code>CREATEEXTTABLE</code>, <code>LOGIN</code>, <code>RESOURCE GROUP</code>, and <code>RESOURCE QUEUE</code>. The attributes must be set on each user-level role.</p>
+<p>The <code>INHERIT</code> attribute is the default for reasons of backwards compatibility. In prior releases of SynxDB, users always had access to all privileges of groups they were members of. However, <code>NOINHERIT</code> provides a closer match to the semantics specified in the SQL standard.</p>
+<p>Be careful with the <code>CREATEROLE</code> privilege. There is no concept of inheritance for the privileges of a <code>CREATEROLE</code>-role. That means that even if a role does not have a certain privilege but is allowed to create other roles, it can easily create another role with different privileges than its own (except for creating roles with superuser privileges). For example, if a role has the <code>CREATEROLE</code> privilege but not the <code>CREATEDB</code> privilege, it can create a new role with the <code>CREATEDB</code> privilege. Therefore, regard roles that have the <code>CREATEROLE</code> privilege as almost-superuser-roles.</p>
+<p>The <code>CONNECTION LIMIT</code> option is never enforced for superusers.</p>
+<p>Caution must be exercised when specifying an unencrypted password with this command. The password will be transmitted to the server in clear-text, and it might also be logged in the client’s command history or the server log. The client program <code>createuser</code>, however, transmits the password encrypted. Also, psql contains a command <code>\password</code> that can be used to safely change the password later.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section6"></a>Examples</a></h2>
+<p>Create a role that can log in, but don’t give it a password:</p>
+<pre><code>CREATE ROLE jonathan LOGIN;
+</code></pre>
+<p>Create a role that belongs to a resource queue:</p>
+<pre><code>CREATE ROLE jonathan LOGIN RESOURCE QUEUE poweruser;
+</code></pre>
+<p>Create a role with a password that is valid until the end of 2016 (<code>CREATE USER</code> is the same as <code>CREATE ROLE</code> except that it implies <code>LOGIN</code>):</p>
+<pre><code>CREATE USER joelle WITH PASSWORD 'jw8s0F4' VALID UNTIL '2017-01-01';
+</code></pre>
+<p>Create a role that can create databases and manage other roles:</p>
+<pre><code>CREATE ROLE admin WITH CREATEDB CREATEROLE;
+</code></pre>
+<p>Create a role that does not allow login access on Sundays:</p>
+<pre><code>CREATE ROLE user3 DENY DAY 'Sunday';
+</code></pre>
+<p>Create a role that can create readable and writable external tables of type ‘gpfdist’:</p>
+<pre><code>CREATE ROLE jan WITH CREATEEXTTABLE(type='readable', protocol='gpfdist')
+   CREATEEXTTABLE(type='writable', protocol='gpfdist'); 
+</code></pre>
+<p>Create a role, assigning a resource group:</p>
+<pre><code>CREATE ROLE bill RESOURCE GROUP rg_light;
+</code></pre>
+<h2 id="compatibility"><a class="header" href="#compatibility"><a id="section7"></a>Compatibility</a></h2>
+<p>The SQL standard defines the concepts of users and roles, but it regards them as distinct concepts and leaves all commands defining users to be specified by the database implementation. In SynxDB users and roles are unified into a single type of object. Roles therefore have many more optional attributes than they do in the standard.</p>
+<p><code>CREATE ROLE</code> is in the SQL standard, but the standard only requires the syntax:</p>
+<pre><code>CREATE ROLE &lt;name&gt; [WITH ADMIN &lt;rolename&gt;]
+</code></pre>
+<p>Allowing multiple initial administrators, and all the other options of <code>CREATE ROLE</code>, are SynxDB extensions.</p>
+<p>The behavior specified by the SQL standard is most closely approximated by giving users the <code>NOINHERIT</code> attribute, while roles are given the <code>INHERIT</code> attribute.</p>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section8"></a>See Also</a></h2>
+<p><a href="SET_ROLE.html">SET ROLE</a>, <a href="ALTER_ROLE.html">ALTER ROLE</a>, <a href="DROP_ROLE.html">DROP ROLE</a>, <a href="GRANT.html">GRANT</a>, <a href="REVOKE.html">REVOKE</a>, <a href="CREATE_RESOURCE_QUEUE.html">CREATE RESOURCE QUEUE</a> <a href="CREATE_RESOURCE_GROUP.html">CREATE RESOURCE GROUP</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/sql_commands/CREATE_RESOURCE_QUEUE.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/sql_commands/CREATE_RULE.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/sql_commands/CREATE_RESOURCE_QUEUE.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/sql_commands/CREATE_RULE.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

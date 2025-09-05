@@ -1,0 +1,337 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>gpaddmirrors - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gpaddmirrors"><a class="header" href="#gpaddmirrors">gpaddmirrors</a></h1>
+<p>Adds mirror segments to a SynxDB system that was initially configured without mirroring.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code>gpaddmirrors [-p &lt;port_offset&gt;] [-m &lt;datadir_config_file&gt; [-a]] [-s] 
+   [-d &lt;master_data_directory&gt;] [-b &lt;segment_batch_size&gt;] [-B &lt;batch_size&gt;] [-l &lt;logfile_directory&gt;]
+   [-v] [--hba-hostnames &lt;boolean&gt;] 
+
+gpaddmirrors -i &lt;mirror_config_file&gt; [-a] [-d &lt;master_data_directory&gt;]
+   [-b &lt;segment_batch_size&gt;] [-B &lt;batch_size&gt;] [-l &lt;logfile_directory&gt;] [-v]
+
+gpaddmirrors -o output_sample_mirror_config&gt; [-s] [-m &lt;datadir_config_file&gt;]
+
+gpaddmirrors -? 
+
+gpaddmirrors --version
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p>The <code>gpaddmirrors</code> utility configures mirror segment instances for an existing SynxDB system that was initially configured with primary segment instances only. The utility will create the mirror instances and begin the online replication process between the primary and mirror segment instances. Once all mirrors are synchronized with their primaries, your SynxDB system is fully data redundant.</p>
+<blockquote>
+<p><strong>Important</strong> During the online replication process, SynxDB should be in a quiescent state, workloads and other queries should not be running.</p>
+</blockquote>
+<p>By default, the utility will prompt you for the file system location(s) where it will create the mirror segment data directories. If you do not want to be prompted, you can pass in a file containing the file system locations using the <code>-m</code> option.</p>
+<p>The mirror locations and ports must be different than your primary segment data locations and ports.</p>
+<p>The utility creates a unique data directory for each mirror segment instance in the specified location using the predefined naming convention. There must be the same number of file system locations declared for mirror segment instances as for primary segment instances. It is OK to specify the same directory name multiple times if you want your mirror data directories created in the same location, or you can enter a different data location for each mirror. Enter the absolute path. For example:</p>
+<pre><code>Enter mirror segment data directory location 1 of 2 &gt; /gpdb/mirror
+Enter mirror segment data directory location 2 of 2 &gt; /gpdb/mirror
+</code></pre>
+<p>OR</p>
+<pre><code>Enter mirror segment data directory location 1 of 2 &gt; /gpdb/m1
+Enter mirror segment data directory location 2 of 2 &gt; /gpdb/m2
+</code></pre>
+<p>Alternatively, you can run the <code>gpaddmirrors</code> utility and supply a detailed configuration file using the <code>-i</code> option. This is useful if you want your mirror segments on a completely different set of hosts than your primary segments. The format of the mirror configuration file is:</p>
+<pre><code>&lt;contentID&gt;|&lt;address&gt;|&lt;port&gt;|&lt;data_dir&gt;
+</code></pre>
+<p>Where <code>&lt;contentID&gt;</code> is the segment instance content ID, <code>&lt;address&gt;</code> is the host name or IP address of the segment host, <code>&lt;port&gt;</code> is the communication port, and <code>&lt;data_dir&gt;</code> is the segment instance data directory.</p>
+<p>For example:</p>
+<pre><code>0|sdw1-1|60000|/gpdata/m1/gp0
+1|sdw1-1|60001|/gpdata/m2/gp1
+</code></pre>
+<p>The <code>gp_segment_configuration</code> system catalog table can help you determine your current primary segment configuration so that you can plan your mirror segment configuration. For example, run the following query:</p>
+<pre><code>=# SELECT dbid, content, address as host_address, port, datadir 
+   FROM gp_segment_configuration
+   ORDER BY dbid;
+</code></pre>
+<p>If you are creating mirrors on alternate mirror hosts, the new mirror segment hosts must be pre-installed with the SynxDB software and configured exactly the same as the existing primary segment hosts.</p>
+<p>You must make sure that the user who runs <code>gpaddmirrors</code> (the <code>gpadmin</code> user) has permissions to write to the data directory locations specified. You may want to create these directories on the segment hosts and <code>chown</code> them to the appropriate user before running <code>gpaddmirrors</code>.</p>
+<blockquote>
+<p><strong>Note</strong> This utility uses secure shell (SSH) connections between systems to perform its tasks. In large SynxDB deployments, cloud deployments, or deployments with a large number of segments per host, this utility may exceed the host’s maximum threshold for unauthenticated connections. Consider updating the SSH <code>MaxStartups</code> configuration parameter to increase this threshold. For more information about SSH configuration options, refer to the SSH documentation for your Linux distribution.</p>
+</blockquote>
+<h2 id="options"><a class="header" href="#options"><a id="section4"></a>Options</a></h2>
+<h3 id="-a-do-not-prompt"><a class="header" href="#-a-do-not-prompt">-a (do not prompt)</a></h3>
+<p>Run in quiet mode - do not prompt for information. Must supply a configuration file with either <code>-m</code> or <code>-i</code> if this option is used.</p>
+<h3 id="-b-segment_batch_size"><a class="header" href="#-b-segment_batch_size">-b segment_batch_size</a></h3>
+<p>The maximum number of segments per host to operate on in parallel. Valid values are <code>1</code> to <code>128</code>. If not specified, the utility will start recovering up to 64 segments in parallel on each host.</p>
+<h3 id="-b-batch_size"><a class="header" href="#-b-batch_size">-B batch_size</a></h3>
+<p>The number of hosts to work on in parallel. If not specified, the utility will start working on up to 16 hosts in parallel. Valid values are <code>1</code> to <code>64</code>.</p>
+<h3 id="-d-master_data_directory"><a class="header" href="#-d-master_data_directory">-d master_data_directory</a></h3>
+<p>The master data directory. If not specified, the value set for <code>$MASTER_DATA_DIRECTORY</code> will be used.</p>
+<h3 id="hba-hostnames-boolean"><a class="header" href="#hba-hostnames-boolean">–hba-hostnames boolean</a></h3>
+<p>Optional. Controls whether this utility uses IP addresses or host names in the <code>pg_hba.conf</code> file when updating this file with addresses that can connect to SynxDB. When set to 0 – the default value – this utility uses IP addresses when updating this file. When set to 1, this utility uses host names when updating this file. For consistency, use the same value that was specified for <code>HBA_HOSTNAMES</code> when the SynxDB system was initialized. For information about how SynxDB resolves host names in the <code>pg_hba.conf</code> file, see <a href="../../admin_guide/client_auth.html">Configuring Client Authentication</a>.</p>
+<h3 id="-i-mirror_config_file"><a class="header" href="#-i-mirror_config_file">-i mirror_config_file</a></h3>
+<p>A configuration file containing one line for each mirror segment you want to create. You must have one mirror segment instance listed for each primary segment in the system. The format of this file is as follows (as per attributes in the <a href="../../ref_guide/system_catalogs/gp_segment_configuration.html">gp_segment_configuration</a> catalog table):</p>
+<pre><code>&lt;contentID&gt;|&lt;address&gt;|&lt;port&gt;|&lt;data_dir&gt;
+</code></pre>
+<p>Where <code>&lt;contentID&gt;</code> is the segment instance content ID, <code>&lt;address&gt;</code> is the hostname or IP address of the segment host, <code>&lt;port&gt;</code> is the communication port, and <code>&lt;data_dir&gt;</code> is the segment instance data directory. For information about using a hostname or IP address, see <a href="#host_ip">Specifying Hosts using Hostnames or IP Addresses</a>. Also, see <a href="#multi_nic">Using Host Systems with Multiple NICs</a>.</p>
+<h3 id="-l-logfile_directory"><a class="header" href="#-l-logfile_directory">-l logfile_directory</a></h3>
+<p>The directory to write the log file. Defaults to <code>~/gpAdminLogs</code>.</p>
+<h3 id="-m-datadir_config_file"><a class="header" href="#-m-datadir_config_file">-m datadir_config_file</a></h3>
+<p>A configuration file containing a list of file system locations where the mirror data directories will be created. If not supplied, the utility prompts you for locations. Each line in the file specifies a mirror data directory location. For example:</p>
+<pre><code>/gpdata/m1
+/gpdata/m2
+/gpdata/m3
+/gpdata/m4
+</code></pre>
+<h3 id="-o-output_sample_mirror_config"><a class="header" href="#-o-output_sample_mirror_config">-o output_sample_mirror_config</a></h3>
+<p>If you are not sure how to lay out the mirror configuration file used by the <code>-i</code> option, you can run <code>gpaddmirrors</code> with this option to generate a sample mirror configuration file based on your primary segment configuration. The utility will prompt you for your mirror segment data directory locations (unless you provide these in a file using <code>-m</code>). You can then edit this file to change the host names to alternate mirror hosts if necessary.</p>
+<h3 id="-p-port_offset"><a class="header" href="#-p-port_offset">-p port_offset</a></h3>
+<p>Optional. This number is used to calculate the database ports used for mirror segments. The default offset is 1000. Mirror port assignments are calculated as follows:
+<code>    primary_port + offset = mirror_database_port    </code></p>
+<p>For example, if a primary segment has port 50001, then its mirror will use a database port of 51001, by default.</p>
+<h3 id="-s-spread-mirrors"><a class="header" href="#-s-spread-mirrors">-s (spread mirrors)</a></h3>
+<p>Spreads the mirror segments across the available hosts. The default is to group a set of mirror segments together on an alternate host from their primary segment set. Mirror spreading will place each mirror on a different host within the SynxDB array. Spreading is only allowed if there is a sufficient number of hosts in the array (number of hosts is greater than the number of segment instances per host).</p>
+<h3 id="-v-verbose"><a class="header" href="#-v-verbose">-v (verbose)</a></h3>
+<p>Sets logging output to verbose.</p>
+<h3 id="version-show-utility-version"><a class="header" href="#version-show-utility-version">–version (show utility version)</a></h3>
+<p>Displays the version of this utility.</p>
+<h3 id="--help"><a class="header" href="#--help">-? (help)</a></h3>
+<p>Displays the online help.</p>
+<h2 id="specifying-hosts-using-hostnames-or-ip-addresses"><a class="header" href="#specifying-hosts-using-hostnames-or-ip-addresses"><a id="host_ip"></a>Specifying Hosts using Hostnames or IP Addresses</a></h2>
+<p>When specifying a mirroring configuration using the <code>gpaddmirrors</code> option <code>-i</code>, you can specify either a hostname or an IP address for the &lt;address&gt; value.</p>
+<ul>
+<li>If you specify a hostname, the resolution of the hostname to an IP address should be done locally for security. For example, you should use entries in a local <code>/etc/hosts</code> file to map the hostname to an IP address. The resolution of a hostname to an IP address should not be performed by an external service such as a public DNS server. You must stop the SynxDB system before you change the mapping of a hostname to a different IP address.</li>
+<li>If you specify an IP address, the address should not be changed after the initial configuration. When segment mirroring is enabled, replication from the primary to the mirror segment will fail if the IP address changes from the configured value. For this reason, you should use a hostname when enabling mirroring using the <code>-i</code> option unless you have a specific requirement to use IP addresses.</li>
+</ul>
+<p>When enabling a mirroring configuration that adds hosts to the SynxDB system, <code>gpaddmirrors</code> populates the <a href="../../ref_guide/system_catalogs/gp_segment_configuration.html">gp_segment_configuration</a> catalog table with the mirror segment instance information. SynxDB uses the address value of the <code>gp_segment_configuration</code> catalog table when looking up host systems for SynxDB interconnect (internal) communication between the master and segment instances and between segment instances, and for other internal communication.</p>
+<h2 id="using-host-systems-with-multiple-nics"><a class="header" href="#using-host-systems-with-multiple-nics"><a id="multi_nic"></a>Using Host Systems with Multiple NICs</a></h2>
+<p>If hosts systems are configured with multiple NICs, you can initialize a SynxDB system to use each NIC as a SynxDB host system. You must ensure that the host systems are configured with sufficient resources to support all the segment instances being added to the host. Also, if you enable segment mirroring, you must ensure that the SynxDB system configuration supports failover if a host system fails. For information about SynxDB mirroring schemes, see <a href="../../best_practices/ha.html#topic_ngz_qf4_tt">Segment Mirroring Configurations</a>.</p>
+<p>For example, this is a segment instance configuration for a simple SynxDB system. The segment host <code>gp6m</code> is configured with two NICs, <code>gp6m-1</code> and <code>gp6m-2</code>, where the SynxDB system uses <code>gp6m-1</code> for the master segment and <code>gp6m-2</code> for segment instances.</p>
+<pre><code>select content, role, port, hostname, address from gp_segment_configuration ;
+
+ content | role | port  | hostname | address
+---------+------+-------+----------+----------
+      -1 | p    |  5432 | gp6m     | gp6m-1
+       0 | p    | 40000 | gp6m     | gp6m-2
+       0 | m    | 50000 | gp6s     | gp6s
+       1 | p    | 40000 | gp6s     | gp6s
+       1 | m    | 50000 | gp6m     | gp6m-2
+(5 rows) 
+</code></pre>
+<h2 id="examples"><a class="header" href="#examples"><a id="section5"></a>Examples</a></h2>
+<p>Add mirroring to an existing SynxDB system using the same set of hosts as your primary data. Calculate the mirror database ports by adding 100 to the current primary segment port numbers:</p>
+<pre><code>$ gpaddmirrors -p 100
+</code></pre>
+<p>Generate a sample mirror configuration file with the <code>-o</code> option to use with <code>gpaddmirrors -i</code>:</p>
+<pre><code>$ gpaddmirrors -o /home/gpadmin/sample_mirror_config
+</code></pre>
+<p>Add mirroring to an existing SynxDB system using a different set of hosts from your primary data:</p>
+<pre><code>$ gpaddmirrors -i mirror_config_file
+</code></pre>
+<p>Where <code>mirror_config_file</code> looks something like this:</p>
+<pre><code>0|sdw1-1|52001|/gpdata/m1/gp0
+1|sdw1-2|52002|/gpdata/m2/gp1
+2|sdw2-1|52001|/gpdata/m1/gp2
+3|sdw2-2|52002|/gpdata/m2/gp3
+</code></pre>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section6"></a>See Also</a></h2>
+<p><a href="gpinitsystem.html">gpinitsystem</a>, <a href="gpinitstandby.html">gpinitstandby</a>, <a href="gpactivatestandby.html">gpactivatestandby</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../utility_guide/ref/gpactivatestandby.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../utility_guide/ref/gpbackup.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../utility_guide/ref/gpactivatestandby.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../utility_guide/ref/gpbackup.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

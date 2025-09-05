@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Use pgvector for Vector Similarity Search &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Vectorization Query Computing" href="vectorization-queries.html" />
+    <link rel="prev" title="Directory Tables" href="directory-table.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../operate-with-data-index.html">Operate with Data</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../operate-with-db-objects/operate-with-db-objects-index.html">Operate with Database Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../choose-table-storage-models/choose-table-storage-models-index.html">Choose Table Storage Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-queries/sql-queries-index.html">Perform SQL Queries</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="advanced-data-analytics-index.html">Advanced Data Analytics</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="directory-table.html">Directory Tables</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Use pgvector for Vector Similarity Search</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#quick-start">Quick start</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#store-data">Store data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#query-data">Query data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hybrid-search">Hybrid search</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pgvector-performance">pgvector performance</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vectorization-queries.html">Vectorization Query Computing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../work-with-transactions.html">Work with Transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transaction-concurrency-control.html">Control Transactional Concurrency</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../operate-with-data-index.html">Operate with Data</a></li>
+          <li class="breadcrumb-item"><a href="advanced-data-analytics-index.html">Advanced Data Analytics</a></li>
+      <li class="breadcrumb-item active">Use pgvector for Vector Similarity Search</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="use-pgvector-for-vector-similarity-search">
+<h1>Use pgvector for Vector Similarity Search<a class="headerlink" href="#use-pgvector-for-vector-similarity-search" title="Link to this heading"></a></h1>
+<p>pgvector is an open-source plugin for vector similarity search. It supports both exact and approximate nearest neighbor searches, as well as L2 distance, inner product, and cosine distance. For more details, see <a class="reference external" href="https://github.com/pgvector/pgvector">pgvector/pgvector: Open-source vector similarity search for Postgres</a>.</p>
+<p>SynxDB Elastic allows you to use pgvector for data storage, querying, hybrid searches, and more through SQL statements. This document explains how to use pgvector in SynxDB Elastic.</p>
+<section id="quick-start">
+<h2>Quick start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
+<p>Enable the extension (do this once in each database where you want to use it):</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="n">vector</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Create a vector column with 3 dimensions:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="n">bigserial</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="n">vector</span><span class="p">(</span><span class="mi">3</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Insert vector data:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;[1,2,3]&#39;</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;[4,5,6]&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Get the nearest neighbors by L2 distance:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="o">&lt;-&gt;</span><span class="w"> </span><span class="s1">&#39;[3,1,2]&#39;</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Note: Use <code class="docutils literal notranslate"><span class="pre">&lt;#&gt;</span></code> for inner product and <code class="docutils literal notranslate"><span class="pre">&lt;=&gt;</span></code> for cosine distance.</p>
+</section>
+<section id="store-data">
+<h2>Store data<a class="headerlink" href="#store-data" title="Link to this heading"></a></h2>
+<p>Create a table with a vector column:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="n">bigserial</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="n">vector</span><span class="p">(</span><span class="mi">3</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Or add a vector column to an existing table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="n">vector</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Insert vectors:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;[1,2,3]&#39;</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;[4,5,6]&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Insert and update vectors:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">embedding</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;[1,2,3]&#39;</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;[4,5,6]&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">ON</span><span class="w"> </span><span class="n">CONFLICT</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">DO</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EXCLUDED</span><span class="p">.</span><span class="n">embedding</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Update vectors:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">UPDATE</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;[1,2,3]&#39;</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Delete vectors:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="query-data">
+<h2>Query data<a class="headerlink" href="#query-data" title="Link to this heading"></a></h2>
+<p>Get the nearest neighbors to a vector:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="o">&lt;-&gt;</span><span class="w"> </span><span class="s1">&#39;[3,1,2]&#39;</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The supported distance functions are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;-&gt;</span></code>: L2 distance</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;#&gt;</span></code>: negative inner product</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;=&gt;</span></code>: cosine distance</p></li>
+</ul>
+<p>Get the nearest neighbors of a row:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="o">&lt;-&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Get rows within a specific distance range:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="o">&lt;-&gt;</span><span class="w"> </span><span class="s1">&#39;[3,1,2]&#39;</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Get the distance:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="o">&lt;-&gt;</span><span class="w"> </span><span class="s1">&#39;[3,1,2]&#39;</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">distance</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>For inner product, multiply by <code class="docutils literal notranslate"><span class="pre">-1</span></code> (because <code class="docutils literal notranslate"><span class="pre">&lt;#&gt;</span></code> returns the negative inner product).</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="n">embedding</span><span class="w"> </span><span class="o">&lt;#&gt;</span><span class="w"> </span><span class="s1">&#39;[3,1,2]&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">inner_product</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>For cosine similarity, use <code class="docutils literal notranslate"><span class="pre">1</span></code> minus the cosine distance.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">embedding</span><span class="w"> </span><span class="o">&lt;=&gt;</span><span class="w"> </span><span class="s1">&#39;[3,1,2]&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">cosine_similarity</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Calculate the average of vectors:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="k">AVG</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Calculate the average of a group of vectors:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">category_id</span><span class="p">,</span><span class="w"> </span><span class="k">AVG</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">category_id</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="hybrid-search">
+<h2>Hybrid search<a class="headerlink" href="#hybrid-search" title="Link to this heading"></a></h2>
+<p>Perform hybrid search using SynxDB Elastic full-text search:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="p">,</span><span class="w"> </span><span class="n">plainto_tsquery</span><span class="p">(</span><span class="s1">&#39;hello search&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">query</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">textsearch</span><span class="w"> </span><span class="o">@@</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ts_rank_cd</span><span class="p">(</span><span class="n">textsearch</span><span class="p">,</span><span class="w"> </span><span class="n">query</span><span class="p">)</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="pgvector-performance">
+<h2>pgvector performance<a class="headerlink" href="#pgvector-performance" title="Link to this heading"></a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">EXPLAIN</span> <span class="pre">ANALYZE</span></code> for performance debugging:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">EXPLAIN</span><span class="w"> </span><span class="k">ANALYZE</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="o">&lt;-&gt;</span><span class="w"> </span><span class="s1">&#39;[3,1,2]&#39;</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+<section id="exact-search">
+<h3>Exact search<a class="headerlink" href="#exact-search" title="Link to this heading"></a></h3>
+<p>To speed up queries, you can increase the value of the <code class="docutils literal notranslate"><span class="pre">max_parallel_workers_per_gather</span></code> parameter.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">max_parallel_workers_per_gather</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>If vectors are already normalized to a length of <code class="docutils literal notranslate"><span class="pre">1</span></code> (for example, the <a class="reference external" href="https://platform.openai.com/docs/guides/embeddings/which-distance-function-should-i-use">OpenAI embeddings</a>), using inner product can provide the best performance.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="o">&lt;#&gt;</span><span class="w"> </span><span class="s1">&#39;[3,1,2]&#39;</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>These are some guidelines for nearest neighbor search and performance optimization in pgvector. Depending on your needs and data structure, you can adjust and optimize based on these recommendations.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="vectorization-queries.html" class="btn btn-neutral float-right" title="Vectorization Query Computing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="directory-table.html" class="btn btn-neutral float-left" title="Directory Tables" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

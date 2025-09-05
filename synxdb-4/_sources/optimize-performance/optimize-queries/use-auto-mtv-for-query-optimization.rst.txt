@@ -1,0 +1,424 @@
+.. raw:: latex
+
+   \newpage
+
+Use Automatic Materialized Views for Query Optimization
+=======================================================================
+
+|product_name| supports automatically using :ref:`materialized views <operate-with-data/operate-with-database-objects/create-and-manage-materialized-views:create and manage materialized views>` to process some or all queries (called "Answer Query Using Materialized Views", or "AQUMV") during the query planning phase. This feature is suitable for queries on large tables and can greatly reduce query processing time. AQUMV uses incremental materialized views (IMVs) because IMVs usually keep the latest data when related tables have write operations.
+
+Usage scenarios
+---------------
+
+-  Aggregation queries on large data sets: For queries that need to aggregate results from millions of records, AQUMV can significantly reduce query time.
+-  Frequently updated large tables: In an environment where data is frequently updated, using IMV can ensure that the query results are real-time and accurate.
+-  Complex calculations: For queries with complex calculations (such as square root and absolute value calculations), AQUMV can speed up the queries by pre-calculating these values in materialized views.
+
+Implementation
+--------------
+
+AQUMV implements query optimization by equivalently transforming the query tree.
+
+|product_name| automatically uses materialized views only when the table query meets the following conditions:
+
+-  Materialized views must contain all the rows required by the query expression.
+-  If the materialized view contains more rows than the query, you might need to add additional filters.
+-  All output expressions must be able to be calculated from the output of the view.
+-  The output expression can fully or partially match the target list of the materialized view.
+
+When there are multiple valid materialized view candidates, or the cost of querying from the materialized view is higher than querying directly from the original table (for example, the original table has indexes), you can let the planner make the best choice based on cost estimates.
+
+Comparison with dynamic tables
+---------------------------------------
+
+AQUMV and :ref:`dynamic tables <optimize-performance/use-dynamic-tables:use dynamic tables to speed up queries and auto-refresh data>` have these differences:
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :widths: 7 13 13
+   :header-rows: 1
+   :align: left
+
+   * - **Feature**
+     - Dynamic table
+     - AQUMV
+   * - **Purpose**
+     - A special table that automatically refreshes, processes data pipelines, and simplifies ETL.
+     - Uses materialized views to improve query efficiency and automatically rewrite queries.
+   * - **Base and structure**
+     - Can be based on ordinary tables, external tables, materialized views.
+     - Based on materialized views, usually targeting a single table.
+   * - **Query rewrite**
+     - Not supported
+     - Supports single-table rewrite
+   * - **Data refresh mechanism**
+     - Users can define automatic refresh interval through SQL
+     - Requires manual refresh of materialized view data
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+Restrictions
+------------
+
+-  Only ``SELECT`` queries for a single relationship are supported, which is applicable to materialized view queries and the original queries.
+-  You need to explicitly enable the support for external tables through the ``aqumv_allow_foreign_table`` parameter.
+-  The support for aggregate queries have the following limitations:
+   -  Aggregates with ``GROUP BY`` are not supported.
+   -  The ``HAVING`` clause must be calculable from the target list of the materialized view.
+-  Currently, unsupported features include: subqueries, sorting of the original query (``ORDER BY``), joins (``JOIN``), sublinks (``SUBLINK``), grouping (``GROUP BY``), window functions, common table expressions (CTE), distinct on (``DISTINCT ON``), refreshing materialized views (``REFRESH MATERIALIZED VIEW``), and ``CREATE AS`` statements.
+
+Usage examples
+---------------
+
+To enable AQUMV, you need to create a materialized view, turn off the GPORCA optimizer, and set the value of the system parameter ``enable_answer_query_using_materialized_views`` to ``ON``. The following example compares the results of the same complex query without AQUMV and with AQUMV.
+
+1. Turn off the GPORCA planner to use the Postgres-based planner.
+
+   .. code-block:: sql
+
+      SET optimizer TO off;
+
+2. Create a table ``aqumv_t1``.
+
+   .. code-block:: sql
+
+      CREATE TABLE aqumv_t1(c1 INT, c2 INT, c3 INT) DISTRIBUTED BY (c1);
+
+3. Insert data into the table and collect statistics from the table.
+
+   .. code-block:: sql
+
+      INSERT INTO aqumv_t1 SELECT i, i+1, i+2 FROM generate_series(1, 1000000) i;
+      ANALYZE aqumv_t1;
+
+4. Execute a query without enabling AQUMV. The query takes 7384.329 ms.
+
+   .. code-block:: sql
+
+      SELECT SQRT(ABS(ABS(c2) - c1 - 1) + ABS(c2)) FROM aqumv_t1 WHERE c1 > 30 AND c1 < 40 AND SQRT(ABS(c2)) > 5.8;
+
+         sqrt
+      -------------------
+      66.08276253029821
+      96.24499799839839
+      85.91607978309961
+      66.16441400296897
+      66.32455532033675
+      95.8309518948453
+      (7 rows)
+
+      Time: 7384.329 ms (00:07.384)
+
+   From the following query plan, you can see that the optimizer scans the table (``Seq Scan on aqumv_t1``).
+
+   .. code-block:: sql
+
+      EXPLAIN(COSTS OFF) SELECT SQRT(ABS(ABS(c2) - c1 - 1) + ABS(c2)) FROM aqumv_t1 WHERE c1 > 30 AND c1 < 40 AND SQRT(ABS(c2)) > 5.8;
+
+         QUERY PLAN
+      -------------------------------------------------------------------------------------------------------------
+      Gather Motion 3:1  (slice1; segments: 3)
+      ->  Seq Scan on aqumv_t1
+                  Filter: ((c1 > 30) AND (c1 < 40) AND (sqrt((abs(c2))::double precision) > '5.8'::double precision))
+      Optimizer: Postgres query optimizer
+      (4 rows)
+
+5. Create a materialized view ``mvt1`` based on ``aqumv_t1`` and collect statistics on the view.
+
+   .. code-block:: sql
+
+      CREATE INCREMENTAL MATERIALIZED VIEW mvt1 AS SELECT c1 AS mc1, c2 AS mc2, ABS(c2) AS mc3, ABS(ABS(c2) - c1 - 1) AS mc4
+      FROM aqumv_t1 WHERE c1 > 30 AND c1 < 40;
+
+      ANALYZE mvt1;
+
+6. Enable the AQUMV-related configuration parameter.
+
+   .. code-block:: sql
+
+      SET enable_answer_query_using_materialized_views = ON;
+
+7. Now AQUMV is enabled. Execute the same query again, which takes only 45.701 ms.
+
+   .. code-block:: sql
+
+      SELECT SQRT(ABS(ABS(c2) - c1 - 1) + ABS(c2)) FROM aqumv_t1 WHERE c1 > 30 AND c1 < 40 AND SQRT(ABS(c2)) > 5.8;
+
+         sqrt
+      -------------------
+      66.08276253029821
+      96.24499799839839
+      85.8309518948453
+      5.916079783099616
+      66.16441400296897
+      66.32455532033675
+      (7 rows)
+
+      Time: 45.701 ms
+
+   From the following query plan, you can see that the optimizer does not scan the ``aqumv_t1`` table, but scans the materialized view ``mvt1`` (``Seq Scan on public.mvt1``) instead.
+
+   .. code-block:: sql
+
+      EXPLAIN(VERBOSE, COSTS OFF) SELECT SQRT(ABS(ABS(c2) - c1 - 1) + ABS(c2)) FROM aqumv_t1 WHERE c1 > 30 AND c1 < 40 AND SQRT(ABS(c2)) > 5.8;
+
+         QUERY PLAN
+      --------------------------------------------------------------------------------
+      Gather Motion 3:1  (slice1; segments: 3)
+      Output: (sqrt(((mc4 + mc3))::double precision))
+      ->  Seq Scan on public.mvt1
+                  Output: sqrt(((mc4 + mc3))::double precision)
+                  Filter: (sqrt((mvt1.mc3)::double precision) > '5.8'::double precision)
+      Settings: enable_answer_query_using_materialized_views = 'on', optimizer = 'off'
+      Optimizer: Postgres query optimizer
+      (7 rows)
+
+   In the above example, the query takes 7384.329 ms without AQUMV and without using the materialized views. In contrast, the same query takes only 45.701 ms with AQUMV enabled and using the materialized view. This means that the materialized view pre-calculates and stores relevant calculation result, so that the view only contains rows that meet the specific condition (``c1 > 30 AND c1 < 40``).
+
+   Therefore, the above table query ``SELECT SQRT(ABS(ABS(c2) - c1 - 1) + ABS(c2)) FROM aqumv_t1 WHERE c1 > 30 AND c1 < 40 AND SQRT(ABS(c2)) > 5.8;`` is equivalent to querying from the materialized view ``SELECT SQRT(ABS(ABS(c2) - c1 - 1) + ABS(c2)) FROM aqumv_t1 WHERE c1 > 30 AND c1 < 40 AND SQRT(ABS(c2)) > 5.8;``.
+
+When the same query is executed, the data can be obtained directly from the materialized view, rather than from the original table. In this way, AQUMV can significantly improve query performance, especially when dealing with large data volumes and complex calculations.
+
+Use materialized views to query external tables
+---------------------------------------------------
+
+|product_name| supports querying external tables using materialized views. In general, querying external tables faces challenges like data synchronization latency and network bottlenecks. Materialized views can cache query results to avoid accessing external data sources every time, which improves query speed.
+
+Here is an example:
+
+1. Create an external table and its corresponding materialized view.
+
+   .. code:: sql
+
+      CREATE READABLE EXTERNAL TABLE aqumv_ext_r(id int) 
+      LOCATION ('demoprot://aqumvtextfile.txt') 
+      FORMAT 'text';
+
+      CREATE MATERIALIZED VIEW aqumv_ext_mv AS 
+      SELECT * FROM aqumv_ext_r;
+
+   In the above external table creation statement, ``demoprot://aqumvtextfile.txt`` is an example file path and example protocol.
+
+2. Enable the AQUMV support in a transaction for the external table:
+
+   .. code:: sql
+
+      BEGIN;
+      SET optimizer = OFF;
+      SET aqumv_allow_foreign_table = ON;
+      SET enable_answer_query_using_materialized_views = ON;
+
+3. Check the query plan to see that the following query uses the materialized view instead of directly scanning the external table:
+
+   .. code:: sql
+
+      EXPLAIN (COSTS OFF, VERBOSE) 
+      SELECT * FROM aqumv_ext_r;
+                                      QUERY PLAN
+      ------------------------------------------------------------------
+      Gather Motion 3:1  (slice1; segments: 3)
+         Output: id
+         ->  Seq Scan on aqumv.aqumv_ext_mv
+               Output: id
+      Optimizer: Postgres query optimizer
+
+4. Create an index on the materialized view to further optimize queries:
+
+   .. code:: sql
+
+      CREATE INDEX ON aqumv_ext_mv(id);
+
+5. When the conditional query is executed, the query plan shows the use of the index:
+
+   .. code:: sql
+
+      EXPLAIN (COSTS OFF, VERBOSE)
+      SELECT * FROM aqumv_ext_r WHERE id = 5;
+                                          QUERY PLAN
+      ----------------------------------------------------------------------------
+      Gather Motion 1:1  (slice1; segments: 1)
+         Output: id
+         ->  Index Only Scan using aqumv_ext_mv_id_idx on aqumv.aqumv_ext_mv
+               Output: id
+               Index Cond: (aqumv_ext_mv.id = 5)
+      Optimizer: Postgres query optimizer
+
+   Commit the transaction:
+
+   .. code-block:: sql
+
+      COMMIT;
+
+When this feature is enabled, queries on external tables automatically uses materialized views, including leveraging indexes on materialized views to accelerate queries.
+
+.. note:: 
+
+   - Because external table data might change outside the database and the planner cannot detect these changes, AQUMV is disabled for external tables by default.
+   - It is recommended to enable ``aqumv_allow_foreign_table`` only when you are certain that external table data has not changed.
+   - For some external tables (like Iceberg and Hudi), access speed can be 10 times slower or more than internal tables. Using materialized views in these cases can greatly improve query performance.
+   - Compared to importing external table data into internal tables, using materialized views avoids data loading latency and time overhead.
+
+Aggregate query support
+------------------------
+
+|product_name| supports optimizing queries that contain aggregate functions using materialized views. This feature can greatly improve query performance when dealing with aggregate operations on large datasets.
+
+Aggregate query support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Create a table ``t``.
+
+   .. code:: sql
+
+      CREATE TABLE t(c1 INT, c2 INT, c3 INT) DISTRIBUTED BY (c1);
+
+2. Insert data into the table and collect statistics.
+
+   .. code:: sql
+
+      INSERT INTO t SELECT i, i+1, i+2 FROM generate_series(1, 1000000) i;
+      ANALYZE t;
+
+3. Create a materialized view with aggregate functions.
+
+   .. code:: sql
+
+      CREATE MATERIALIZED VIEW mv AS
+      SELECT sum(c1) AS mc1, count(c2) AS mc2, 
+             avg(c3) AS mc3, count(*) AS mc4
+      FROM t 
+      WHERE c1 > 90;
+
+4. Query transformation example.
+   
+   Original query:
+
+   .. code:: sql
+
+      SELECT count(*), sum(c1), count(c2), avg(c3), 
+             abs(count(*) - 21) 
+      FROM t 
+      WHERE c1 > 90;
+
+   AQUMV will automatically rewrite it as:
+
+   .. code:: sql
+
+      SELECT mc4, mc1, mc2, mc3, abs((mc4 - 21)) 
+      FROM mv;
+
+   ``Seq Scan on mv`` in the query plan shows that the optimizer directly uses the materialized view:
+
+   .. code:: sql
+
+      EXPLAIN (VERBOSE, COSTS OFF)
+      SELECT count(*), sum(c1), count(c2), avg(c3), abs(count(*) - 21) 
+      FROM t 
+      WHERE c1 > 90;
+                                          QUERY PLAN
+      ------------------------------------------------------------------------
+       Gather Motion 3:1  (slice1; segments: 3)
+         Output: mc4, mc1, mc2, mc3, (abs((mc4 - 21)))
+         ->  Seq Scan on mv
+               Output: mc4, mc1, mc2, mc3, abs((mc4 - 21))
+       Settings: enable_answer_query_using_materialized_views = 'on', optimizer = 'off'
+       Optimizer: Postgres query optimizer
+      (6 rows)
+
+HAVING clause processing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+AQUMV supports queries with ``HAVING`` clauses. If the conditions in the ``HAVING`` clause can be calculated from the target list of the materialized view, these conditions will be converted to ``WHERE`` clauses.
+
+Example:
+
+1. Create a table and materialized view.
+
+   .. code:: sql
+
+      CREATE TABLE t(c1 int, c2 int, c3 int, c4 int);
+      INSERT INTO t SELECT i, i+1, i+2, i+3 FROM generate_series(1, 1000000) i;
+      ANALYZE t;
+      CREATE MATERIALIZED VIEW mv AS
+      SELECT sum(c1) AS mc1, count(c2) AS mc2,
+             avg(c3) AS mc3, count(*) AS mc4
+      FROM t 
+      WHERE c1 > 90;
+
+2. Query transformation with ``HAVING`` clause.
+
+   Original query:
+
+   .. code:: sql
+
+      SELECT count(*), sum(c1) 
+      FROM t 
+      WHERE c1 > 90 
+      HAVING abs(count(*) - 21) > 0 AND 2 > 1 AND avg(c3) > 97;
+
+   AQUMV will automatically rewrite it as:
+
+   .. code:: sql
+
+      SELECT mc4, mc1 
+      FROM mv 
+      WHERE mc3 > 97 AND abs(mc4 - 21) > 0;
+
+   The query plan shows that ``HAVING`` conditions are converted to filter conditions in the ``WHERE`` clause:
+
+   .. code:: sql
+
+      EXPLAIN (VERBOSE, COSTS OFF)
+      SELECT count(*), sum(c1) 
+      FROM t 
+      WHERE c1 > 90 
+      HAVING abs(count(*) - 21) > 0 AND 2 > 1 AND avg(c3) > 97;
+                                          QUERY PLAN
+      ------------------------------------------------------------------------
+       Gather Motion 3:1  (slice1; segments: 3)
+         Output: mc4, mc1
+         ->  Seq Scan on aqumv.mv
+               Output: mc4, mc1
+               Filter: ((mv.mc3 > '97'::numeric) AND (abs((mv.mc4 - 21)) > 0))
+       Optimizer: Postgres query optimizer
+      (7 rows)
+
+   Note:
+
+   - The condition ``2 > 1`` in the ``HAVING`` clause is optimized out during planning.
+   - ``abs(count(*) - 21) > 0`` is converted to ``abs(mc4 - 21) > 0`` and used as a filter condition.
+
+LIMIT and ORDER BY Support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Because only aggregate queries without ``GROUP BY`` are currently supported, aggregate results will have at most one row, therefore:
+  
+-  ``ORDER BY`` clauses do not affect the results in this case.
+-  ``LIMIT`` and ``OFFSET`` clauses with constant values can be directly applied to materialized view queries.
+
+   Example:
+
+   .. code:: sql
+
+      -- Original query
+      SELECT count(*), sum(c1) 
+      FROM t 
+      WHERE c1 > 90 
+      LIMIT 2;
+
+      -- Rewritten as
+      SELECT mc4, mc1 
+      FROM mv 
+      LIMIT 2;
+
+Notes for aggregate query support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-  Currently, only aggregate queries without ``GROUP BY`` clauses are supported.
+-  Conditions in ``HAVING`` clauses must be calculable from the target list of the materialized view.
+-  For aggregate queries, the result will be either one row or zero rows.

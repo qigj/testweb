@@ -1,0 +1,496 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Use Tags to Manage Database Objects &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Data Branching" href="use-data-branching.html" />
+    <link rel="prev" title="Insert, Update, and Delete Row Data" href="insert-update-delete-row-data.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../operate-with-data-index.html">Operate with Data</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="operate-with-db-objects-index.html">Operate with Database Objects</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="basic-query-syntax.html">Basic Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create-and-manage-warehouses.html">Create and Manage Warehouses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create-and-manage-tables.html">Create and Manage Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create-and-manage-views.html">Create and Manage Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create-and-manage-materialized-views.html">Create and Manage Materialized Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="insert-update-delete-row-data.html">Insert, Update, and Delete Row Data</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Use Tags to Manage Database Objects</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#features-of-tags">Features of tags</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage-scenarios">Usage scenarios</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#use-tags">Use tags</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#system-tables-related-to-tags">System tables related to tags</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#common-errors-and-tips">Common errors and tips</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="use-data-branching.html">Data Branching</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../choose-table-storage-models/choose-table-storage-models-index.html">Choose Table Storage Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-queries/sql-queries-index.html">Perform SQL Queries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced-data-analytics/advanced-data-analytics-index.html">Advanced Data Analytics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../work-with-transactions.html">Work with Transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transaction-concurrency-control.html">Control Transactional Concurrency</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../operate-with-data-index.html">Operate with Data</a></li>
+          <li class="breadcrumb-item"><a href="operate-with-db-objects-index.html">Operate with Database Objects</a></li>
+      <li class="breadcrumb-item active">Use Tags to Manage Database Objects</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="use-tags-to-manage-database-objects">
+<h1>Use Tags to Manage Database Objects<a class="headerlink" href="#use-tags-to-manage-database-objects" title="Link to this heading"></a></h1>
+<p>A tag is a database-level object that helps users label, classify, and manage other objects in the database. using tags, you can add custom labels to database objects such as databases, users, and tables, and warehouses,making it easier to manage and monitor different objects in the database.</p>
+<p>You can use tags in the database mainly used for the following purposes:</p>
+<ul class="simple">
+<li><p>Compliance monitoring for sensitive data: Tags can mark sensitive data to help administrators track and protect data, thus ensuring compliance.</p></li>
+<li><p>Data governance and resource usage management: Tags can classify and label different types of database objects, which helps discover data, protect it, and monitor resource usage.</p></li>
+</ul>
+<p>Tags are stored as key-value pairs, with a tag name and its value making up the pair. You can assign the same tag to multiple database objects with different values for flexible management.</p>
+<p>SynxDB Elastic supports and enables tags by default, with no extra setup needed.</p>
+<section id="features-of-tags">
+<h2>Features of tags<a class="headerlink" href="#features-of-tags" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>You can assign tags to any object in the database, such as databases, users, tables, and warehouses.</p></li>
+<li><p>You can assign tags when creating a database object with the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">&lt;object&gt;</span></code> statement, or add or change tags later using the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">&lt;object&gt;</span></code> statement.</p></li>
+<li><p>You can assign the same tag to different types of objects (like databases and tables) at the same time, and the tag value can be the same or different each time.</p></li>
+</ul>
+</section>
+<section id="usage-scenarios">
+<h2>Usage scenarios<a class="headerlink" href="#usage-scenarios" title="Link to this heading"></a></h2>
+<p>The tag is suitable for these situations:</p>
+<ul class="simple">
+<li><p>Object classification: Tags can be used to classify database objects. For example, you can use tags to tell the difference between objects in a development environment and a production environment. This makes it easier to quickly find and manage database objects in different environments.</p></li>
+<li><p>Permission management: By giving objects-specific tags, you can mark objects with special permissions or sensitive data. This helps administrators be more accurate when checking data, giving permissions, and managing compliance.</p></li>
+<li><p>Version control and status tracking: Tags can also be used to mark the version or status of database objects. This helps teams track the history of changes or see the database setup at a specific point in time. For example, a tag can show which project stage or version an object belongs to.</p></li>
+<li><p>Resource usage monitoring: Giving tags to resources (such as warehouses or tables) can help you accurately monitor resource usage. For example, tags can be used to group data warehouses by cost centers or business units, making it easier to analyze how resources are used and their efficiency.</p></li>
+</ul>
+</section>
+<section id="use-tags">
+<h2>Use tags<a class="headerlink" href="#use-tags" title="Link to this heading"></a></h2>
+<section id="query-existing-tag-information">
+<h3>Query existing tag information<a class="headerlink" href="#query-existing-tag-information" title="Link to this heading"></a></h3>
+<p>You can use the following commands to check the structure and content of the <code class="docutils literal notranslate"><span class="pre">pg_tag</span></code> and <code class="docutils literal notranslate"><span class="pre">pg_tag_description</span></code> tables:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>\<span class="n">d</span><span class="o">+</span> <span class="n">pg_tag</span><span class="p">;</span>  <span class="o">--</span> <span class="n">Views</span> <span class="n">the</span> <span class="n">detailed</span> <span class="n">structure</span> <span class="n">of</span> <span class="n">the</span> <span class="n">pg_tag</span> <span class="n">table</span><span class="o">.</span>
+\<span class="n">d</span><span class="o">+</span> <span class="n">pg_tag_description</span><span class="p">;</span>  <span class="o">--</span> <span class="n">Views</span> <span class="n">the</span> <span class="n">detailed</span> <span class="n">structure</span> <span class="n">of</span> <span class="n">the</span> <span class="n">pg_tag_description</span> <span class="n">table</span><span class="o">.</span>
+<span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">pg_tag</span><span class="p">;</span>  <span class="o">--</span> <span class="n">Gets</span> <span class="nb">all</span> <span class="n">tag</span> <span class="n">information</span><span class="o">.</span>
+<span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">pg_tag_description</span><span class="p">;</span>  <span class="o">--</span> <span class="n">Gets</span> <span class="nb">all</span> <span class="n">tag</span> <span class="n">description</span> <span class="n">information</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>You can use the following commands to query the created tags and descriptions:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">tagname</span><span class="p">,</span><span class="w"> </span><span class="n">tagowner</span><span class="p">,</span><span class="w"> </span><span class="n">allowed_values</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_tag</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Gets all tag names, owners, and allowed values.</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_tag_description</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Gets the total count of tag descriptions.</span>
+</pre></div>
+</div>
+<p>You can also use the following views to quickly query tag information in the database system:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">database_tag_descriptions</span></code>: Queries tag information for database objects.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_tag_descriptions</span></code>: Queries tag information for user (role) objects.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">warehouse_tag_descriptions</span></code>: Queries tag information for warehouses.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">schema_tag_descriptions</span></code>: Queries tag information for schemas.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">relation_tag_descriptions</span></code>: Queries tag information for relation objects such as tables, and views.</p></li>
+</ul>
+<p>Example queries:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">database_tag_descriptions</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">user_tag_descriptions</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">warehouse_tag_descriptions</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">tablespace_tag_descriptions</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">schema_tag_descriptions</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">relation_tag_descriptions</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="create-tags">
+<h3>Create tags<a class="headerlink" href="#create-tags" title="Link to this heading"></a></h3>
+<p>You can create a tag using the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TAG</span></code> statement and specify allowed values. The syntax is:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="n">ALLOWED_VALUES</span><span class="w"> </span><span class="s1">&#39;&lt;val_1&gt;&#39;</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&lt;val_2&gt;&#39;</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">]</span>
+</pre></div>
+</div>
+<p>In the above statements, <code class="docutils literal notranslate"><span class="pre">ALLOWED_VALUES</span></code> can define up to 300 allowed values. By default, any string (including empty strings) is allowed, and each string can be up to 256 characters long.</p>
+<p>Examples:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="n">tag_test_a</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Creates a tag named tag_test_a.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">tag_test_b</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Creates tag_test_b if it does not exist.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="n">tag_test_c</span><span class="w"> </span><span class="n">ALLOWED_VALUES</span><span class="w"> </span><span class="s1">&#39;123&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Creates a tag_test_c tag with the allowed value &#39;123&#39;.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="n">tag_test_d</span><span class="w"> </span><span class="n">ALLOWED_VALUES</span><span class="w"> </span><span class="s1">&#39;123&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;456&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Creates a tag_test_d tag with multiple allowed values.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">tag_test_e</span><span class="w"> </span><span class="n">ALLOWED_VALUES</span><span class="w"> </span><span class="s1">&#39;123&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;val1&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Creates a tag_test_e tag if it does not exist.</span>
+</pre></div>
+</div>
+</section>
+<section id="delete-tags">
+<h3>Delete tags<a class="headerlink" href="#delete-tags" title="Link to this heading"></a></h3>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">TAG</span></code> statement to delete a tag. The syntax is:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Before deleting a tag, the system checks whether the tag is referenced by any database object. If it is, an error is thrown. The user who executes the deletion must be a superuser or the owner of the tag.</p>
+<p>Examples:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="n">tag_test_a</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Deletes the tag_test_a tag.</span>
+<span class="k">DROP</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">tag_test_b</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Deletes the tag_test_b tag if it exists.</span>
+</pre></div>
+</div>
+</section>
+<section id="modify-tags">
+<h3>Modify tags<a class="headerlink" href="#modify-tags" title="Link to this heading"></a></h3>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TAG</span></code> statement to change the tag name or allowed values. The syntax is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TAG</span> <span class="p">[</span> <span class="n">IF</span> <span class="n">EXISTS</span> <span class="p">]</span> <span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span> <span class="n">RENAME</span> <span class="n">TO</span> <span class="o">&lt;</span><span class="n">new_name</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="n">ALTER</span> <span class="n">TAG</span> <span class="p">[</span> <span class="n">IF</span> <span class="n">EXISTS</span> <span class="p">]</span> <span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span> <span class="p">{</span> <span class="n">ADD</span> <span class="o">|</span> <span class="n">DROP</span> <span class="p">}</span> <span class="n">ALLOWED_VALUES</span> <span class="s1">&#39;&lt;val_1&gt;&#39;</span> <span class="p">[,</span> <span class="s1">&#39;&lt;val_2&gt;&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">];</span>
+<span class="n">ALTER</span> <span class="n">TAG</span> <span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span> <span class="n">UNSET</span> <span class="n">ALLOWED_VALUES</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">RENAME</span> <span class="pre">TO</span></code>: Renames the existing tag to a new name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ADD</span></code> or <code class="docutils literal notranslate"><span class="pre">DROP</span></code>: Adds or removes allowed values for the tag.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UNSET</span> <span class="pre">ALLOWED_VALUES</span></code>: Resets the allowed values for the tag.</p></li>
+</ul>
+<section id="rename-tags">
+<h4>Rename tags<a class="headerlink" href="#rename-tags" title="Link to this heading"></a></h4>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="n">tag_test_a</span><span class="w"> </span><span class="k">RENAME</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">tag_test_a_new</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Renames tag_test_a to tag_test_a_new.</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">tag_test_b</span><span class="w"> </span><span class="k">RENAME</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">tag_test_b_new</span><span class="p">;</span><span class="w">  </span><span class="c1">-- If tag_test_b exists, renames it to tag_test_b_new.</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="n">tag_test_c_new</span><span class="w"> </span><span class="k">RENAME</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">tag_test_c</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Renames tag_test_c_new back to tag_test_c.</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="n">tag_test_d_new</span><span class="w"> </span><span class="k">RENAME</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">tag_test_d</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Renames tag_test_d_new to tag_test_d.</span>
+</pre></div>
+</div>
+</section>
+<section id="modify-allowed-values">
+<h4>Modify allowed values<a class="headerlink" href="#modify-allowed-values" title="Link to this heading"></a></h4>
+<p>Example of removing allowed values:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="n">tag_test_a</span><span class="w"> </span><span class="n">UNSET</span><span class="w"> </span><span class="n">ALLOWED_VALUES</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Removes all allowed values from tag_test_a.</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="n">tag_test_b</span><span class="w"> </span><span class="n">UNSET</span><span class="w"> </span><span class="n">ALLOWED_VALUES</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Removes all allowed values from tag_test_b.</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="n">tag_test_c</span><span class="w"> </span><span class="n">UNSET</span><span class="w"> </span><span class="n">ALLOWED_VALUES</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Removes all allowed values from tag_test_c.</span>
+</pre></div>
+</div>
+<p>Example of adding allowed values:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="n">tag_test_a</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="n">ALLOWED_VALUES</span><span class="w"> </span><span class="s1">&#39;val1&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Adds &#39;val1&#39; as an allowed value to tag_test_a.</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="n">tag_test_b</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="n">ALLOWED_VALUES</span><span class="w"> </span><span class="s1">&#39;val2&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;val3&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Adds multiple allowed values to tag_test_b.</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">tag_test_c</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="n">ALLOWED_VALUES</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Adds an empty string as an allowed value to tag_test_c.</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="assign-tags-to-objects">
+<h3>Assign tags to objects<a class="headerlink" href="#assign-tags-to-objects" title="Link to this heading"></a></h3>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">TAG</span></code> keyword to assign tags when creating or modifying database objects.</p>
+<section id="assign-tags-to-a-database">
+<h4>Assign tags to a database<a class="headerlink" href="#assign-tags-to-a-database" title="Link to this heading"></a></h4>
+<p>The syntax is:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">database_name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&lt;tag_value&gt;&#39;</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">];</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="n">database_name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&lt;tag_value&gt;&#39;</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">);</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="n">database_name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">UNSET</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+<p>You can assign or remove tags for a database object using the <code class="docutils literal notranslate"><span class="pre">TAG</span></code> keyword in the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">DATABASE</span></code> and <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">DATABASE</span></code> statements.</p>
+<p>Examples:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">sales_db</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;production&#39;</span><span class="w"> </span><span class="p">);</span>
+
+<span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">sales_db</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;staging&#39;</span><span class="w"> </span><span class="p">);</span><span class="w">  </span><span class="c1">-- Updates the environment tag of the sales_db database to staging.</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">sales_db</span><span class="w"> </span><span class="n">UNSET</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">environment</span><span class="w"> </span><span class="p">);</span><span class="w">  </span><span class="c1">-- Removes the environment tag from the sales_db database.</span>
+</pre></div>
+</div>
+</section>
+<section id="assign-tags-to-tables">
+<h4>Assign tags to tables<a class="headerlink" href="#assign-tags-to-tables" title="Link to this heading"></a></h4>
+<p>The syntax is:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&lt;tag_value&gt;&#39;</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">];</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&lt;tag_value&gt;&#39;</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">);</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">UNSET</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>You can use <code class="docutils literal notranslate"><span class="pre">TAG</span></code> in the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> and <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span></code> statements to assign or remove tags from table objects.</p></li>
+<li><p>A database object can have up to 50 tags, and each tag must be unique.</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">order_id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">order_date</span><span class="w"> </span><span class="nb">DATE</span>
+<span class="p">)</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">priority</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;high&#39;</span><span class="w"> </span><span class="p">);</span>
+
+<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">priority</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;urgent&#39;</span><span class="w"> </span><span class="p">);</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">UNSET</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">priority</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="assign-tags-to-users">
+<h4>Assign tags to users<a class="headerlink" href="#assign-tags-to-users" title="Link to this heading"></a></h4>
+<p>The syntax is:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="o">&lt;</span><span class="n">user_name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&lt;tag_value&gt;&#39;</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">];</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="n">user_name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&lt;tag_value&gt;&#39;</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">);</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="n">user_name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">UNSET</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">TAG</span></code> in the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">USER</span></code> and <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">USER</span></code> statements to assign or remove tags from user objects.</p>
+<p>Example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">john_doe</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="w"> </span><span class="p">);</span>
+
+<span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">john_doe</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;super_admin&#39;</span><span class="w"> </span><span class="p">);</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">john_doe</span><span class="w"> </span><span class="n">UNSET</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="assign-tags-to-warehouses">
+<h4>Assign tags to warehouses<a class="headerlink" href="#assign-tags-to-warehouses" title="Link to this heading"></a></h4>
+<p>The syntax is:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="n">WAREHOUSE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">warehouse_name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&lt;tag_value&gt;&#39;</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">];</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="n">WAREHOUSE</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="n">warehouse_name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&lt;tag_value&gt;&#39;</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">);</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="n">WAREHOUSE</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="n">warehouse_name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">UNSET</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">TAG</span></code> in the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">WAREHOUSE</span></code> and <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">WAREHOUSE</span></code> statements to assign or remove tags from warehouse objects.</p>
+<p>For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">WAREHOUSE</span><span class="w"> </span><span class="n">analytics_wh</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">cost_center</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;analytics&#39;</span><span class="w"> </span><span class="p">);</span>
+
+<span class="k">ALTER</span><span class="w"> </span><span class="n">WAREHOUSE</span><span class="w"> </span><span class="n">analytics_wh</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">cost_center</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;finance&#39;</span><span class="w"> </span><span class="p">);</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="n">WAREHOUSE</span><span class="w"> </span><span class="n">analytics_wh</span><span class="w"> </span><span class="n">UNSET</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">cost_center</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="tag-comments">
+<h3>Tag comments<a class="headerlink" href="#tag-comments" title="Link to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">COMMENT</span> <span class="pre">ON</span> <span class="pre">TAG</span></code> to add a comment to a tag. The syntax is:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">COMMENT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tag_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="s1">&#39;&lt;comment&gt;&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">COMMENT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="n">priority</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="s1">&#39;This tag indicates the urgency level of orders.&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="system-tables-related-to-tags">
+<h2>System tables related to tags<a class="headerlink" href="#system-tables-related-to-tags" title="Link to this heading"></a></h2>
+<p>SynxDB Elastic uses two metadata tables to store tag information and the relationship between database objects and tags: <code class="docutils literal notranslate"><span class="pre">pg_tag</span></code> and <code class="docutils literal notranslate"><span class="pre">pg_tag_description</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pg_tag</span></code>: Stores information about all tags, including the tag’s OID, name, owner, and allowed values.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pg_tag_description</span></code>: Records the relationship between database objects and tags, including the object’s database ID, class ID, object ID, sub-object number, tag OID, and tag value.</p></li>
+</ul>
+<section id="pg-tag-table">
+<h3>pg_tag table<a class="headerlink" href="#pg-tag-table" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">pg_tag</span></code> table is used to store information about all tags, including the tag identifier, name, owner, and allowed values. The table structure is as follows:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Column name</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">OID</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OID</span></code></p></td>
+<td><p>Unique identifier for the tag.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TAGNAME</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">NAMEDATA</span></code></p></td>
+<td><p>Name of the tag.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TAGOWNER</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OID</span></code></p></td>
+<td><p>The OID of the tag owner (user).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ALLOWED_VALUES</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ARRAY[TEXT]</span></code></p></td>
+<td><p>Allowed values for this tag (if any).</p></td>
+</tr>
+</tbody>
+</table>
+<p>With the <code class="docutils literal notranslate"><span class="pre">pg_tag</span></code> table, the database system can efficiently manage and store all defined tag information, and each tag can have a set of allowed values, making it flexible to use.</p>
+</section>
+<section id="pg-tag-description-table">
+<h3>pg_tag_description table<a class="headerlink" href="#pg-tag-description-table" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">pg_tag_description</span></code> table records the relationships between database objects and tags. Each record represents a tag and its value associated with a specific database object. The structure of the table is as follows:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Column name</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">oid</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OID</span></code></p></td>
+<td><p>The unique identifier for the table.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tddatabaseid</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OID</span></code></p></td>
+<td><p>The database ID associated with the tag (set to <code class="docutils literal notranslate"><span class="pre">0</span></code> for globally shared objects).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tdclassid</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OID</span></code></p></td>
+<td><p>The class ID of the database object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tdobjid</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OID</span></code></p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">OID</span></code> of the database object.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tagid</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OID</span></code></p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">OID</span></code> of the tag, indicating the tag associated with the object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tagvalue</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TEXT</span></code></p></td>
+<td><p>The specific value of the tag for the object.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The <code class="docutils literal notranslate"><span class="pre">pg_tag_description</span></code> table stores the tag information for each database object along with its values, supporting many-to-many relationships between tags and objects.</p>
+</section>
+<section id="handle-global-and-non-global-objects">
+<h3>Handle global and non-global objects<a class="headerlink" href="#handle-global-and-non-global-objects" title="Link to this heading"></a></h3>
+<p>For globally shared objects (such as users and repositories), the <code class="docutils literal notranslate"><span class="pre">DBID</span></code> field value is <code class="docutils literal notranslate"><span class="pre">0</span></code>. This means that these objects are not part of a specific database and have global properties. For non-global shared objects (such as a specific database object), the <code class="docutils literal notranslate"><span class="pre">DBID</span></code> field stores the OID of the database where the object belongs.</p>
+<p>Sub-object number (<code class="docutils literal notranslate"><span class="pre">OBJSUBID</span></code>): Currently, the database system does not support adding labels to sub-objects (like columns), so <code class="docutils literal notranslate"><span class="pre">OBJSUBID</span></code> is always <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</section>
+</section>
+<section id="common-errors-and-tips">
+<h2>Common errors and tips<a class="headerlink" href="#common-errors-and-tips" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Duplicate labels</strong>: If you assign duplicate labels to the same object, the database system returns an error message.</p></li>
+<li><p><strong>Permission denied</strong>: If a non-superuser or non-label owner tries to delete or modify a label, the database system returns a permission error.</p></li>
+<li><p><strong>Exceeded label limit</strong>: An object can have a maximum of 50 labels. Adding more than 50 will cause an error.</p></li>
+</ul>
+<p>Using this feature, database administrators can organize and manage database objects more effectively, making the system more flexible and easier to operate.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="use-data-branching.html" class="btn btn-neutral float-right" title="Data Branching" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="insert-update-delete-row-data.html" class="btn btn-neutral float-left" title="Insert, Update, and Delete Row Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

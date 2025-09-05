@@ -1,0 +1,701 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>SELECT - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="select"><a class="header" href="#select">SELECT</a></h1>
+<p>Retrieves rows from a table or view.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code class="language-{#sql_command_synopsis}">[ WITH [ RECURSIVE ] &lt;with_query&gt; [, ...] ]
+SELECT [ALL | DISTINCT [ON (&lt;expression&gt; [, ...])]]
+  * | &lt;expression &gt;[[AS] &lt;output_name&gt;] [, ...]
+  [FROM &lt;from_item&gt; [, ...]]
+  [WHERE &lt;condition&gt;]
+  [GROUP BY &lt;grouping_element&gt; [, ...]]
+  [HAVING &lt;condition&gt; [, ...]]
+  [WINDOW &lt;window_name&gt; AS (&lt;window_definition&gt;) [, ...] ]
+  [{UNION | INTERSECT | EXCEPT} [ALL | DISTINCT] &lt;select&gt;]
+  [ORDER BY &lt;expression&gt; [ASC | DESC | USING &lt;operator&gt;] [NULLS {FIRST | LAST}] [, ...]]
+  [LIMIT {&lt;count&gt; | ALL}]
+  [OFFSET &lt;start&gt; [ ROW | ROWS ] ]
+  [FETCH { FIRST | NEXT } [ &lt;count&gt; ] { ROW | ROWS } ONLY]
+  [FOR {UPDATE | NO KEY UPDATE | SHARE | KEY SHARE} [OF &lt;table_name&gt; [, ...]] [NOWAIT] [...]]
+
+TABLE { [ ONLY ] &lt;table_name&gt; [ * ] | &lt;with_query_name&gt; }
+
+</code></pre>
+<p>where with_query: is:</p>
+<pre><code>  &lt;with_query_name&gt; [( &lt;column_name&gt; [, ...] )] AS ( &lt;select&gt; | &lt;values&gt; | &lt;insert&gt; | &lt;update&gt; | delete )
+</code></pre>
+<p>where from_item can be one of:</p>
+<pre><code>[ONLY] &lt;table_name&gt; [ * ] [ [ AS ] &lt;alias&gt; [ ( &lt;column_alias&gt; [, ...] ) ] ]
+( &lt;select&gt; ) [ AS ] &lt;alias&gt; [( &lt;column_alias&gt; [, ...] ) ]
+with\_query\_name [ [ AS ] &lt;alias&gt; [ ( &lt;column_alias&gt; [, ...] ) ] ]
+&lt;function_name&gt; ( [ &lt;argument&gt; [, ...] ] )
+            [ WITH ORDINALITY ] [ [ AS ] &lt;alias&gt; [ ( &lt;column_alias&gt; [, ...] ) ] ]
+&lt;function_name&gt; ( [ &lt;argument&gt; [, ...] ] ) [ AS ] &lt;alias&gt; ( &lt;column_definition&gt; [, ...] )
+&lt;function_name&gt; ( [ &lt;argument&gt; [, ...] ] ) AS ( &lt;column_definition&gt; [, ...] )
+ROWS FROM( function_name ( [ argument [, ...] ] ) [ AS ( column_definition [, ...] ) ] [, ...] )
+            [ WITH ORDINALITY ] [ [ AS ] &lt;alias&gt; [ ( &lt;column_alias&gt; [, ...] ) ] ]
+&lt;from_item&gt; [ NATURAL ] &lt;join_type&gt; &lt;from_item&gt;
+          [ ON &lt;join_condition&gt; | USING ( &lt;join_column&gt; [, ...] ) ]
+</code></pre>
+<p>where grouping_element can be one of:</p>
+<pre><code>  ()
+  &lt;expression&gt;
+  ROLLUP (&lt;expression&gt; [,...])
+  CUBE (&lt;expression&gt; [,...])
+  GROUPING SETS ((&lt;grouping_element&gt; [, ...]))
+</code></pre>
+<p>where window_definition is:</p>
+<pre><code>  [&lt;existing_window_name&gt;]
+  [PARTITION BY &lt;expression&gt; [, ...]]
+  [ORDER BY &lt;expression&gt; [ASC | DESC | USING &lt;operator&gt;] 
+    [NULLS {FIRST | LAST}] [, ...]]
+  [{ RANGE | ROWS} &lt;frame_start&gt; 
+     | {RANGE | ROWS} BETWEEN &lt;frame_start&gt; AND &lt;frame_end&gt;
+
+</code></pre>
+<p>where frame_start and frame_end can be one of:</p>
+<pre><code>  UNBOUNDED PRECEDING
+  &lt;value&gt; PRECEDING
+  CURRENT ROW
+  &lt;value&gt; FOLLOWING
+  UNBOUNDED FOLLOWING
+
+</code></pre>
+<p><sup>2</sup>When a locking clause is specified (the <code>FOR</code> clause), the Global Deadlock Detector affects how table rows are locked. See item 12 in the Description section and see <a href="#locking_clause">The Locking Clause</a>.</p>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p><code>SELECT</code> retrieves rows from zero or more tables. The general processing of <code>SELECT</code> is as follows:</p>
+<ol>
+<li>All queries in the <code>WITH</code> clause are computed. These effectively serve as temporary tables that can be referenced in the <code>FROM</code> list.</li>
+<li>All elements in the <code>FROM</code> list are computed. (Each element in the <code>FROM</code> list is a real or virtual table.) If more than one element is specified in the <code>FROM</code> list, they are cross-joined together.</li>
+<li>If the <code>WHERE</code> clause is specified, all rows that do not satisfy the condition are eliminated from the output.</li>
+<li>If the <code>GROUP BY</code> clause is specified, or if there are aggregate function calls, the output is combined into groups of rows that match on one or more values, and the results of aggregate functions are computed. If the <code>HAVING</code> clause is present, it eliminates groups that do not satisfy the given condition.</li>
+<li>The actual output rows are computed using the <code>SELECT</code> output expressions for each selected row or row group.</li>
+<li><code>SELECT DISTINCT</code> eliminates duplicate rows from the result. <code>SELECT DISTINCT ON</code> eliminates rows that match on all the specified expressions. <code>SELECT ALL</code> (the default) will return all candidate rows, including duplicates.</li>
+<li>If a window expression is specified (and optional <code>WINDOW</code> clause), the output is organized according to the positional (row) or value-based (range) window frame.</li>
+<li>The actual output rows are computed using the <code>SELECT</code> output expressions for each selected row.</li>
+<li>Using the operators <code>UNION</code>, <code>INTERSECT</code>, and <code>EXCEPT</code>, the output of more than one <code>SELECT</code> statement can be combined to form a single result set. The <code>UNION</code> operator returns all rows that are in one or both of the result sets. The <code>INTERSECT</code> operator returns all rows that are strictly in both result sets. The <code>EXCEPT</code> operator returns the rows that are in the first result set but not in the second. In all three cases, duplicate rows are eliminated unless <code>ALL</code> is specified. The noise word <code>DISTINCT</code> can be added to explicitly specify eliminating duplicate rows. Notice that <code>DISTINCT</code> is the default behavior here, even though <code>ALL</code> is the default for <code>SELECT</code> itself.</li>
+<li>If the <code>ORDER BY</code> clause is specified, the returned rows are sorted in the specified order. If <code>ORDER BY</code> is not given, the rows are returned in whatever order the system finds fastest to produce.</li>
+<li>If the <code>LIMIT</code> (or <code>FETCH FIRST</code>) or <code>OFFSET</code> clause is specified, the <code>SELECT</code> statement only returns a subset of the result rows.</li>
+<li>If <code>FOR UPDATE</code>, <code>FOR NO KEY UPDATE</code>, <code>FOR SHARE</code>, or <code>FOR KEY SHARE</code> is specified, the <code>SELECT</code> statement locks the entire table against concurrent updates.</li>
+</ol>
+<p>You must have <code>SELECT</code> privilege on each column used in a <code>SELECT</code> command. The use of <code>FOR NO KEY UPDATE</code>, <code>FOR UPDATE</code>, <code>FOR SHARE</code>, or <code>FOR KEY SHARE</code> requires <code>UPDATE</code> privilege as well (for at least one column of each table so selected).</p>
+<h2 id="parameters"><a class="header" href="#parameters"><a id="section4"></a>Parameters</a></h2>
+<p><strong>The WITH Clause</strong></p>
+<p>The optional <code>WITH</code> clause allows you to specify one or more subqueries that can be referenced by name in the primary query. The subqueries effectively act as temporary tables or views for the duration of the primary query. Each subquery can be a <code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code> statement. When writing a data-modifying statement (<code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code>) in <code>WITH</code>, it is usual to include a <code>RETURNING</code> clause. It is the output of <code>RETURNING</code>, <em>not</em> the underlying table that the statement modifies, that forms the temporary table that is read by the primary query. If <code>RETURNING</code> is omitted, the statement is still run, but it produces no output so it cannot be referenced as a table by the primary query.</p>
+<p>For a <code>SELECT</code> command that includes a <code>WITH</code> clause, the clause can contain at most a single clause that modifies table data (<code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code> command).</p>
+<p>A with_query_name without schema qualification must be specified for each query in the <code>WITH</code> clause. Optionally, a list of column names can be specified; if the list of column names is omitted, the names are inferred from the subquery. The primary query and the <code>WITH</code> queries are all (notionally) run at the same time.</p>
+<p>If <code>RECURSIVE</code> is specified, it allows a <code>SELECT</code> subquery to reference itself by name. Such a subquery has the general form</p>
+<pre><code>&lt;non_recursive_term&gt; UNION [ALL | DISTINCT] &lt;recursive_term&gt;
+</code></pre>
+<p>where the recursive self-reference appears on the right-hand side of the <code>UNION</code>. Only one recursive self-reference is permitted per query. Recursive data-modifying statements are not supported, but you can use the results of a recursive <code>SELECT</code> query in a data-modifying statement.</p>
+<p>If the <code>RECURSIVE</code> keyword is specified, the <code>WITH</code> queries need not be ordered: a query can reference another query that is later in the list. However, circular references, or mutual recursion, are not supported.</p>
+<p>Without the <code>RECURSIVE</code> keyword, <code>WITH</code> queries can only reference sibling <code>WITH</code> queries that are earlier in the <code>WITH</code> list.</p>
+<p><code>WITH RECURSIVE</code> limitations. These items are not supported:</p>
+<ul>
+<li>A recursive <code>WITH</code> clause that contains the following in the recursive_term.
+<ul>
+<li>Subqueries with a self-reference</li>
+<li><code>DISTINCT</code> clause</li>
+<li><code>GROUP BY</code> clause</li>
+<li>A window function</li>
+</ul>
+</li>
+<li>A recursive <code>WITH</code> clause where the with_query_name is a part of a set operation.</li>
+</ul>
+<p>Following is an example of the set operation limitation. This query returns an error because the set operation <code>UNION</code> contains a reference to the table <code>foo</code>.</p>
+<pre><code>WITH RECURSIVE foo(i) AS (
+    SELECT 1
+  UNION ALL
+    SELECT i+1 FROM (SELECT * FROM foo UNION SELECT 0) bar
+)
+SELECT * FROM foo LIMIT 5;
+</code></pre>
+<p>This recursive CTE is allowed because the set operation <code>UNION</code> does not have a reference to the CTE <code>foo</code>.</p>
+<pre><code>WITH RECURSIVE foo(i) AS (
+    SELECT 1
+  UNION ALL
+    SELECT i+1 FROM (SELECT * FROM bar UNION SELECT 0) bar, foo
+    WHERE foo.i = bar.a
+)
+SELECT * FROM foo LIMIT 5;
+</code></pre>
+<p>A key property of <code>WITH</code> queries is that they are evaluated only once per execution of the primary query, even if the primary query refers to them more than once. In particular, data-modifying statements are guaranteed to be run once and only once, regardless of whether the primary query reads all or any of their output.</p>
+<p>The primary query and the <code>WITH</code> queries are all (notionally) run at the same time. This implies that the effects of a data-modifying statement in <code>WITH</code> cannot be seen from other parts of the query, other than by reading its <code>RETURNING</code> output. If two such data-modifying statements attempt to modify the same row, the results are unspecified.</p>
+<p>See <a href="../../admin_guide/query/topics/CTE-query.html">WITH Queries (Common Table Expressions)</a> in the <em>SynxDB Administrator Guide</em> for additional information.</p>
+<p><strong>The SELECT List</strong></p>
+<p>The <code>SELECT</code> list (between the key words <code>SELECT</code> and <code>FROM</code>) specifies expressions that form the output rows of the <code>SELECT</code> statement. The expressions can (and usually do) refer to columns computed in the <code>FROM</code> clause.</p>
+<p>An expression in the <code>SELECT</code> list can be a constant value, a column reference, an operator invocation, a function call, an aggregate expression, a window expression, a scalar subquery, and so on. A number of constructs can be classified as an expression but do not follow any general syntax rules. These generally have the semantics of a function or operator. For information about SQL value expressions and function calls, see “Querying Data” in the <em>SynxDB Administrator Guide</em>.</p>
+<p>Just as in a table, every output column of a <code>SELECT</code> has a name. In a simple <code>SELECT</code> this name is just used to label the column for display, but when the <code>SELECT</code> is a sub-query of a larger query, the name is seen by the larger query as the column name of the virtual table produced by the sub-query. To specify the name to use for an output column, write <code>AS</code> output_name after the column’s expression. (You can omit <code>AS</code>, but only if the desired output name does not match any SQL keyword. For protection against possible future keyword additions, you can always either write <code>AS</code> or double-quote the output name.) If you do not specify a column name, SynxDB chooses a name is automatically. If the column’s expression is a simple column reference then the chosen name is the same as that column’s name. In more complex cases, a function or type name may be used, or the system may fall back on a generated name such as <code>?column?</code> or <code>columnN</code>.</p>
+<p>An output column’s name can be used to refer to the column’s value in <code>ORDER BY</code> and <code>GROUP BY</code> clauses, but not in the <code>WHERE</code> or <code>HAVING</code> clauses; there you must write out the expression instead.</p>
+<p>Instead of an expression, <code>*</code> can be written in the output list as a shorthand for all the columns of the selected rows. Also, you can write <code>table\_name.*</code> as a shorthand for the columns coming from just that table. In these cases it is not possible to specify new names with <code>AS</code>; the output column names will be the same as the table columns’ names.</p>
+<p><strong>The DISTINCT Clause</strong></p>
+<p>If <code>SELECT DISTINCT</code> is specified, all duplicate rows are removed from the result set (one row is kept from each group of duplicates). <code>SELECT ALL</code> specifies the opposite: all rows are kept; that is the default.</p>
+<p><code>SELECT DISTINCT ON ( expression [, ...] )</code> keeps only the first row of each set of rows where the given expressions evaluate to equal. The <code>DISTINCT ON</code> expressions are interpreted using the same rules as for <code>ORDER BY</code> (see above). Note that the “first row” of each set is unpredictable unless <code>ORDER BY</code> is used to ensure that the desired row appears first. For example:</p>
+<pre><code>
+SELECT DISTINCT ON (location) location, time, report
+    FROM weather_reports
+    ORDER BY location, time DESC;
+
+</code></pre>
+<p>retrieves the most recent weather report for each location. But if we had not used <code>ORDER BY</code> to force descending order of time values for each location, we’d have gotten a report from an unpredictable time for each location.</p>
+<p>The <code>DISTINCT ON</code> expression(s) must match the leftmost <code>ORDER BY</code> expression(s). The <code>ORDER BY</code> clause will normally contain additional expression(s) that determine the desired precedence of rows within each <code>DISTINCT ON</code> group.</p>
+<p><strong>The FROM Clause</strong></p>
+<p>The <code>FROM</code> clause specifies one or more source tables for the <code>SELECT</code>. If multiple sources are specified, the result is the Cartesian product (cross join) of all the sources. But usually qualification conditions are added (via <code>WHERE</code>) to restrict the returned rows to a small subset of the Cartesian product. The <code>FROM</code> clause can contain the following elements:</p>
+<h3 id="table_name"><a class="header" href="#table_name">table_name</a></h3>
+<p>The name (optionally schema-qualified) of an existing table or view. If <code>ONLY</code> is specified, only that table is scanned. If <code>ONLY</code> is not specified, the table and all its descendant tables (if any) are scanned.</p>
+<h3 id="alias"><a class="header" href="#alias">alias</a></h3>
+<p>A substitute name for the <code>FROM</code> item containing the alias. An alias is used for brevity or to eliminate ambiguity for self-joins (where the same table is scanned multiple times). When an alias is provided, it completely hides the actual name of the table or function; for example given <code>FROM foo AS f</code>, the remainder of the <code>SELECT</code> must refer to this <code>FROM</code> item as <code>f</code> not <code>foo</code>. If an alias is written, a column alias list can also be written to provide substitute names for one or more columns of the table.</p>
+<h3 id="select-1"><a class="header" href="#select-1">select</a></h3>
+<p>A sub-<code>SELECT</code> can appear in the <code>FROM</code> clause. This acts as though its output were created as a temporary table for the duration of this single <code>SELECT</code> command. Note that the sub-<code>SELECT</code> must be surrounded by parentheses, and an alias must be provided for it. A <a href="VALUES.html">VALUES</a> command can also be used here. See “Non-standard Clauses” in the <a href="#section19">Compatibility</a> section for limitations of using correlated sub-selects in SynxDB.</p>
+<h3 id="with_query_name"><a class="header" href="#with_query_name">with_query_name</a></h3>
+<p>A with_query is referenced in the <code>FROM</code> clause by specifying its with_query_name, just as though the name were a table name. The with_query_name cannot contain a schema qualifier. An alias can be provided in the same way as for a table.</p>
+<p>The with_query hides a table of the same name for the purposes of the primary query. If necessary, you can refer to a table of the same name by qualifying the table name with the schema.</p>
+<h3 id="function_name"><a class="header" href="#function_name">function_name</a></h3>
+<p>Function calls can appear in the <code>FROM</code> clause. (This is especially useful for functions that return result sets, but any function can be used.) This acts as though its output were created as a temporary table for the duration of this single <code>SELECT</code> command. An alias may also be used. If an alias is written, a column alias list can also be written to provide substitute names for one or more attributes of the function’s composite return type. If the function has been defined as returning the record data type, then an alias or the key word <code>AS</code> must be present, followed by a column definition list in the form <code>( column_name data_type [, ... ] )</code>. The column definition list must match the actual number and types of columns returned by the function.</p>
+<h3 id="join_type"><a class="header" href="#join_type">join_type</a></h3>
+<p>One of:</p>
+<ul>
+<li><strong>[INNER] JOIN</strong></li>
+<li><strong>LEFT [OUTER] JOIN</strong></li>
+<li><strong>RIGHT [OUTER] JOIN</strong></li>
+<li><strong>FULL [OUTER] JOIN</strong></li>
+<li><strong>CROSS JOIN</strong></li>
+</ul>
+<p>For the <code>INNER</code> and <code>OUTER</code> join types, a join condition must be specified, namely exactly one of <code>NATURAL</code>, <code>ON join\_condition</code>, or <code>USING ( join\_column [, ...])</code>. See below for the meaning. For <code>CROSS JOIN</code>, none of these clauses may appear.</p>
+<p>A JOIN clause combines two <code>FROM</code> items, which for convenience we will refer to as “tables”, though in reality they can be any type of <code>FROM</code> item. Use parentheses if necessary to determine the order of nesting. In the absence of parentheses, <code>JOIN</code>s nest left-to-right. In any case <code>JOIN</code> binds more tightly than the commas separating <code>FROM</code>-list items.</p>
+<p><code>CROSS JOIN</code> and <code>INNER JOIN</code> produce a simple Cartesian product, the same result as you get from listing the two tables at the top level of <code>FROM</code>, but restricted by the join condition (if any). <code>CROSS JOIN</code> is equivalent to <code>INNER JOIN ON``(TRUE)</code>, that is, no rows are removed by qualification. These join types are just a notational convenience, since they do nothing you could not do with plain <code>FROM</code> and <code>WHERE</code>.</p>
+<p><code>LEFT OUTER JOIN</code> returns all rows in the qualified Cartesian product (i.e., all combined rows that pass its join condition), plus one copy of each row in the left-hand table for which there was no right-hand row that passed the join condition. This left-hand row is extended to the full width of the joined table by inserting null values for the right-hand columns. Note that only the <code>JOIN</code> clause’s own condition is considered while deciding which rows have matches. Outer conditions are applied afterwards.</p>
+<p>Conversely, <code>RIGHT OUTER JOIN</code> returns all the joined rows, plus one row for each unmatched right-hand row (extended with nulls on the left). This is just a notational convenience, since you could convert it to a <code>LEFT OUTER JOIN</code> by switching the left and right tables.</p>
+<p><code>FULL OUTER JOIN</code> returns all the joined rows, plus one row for each unmatched left-hand row (extended with nulls on the right), plus one row for each unmatched right-hand row (extended with nulls on the left).</p>
+<h3 id="on-join_condition"><a class="header" href="#on-join_condition">ON join_condition</a></h3>
+<p>join_condition is an expression resulting in a value of type <code>boolean</code> (similar to a <code>WHERE</code> clause) that specifies which rows in a join are considered to match.</p>
+<h3 id="using-join_column--"><a class="header" href="#using-join_column--">USING (join_column [, …])</a></h3>
+<p>A clause of the form <code>USING ( a, b, ... )</code> is shorthand for <code>ON left_table.a = right_table.a AND left_table.b = right_table.b ...</code>. Also, <code>USING</code> implies that only one of each pair of equivalent columns will be included in the join output, not both.</p>
+<h3 id="natural"><a class="header" href="#natural">NATURAL</a></h3>
+<p><code>NATURAL</code> is shorthand for a <code>USING</code> list that mentions all columns in the two tables that have the same names. If there are no common column names, <code>NATURAL</code> is equivalent to <code>ON TRUE</code>.</p>
+<p><strong>The WHERE Clause</strong></p>
+<p>The optional <code>WHERE</code> clause has the general form:</p>
+<pre><code>WHERE &lt;condition&gt;
+</code></pre>
+<p>where condition is any expression that evaluates to a result of type <code>boolean</code>. Any row that does not satisfy this condition will be eliminated from the output. A row satisfies the condition if it returns true when the actual row values are substituted for any variable references.</p>
+<p><strong>The GROUP BY Clause</strong></p>
+<p>The optional <code>GROUP BY</code> clause has the general form:</p>
+<pre><code>GROUP BY &lt;grouping_element &gt;[, ...]
+</code></pre>
+<p>where grouping_element can be one of:</p>
+<pre><code>()
+&lt;expression&gt;
+ROLLUP (&lt;expression&gt; [,...])
+CUBE (&lt;expression&gt; [,...])
+GROUPING SETS ((&lt;grouping_element&gt; [, ...]))
+</code></pre>
+<p><code>GROUP BY</code> will condense into a single row all selected rows that share the same values for the grouped expressions. expression can be an input column name, or the name or ordinal number of an output column (<code>SELECT</code> list item), or an arbitrary expression formed from input-column values. In case of ambiguity, a <code>GROUP BY</code> name will be interpreted as an input-column name rather than an output column name.</p>
+<p>Aggregate functions, if any are used, are computed across all rows making up each group, producing a separate value for each group. (If there are aggregate functions but no <code>GROUP BY</code> clause, the query is treated as having a single group comprising all the selected rows.) The set of rows fed to each aggregate function can be further filtered by attaching a <code>FILTER</code> clause to the aggregate function call. When a <code>FILTER</code> clause is present, only those rows matching it are included in the input to that aggregate function. See <a href="../../admin_guide/query/topics/defining-queries.html#topic11">Aggregate Expressions</a>.</p>
+<p>When <code>GROUP BY</code> is present, or any aggregate functions are present, it is not valid for the <code>SELECT</code> list expressions to refer to ungrouped columns except within aggregate functions or when the ungrouped column is functionally dependent on the grouped columns, since there would otherwise be more than one possible value to return for an ungrouped column. A functional dependency exists if the grouped columns (or a subset thereof) are the primary key of the table containing the ungrouped column.</p>
+<p>Keep in mind that all aggregate functions are evaluated before evaluating any “scalar” expressions in the <code>HAVING</code> clause or <code>SELECT</code> list. This means that, for example, a <code>CASE</code> expression cannot be used to skip evaluation of an aggregate function; see <a href="../../admin_guide/query/topics/defining-queries.html#topic25">Expression Evaluation Rules</a>.</p>
+<p>SynxDB has the following additional OLAP grouping extensions (often referred to as <em>supergroups</em>):</p>
+<h3 id="rollup"><a class="header" href="#rollup">ROLLUP</a></h3>
+<p>A <code>ROLLUP</code> grouping is an extension to the <code>GROUP BY</code> clause that creates aggregate subtotals that roll up from the most detailed level to a grand total, following a list of grouping columns (or expressions). <code>ROLLUP</code> takes an ordered list of grouping columns, calculates the standard aggregate values specified in the <code>GROUP BY</code> clause, then creates progressively higher-level subtotals, moving from right to left through the list. Finally, it creates a grand total. A <code>ROLLUP</code> grouping can be thought of as a series of grouping sets. For example:</p>
+<pre><code>GROUP BY ROLLUP (a,b,c) 
+</code></pre>
+<p>is equivalent to:</p>
+<pre><code>GROUP BY GROUPING SETS( (a,b,c), (a,b), (a), () ) 
+</code></pre>
+<p>Notice that the n elements of a <code>ROLLUP</code> translate to n+1 grouping sets. Also, the order in which the grouping expressions are specified is significant in a <code>ROLLUP</code>.</p>
+<h3 id="cube"><a class="header" href="#cube">CUBE</a></h3>
+<p>A <code>CUBE</code> grouping is an extension to the <code>GROUP BY</code> clause that creates subtotals for all of the possible combinations of the given list of grouping columns (or expressions). In terms of multidimensional analysis, <code>CUBE</code> generates all the subtotals that could be calculated for a data cube with the specified dimensions. For example:</p>
+<pre><code>GROUP BY CUBE (a,b,c) 
+</code></pre>
+<p>is equivalent to:</p>
+<pre><code>GROUP BY GROUPING SETS( (a,b,c), (a,b), (a,c), (b,c), (a), 
+(b), (c), () ) 
+</code></pre>
+<p>Notice that n elements of a <code>CUBE</code> translate to 2n grouping sets. Consider using <code>CUBE</code> in any situation requiring cross-tabular reports. <code>CUBE</code> is typically most suitable in queries that use columns from multiple dimensions rather than columns representing different levels of a single dimension. For instance, a commonly requested cross-tabulation might need subtotals for all the combinations of month, state, and product.</p>
+<blockquote>
+<p><strong>Note</strong> SynxDB supports specifying a maximum of 12 <code>CUBE</code> grouping columns.</p>
+</blockquote>
+<h3 id="grouping-sets"><a class="header" href="#grouping-sets">GROUPING SETS</a></h3>
+<p>You can selectively specify the set of groups that you want to create using a <code>GROUPING SETS</code> expression within a <code>GROUP BY</code> clause. This allows precise specification across multiple dimensions without computing a whole <code>ROLLUP</code> or <code>CUBE</code>. For example:</p>
+<pre><code>GROUP BY GROUPING SETS( (a,c), (a,b) )
+</code></pre>
+<p>If using the grouping extension clauses <code>ROLLUP</code>, <code>CUBE</code>, or <code>GROUPING SETS</code>, two challenges arise. First, how do you determine which result rows are subtotals, and then the exact level of aggregation for a given subtotal. Or, how do you differentiate between result rows that contain both stored <code>NULL</code> values and “NULL” values created by the <code>ROLLUP</code> or <code>CUBE</code>. Secondly, when duplicate grouping sets are specified in the <code>GROUP BY</code> clause, how do you determine which result rows are duplicates? There are two additional grouping functions you can use in the <code>SELECT</code> list to help with this:</p>
+<ul>
+<li><strong>grouping(column [, …])</strong> — The <code>grouping</code> function can be applied to one or more grouping attributes to distinguish super-aggregated rows from regular grouped rows. This can be helpful in distinguishing a “NULL” representing the set of all values in a super-aggregated row from a <code>NULL</code> value in a regular row. Each argument in this function produces a bit — either <code>1</code> or <code>0</code>, where <code>1</code> means the result row is super-aggregated, and <code>0</code> means the result row is from a regular grouping. The <code>grouping</code> function returns an integer by treating these bits as a binary number and then converting it to a base-10 integer.</li>
+<li><strong>group_id()</strong> — For grouping extension queries that contain duplicate grouping sets, the <code>group_id</code> function is used to identify duplicate rows in the output. All <em>unique</em> grouping set output rows will have a group_id value of 0. For each duplicate grouping set detected, the <code>group_id</code> function assigns a group_id number greater than 0. All output rows in a particular duplicate grouping set are identified by the same group_id number.</li>
+</ul>
+<p><strong>The WINDOW Clause</strong></p>
+<p>The optional <code>WINDOW</code> clause specifies the behavior of window functions appearing in the query’s <code>SELECT</code> list or <code>ORDER BY</code> clause. These functions can reference the <code>WINDOW</code> clause entries by name in their <code>OVER</code> clauses. A <code>WINDOW</code> clause entry does not have to be referenced anywhere, however; if it is not used in the query it is simply ignored. It is possible to use window functions without any <code>WINDOW</code> clause at all, since a window function call can specify its window definition directly in its <code>OVER</code> clause. However, the <code>WINDOW</code> clause saves typing when the same window definition is needed for more than one window function.</p>
+<p>For example:</p>
+<pre><code>SELECT vendor, rank() OVER (mywindow) FROM sale
+GROUP BY vendor
+WINDOW mywindow AS (ORDER BY sum(prc*qty));
+</code></pre>
+<p>A <code>WINDOW</code> clause has this general form:</p>
+<pre><code>WINDOW &lt;window_name&gt; AS (&lt;window_definition&gt;)
+</code></pre>
+<p>where window_name is a name that can be referenced from <code>OVER</code> clauses or subsequent window definitions, and window_definition is:</p>
+<pre><code>[&lt;existing_window_name&gt;]
+[PARTITION BY &lt;expression&gt; [, ...]]
+[ORDER BY &lt;expression&gt; [ASC | DESC | USING &lt;operator&gt;] [NULLS {FIRST | LAST}] [, ...] ]
+[&lt;frame_clause&gt;] 
+</code></pre>
+<h3 id="existing_window_name"><a class="header" href="#existing_window_name">existing_window_name</a></h3>
+<p>If an <code>existing\_window\_name</code> is specified it must refer to an earlier entry in the <code>WINDOW</code> list; the new window copies its partitioning clause from that entry, as well as its ordering clause if any. The new window cannot specify its own <code>PARTITION BY</code> clause, and it can specify <code>ORDER BY</code> only if the copied window does not have one. The new window always uses its own frame clause; the copied window must not specify a frame clause.</p>
+<h3 id="partition-by"><a class="header" href="#partition-by">PARTITION BY</a></h3>
+<p>The <code>PARTITION BY</code> clause organizes the result set into logical groups based on the unique values of the specified expression. The elements of the <code>PARTITION BY</code> clause are interpreted in much the same fashion as elements of a <code>GROUP BY</code> clause, except that they are always simple expressions and never the name or number of an output column. Another difference is that these expressions can contain aggregate function calls, which are not allowed in a regular <code>GROUP BY</code> clause. They are allowed here because windowing occurs after grouping and aggregation. When used with window functions, the functions are applied to each partition independently. For example, if you follow <code>PARTITION BY</code> with a column name, the result set is partitioned by the distinct values of that column. If omitted, the entire result set is considered one partition.</p>
+<p>Similarly, the elements of the <code>ORDER BY</code> list are interpreted in much the same fashion as elements of an <code>ORDER BY</code> clause, except that the expressions are always taken as simple expressions and never the name or number of an output column.</p>
+<h3 id="order-by"><a class="header" href="#order-by">ORDER BY</a></h3>
+<p>The elements of the <code>ORDER BY</code> clause define how to sort the rows in each partition of the result set. If omitted, rows are returned in whatever order is most efficient and may vary. &gt; <strong>Note</strong> Columns of data types that lack a coherent ordering, such as <code>time</code>, are not good candidates for use in the <code>ORDER BY</code> clause of a window specification. Time, with or without time zone, lacks a coherent ordering because addition and subtraction do not have the expected effects. For example, the following is not generally true: <code>x::time &lt; x::time + '2 hour'::interval</code></p>
+<h3 id="frame_clause"><a class="header" href="#frame_clause">frame_clause</a></h3>
+<p>The optional <code>frame\_clause</code> defines the <em>window frame</em> for window functions that depend on the frame (not all do). The window frame is a set of related rows for each row of the query (called the <em>current row</em>). The <code>frame\_clause</code> can be one of</p>
+<pre><code>{ RANGE | ROWS } &lt;frame_start&gt;
+{ RANGE | ROWS } BETWEEN &lt;frame_start&gt; AND &lt;frame_end&gt;
+</code></pre>
+<p>where <code>frame\_start</code> and <code>frame\_end</code> can be one of</p>
+<ul>
+<li><code>UNBOUNDED PRECEDING</code></li>
+<li><code>value PRECEDING</code></li>
+<li><code>CURRENT ROW</code></li>
+<li><code>value FOLLOWING</code></li>
+<li><code>UNBOUNDED FOLLOWING</code></li>
+</ul>
+<p>If <code>frame\_end</code> is omitted it defaults to <code>CURRENT ROW</code>. Restrictions are that <code>frame\_start</code> cannot be <code>UNBOUNDED FOLLOWING</code>, <code>frame\_end</code> cannot be <code>UNBOUNDED PRECEDING</code>, and the <code>frame\_end</code> choice cannot appear earlier in the above list than the <code>frame\_start</code> choice — for example <code>RANGE BETWEEN CURRENT ROW AND value PRECEDING</code> is not allowed.</p>
+<p>The default framing option is <code>RANGE UNBOUNDED PRECEDING</code>, which is the same as <code>RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</code>; it sets the frame to be all rows from the partition start up through the current row’s last peer (a row that <code>ORDER BY</code> considers equivalent to the current row, or all rows if there is no <code>ORDER BY</code>). In general, <code>UNBOUNDED PRECEDING</code> means that the frame starts with the first row of the partition, and similarly <code>UNBOUNDED FOLLOWING</code> means that the frame ends with the last row of the partition (regardless of <code>RANGE</code> or <code>ROWS</code> mode). In <code>ROWS</code> mode, <code>CURRENT ROW</code> means that the frame starts or ends with the current row; but in <code>RANGE</code> mode it means that the frame starts or ends with the current row’s first or last peer in the <code>ORDER BY</code> ordering. The value <code>PRECEDING</code> and value <code>FOLLOWING</code> cases are currently only allowed in <code>ROWS</code> mode. They indicate that the frame starts or ends with the row that many rows before or after the current row. value must be an integer expression not containing any variables, aggregate functions, or window functions. The value must not be null or negative; but it can be zero, which selects the current row itself.</p>
+<p>Beware that the <code>ROWS</code> options can produce unpredictable results if the <code>ORDER BY</code> ordering does not order the rows uniquely. The <code>RANGE</code> options are designed to ensure that rows that are peers in the <code>ORDER BY</code> ordering are treated alike; all peer rows will be in the same frame.</p>
+<p>Use either a <code>ROWS</code> or <code>RANGE</code> clause to express the bounds of the window. The window bound can be one, many, or all rows of a partition. You can express the bound of the window either in terms of a range of data values offset from the value in the current row (<code>RANGE</code>), or in terms of the number of rows offset from the current row (<code>ROWS</code>). When using the <code>RANGE</code> clause, you must also use an <code>ORDER BY</code> clause. This is because the calculation performed to produce the window requires that the values be sorted. Additionally, the <code>ORDER BY</code> clause cannot contain more than one expression, and the expression must result in either a date or a numeric value. When using the <code>ROWS</code> or <code>RANGE</code> clauses, if you specify only a starting row, the current row is used as the last row in the window.</p>
+<p><strong>PRECEDING</strong> — The <code>PRECEDING</code> clause defines the first row of the window using the current row as a reference point. The starting row is expressed in terms of the number of rows preceding the current row. For example, in the case of <code>ROWS</code> framing, <code>5 PRECEDING</code> sets the window to start with the fifth row preceding the current row. In the case of <code>RANGE</code> framing, it sets the window to start with the first row whose ordering column value precedes that of the current row by 5 in the given order. If the specified order is ascending by date, this will be the first row within 5 days before the current row. <code>UNBOUNDED PRECEDING</code> sets the first row in the window to be the first row in the partition.</p>
+<p><strong>BETWEEN</strong> — The <code>BETWEEN</code> clause defines the first and last row of the window, using the current row as a reference point. First and last rows are expressed in terms of the number of rows preceding and following the current row, respectively. For example, <code>BETWEEN 3 PRECEDING AND 5 FOLLOWING</code> sets the window to start with the third row preceding the current row, and end with the fifth row following the current row. Use <code>BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING</code> to set the first and last rows in the window to be the first and last row in the partition, respectively. This is equivalent to the default behavior if no <code>ROW</code> or <code>RANGE</code> clause is specified.</p>
+<p><strong>FOLLOWING</strong> — The <code>FOLLOWING</code> clause defines the last row of the window using the current row as a reference point. The last row is expressed in terms of the number of rows following the current row. For example, in the case of <code>ROWS</code> framing, <code>5 FOLLOWING</code> sets the window to end with the fifth row following the current row. In the case of <code>RANGE</code> framing, it sets the window to end with the last row whose ordering column value follows that of the current row by 5 in the given order. If the specified order is ascending by date, this will be the last row within 5 days after the current row. Use <code>UNBOUNDED FOLLOWING</code> to set the last row in the window to be the last row in the partition.</p>
+<p>If you do not specify a <code>ROW</code> or a <code>RANGE</code> clause, the window bound starts with the first row in the partition (<code>UNBOUNDED PRECEDING</code>) and ends with the current row (<code>CURRENT ROW</code>) if <code>ORDER BY</code> is used. If an <code>ORDER BY</code> is not specified, the window starts with the first row in the partition (<code>UNBOUNDED PRECEDING</code>) and ends with last row in the partition (<code>UNBOUNDED FOLLOWING</code>).</p>
+<p><strong>The HAVING Clause</strong></p>
+<p>The optional <code>HAVING</code> clause has the general form:</p>
+<pre><code>HAVING &lt;condition&gt;
+</code></pre>
+<p>where condition is the same as specified for the <code>WHERE</code> clause. <code>HAVING</code> eliminates group rows that do not satisfy the condition. <code>HAVING</code> is different from <code>WHERE</code>: <code>WHERE</code> filters individual rows before the application of <code>GROUP BY</code>, while <code>HAVING</code> filters group rows created by <code>GROUP BY</code>. Each column referenced in condition must unambiguously reference a grouping column, unless the reference appears within an aggregate function or the ungrouped column is functionally dependent on the grouping columns.</p>
+<p>The presence of <code>HAVING</code> turns a query into a grouped query even if there is no <code>GROUP BY</code> clause. This is the same as what happens when the query contains aggregate functions but no <code>GROUP BY</code> clause. All the selected rows are considered to form a single group, and the <code>SELECT</code> list and <code>HAVING</code> clause can only reference table columns from within aggregate functions. Such a query will emit a single row if the <code>HAVING</code> condition is true, zero rows if it is not true.</p>
+<p><strong>The UNION Clause</strong></p>
+<p>The <code>UNION</code> clause has this general form:</p>
+<pre><code>&lt;select_statement&gt; UNION [ALL | DISTINCT] &lt;select_statement&gt;
+</code></pre>
+<p>where select_statement is any <code>SELECT</code> statement without an <code>ORDER BY</code>, <code>LIMIT</code>, <code>FOR NO KEY UPDATE</code>, <code>FOR UPDATE</code>, <code>FOR SHARE</code>, or <code>FOR KEY SHARE</code> clause. (<code>ORDER BY</code> and <code>LIMIT</code> can be attached to a subquery expression if it is enclosed in parentheses. Without parentheses, these clauses will be taken to apply to the result of the <code>UNION</code>, not to its right-hand input expression.)</p>
+<p>The <code>UNION</code> operator computes the set union of the rows returned by the involved <code>SELECT</code> statements. A row is in the set union of two result sets if it appears in at least one of the result sets. The two <code>SELECT</code> statements that represent the direct operands of the <code>UNION</code> must produce the same number of columns, and corresponding columns must be of compatible data types.</p>
+<p>The result of <code>UNION</code> does not contain any duplicate rows unless the <code>ALL</code> option is specified. <code>ALL</code> prevents elimination of duplicates. (Therefore, <code>UNION ALL</code> is usually significantly quicker than <code>UNION</code>; use <code>ALL</code> when you can.) <code>DISTINCT</code> can be written to explicitly specify the default behavior of eliminating duplicate rows.</p>
+<p>Multiple <code>UNION</code> operators in the same <code>SELECT</code> statement are evaluated left to right, unless otherwise indicated by parentheses.</p>
+<p>Currently, <code>FOR NO KEY UPDATE</code>, <code>FOR UPDATE</code>, <code>FOR SHARE</code>, and <code>FOR KEY SHARE</code> cannot be specified either for a <code>UNION</code> result or for any input of a <code>UNION</code>.</p>
+<p><strong>The INTERSECT Clause</strong></p>
+<p>The <code>INTERSECT</code> clause has this general form:</p>
+<pre><code>&lt;select_statement&gt; INTERSECT [ALL | DISTINCT] &lt;select_statement&gt;
+</code></pre>
+<p>where select_statement is any SELECT statement without an <code>ORDER BY</code>, <code>LIMIT</code>, <code>FOR NO KEY UPDATE</code>, <code>FOR UPDATE</code>, <code>FOR SHARE</code>, or <code>FOR KEY SHARE</code> clause.</p>
+<p>The <code>INTERSECT</code> operator computes the set intersection of the rows returned by the involved <code>SELECT</code> statements. A row is in the intersection of two result sets if it appears in both result sets.</p>
+<p>The result of <code>INTERSECT</code> does not contain any duplicate rows unless the <code>ALL</code> option is specified. With <code>ALL</code>, a row that has m duplicates in the left table and n duplicates in the right table will appear min(m, n) times in the result set. <code>DISTINCT</code> can be written to explicitly specify the default behavior of eliminating duplicate rows.</p>
+<p>Multiple <code>INTERSECT</code> operators in the same <code>SELECT</code> statement are evaluated left to right, unless parentheses dictate otherwise. <code>INTERSECT</code> binds more tightly than <code>UNION</code>. That is, <code>A UNION B INTERSECT C</code> will be read as <code>A UNION (B INTERSECT C)</code>.</p>
+<p>Currently, <code>FOR NO KEY UPDATE</code>, <code>FOR UPDATE</code>, <code>FOR SHARE</code>, and <code>FOR KEY SHARE</code> cannot be specified either for an <code>INTERSECT</code> result or for any input of an <code>INTERSECT</code>.</p>
+<p><strong>The EXCEPT Clause</strong></p>
+<p>The <code>EXCEPT</code> clause has this general form:</p>
+<pre><code>&lt;select_statement&gt; EXCEPT [ALL | DISTINCT] &lt;select_statement&gt;
+</code></pre>
+<p>where select_statement is any <code>SELECT</code> statement without an <code>ORDER BY</code>, <code>LIMIT</code>, <code>FOR NO KEY UPDATE</code>, <code>FOR UPDATE</code>, <code>FOR SHARE</code>, or <code>FOR KEY SHARE</code> clause.</p>
+<p>The <code>EXCEPT</code> operator computes the set of rows that are in the result of the left <code>SELECT</code> statement but not in the result of the right one.</p>
+<p>The result of <code>EXCEPT</code> does not contain any duplicate rows unless the <code>ALL</code> option is specified. With <code>ALL</code>, a row that has m duplicates in the left table and n duplicates in the right table will appear max(m-n,0) times in the result set. <code>DISTINCT</code> can be written to explicitly specify the default behavior of eliminating duplicate rows.</p>
+<p>Multiple <code>EXCEPT</code> operators in the same <code>SELECT</code> statement are evaluated left to right, unless parentheses dictate otherwise. <code>EXCEPT</code> binds at the same level as <code>UNION</code>.</p>
+<p>Currently, <code>FOR NO KEY UPDATE</code>, <code>FOR UPDATE</code>, <code>FOR SHARE</code>, and <code>FOR KEY SHARE</code> cannot be specified either for an <code>EXCEPT</code> result or for any input of an <code>EXCEPT</code>.</p>
+<p><strong>The ORDER BY Clause</strong></p>
+<p>The optional <code>ORDER BY</code> clause has this general form:</p>
+<pre><code>ORDER BY &lt;expression&gt; [ASC | DESC | USING &lt;operator&gt;] [NULLS {FIRST | LAST}] [,...]
+</code></pre>
+<p>where expression can be the name or ordinal number of an output column (<code>SELECT</code> list item), or it can be an arbitrary expression formed from input-column values.</p>
+<p>The <code>ORDER BY</code> clause causes the result rows to be sorted according to the specified expressions. If two rows are equal according to the left-most expression, they are compared according to the next expression and so on. If they are equal according to all specified expressions, they are returned in an implementation-dependent order.</p>
+<p>The ordinal number refers to the ordinal (left-to-right) position of the output column. This feature makes it possible to define an ordering on the basis of a column that does not have a unique name. This is never absolutely necessary because it is always possible to assign a name to an output column using the <code>AS</code> clause.</p>
+<p>It is also possible to use arbitrary expressions in the <code>ORDER BY</code> clause, including columns that do not appear in the <code>SELECT</code> output list. Thus the following statement is valid:</p>
+<pre><code>SELECT name FROM distributors ORDER BY code;
+</code></pre>
+<p>A limitation of this feature is that an <code>ORDER BY</code> clause applying to the result of a <code>UNION</code>, <code>INTERSECT</code>, or <code>EXCEPT</code> clause may only specify an output column name or number, not an expression.</p>
+<p>If an <code>ORDER BY</code> expression is a simple name that matches both an output column name and an input column name, <code>ORDER BY</code> will interpret it as the output column name. This is the opposite of the choice that <code>GROUP BY</code> will make in the same situation. This inconsistency is made to be compatible with the SQL standard.</p>
+<p>Optionally one may add the key word <code>ASC</code> (ascending) or <code>DESC</code> (descending) after any expression in the <code>ORDER BY</code> clause. If not specified, <code>ASC</code> is assumed by default. Alternatively, a specific ordering operator name may be specified in the <code>USING</code> clause. <code>ASC</code> is usually equivalent to <code>USING &lt;</code> and <code>DESC</code> is usually equivalent to <code>USING &gt;</code>. (But the creator of a user-defined data type can define exactly what the default sort ordering is, and it might correspond to operators with other names.)</p>
+<p>If <code>NULLS LAST</code> is specified, null values sort after all non-null values; if <code>NULLS FIRST</code> is specified, null values sort before all non-null values. If neither is specified, the default behavior is <code>NULLS LAST</code> when <code>ASC</code> is specified or implied, and <code>NULLS FIRST</code> when <code>DESC</code> is specified (thus, the default is to act as though nulls are larger than non-nulls). When <code>USING</code> is specified, the default nulls ordering depends upon whether the operator is a less-than or greater-than operator.</p>
+<p>Note that ordering options apply only to the expression they follow; for example <code>ORDER BY x, y DESC</code> does not mean the same thing as <code>ORDER BY x DESC, y DESC</code>.</p>
+<p>Character-string data is sorted according to the locale-specific collation order that was established when the database was created.</p>
+<p>Character-string data is sorted according to the collation that applies to the column being sorted. That can be overridden as needed by including a <code>COLLATE</code> clause in the expression, for example <code>ORDER BY mycolumn COLLATE "en_US"</code>. For information about defining collations, see <a href="CREATE_COLLATION.html">CREATE COLLATION</a>.</p>
+<p><strong>The LIMIT Clause</strong></p>
+<p>The <code>LIMIT</code> clause consists of two independent sub-clauses:</p>
+<pre><code>LIMIT {&lt;count&gt; | ALL}
+OFFSET &lt;start&gt;
+</code></pre>
+<p>where count specifies the maximum number of rows to return, while start specifies the number of rows to skip before starting to return rows. When both are specified, start rows are skipped before starting to count the <code>count</code> rows to be returned.</p>
+<p>If the <code>count</code> expression evaluates to NULL, it is treated as <code>LIMIT ALL</code>, that is, no limit. If <code>start</code> evaluates to NULL, it is treated the same as <code>OFFSET 0</code>.</p>
+<p>SQL:2008 introduced a different syntax to achieve the same result, which SynxDB also supports. It is:</p>
+<pre><code>OFFSET &lt;start&gt; [ ROW | ROWS ]
+            FETCH { FIRST | NEXT } [ &lt;count&gt; ] { ROW | ROWS } ONLY
+</code></pre>
+<p>In this syntax, the start or count value is required by the standard to be a literal constant, a parameter, or a variable name; as a SynxDB extension, other expressions are allowed, but will generally need to be enclosed in parentheses to avoid ambiguity. If count is omitted in a <code>FETCH</code> clause, it defaults to 1. <code>ROW</code> and <code>ROWS</code> as well as <code>FIRST</code> and <code>NEXT</code> are noise words that don’t influence the effects of these clauses. According to the standard, the <code>OFFSET</code> clause must come before the <code>FETCH</code> clause if both are present; but SynxDB allows either order.</p>
+<p>When using <code>LIMIT</code>, it is a good idea to use an <code>ORDER BY</code> clause that constrains the result rows into a unique order. Otherwise you will get an unpredictable subset of the query’s rows — you may be asking for the tenth through twentieth rows, but tenth through twentieth in what ordering? You don’t know what ordering unless you specify <code>ORDER BY</code>.</p>
+<p>The query optimizer takes <code>LIMIT</code> into account when generating a query plan, so you are very likely to get different plans (yielding different row orders) depending on what you use for <code>LIMIT</code> and <code>OFFSET</code>. Thus, using different <code>LIMIT/OFFSET</code> values to select different subsets of a query result will give inconsistent results unless you enforce a predictable result ordering with <code>ORDER BY</code>. This is not a defect; it is an inherent consequence of the fact that SQL does not promise to deliver the results of a query in any particular order unless <code>ORDER BY</code> is used to constrain the order.</p>
+<p><a id="locking_clause"></a>
+<strong>The Locking Clause</strong></p>
+<p><code>FOR UPDATE</code>, <code>FOR NO KEY UPDATE</code>, <code>FOR SHARE</code> and <code>FOR KEY SHARE</code> are <em>locking clauses</em>; they affect how <code>SELECT</code> locks rows as they are obtained from the table.</p>
+<p>The locking clause has the general form</p>
+<pre><code>FOR &lt;lock_strength&gt; [OF &lt;table_name&gt; [ , ... ] ] [ NOWAIT ]
+</code></pre>
+<p>where lock_strength can be one of</p>
+<ul>
+<li><code>FOR UPDATE</code> - Locks the table with an <code>EXCLUSIVE</code> lock.</li>
+<li><code>FOR NO KEY UPDATE</code> - Locks the table with an <code>EXCLUSIVE</code> lock.</li>
+<li><code>FOR SHARE</code> - Locks the table with a <code>ROW SHARE</code> lock.</li>
+<li><code>FOR KEY SHARE</code> - Locks the table with a <code>ROW SHARE</code> lock.</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> By default SynxDB acquires the more restrictive <code>EXCLUSIVE</code> lock (rather than <code>ROW EXCLUSIVE</code> in PostgreSQL) for <code>UPDATE</code>, <code>DELETE</code>, and <code>SELECT...FOR UPDATE</code> operations on heap tables. When the Global Deadlock Detector is enabled the lock mode for <code>UPDATE</code> and <code>DELETE</code> operations on heap tables is <code>ROW EXCLUSIVE</code>. See <a href="../../admin_guide/dml.html">Global Deadlock Detector</a>. SynxDB always holds a table-level lock with <code>SELECT...FOR UPDATE</code> statements.</p>
+</blockquote>
+<p>For more information on each row-level lock mode, refer to <a href="https://www.postgresql.org/docs/9.4/explicit-locking.html">Explicit Locking</a> in the PostgreSQL documentation.</p>
+<p>To prevent the operation from waiting for other transactions to commit, use the <code>NOWAIT</code> option. With <code>NOWAIT</code>, the statement reports an error, rather than waiting, if a selected row cannot be locked immediately. Note that <code>NOWAIT</code> only affects whether the <code>SELECT</code> statement waits to obtain row-level locks. A required table-level lock is always taken in the ordinary way. For example, a <code>SELECT FOR UPDATE NOWAIT</code> statement will always wait for the required table-level lock; it behaves as if <code>NOWAIT</code> was omitted. You can use <code>LOCK</code> with the <code>NOWAIT</code> option first, if you need to acquire the table-level lock without waiting.</p>
+<p>If specific tables are named in a locking clause, then only rows coming from those tables are locked; any other tables used in the <code>SELECT</code> are simply read as usual. A locking clause without a table list affects all tables used in the statement. If a locking clause is applied to a view or sub-query, it affects all tables used in the view or sub-query. However, these clauses do not apply to <code>WITH</code> queries referenced by the primary query. If you want row locking to occur within a <code>WITH</code> query, specify a locking clause within the <code>WITH</code> query.</p>
+<p>Multiple locking clauses can be written if it is necessary to specify different locking behavior for different tables. If the same table is mentioned (or implicitly affected) by both more than one locking clause, then it is processed as if it was only specified by the strongest one. Similarly, a table is processed as <code>NOWAIT</code> if that is specified in any of the clauses affecting it.</p>
+<p>The locking clauses cannot be used in contexts where returned rows cannot be clearly identified with individual table rows; for example they cannot be used with aggregation.</p>
+<p>When a locking clause appears at the top level of a <code>SELECT</code> query, the rows that are locked are exactly those that are returned by the query; in the case of a join query, the rows locked are those that contribute to returned join rows. In addition, rows that satisfied the query conditions as of the query snapshot will be locked, although they will not be returned if they were updated after the snapshot and no longer satisfy the query conditions. If a <code>LIMIT</code> is used, locking stops once enough rows have been returned to satisfy the limit (but note that rows skipped over by <code>OFFSET</code> will get locked). Similarly, if a locking clause is used in a cursor’s query, only rows actually fetched or stepped past by the cursor will be locked.</p>
+<p>When locking clause appears in a sub-<code>SELECT</code>, the rows locked are those returned to the outer query by the sub-query. This might involve fewer rows than inspection of the sub-query alone would suggest, since conditions from the outer query might be used to optimize execution of the sub-query. For example,</p>
+<pre><code>SELECT * FROM (SELECT * FROM mytable FOR UPDATE) ss WHERE col1 = 5;
+</code></pre>
+<p>will lock only rows having <code>col1 = 5</code>, even though that condition is not textually within the sub-query.</p>
+<p>It is possible for a <code>SELECT</code> command running at the <code>READ COMMITTED</code> transaction isolation level and using <code>ORDER BY</code> and a locking clause to return rows out of order. This is because <code>ORDER BY</code> is applied first. The command sorts the result, but might then block trying to obtain a lock on one or more of the rows. Once the <code>SELECT</code> unblocks, some of the ordering column values might have been modified, leading to those rows appearing to be out of order (though they are in order in terms of the original column values). This can be worked around at need by placing the <code>FOR UPDATE/SHARE</code> clause in a sub-query, for example</p>
+<pre><code>SELECT * FROM (SELECT * FROM mytable FOR UPDATE) ss ORDER BY column1;
+</code></pre>
+<p>Note that this will result in locking all rows of <code>mytable</code>, whereas <code>FOR UPDATE</code> at the top level would lock only the actually returned rows. This can make for a significant performance difference, particularly if the <code>ORDER BY</code> is combined with <code>LIMIT</code> or other restrictions. So this technique is recommended only if concurrent updates of the ordering columns are expected and a strictly sorted result is required.</p>
+<p>At the <code>REPEATABLE READ</code> or <code>SERIALIZABLE</code> transaction isolation level this would cause a serialization failure (with a <code>SQLSTATE</code> of <code>40001</code>), so there is no possibility of receiving rows out of order under these isolation levels.</p>
+<h2 id="the-table-command"><a class="header" href="#the-table-command"><a id="table-command"></a>The TABLE Command</a></h2>
+<p>The command</p>
+<pre><code>TABLE &lt;name&gt;
+</code></pre>
+<p>is completely equivalent to</p>
+<pre><code>SELECT * FROM &lt;name&gt;
+</code></pre>
+<p>It can be used as a top-level command or as a space-saving syntax variant in parts of complex queries.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section18"></a>Examples</a></h2>
+<p>To join the table <code>films</code> with the table <code>distributors</code>:</p>
+<pre><code>SELECT f.title, f.did, d.name, f.date_prod, f.kind FROM 
+distributors d, films f WHERE f.did = d.did
+</code></pre>
+<p>To sum the column <code>length</code> of all films and group the results by <code>kind</code>:</p>
+<pre><code>SELECT kind, sum(length) AS total FROM films GROUP BY kind;
+</code></pre>
+<p>To sum the column <code>length</code> of all films, group the results by <code>kind</code> and show those group totals that are less than 5 hours:</p>
+<pre><code>SELECT kind, sum(length) AS total FROM films GROUP BY kind 
+HAVING sum(length) &lt; interval '5 hours';
+</code></pre>
+<p>Calculate the subtotals and grand totals of all sales for movie <code>kind</code> and <code>distributor</code>.</p>
+<pre><code>SELECT kind, distributor, sum(prc*qty) FROM sales
+GROUP BY ROLLUP(kind, distributor)
+ORDER BY 1,2,3;
+</code></pre>
+<p>Calculate the rank of movie distributors based on total sales:</p>
+<pre><code>SELECT distributor, sum(prc*qty), 
+       rank() OVER (ORDER BY sum(prc*qty) DESC) 
+FROM sale
+GROUP BY distributor ORDER BY 2 DESC;
+</code></pre>
+<p>The following two examples are identical ways of sorting the individual results according to the contents of the second column (<code>name</code>):</p>
+<pre><code>SELECT * FROM distributors ORDER BY name;
+SELECT * FROM distributors ORDER BY 2;
+</code></pre>
+<p>The next example shows how to obtain the union of the tables <code>distributors</code> and <code>actors</code>, restricting the results to those that begin with the letter <code>W</code> in each table. Only distinct rows are wanted, so the key word <code>ALL</code> is omitted:</p>
+<pre><code>SELECT distributors.name FROM distributors WHERE 
+distributors.name LIKE 'W%' UNION SELECT actors.name FROM 
+actors WHERE actors.name LIKE 'W%';
+</code></pre>
+<p>This example shows how to use a function in the <code>FROM</code> clause, both with and without a column definition list:</p>
+<pre><code>CREATE FUNCTION distributors(int) RETURNS SETOF distributors 
+AS $$ SELECT * FROM distributors WHERE did = $1; $$ LANGUAGE 
+SQL;
+SELECT * FROM distributors(111);
+
+CREATE FUNCTION distributors_2(int) RETURNS SETOF record AS 
+$$ SELECT * FROM distributors WHERE did = $1; $$ LANGUAGE 
+SQL;
+SELECT * FROM distributors_2(111) AS (dist_id int, dist_name 
+text);
+</code></pre>
+<p>This example uses a simple <code>WITH</code> clause:</p>
+<pre><code>WITH test AS (
+  SELECT random() as x FROM generate_series(1, 3)
+  )
+SELECT * FROM test
+UNION ALL
+SELECT * FROM test; 
+</code></pre>
+<p>This example uses the <code>WITH</code> clause to display per-product sales totals in only the top sales regions.</p>
+<pre><code>WITH regional_sales AS 
+    SELECT region, SUM(amount) AS total_sales
+    FROM orders
+    GROUP BY region
+  ), top_regions AS (
+    SELECT region
+    FROM regional_sales
+    WHERE total_sales &gt; (SELECT SUM(total_sales) FROM
+       regional_sales)
+  )
+SELECT region, product, SUM(quantity) AS product_units,
+   SUM(amount) AS product_sales
+FROM orders
+WHERE region IN (SELECT region FROM top_regions) 
+GROUP BY region, product;
+</code></pre>
+<p>The example could have been written without the <code>WITH</code> clause but would have required two levels of nested sub-<code>SELECT</code> statements.</p>
+<p>This example uses the <code>WITH RECURSIVE</code> clause to find all subordinates (direct or indirect) of the employee Mary, and their level of indirectness, from a table that shows only direct subordinates:</p>
+<pre><code>WITH RECURSIVE employee_recursive(distance, employee_name, manager_name) AS (
+    SELECT 1, employee_name, manager_name
+    FROM employee
+    WHERE manager_name = 'Mary'
+  UNION ALL
+    SELECT er.distance + 1, e.employee_name, e.manager_name
+    FROM employee_recursive er, employee e
+    WHERE er.employee_name = e.manager_name
+  )
+SELECT distance, employee_name FROM employee_recursive;
+</code></pre>
+<p>The typical form of recursive queries: an initial condition, followed by <code>UNION [ALL]</code>, followed by the recursive part of the query. Be sure that the recursive part of the query will eventually return no tuples, or else the query will loop indefinitely. See <a href="../../admin_guide/query/topics/CTE-query.html">WITH Queries (Common Table Expressions)</a>in the <em>SynxDB Administrator Guide</em> for more examples.</p>
+<h2 id="compatibility"><a class="header" href="#compatibility"><a id="section19"></a>Compatibility</a></h2>
+<p>The <code>SELECT</code> statement is compatible with the SQL standard, but there are some extensions and some missing features.</p>
+<p><strong>Omitted FROM Clauses</strong></p>
+<p>SynxDB allows one to omit the <code>FROM</code> clause. It has a straightforward use to compute the results of simple expressions. For example:</p>
+<pre><code>SELECT 2+2;
+</code></pre>
+<p>Some other SQL databases cannot do this except by introducing a dummy one-row table from which to do the <code>SELECT</code>.</p>
+<p>Note that if a <code>FROM</code> clause is not specified, the query cannot reference any database tables. For example, the following query is invalid:</p>
+<pre><code>SELECT distributors.* WHERE distributors.name = 'Westward';
+</code></pre>
+<p>In earlier releases, setting a server configuration parameter, add_missing_from, to true allowed SynxDB to add an implicit entry to the query’s <code>FROM</code> clause for each table referenced by the query. This is no longer allowed.</p>
+<p><strong>Omitting the AS Key Word</strong></p>
+<p>In the SQL standard, the optional key word <code>AS</code> can be omitted before an output column name whenever the new column name is a valid column name (that is, not the same as any reserved keyword). SynxDB is slightly more restrictive: <code>AS</code> is required if the new column name matches any keyword at all, reserved or not. Recommended practice is to use <code>AS</code> or double-quote output column names, to prevent any possible conflict against future keyword additions.</p>
+<p>In <code>FROM</code> items, both the standard and SynxDB allow <code>AS</code> to be omitted before an alias that is an unreserved keyword. But this is impractical for output column names, because of syntactic ambiguities.</p>
+<p><strong>ONLY and Inheritance</strong></p>
+<p>The SQL standard requires parentheses around the table name when writing <code>ONLY</code>, for example:</p>
+<pre><code>SELECT * FROM ONLY (tab1), ONLY (tab2) WHERE ...
+</code></pre>
+<p>SynxDB considers these parentheses to be optional.</p>
+<p>SynxDB allows a trailing <code>*</code>to be written to explicitly specify the non-<code>ONLY</code> behavior of including child tables. The standard does not allow this.</p>
+<p>(These points apply equally to all SQL commands supporting the <code>ONLY</code> option.)</p>
+<p><strong>Namespace Available to GROUP BY and ORDER BY</strong></p>
+<p>In the SQL-92 standard, an <code>ORDER BY</code> clause may only use output column names or numbers, while a <code>GROUP BY</code> clause may only use expressions based on input column names. SynxDB extends each of these clauses to allow the other choice as well (but it uses the standard’s interpretation if there is ambiguity). SynxDB also allows both clauses to specify arbitrary expressions. Note that names appearing in an expression are always taken as input-column names, not as output column names.</p>
+<p>SQL:1999 and later use a slightly different definition which is not entirely upward compatible with SQL-92. In most cases, however, SynxDB interprets an <code>ORDER BY</code> or <code>GROUP BY</code> expression the same way SQL:1999 does.</p>
+<p><strong>Functional Dependencies</strong></p>
+<p>SynxDB recognizes functional dependency (allowing columns to be omitted from <code>GROUP BY</code>) only when a table’s primary key is included in the <code>GROUP BY</code> list. The SQL standard specifies additional conditions that should be recognized.</p>
+<p><strong>LIMIT and OFFSET</strong></p>
+<p>The clauses <code>LIMIT</code> and <code>OFFSET</code> are SynxDB-specific syntax, also used by MySQL. The SQL:2008 standard has introduced the clauses <code>OFFSET .. FETCH {FIRST|NEXT} ...</code> for the same functionality, as shown above. This syntax is also used by IBM DB2. (Applications for Oracle frequently use a workaround involving the automatically generated <code>rownum</code> column, which is not available in SynxDB, to implement the effects of these clauses.)</p>
+<p><strong>FOR NO KEY UPDATE, FOR UPDATE, FOR SHARE, and FOR KEY SHARE</strong></p>
+<p>Although <code>FOR UPDATE</code> appears in the SQL standard, the standard allows it only as an option of <code>DECLARE CURSOR</code>. SynxDB allows it in any <code>SELECT</code> query as well as in sub-<code>SELECT</code>s, but this is an extension. The <code>FOR NO KEY UPDATE</code>, <code>FOR SHARE</code>, and <code>FOR KEY SHARE</code> variants, as well as the <code>NOWAIT</code> option, do not appear in the standard.</p>
+<p><strong>Data-Modifying Statements in WITH</strong></p>
+<p>SynxDB allows <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> to be used as <code>WITH</code> queries. This is not found in the SQL standard.</p>
+<p><strong>Nonstandard Clauses</strong></p>
+<p>The clause <code>DISTINCT ON</code> is not defined in the SQL standard.</p>
+<p><strong>Limited Use of STABLE and VOLATILE Functions</strong></p>
+<p>To prevent data from becoming out-of-sync across the segments in SynxDB, any function classified as <code>STABLE</code> or <code>VOLATILE</code> cannot be run at the segment database level if it contains SQL or modifies the database in any way. See <a href="CREATE_FUNCTION.html">CREATE FUNCTION</a> for more information.</p>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section25"></a>See Also</a></h2>
+<p><a href="EXPLAIN.html">EXPLAIN</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/sql_commands/SAVEPOINT.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/sql_commands/SELECT_INTO.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/sql_commands/SAVEPOINT.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/sql_commands/SELECT_INTO.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

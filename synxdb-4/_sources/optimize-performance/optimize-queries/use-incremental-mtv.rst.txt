@@ -1,0 +1,295 @@
+.. raw:: latex
+
+   \newpage
+
+Use Incremental Materialized Views
+====================================
+
+This document describes the use cases, usage methods, restrictions, and notes for incremental materialized views in |product_name|.
+
+An incremental materialized view is a special form of a materialized view. When data in the base table changes (for example, through insert, update, or delete operations), an incremental materialized view does not need to recompute all the data in the entire view. Instead, it only updates the parts that have changed because the last refresh. This can save a significant amount of computational resources and time, leading to a notable performance improvement, especially when dealing with large datasets.
+
+.. topic:: Comparison with regular views
+
+   -  Regular view: A regular view does not store data. Instead, it dynamically generates the result set based on its defining SQL statement every time it is queried. This means the view's data must be recomputed for each query, which can be very time-consuming when dealing with large amounts of data.
+   -  Incremental materialized view: An incremental materialized view pre-computes and stores its result set, which reduces the computational load at query time. Furthermore, being 'incremental', it only needs to update the affected parts when the underlying base data changes, rather than recomputing the entire dataset.
+
+Use cases
+---------
+
+-  Accelerating queries with intermediate result sets.
+-  Read-heavy, write-light scenarios.
+
+Usage example
+-------------
+
+You can use the SQL command ``CREATE INCREMENTAL MATERIALIZED VIEW`` to create an incremental materialized view. The full syntax is as follows:
+
+.. code:: sql
+
+   CREATE [INCREMENTAL] MATERIALIZED VIEW [ IF NOT EXISTS ] table_name
+       [ (column_name [, ...] ) ]
+       [ USING method ]
+       [ WITH ( storage_parameter [= value] [, ... ] ) ]
+       [ TABLESPACE tablespace_name ]
+       AS query
+       [ WITH [ NO ] DATA ]
+
+The following example demonstrates how to create an incremental materialized view for tables in |product_name|.
+
+1. Create tables ``t0`` and ``t1``.
+
+   .. code:: sql
+
+      CREATE TABLE t0 (a int) DISTRIBUTED BY (a);
+      CREATE TABLE t1 (a int) DISTRIBUTED BY (a);
+
+2. Create an incremental materialized view ``m`` based on the two tables.
+
+   -  Create a simple materialized view. The following statement creates an incremental materialized view named ``m``. It selects all columns from table ``t0`` and distributes the data based on the values in column ``a``. This means the view ``m`` will store a snapshot of the data from table ``t0`` and can be incrementally updated as the data in ``t0`` changes.
+
+      .. code:: sql
+
+         CREATE INCREMENTAL MATERIALIZED VIEW m AS SELECT * FROM t0 DISTRIBUTED BY (a);
+
+   -  Create a materialized view with a join operation. The following statement also creates an incremental materialized view named ``m``, but this time by joining tables ``t0`` and ``t1``. It selects all values of ``t0.a``, but only when the value of ``t0.a`` equals the value of ``t1.a``. Similarly, the view's data is distributed based on the values in column ``a``.
+
+      .. code:: sql
+
+         CREATE INCREMENTAL MATERIALIZED VIEW m AS SELECT t0.a FROM t0, t1 WHERE t0.a = t1.a DISTRIBUTED BY (a);
+
+3. Insert data into the tables. The ``RETURNING *`` clause returns the inserted rows after the insertion.
+
+   .. code:: sql
+
+      INSERT INTO t0 VALUES (5);
+      INSERT INTO t1 VALUES (5);
+      INSERT INTO t0 VALUES (8) RETURNING *;
+
+4. View the structure and data of the materialized view ``m``.
+
+   .. code:: sql
+
+      postgres=# \d+ m
+                                          MATERIALIZED VIEW "public.m"
+      Column |  Type   | Collation | Nullable | Default | Storage | Compression | Stats target | Description 
+      --------+---------+-----------+----------+---------+---------+-------------+--------------+-------------
+      a      | integer |           |          |         | plain   |             |              | 
+      VIEW definition:
+      SELECT t0.a
+      FROM t0;
+      DISTRIBUTED BY: (a)
+      Access method: heap
+
+5.  View the data in view ``m``.
+
+   .. code:: sql
+
+      postgres=# TABLE m;
+      a 
+      ---
+      5
+      (1 row)
+
+To debug the execution of statements related to incremental materialized views, you can set the system parameter ``debug_print_ivm`` to ``ON`` by executing ``SET debug_print_ivm = ON;``. The details of this parameter are as follows:
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table:: 
+   :header-rows: 1
+   :align: left
+
+   * - Parameter
+     - Description
+     - Default
+     - Required
+     - Example
+   * - ``debug_print_ivm``
+     - Whether to enable IVM debugging.
+     - ``OFF``
+     - No
+     - ``SET debug_print_ivm = ON;``
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+Query performance comparison with regular views
+-----------------------------------------------
+
+The following example shows a comparison of query performance between a regular view and an incremental materialized view when processing large datasets in |product_name|. The example uses the TPC-H Query 15 test dataset.
+
+Example of using a regular view
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Create a regular view ``revenue0``.
+
+   .. code:: sql
+
+      CREATE VIEW revenue0 (supplier_no, total_revenue) AS
+              SELECT
+                      l_suppkey,
+                      SUM(l_extendedprice * (1 - l_discount))
+              FROM
+                      lineitem
+              WHERE
+                      l_shipdate >= DATE '1996-01-01'
+                      AND l_shipdate < DATE '1996-01-01' + INTERVAL '3' MONTH
+              GROUP BY
+                      l_suppkey;
+
+2. Select the details of suppliers and their maximum revenue from the ``supplier`` table and the ``revenue0`` view.
+
+   .. code:: sql
+
+      SELECT
+              s_suppkey,
+              s_name,
+              s_address,
+              s_phone,
+              total_revenue
+      FROM
+              supplier,
+              revenue0
+      WHERE
+              s_suppkey = supplier_no
+              AND total_revenue = (
+                      SELECT
+                              MAX(total_revenue)
+                      FROM
+                              revenue0
+              )
+      ORDER BY s_suppkey;
+
+      s_suppkey |          s_name           |     s_address     |     s_phone     | total_revenue 
+      -----------+---------------------------+-------------------+-----------------+---------------
+          8449 | Supplier#000008449        | Wp34zim9qYFbVctdW | 20-469-856-8873 |  1772627.2087
+      (1 row)
+
+      Time: 3040.23 ms
+
+In the query above, the result of the view ``revenue0`` is computed in real time, and the query takes 3040.23 ms.
+
+.. _use-incremental-materialized-view-example:
+
+Example of using an incremental materialized view
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can create an incremental materialized view during the DDL phase to significantly reduce query time.
+
+1. Create an incremental materialized view ``revenue0``.
+
+   .. code:: sql
+
+      CREATE INCREMENTAL MATERIALIZED VIEW revenue0 (supplier_no, total_revenue) AS
+              SELECT
+                      l_suppkey,
+                      SUM(l_extendedprice * (1 - l_discount))
+              FROM
+                      lineitem
+              WHERE
+                      l_shipdate >= DATE '1996-01-01'
+                      AND l_shipdate < DATE '1996-01-01' + INTERVAL '3' MONTH
+              GROUP BY
+                      l_suppkey;
+
+2. Select the details of suppliers and their maximum revenue from the ``supplier`` table and the ``revenue0`` view. The query takes 65 ms.
+
+   .. code:: sql
+
+      SELECT                
+              s_suppkey,
+              s_name,
+              s_address,
+              s_phone,
+              total_revenue
+      FROM
+              supplier,
+              revenue0
+      WHERE
+              s_suppkey = supplier_no
+              AND total_revenue = (
+                      SELECT
+                              MAX(total_revenue)
+                      FROM
+                              revenue0
+              )
+      ORDER BY s_suppkey;
+
+
+      s_suppkey |          s_name           |     s_address     |     s_phone     | total_revenue 
+      -----------+---------------------------+-------------------+-----------------+---------------
+          8449 | Supplier#000008449        | Wp34zim9qYFbVctdW | 20-469-856-8873 |  1772627.2087
+      (1 row)
+
+      Time: 65.731 ms
+
+TPC-H test result comparison
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Using the TPC-H test, the execution times for insert and query statements with different data volumes are shown in the table below:
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+
+   * - Data Volume
+     - Regular Insert
+     - Insert with Incremental MV
+     - Query with Regular View
+     - Query with Incremental MV
+   * - 1 GB
+     - 2712 ms
+     - 3777 ms
+     - 813 ms
+     - 43 ms
+   * - 5 GB
+     - 15681 ms
+     - 29363 ms
+     - 3040 ms
+     - 63 ms
+   * - 10 GB
+     - 43011 ms
+     - 73188 ms
+     - 7057 ms
+     - 102 ms
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+As can be seen from the table above:
+
+-  At all data volumes, query statements with incremental materialized views execute much faster than those with regular views, showing a significant improvement in query performance.
+-  At all data volumes, insert statements with incremental materialized views are slower than regular insert statements. This is because after data is inserted into the table, the materialized view needs to be updated synchronously. Therefore, incremental materialized views are not suitable for write-heavy scenarios.
+
+Usage restrictions and notes
+----------------------------
+
+Currently, incremental materialized views in |product_name| have the following restrictions:
+
+-  Creating incremental materialized views for Append-Optimized (AO) tables is not supported.
+-  Creating incremental materialized views for partitioned tables is not supported.
+-  Creating incremental materialized views on PAX storage is not supported.
+-  The following are not supported when defining an incremental materialized view:
+
+   -  ``min`` and ``max`` functions, custom aggregate functions
+   -  Left and outer joins, that is, ``LEFT JOIN`` and ``OUTER JOIN``
+   -  Window functions, ``HAVING`` clause
+   -  Subqueries, CTE queries
+   -  Set operations (``UNION``, ``INTERSECT``, ``EXCEPT``)
+   -  ``DISTINCT ON``, ``ORDER BY``, ``LIMIT``, ``OFFSET``
+
+-  Creating an incremental materialized view on another materialized view is not supported.
+
+In addition, you should be aware of the following issues when using incremental materialized views in |product_name|:
+
+-  Introducing incremental materialized views will slow down data insertion, deletion, and updates. Also, a base table might have multiple incremental materialized views, and the performance degradation is proportional to the number of incremental materialized views.
+-  Using incremental materialized views generates temporary files to store the computed delta view, which might consume some storage space.
+-  Depending on the view definition, materialized views might lead to increased storage costs.

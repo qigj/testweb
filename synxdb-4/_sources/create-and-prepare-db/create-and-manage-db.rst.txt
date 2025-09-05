@@ -1,0 +1,102 @@
+Create and Manage Databases
+===========================
+
+A |product_name| system is a single instance of |product_name|. There might be multiple running database systems in |product_name|, but typically clients can only connect to one of them.
+
+A |product_name| database system (DBMS) can have multiple databases. This is different from some DBMSs where "the database instance is the database", such as Oracle. Although you can create multiple databases in a |product_name| system, a client program can only connect to and access one database at a time, and cannot perform cross-database queries.
+
+Templates and default databases
+-------------------------------
+
+|product_name| provides several template databases (``template1`` and ``template0``) and a default database (``postgres``).
+
+By default, every new database you create is based on the ``template1`` database. |product_name| uses ``template1`` by default to create databases unless you specify another template database. It is not recommended to create database objects in ``template1``, otherwise these objects will be present in every new database created based on ``template1``.
+
+|product_name| uses another database template internally, ``template0``. You can use ``template0`` to create a completely clean database that contains only the standard objects predefined by |product_name| at initialization. Do not delete or modify ``template0``.
+
+When you first connect to |product_name|, you can use the ``postgres`` database. |product_name| uses ``postgres`` as the default database for administrative connections.
+
+Create a database
+-----------------
+
+Use the ``CREATE DATABASE`` command to create a new database. For example:
+
+.. code:: sql
+
+   = CREATE DATABASE <new_dbname>;
+
+To create a database, you need to have the permission to create databases, or you need to be a superuser of |product_name|. If you do not have the appropriate permissions, you cannot create a database. Contact your |product_name| administrator for authorization, or ask the administrator to create the database for you.
+
+In addition, you can use the client program ``createdb`` to create a database. For example, execute the following command in a command-line terminal, using the actual host name and port in the command to connect to |product_name| and create a database named ``mydatabase``:
+
+.. code:: shell
+
+   $ createdb -h coordinator_host -p 5432 mydatabase
+
+The host name and port must match those of the installed |product_name| system.
+
+Some database objects (such as roles) are shared by all databases in the |product_name| system. Other objects (such as created tables) are only visible in the database in which they were created.
+
+The ``CREATE DATABASE`` command is not transactional.
+
+.. warning::
+
+   The ``CREATE DATABASE`` command is not transactional.
+
+Clone a database
+~~~~~~~~~~~~~~~~
+
+|product_name| creates new databases by cloning the standard system database template ``template1`` by default. When creating a new database, any database can be used as a template, and you can "clone" or copy an existing database and all the objects and data within it. For example:
+
+.. code:: sql
+
+   = CREATE DATABASE <new_dbname> TEMPLATE <old_dbname>;
+
+Assign a different owner when creating a database
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When creating a database, you can specify another role as the owner of that database:
+
+.. code:: sql
+
+   = CREATE DATABASE <new_dbname> WITH <owner=new_user>;
+
+List databases
+--------------
+
+If you are using the ``psql`` client program, you can use the ``\l`` meta-command to view the list of databases and templates in the |product_name| system. If you are using another client program and you are a superuser, you can query the list of databases from the ``pg_database`` system catalog table. For example:
+
+.. code:: sql
+
+   = SELECT datname from pg_database;
+
+Alter a database
+----------------
+
+The ``ALTER DATABASE`` command changes database properties such as the database owner, name, or default configuration. The following example command sets the default schema search path (the ``search_path`` configuration parameter) for a database:
+
+.. code:: sql
+
+   = ALTER DATABASE mydatabase SET search_path TO myschema, public, pg_catalog;
+
+To alter a database, you must be the database owner or a superuser.
+
+Drop a database
+---------------
+
+The ``DROP DATABASE`` command is used to drop a database. It removes the system catalog entries for the database and deletes the database directory on disk that contains the data. To execute ``DROP DATABASE``, you must be the database owner or a superuser. You cannot drop a database if users are currently connected to it. Before dropping a database, connect to the ``postgres`` database (or another database) and then execute the drop command. For example:
+
+.. code:: none
+
+   = \c postgres
+   = DROP DATABASE mydatabase;
+
+Alternatively, you can use the client program ``dropdb`` to drop a database. For example, the following command connects to |product_name| using the provided host name and port and drops the database ``mydatabase``:
+
+.. code:: shell
+
+   $ dropdb -h coordinator_host -p 5432 mydatabase
+
+.. warning::
+
+   The ``DROP DATABASE`` command is not transactional.

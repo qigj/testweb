@@ -1,0 +1,18 @@
+Operate with Database Objects
+*******************************
+
+.. toctree:: 
+   :maxdepth: 2
+
+   basic-query-syntax
+   create-and-manage-tables
+   insert-update-delete-row-data
+   create-and-manage-views
+   create-and-manage-materialized-views
+   create-and-manage-indexes
+   brin-indexes
+   work-with-transctions
+   transaction-concurrency-control
+   choose-table-storage-models/choose-table-storage-models-index
+   perform-federated-query-across-clusters
+   use-tagging-for-db-objects

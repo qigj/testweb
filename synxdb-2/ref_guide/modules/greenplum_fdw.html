@@ -1,0 +1,416 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>greenplum_fdw - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="greenplum_fdw"><a class="header" href="#greenplum_fdw">greenplum_fdw</a></h1>
+<p>The <code>greenplum_fdw</code> module is a foreign-data wrapper (FDW) that you can use to run queries between one or more SynxDB clusters.</p>
+<p>The SynxDB <code>greenplum_fdw</code> module is an MPP extension of the PostgreSQL <code>postgres_fdw</code> module.</p>
+<p>This topic includes the following sections:</p>
+<ul>
+<li><a href="#topic_reg">Installing and Registering the Module</a></li>
+<li><a href="#topic_depend">About Module Dependencies</a></li>
+<li><a href="#topic_about">About the greenplum_fdw Module</a></li>
+<li><a href="#topic_using">Using the greenplum_fdw Module</a></li>
+<li><a href="#topic_other">Additional Information</a></li>
+<li><a href="#topic_limits">Known Issues and Limitations</a></li>
+<li><a href="#topic_compat">Compatibility</a></li>
+<li><a href="#topic_examples">Example</a></li>
+</ul>
+<h2 id="installing-and-registering-the-module"><a class="header" href="#installing-and-registering-the-module"><a id="topic_reg"></a>Installing and Registering the Module</a></h2>
+<p>The <code>greenplum_fdw</code> module is installed when you install SynxDB. Before you can use this FDW, you must register the <code>greenplum_fdw</code> extension in each database in the local SynxDB cluster in which you plan to use it:</p>
+<pre><code>CREATE EXTENSION greenplum_fdw;
+</code></pre>
+<p>Refer to <a href="../../install_guide/install_modules.html">Installing Additional Supplied Modules</a> for more information about installing and registering modules in SynxDB.</p>
+<h2 id="about-module-dependencies"><a class="header" href="#about-module-dependencies"><a id="topic_depend"></a>About Module Dependencies</a></h2>
+<p><code>greenplum_fdw</code> depends on the <a href="gp_parallel_retrieve_cursor.html">gp_parallel_retrieve_cursor</a> module.</p>
+<blockquote>
+<p><strong>Note</strong> You must register the <code>gp_parallel_retrieve_cursor</code> module in <strong>each remote SynxDB database</strong> with tables that you plan to access using the <code>greenplum_fdw</code> foreign-data wrapper.</p>
+</blockquote>
+<h2 id="about-the-greenplum_fdw-module"><a class="header" href="#about-the-greenplum_fdw-module"><a id="topic_about"></a>About the greenplum_fdw Module</a></h2>
+<p><code>greenplum_fdw</code> is an MPP version of the <a href="https://www.postgresql.org/docs/9.4/postgres-fdw.html">postgres_fdw</a> foreign-data wrapper. While it behaves similarly to <code>postgres_fdw</code> in many respects, <code>greenplum_fdw</code> uses a SynxDB parallel retrieve cursor to pull data directly from the segments of a remote SynxDB cluster to the segments in the local SynxDB cluster, in parallel.</p>
+<p>By supporting predicate pushdown, <code>greenplum_fdw</code> minimizes the amount of data transferred between the SynxDB clusters by sending a query filter condition to the remote SynxDB server where it is applied there.</p>
+<h2 id="using-the-greenplum_fdw-module"><a class="header" href="#using-the-greenplum_fdw-module"><a id="topic_using"></a>Using the greenplum_fdw Module</a></h2>
+<p>You will perform the following tasks when you use <code>greenplum_fdw</code> to access data that resides in a remote SynxDB cluster(s):</p>
+<ol>
+<li><a href="#create_server">Create a server</a> to represent each remote SynxDB database to which you want to connect.</li>
+<li><a href="#user_mapping">Create a user mapping</a> for each (local) SynxDB user that you want to allow to access each server.</li>
+<li><a href="#create_ftable">Create a foreign table</a> for each remote SynxDB table that you want to access.</li>
+<li><a href="#query_ftable">Construct and run queries</a>.</li>
+</ol>
+<h3 id="creating-a-server"><a class="header" href="#creating-a-server"><a id="create_server"></a>Creating a Server</a></h3>
+<p>To access a remote SynxDB cluster, you must first create a foreign server object which specifies the host, port, and database connection details. You provide these connection parameters in the <code>OPTIONS</code> clause of the <a href="../sql_commands/CREATE_SERVER.html">CREATE SERVER</a> command.</p>
+<p>A foreign server using the <code>greenplum_fdw</code> foreign-data wrapper accepts and disallows the same options as that of a foreign server using the <code>postgres_fdw</code> FDW; refer to the <a href="https://www.postgresql.org/docs/9.4/postgres-fdw.html">Connection Options</a> topic in the PostgreSQL <code>postgres_fdw</code> documentation for more information about these options.</p>
+<p>To obtain the full benefits of the parallel transfer feature provided by <code>greenplum_fdw</code>, you must also specify:</p>
+<pre><code>mpp_execute 'all segments'
+</code></pre>
+<p>and</p>
+<pre><code>num_segments '&lt;num&gt;'
+</code></pre>
+<p>in the <code>OPTIONS</code> clause when you create the server. Set num to the number of segments in the the remote SynxDB cluster. If you do not provide the</p>
+<pre><code>num_segments
+</code></pre>
+<p>option, the default value is the number of segments on the local SynxDB cluster.</p>
+<p>The following example command creates a server named <code>gpc1_testdb</code> that will be used to access tables residing in the database named <code>testdb</code> on the remote 8-segment SynxDB cluster whose master is running on the host <code>gpc1_master</code>, port <code>5432</code>:</p>
+<pre><code>CREATE SERVER gpc1_testdb FOREIGN DATA WRAPPER greenplum_fdw
+    OPTIONS (host 'gpc1_master', port '5432', dbname 'testdb', mpp_execute 'all segments', num_segments '8');
+</code></pre>
+<h3 id="creating-a-user-mapping"><a class="header" href="#creating-a-user-mapping"><a id="user_mapping"></a>Creating a User Mapping</a></h3>
+<p>After you identify which users you will allow to access the remote SynxDB cluster, you must create one or more mappings between a local SynxDB user and a user on the remote SynxDB cluster. You create these mappings with the <a href="../sql_commands/CREATE_USER_MAPPING.html">CREATE USER MAPPING</a> command.</p>
+<p>User mappings that you create may include the following <code>OPTIONS</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>Option Name</th><th>Description</th><th>Default Value</th></tr></thead><tbody>
+<tr><td>user</td><td>The name of the remote SynxDB user to connect as.</td><td>The name of the current (local) SynxDB user.</td></tr>
+<tr><td>password</td><td>The password for user on the remote SynxDB system.</td><td>No default value.</td></tr>
+</tbody></table>
+</div>
+<p>Only a SynxDB superuser may connect to a SynxDB foreign server without password authentication. Always specify the <code>password</code> option for user mappings that you create for non-superusers.</p>
+<p>The following command creates a default user mapping on the local SynxDB cluster to the user named <code>bill</code> on the remote SynxDB cluster that allows access to the database identified by the <code>gpc1_testdb</code> server. Specifying the <code>PUBLIC</code> user name creates a mapping for all current and future users when no user-specific mapping is applicable.</p>
+<pre><code>CREATE USER MAPPING FOR PUBLIC SERVER gpc1_testdb
+    OPTIONS (user 'bill', password 'changeme');
+</code></pre>
+<p>The remote user must have the appropriate privileges to access any table(s) of interest in the database identified by the specified <code>SERVER</code>.</p>
+<p>If the mapping is used to access a foreign-data wrapper across multiple SynxDB clusters, then the remote user also requires <code>SELECT</code> access to the <code>pg_catalog.gp_endpoints</code> view. For example:</p>
+<pre><code>GRANT SELECT ON TABLE pg_catalog.gp_endpoints TO bill;
+</code></pre>
+<h3 id="creating-a-foreign-table"><a class="header" href="#creating-a-foreign-table"><a id="create_ftable"></a>Creating a Foreign Table</a></h3>
+<p>You invoke the <a href="../sql_commands/CREATE_FOREIGN_TABLE.html">CREATE FOREIGN TABLE</a> command to create a foreign table. The column data types that you specify when you create the foreign table should exactly match those in the referenced remote table. It is also recommended that the columns be declared with exactly the same collations, if applicable, as the referenced columns of the remote table.</p>
+<p>Because <code>greenplum_fdw</code> matches foreign table columns to the remote table by name, not position, you can create a foreign table with fewer columns, or with a different column order, than the underlying remote table.</p>
+<p>Foreign tables that you create may include the following <code>OPTIONS</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>Option Name</th><th>Description</th><th>Default Value</th></tr></thead><tbody>
+<tr><td>schema_name</td><td>The name of the schema in which the remote SynxDB table resides.</td><td>The name of the schema in which the foreign table resides.</td></tr>
+<tr><td>table_name</td><td>The name of the remote SynxDB table.</td><td>The name of the foreign table.</td></tr>
+</tbody></table>
+</div>
+<p>The following command creates a foreign table named <code>f_gpc1_orders</code> that references a table named <code>orders</code> located in the <code>public</code> schema of the database identified by the <code>gpc1_testdb</code> server (<code>testdb</code>):</p>
+<pre><code>CREATE FOREIGN TABLE f_gpc1_orders ( id int, qty int, item text )
+    SERVER gpc1_testdb OPTIONS (schema_name 'public', table_name 'orders');
+</code></pre>
+<p>You can additionally specify column name mappings via <code>OPTIONS</code> that you provide in the column declaration of the foreign table. The <code>column_name</code> option identifies the name of the associated column in the remote SynxDB table, and defaults to the foreign table column name when not specified.</p>
+<h3 id="constructing-and-running-queries"><a class="header" href="#constructing-and-running-queries"><a id="query_ftable"></a>Constructing and Running Queries</a></h3>
+<p>You <code>SELECT</code> from a foreign table to access the data stored in the underlying remote SynxDB table. By default, you can also modify the remote table using the <code>INSERT</code> command, provided that the remote user specified the user mapping has the privileges to perform these operations. (Refer to <a href="#topic_update">About the Updatability Option</a> for information about changing the updatability of foreign tables.)</p>
+<p><code>greenplum_fdw</code> attempts to optimize remote queries to reduce the amount of data transferred from foreign servers. This is achieved by sending query <code>WHERE</code> clauses to the remote SynxDB server for execution, and by not retrieving table columns that are not needed for the current query. To reduce the risk of misexecution of queries, <code>greenplum_fdw</code> does not send <code>WHERE</code> clauses to the remote server unless they use only built-in data types, operators, and functions. Operators and functions in the clauses must be <code>IMMUTABLE</code> as well.</p>
+<p>You can run the <code>EXPLAIN VERBOSE</code> command to examine the query that is actually sent to the remote SynxDB server for execution.</p>
+<h2 id="additional-information"><a class="header" href="#additional-information"><a id="topic_other"></a>Additional Information</a></h2>
+<p>For more information about <code>greenplum_fdw</code> updatability and cost estimation options, connection management, and transaction management, refer to the individual topics below.</p>
+<h3 id="about-the-updatability-option"><a class="header" href="#about-the-updatability-option"><a id="topic_update"></a>About the Updatability Option</a></h3>
+<p>By default, all foreign tables created with <code>greenplum_fdw</code> are assumed to be updatable. You can override this for a foreign server or a foreign table using the following option:</p>
+<p><code>updatable</code>
+:   Controls whether <code>greenplum_fdw</code> allows foreign tables to be modified using the <code>INSERT</code> command. The default is true.</p>
+<p>Setting this option at the foreign table-level overrides a foreign server-level option setting.</p>
+<h3 id="about-the-cost-estimation-options"><a class="header" href="#about-the-cost-estimation-options"><a id="topic_costest"></a>About the Cost Estimation Options</a></h3>
+<p><code>greenplum_fdw</code> supports the same cost estimation options as described in the <a href="https://www.postgresql.org/docs/9.4/postgres-fdw.html">Cost Estimation Options</a> topic in the PostgreSQL <code>postgres_fdw</code> documentation.</p>
+<h3 id="about-connection-management"><a class="header" href="#about-connection-management"><a id="topic_connmgmt"></a>About Connection Management</a></h3>
+<p><code>greenplum_fdw</code> establishes a connection to a foreign server during the first query on any foreign table associated with the server. <code>greenplum_fdw</code> retains and reuses this connection for subsequent queries submitted in the same session. However, if multiple user identities (user mappings) are used to access the foreign server, <code>greenplum_fdw</code> establishes a connection for each user mapping.</p>
+<h3 id="about-transaction-management"><a class="header" href="#about-transaction-management"><a id="topic_transmgmt"></a>About Transaction Management</a></h3>
+<p><code>greenplum_fdw</code> manages transactions as described in the <a href="https://www.postgresql.org/docs/9.4/postgres-fdw.html">Transaction Management</a> topic in the PostgreSQL <code>postgres_fdw</code> documentation.</p>
+<h2 id="about-using-resource-groups-to-limit-concurrency"><a class="header" href="#about-using-resource-groups-to-limit-concurrency"><a id="resgroups"></a>About Using Resource Groups to Limit Concurrency</a></h2>
+<p>You can create a dedicated user and resource group to manage <code>greenplum_fdw</code> concurrency on the remote SynxDB clusters. In the following example scenario, local cluster 2 reads data from remote cluster 1.</p>
+<p>Remote cluster (1) configuration:</p>
+<ol>
+<li>
+<p>Create a dedicated SynxDB user/role to represent the <code>greenplum_fdw</code> users on cluster 2 that initiate queries. For example, to create a role named <code>gpcluster2_users</code>:</p>
+<pre><code>CREATE ROLE gpcluster2_users;
+</code></pre>
+</li>
+<li>
+<p>Create a dedicated resource group to manage resources for these users:</p>
+<pre><code>CREATE RESOURCE GROUP rg_gpcluster2_users with (concurrency=2, cpu_rate_limit=20, memory_limit=10);
+ALTER ROLE gpcluster2_users RESOURCE GROUP rg_gpcluster2_users;
+</code></pre>
+<p>When you configure the remote cluster as described above, the <code>rg_gpcluster2_users</code> resource group manages the resources used by all queries that are initiated by <code>gpcluster2_users</code>.</p>
+</li>
+</ol>
+<p>Local cluster (2) configuration:</p>
+<ol>
+<li>
+<p>Create a <code>greenplum_fdw</code> foreign server to access the remote cluster. For example, to create a server named <code>gpc1_testdb</code> that accesses the <code>testdb</code> database:</p>
+<pre><code>CREATE SERVER gpc1_testdb FOREIGN DATA WRAPPER greenplum_fdw
+    OPTIONS (host 'gpc1_master', port '5432', dbname 'testdb', mpp_execute 'all segments', );
+</code></pre>
+</li>
+<li>
+<p>Map local users of the <code>greenplum_fdw</code> foreign server to the remote role. For example, to map specific users of the <code>gpc1_testdb</code> server on the local cluster to the <code>gpcluster2_users</code> role on the remote cluster:</p>
+<pre><code>CREATE USER MAPPING FOR greenplum_fdw_user1 SERVER gpc1_testdb
+    OPTIONS (user ‘gpcluster2_users’, password ‘changeme’);
+CREATE USER MAPPING FOR greenplum_fdw_user2 SERVER gpc1_testdb
+    OPTIONS (user ‘gpcluster2_users’, password ‘changeme’);
+</code></pre>
+</li>
+<li>
+<p>Create a foreign table referencing a table on the remote cluster. For example to create a foreign table that references table <code>t1</code> on the remote cluster:</p>
+<pre><code>CREATE FOREIGN TABLE table_on_cluster1 ( tc1 int )
+  SERVER gpc1_testdb
+  OPTIONS (schema_name 'public', table_name 't1', mpp_execute 'all segments');
+</code></pre>
+</li>
+</ol>
+<p>All local queries on foreign table <code>table_on_cluster1</code> are bounded on the remote cluster by the <code>rg_gpcluster2_users</code> resource group limits.</p>
+<h2 id="known-issues-and-limitations"><a class="header" href="#known-issues-and-limitations"><a id="topic_limits"></a>Known Issues and Limitations</a></h2>
+<p>The <code>greenplum_fdw</code> module has the following known issues and limitations:</p>
+<ul>
+<li>The SynxDB Query Optimizer (GPORCA) does not support queries on foreign tables that you create with the <code>greenplum_fdw</code> foreign-data wrapper.</li>
+<li><code>greenplum_fdw</code> does not support <code>UPDATE</code> and <code>DELETE</code> operations on foreign tables.</li>
+</ul>
+<h2 id="compatibility"><a class="header" href="#compatibility"><a id="topic_compat"></a>Compatibility</a></h2>
+<p>You can use <code>greenplum_fdw</code> to access other remote SynxDB clusters .</p>
+<h2 id="example"><a class="header" href="#example"><a id="topic_examples"></a>Example</a></h2>
+<p>In this example, you query data residing in a database named <code>rdb</code> on the remote 16-segment SynxDB cluster whose master is running on host <code>gpc2_master</code>, port <code>5432</code>:</p>
+<ol>
+<li>
+<p>Open a <code>psql</code> session to the master host of the remote SynxDB cluster:</p>
+<pre><code>psql -h gpc2_master -d rdb
+</code></pre>
+</li>
+<li>
+<p>Register the <code>gp_parallel_retrieve_cursor</code> extension in the database if it does not already exist:</p>
+<pre><code>CREATE EXTENSION IF NOT EXISTS gp_parallel_retrieve_cursor;
+</code></pre>
+</li>
+<li>
+<p>Exit the session.</p>
+</li>
+<li>
+<p>Initiate a <code>psql</code> session to the database named <code>testdb</code> on the local SynxDB master host:</p>
+<pre><code>$ psql -d testdb
+</code></pre>
+</li>
+<li>
+<p>Register the <code>greenplum_fdw</code> extension in the database if it does not already exist:</p>
+<pre><code>CREATE EXTENSION IF NOT EXISTS greenplum_fdw;
+</code></pre>
+</li>
+<li>
+<p>Create a server to access the remote SynxDB cluster:</p>
+<pre><code>CREATE SERVER gpc2_rdb FOREIGN DATA WRAPPER greenplum_fdw
+    OPTIONS (host 'gpc2_master', port '5432', dbname 'rdb', mpp_execute 'all segments', num_segments '16');
+</code></pre>
+</li>
+<li>
+<p>Create a user mapping for a user named <code>jane</code> on the local SynxDB cluster and the user named <code>john</code> on the remote SynxDB cluster and database represented by the server named <code>gpc2_rdb</code>:</p>
+<pre><code>CREATE USER MAPPING FOR jane SERVER gpc2_rdb OPTIONS (user 'john', password 'changeme');
+</code></pre>
+</li>
+<li>
+<p>Create a foreign table named <code>f_gpc2_emea</code> to reference the table named <code>emea</code> that is resides in the <code>public</code> schema of the database identified by the <code>gpc2_rdb</code> server (<code>rdb</code>):</p>
+<pre><code>CREATE FOREIGN TABLE f_gpc2_emea( bu text, income int )
+    SERVER gpcs2_rdb OPTIONS (schema_name 'public', table_name 'emea');
+</code></pre>
+</li>
+<li>
+<p>Query the foreign table:</p>
+<pre><code>SELECT * FROM f_gpc2_emea;
+</code></pre>
+</li>
+<li>
+<p>Join the results of a foreign table query with a local table named <code>amer</code> that has similarly-named columns:</p>
+<pre><code>SELECT amer.bu, amer.income as amer_in, f_gpc2_emea.income as emea_in
+    FROM amer, f_gpc2_emea
+    WHERE amer.bu = f_gpc2_emea.bu;
+</code></pre>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/modules/gp_subtransaction_overflow.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/modules/hstore.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/modules/gp_subtransaction_overflow.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/modules/hstore.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

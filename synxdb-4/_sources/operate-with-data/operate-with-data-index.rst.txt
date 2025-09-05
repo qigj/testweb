@@ -1,0 +1,11 @@
+Operate with Data
+******************
+
+.. toctree::
+   :maxdepth: 2
+
+   operate-with-database-objects/operate-with-database-objects-index
+   sql-queries/sql-queries-index
+   advanced-data-analytics/advanced-data-analytics-index
+   auto-execute-sql-commands
+   use-oracle-compatibility-sql-via-orafce

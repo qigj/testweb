@@ -1,0 +1,7 @@
+Optimize Performance
+***********************
+
+.. toctree::
+   :maxdepth: 2
+
+   optimize-queries/optimize-queries-index

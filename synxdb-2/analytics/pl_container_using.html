@@ -1,0 +1,691 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Using PL/Container - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="using-plcontainer"><a class="header" href="#using-plcontainer">Using PL/Container</a></h1>
+<p>This topic covers further details on:</p>
+<ul>
+<li><a href="#topic_resmgmt">PL/Container Resource Management</a></li>
+<li><a href="#topic_rh3_p3q_dw">PL/Container Functions</a></li>
+<li><a href="#remote_container">Configuring a Remote PL/Container</a></li>
+</ul>
+<h2 id="plcontainer-resource-management"><a class="header" href="#plcontainer-resource-management"><a id="topic_resmgmt"></a>PL/Container Resource Management</a></h2>
+<p>The Docker containers and the SynxDB servers share CPU and memory resources on the same hosts. In the default case, SynxDB is unaware of the resources consumed by running PL/Container instances. You can use SynxDB resource groups to control overall CPU and memory resource usage for running PL/Container instances.</p>
+<p>PL/Container manages resource usage at two levels - the container level and the runtime level. You can control container-level CPU and memory resources with the <code>memory_mb</code> and <code>cpu_share</code> settings that you configure for the PL/Container runtime. <code>memory_mb</code> governs the memory resources available to each container instance. The <code>cpu_share</code> setting identifies the relative weighting of a container’s CPU usage compared to other containers. See <a href="../utility_guide/ref/plcontainer-configuration.html">plcontainer Configuration File</a> for further details.</p>
+<p>You cannot, by default, restrict the number of running PL/Container container instances, nor can you restrict the total amount of memory or CPU resources that they consume.</p>
+<h3 id="using-resource-groups-to-manage-plcontainer-resources"><a class="header" href="#using-resource-groups-to-manage-plcontainer-resources"><a id="topic_resgroup"></a>Using Resource Groups to Manage PL/Container Resources</a></h3>
+<p>With PL/Container 1.2.0 and later, you can use SynxDB resource groups to manage and limit the total CPU and memory resources of containers in PL/Container runtimes. For more information about enabling, configuring, and using SynxDB resource groups, refer to <a href="../admin_guide/workload_mgmt_resgroups.html">Using Resource Groups</a> in the <em>SynxDB Administrator Guide</em>.</p>
+<blockquote>
+<p><strong>Note</strong> If you do not explicitly configure resource groups for a PL/Container runtime, its container instances are limited only by system resources. The containers may consume resources at the expense of the SynxDB server.</p>
+</blockquote>
+<p>Resource groups for external components such as PL/Container use Linux control groups (cgroups) to manage component-level use of memory and CPU resources. When you manage PL/Container resources with resource groups, you configure both a memory limit and a CPU limit that SynxDB applies to all container instances that share the same PL/Container runtime configuration.</p>
+<p>When you create a resource group to manage the resources of a PL/Container runtime, you must specify <code>MEMORY_AUDITOR=cgroup</code> and <code>CONCURRENCY=0</code> in addition to the required CPU and memory limits. For example, the following command creates a resource group named <code>plpy_run1_rg</code> for a PL/Container runtime:</p>
+<pre><code>CREATE RESOURCE GROUP plpy_run1_rg WITH (MEMORY_AUDITOR=cgroup, CONCURRENCY=0,
+                                                  CPU_RATE_LIMIT=10, MEMORY_LIMIT=10);
+</code></pre>
+<p>PL/Container does not use the <code>MEMORY_SHARED_QUOTA</code> and <code>MEMORY_SPILL_RATIO</code> resource group memory limits. Refer to the <a href="../ref_guide/sql_commands/CREATE_RESOURCE_GROUP.html">CREATE RESOURCE GROUP</a> reference page for detailed information about this SQL command.</p>
+<p>You can create one or more resource groups to manage your running PL/Container instances. After you create a resource group for PL/Container, you assign the resource group to one or more PL/Container runtimes. You make this assignment using the <code>groupid</code> of the resource group. You can determine the <code>groupid</code> for a given resource group name from the <code>gp_resgroup_config</code> <code>gp_toolkit</code> view. For example, the following query displays the <code>groupid</code> of a resource group named <code>plpy_run1_rg</code>:</p>
+<pre><code>SELECT groupname, groupid FROM gp_toolkit.gp_resgroup_config
+ WHERE groupname='plpy_run1_rg';
+                            
+ groupname   |  groupid
+ --------------+----------
+ plpy_run1_rg |   16391
+ (1 row)
+</code></pre>
+<p>You assign a resource group to a PL/Container runtime configuration by specifying the <code>-s resource_group_id=rg\_groupid</code> option to the <code>plcontainer runtime-add</code> (new runtime) or <code>plcontainer runtime-replace</code> (existing runtime) commands. For example, to assign the <code>plpy_run1_rg</code> resource group to a new PL/Container runtime named <code>python_run1</code>:</p>
+<pre><code>plcontainer runtime-add -r python_run1 -i pivotaldata/plcontainer_python_shared:devel -l python -s resource_group_id=16391
+</code></pre>
+<p>You can also assign a resource group to a PL/Container runtime using the <code>plcontainer runtime-edit</code> command. For information about the <code>plcontainer</code> command, see <a href="../utility_guide/ref/plcontainer.html">plcontainer</a> reference page.</p>
+<p>After you assign a resource group to a PL/Container runtime, all container instances that share the same runtime configuration are subject to the memory limit and the CPU limit that you configured for the group. If you decrease the memory limit of a PL/Container resource group, queries running in containers in the group may fail with an out of memory error. If you drop a PL/Container resource group while there are running container instances, SynxDB terminates the running containers.</p>
+<h3 id="configuring-resource-groups-for-plcontainer"><a class="header" href="#configuring-resource-groups-for-plcontainer"><a id="topic_resgroupcfg"></a>Configuring Resource Groups for PL/Container</a></h3>
+<p>To use SynxDB resource groups to manage PL/Container resources, you must explicitly configure both resource groups and PL/Container.</p>
+<p>Perform the following procedure to configure PL/Container to use SynxDB resource groups for CPU and memory resource management:</p>
+<ol>
+<li>
+<p>If you have not already configured and enabled resource groups in your SynxDB deployment, configure cgroups and enable SynxDB resource groups as described in <a href="../admin_guide/workload_mgmt_resgroups.html#topic71717999">Using Resource Groups</a> in the <em>SynxDB Administrator Guide</em>.</p>
+<blockquote>
+<p><strong>Note</strong> If you have previously configured and enabled resource groups in your deployment, ensure that the SynxDB resource group <code>gpdb.conf</code> cgroups configuration file includes a <code>memory { }</code> block as described in the previous link.</p>
+</blockquote>
+</li>
+<li>
+<p>Analyze the resource usage of your SynxDB deployment. Determine the percentage of resource group CPU and memory resources that you want to allocate to PL/Container Docker containers.</p>
+</li>
+<li>
+<p>Determine how you want to distribute the total PL/Container CPU and memory resources that you identified in the step above among the PL/Container runtimes. Identify:</p>
+<ul>
+<li>The number of PL/Container resource group(s) that you require.</li>
+<li>The percentage of memory and CPU resources to allocate to each resource group.</li>
+<li>The resource-group-to-PL/Container-runtime assignment(s).</li>
+</ul>
+</li>
+<li>
+<p>Create the PL/Container resource groups that you identified in the step above. For example, suppose that you choose to allocate 25% of both memory and CPU SynxDB resources to PL/Container. If you further split these resources among 2 resource groups 60/40, the following SQL commands create the resource groups:</p>
+<pre><code>CREATE RESOURCE GROUP plr_run1_rg WITH (MEMORY_AUDITOR=cgroup, CONCURRENCY=0,
+                                           CPU_RATE_LIMIT=15, MEMORY_LIMIT=15);
+ CREATE RESOURCE GROUP plpy_run1_rg WITH (MEMORY_AUDITOR=cgroup, CONCURRENCY=0,
+                                          CPU_RATE_LIMIT=10, MEMORY_LIMIT=10);
+</code></pre>
+</li>
+<li>
+<p>Find and note the <code>groupid</code> associated with each resource group that you created. For example:</p>
+<pre><code>SELECT groupname, groupid FROM gp_toolkit.gp_resgroup_config
+WHERE groupname IN ('plpy_run1_rg', 'plr_run1_rg');
+                                    
+groupname   |  groupid
+--------------+----------
+plpy_run1_rg |   16391
+plr_run1_rg  |   16393
+(1 row)
+</code></pre>
+</li>
+<li>
+<p>Assign each resource group that you created to the desired PL/Container runtime configuration. If you have not yet created the runtime configuration, use the <code>plcontainer runtime-add</code> command. If the runtime already exists, use the <code>plcontainer runtime-replace</code> or <code>plcontainer runtime-edit</code> command to add the resource group assignment to the runtime configuration. For example:</p>
+<pre><code>plcontainer runtime-add -r python_run1 -i pivotaldata/plcontainer_python_shared:devel -l python -s resource_group_id=16391
+plcontainer runtime-replace -r r_run1 -i pivotaldata/plcontainer_r_shared:devel -l r -s resource_group_id=16393
+</code></pre>
+<p>For information about the <code>plcontainer</code> command, see <a href="../utility_guide/ref/plcontainer.html">plcontainer</a> reference page.</p>
+</li>
+</ol>
+<h3 id="notes"><a class="header" href="#notes"><a id="plc_notes"></a>Notes</a></h3>
+<p><strong>PL/Container logging</strong></p>
+<p>When PL/Container logging is enabled, you can set the log level with the SynxDB server configuration parameter <a href="../ref_guide/config_params/guc-list.html">log_min_messages</a>. The default log level is <code>warning</code>. The parameter controls the PL/Container log level and also controls the SynxDB log level.</p>
+<ul>
+<li>
+<p>PL/Container logging is enabled or deactivated for each runtime ID with the <code>setting</code> attribute <code>use_container_logging</code>. The default is no logging.</p>
+</li>
+<li>
+<p>The PL/Container log information is the information from the UDF that is run in the Docker container. By default, the PL/Container log information is sent to a system service. On Red Hat 7 or CentOS 7 systems, the log information is sent to the <code>journald</code> service.</p>
+</li>
+<li>
+<p>The SynxDB log information is sent to log file on the SynxDB master.</p>
+</li>
+<li>
+<p>When testing or troubleshooting a PL/Container UDF, you can change the SynxDB log level with the <code>SET</code> command. You can set the parameter in the session before you run your PL/Container UDF. This example sets the log level to <code>debug1</code>.</p>
+<pre><code>SET log_min_messages='debug1' ;
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> The parameter <code>log_min_messages</code> controls both the SynxDB and PL/Container logging, increasing the log level might affect SynxDB performance even if a PL/Container UDF is not running.</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="plcontainer-function-limitations"><a class="header" href="#plcontainer-function-limitations"><a id="topic_rh3_p3q_dw"></a>PL/Container Function Limitations</a></h2>
+<p>Review the following limitations when creating and using PL/Container PL/Python and PL/R functions:</p>
+<ul>
+<li>SynxDB domains are not supported.</li>
+<li>Multi-dimensional arrays are not supported.</li>
+<li>Python and R call stack information is not displayed when debugging a UDF.</li>
+<li>The <code>plpy.execute()</code> methods <code>nrows()</code> and <code>status()</code> are not supported.</li>
+<li>The PL/Python function <code>plpy.SPIError()</code> is not supported.</li>
+<li>Running the <code>SAVEPOINT</code> command with <code>plpy.execute()</code> is not supported.</li>
+<li>The <code>DO</code> command (anonymous code block) is supported only with PL/Container 3 (currently a Beta feature).</li>
+<li>Container flow control is not supported.</li>
+<li>Triggers are not supported.</li>
+<li><code>OUT</code> parameters are not supported.</li>
+<li>The Python <code>dict</code> type cannot be returned from a PL/Python UDF. When returning the Python <code>dict</code> type from a UDF, you can convert the <code>dict</code> type to a SynxDB user-defined data type (UDT).</li>
+</ul>
+<h2 id="developing-plcontainer-functions"><a class="header" href="#developing-plcontainer-functions"><a id="using_functions"></a>Developing PL/Container functions</a></h2>
+<p>When you enable PL/Container in a database of a SynxDB system, the language <code>plcontainer</code> is registered in that database. Specify <code>plcontainer</code> as a language in a UDF definition to create and run user-defined functions in the procedural languages supported by the PL/Container Docker images.</p>
+<p>A UDF definition that uses PL/Container must have these items.</p>
+<ul>
+<li>The first line of the UDF must be <code># container: ID</code></li>
+<li>The <code>LANGUAGE</code> attribute must be <code>plcontainer</code></li>
+</ul>
+<p>The ID is the name that PL/Container uses to identify a Docker image. When SynxDB runs a UDF on a host, the Docker image on the host is used to start a Docker container that runs the UDF. In the XML configuration file <code>plcontainer_configuration.xml</code>, there is a <code>runtime</code> XML element that contains a corresponding <code>id</code> XML element that specifies the Docker container startup information. See <a href="../utility_guide/ref/plcontainer-configuration.html">plcontainer Configuration File</a> for information about how PL/Container maps the ID to a Docker image.</p>
+<p>The PL/Container configuration file is read only on the first invocation of a PL/Container function in each SynxDB session that runs PL/Container functions. You can force the configuration file to be re-read by performing a <code>SELECT</code> command on the view <code>plcontainer_refresh_config</code> during the session. For example, this <code>SELECT</code> command forces the configuration file to be read.</p>
+<pre><code>SELECT * FROM plcontainer_refresh_config;
+</code></pre>
+<p>The command runs a PL/Container function that updates the configuration on the master and segment instances and returns the status of the refresh.</p>
+<pre><code> gp_segment_id | plcontainer_refresh_local_config
+ ---------------+----------------------------------
+ 1 | ok
+ 0 | ok
+-1 | ok
+(3 rows)
+</code></pre>
+<p>Also, you can show all the configurations in the session by performing a <code>SELECT</code> command on the view <code>plcontainer_show_config</code>. For example, this <code>SELECT</code> command returns the PL/Container configurations.</p>
+<pre><code>SELECT * FROM plcontainer_show_config;
+</code></pre>
+<p>Running the command executes a PL/Container function that displays configuration information from the master and segment instances. This is an example of the start and end of the view output.</p>
+<pre><code>INFO:  plcontainer: Container 'plc_py_test' configuration
+ INFO:  plcontainer:     image = 'pivotaldata/plcontainer_python_shared:devel'
+ INFO:  plcontainer:     memory_mb = '1024'
+ INFO:  plcontainer:     use container network = 'no'
+ INFO:  plcontainer:     use container logging  = 'no'
+ INFO:  plcontainer:     shared directory from host '/usr/local/synxdb/./bin/plcontainer_clients' to container '/clientdir'
+ INFO:  plcontainer:     access = readonly
+                
+ ...
+                
+ INFO:  plcontainer: Container 'plc_r_example' configuration  (seg0 slice3 192.168.180.45:40000 pid=3304)
+ INFO:  plcontainer:     image = 'pivotaldata/plcontainer_r_without_clients:0.2'  (seg0 slice3 192.168.180.45:40000 pid=3304)
+ INFO:  plcontainer:     memory_mb = '1024'  (seg0 slice3 192.168.180.45:40000 pid=3304)
+ INFO:  plcontainer:     use container network = 'no'  (seg0 slice3 192.168.180.45:40000 pid=3304)
+ INFO:  plcontainer:     use container logging  = 'yes'  (seg0 slice3 192.168.180.45:40000 pid=3304)
+ INFO:  plcontainer:     shared directory from host '/usr/local/synxdb/bin/plcontainer_clients' to container '/clientdir'  (seg0 slice3 192.168.180.45:40000 pid=3304)
+ INFO:  plcontainer:         access = readonly  (seg0 slice3 192.168.180.45:40000 pid=3304)
+ gp_segment_id | plcontainer_show_local_config
+ ---------------+-------------------------------
+  0 | ok
+ -1 | ok
+  1 | ok
+</code></pre>
+<p>The PL/Container function <code>plcontainer_containers_summary()</code> displays information about the currently running Docker containers.</p>
+<pre><code>SELECT * FROM plcontainer_containers_summary();
+</code></pre>
+<p>If a normal (non-superuser) SynxDB user runs the function, the function displays information only for containers created by the user. If a SynxDB superuser runs the function, information for all containers created by SynxDB users is displayed. This is sample output when 2 containers are running.</p>
+<pre><code> SEGMENT_ID |                           CONTAINER_ID                           |   UP_TIME    |  OWNER  | MEMORY_USAGE(KB)
+ ------------+------------------------------------------------------------------+--------------+---------+------------------
+ 1          | 693a6cb691f1d2881ec0160a44dae2547a0d5b799875d4ec106c09c97da422ea | Up 8 seconds | gpadmin | 12940
+ 1          | bc9a0c04019c266f6d8269ffe35769d118bfb96ec634549b2b1bd2401ea20158 | Up 2 minutes | gpadmin | 13628
+ (2 rows)
+</code></pre>
+<p>When SynxDB runs a PL/Container UDF, Query Executer (QE) processes start Docker containers and reuse them as needed. After a certain amount of idle time, a QE process quits and destroys its Docker containers. You can control the amount of idle time with the SynxDB server configuration parameter <a href="../ref_guide/config_params/guc-list.html">gp_vmem_idle_resource_timeout</a>. Controlling the idle time might help with Docker container reuse and avoid the overhead of creating and starting a Docker container.</p>
+<blockquote>
+<p><strong>Caution</strong> Changing <code>gp_vmem_idle_resource_timeout</code> value, might affect performance due to resource issues. The parameter also controls the freeing of SynxDB resources other than Docker containers.</p>
+</blockquote>
+<h3 id="basic-function-examples"><a class="header" href="#basic-function-examples"><a id="function_examples"></a>Basic Function Examples</a></h3>
+<p>The values in the <code># container</code> lines of the examples, <code>plc_python_shared</code> and <code>plc_r_shared</code>, are the <code>id</code> XML elements defined in the <code>plcontainer_config.xml</code> file. The <code>id</code> element is mapped to the <code>image</code> element that specifies the Docker image to be started. If you configured PL/Container with a different ID, change the value of the <code># container</code> line. For information about configuring PL/Container and viewing the configuration settings, see <a href="../utility_guide/ref/plcontainer-configuration.html">plcontainer Configuration File</a>.</p>
+<p>This is an example of PL/Python function that runs using the <code>plc_python_shared</code> container that contains Python 2:</p>
+<pre><code>CREATE OR REPLACE FUNCTION pylog100() RETURNS double precision AS $$
+ # container: plc_python_shared
+ import math
+ return math.log10(100)
+ $$ LANGUAGE plcontainer;
+</code></pre>
+<p>This is an example of a similar function using the <code>plc_r_shared</code> container:</p>
+<pre><code>CREATE OR REPLACE FUNCTION rlog100() RETURNS text AS $$
+# container: plc_r_shared
+return(log10(100))
+$$ LANGUAGE plcontainer;
+</code></pre>
+<p>If the <code># container</code> line in a UDF specifies an ID that is not in the PL/Container configuration file, SynxDB returns an error when you try to run the UDF.</p>
+<h3 id="about-plpython-2-functions-in-plcontainer"><a class="header" href="#about-plpython-2-functions-in-plcontainer"><a id="topic_ctk_xjg_wkb"></a>About PL/Python 2 Functions in PL/Container</a></h3>
+<p>In the Python 2 language container, the module <code>plpy</code> is implemented. The module contains these methods:</p>
+<ul>
+<li><code>plpy.execute(stmt)</code> - Runs the query string <code>stmt</code> and returns query result in a list of dictionary objects. To be able to access the result fields ensure your query returns named fields.</li>
+<li><code>plpy.prepare(stmt[, argtypes])</code> - Prepares the execution plan for a query. It is called with a query string and a list of parameter types, if you have parameter references in the query.</li>
+<li><code>plpy.execute(plan[, argtypes])</code> - Runs a prepared plan.</li>
+<li><code>plpy.debug(msg)</code> - Sends a DEBUG2 message to the SynxDB log.</li>
+<li><code>plpy.log(msg)</code> - Sends a LOG message to the SynxDB log.</li>
+<li><code>plpy.info(msg)</code> - Sends an INFO message to the SynxDB log.</li>
+<li><code>plpy.notice(msg)</code> - Sends a NOTICE message to the SynxDB log.</li>
+<li><code>plpy.warning(msg)</code> - Sends a WARNING message to the SynxDB log.</li>
+<li><code>plpy.error(msg)</code> - Sends an ERROR message to the SynxDB log. An ERROR message raised in SynxDB causes the query execution process to stop and the transaction to rollback.</li>
+<li><code>plpy.fatal(msg)</code> - Sends a FATAL message to the SynxDB log. A FATAL message causes SynxDB session to be closed and transaction to be rolled back.</li>
+<li><code>plpy.subtransaction()</code> - Manages <code>plpy.execute</code> calls in an explicit subtransaction. See <a href="https://www.postgresql.org/docs/9.4/plpython-subtransaction.html">Explicit Subtransactions</a> in the PostgreSQL documentation for additional information about <code>plpy.subtransaction()</code>.</li>
+</ul>
+<p>If an error of level <code>ERROR</code> or <code>FATAL</code> is raised in a nested Python function call, the message includes the list of enclosing functions.</p>
+<p>The Python language container supports these string quoting functions that are useful when constructing ad-hoc queries.</p>
+<ul>
+<li><code>plpy.quote_literal(string)</code> - Returns the string quoted to be used as a string literal in an SQL statement string. Embedded single-quotes and backslashes are properly doubled. <code>quote_literal()</code> returns null on null input (empty input). If the argument might be null, <code>quote_nullable()</code> might be more appropriate.</li>
+<li><code>plpy.quote_nullable(string)</code> - Returns the string quoted to be used as a string literal in an SQL statement string. If the argument is null, returns <code>NULL</code>. Embedded single-quotes and backslashes are properly doubled.</li>
+<li><code>plpy.quote_ident(string)</code> - Returns the string quoted to be used as an identifier in an SQL statement string. Quotes are added only if necessary (for example, if the string contains non-identifier characters or would be case-folded). Embedded quotes are properly doubled.</li>
+</ul>
+<p>When returning text from a PL/Python function, PL/Container converts a Python unicode object to text in the database encoding. If the conversion cannot be performed, an error is returned.</p>
+<p>PL/Container does not support this SynxDB PL/Python feature:</p>
+<ul>
+<li>Multi-dimensional arrays.</li>
+</ul>
+<p>Also, the Python module has two global dictionary objects that retain the data between function calls. They are named GD and SD. GD is used to share the data between all the function running within the same container, while SD is used for sharing the data between multiple calls of each separate function. Be aware that accessing the data is possible only within the same session, when the container process lives on a segment or master. Be aware that for idle sessions SynxDB terminates segment processes, which means the related containers would be shut down and the data from GD and SD lost.</p>
+<p>For information about PL/Python, see <a href="pl_python.html">PL/Python Language</a>.</p>
+<p>For information about the <code>plpy</code> methods, see <a href="https://www.postgresql.org/docs/9.4/plpython-database.html">https://www.postgresql.org/docs/9.4/plpython-database.htm</a>.</p>
+<h3 id="about-plpython-3-functions-in-plcontainer"><a class="header" href="#about-plpython-3-functions-in-plcontainer"><a id="topic_plc_py3"></a>About PL/Python 3 Functions in PL/Container</a></h3>
+<p>PL/Container for SynxDB 5 supports Python version 3.6+. PL/Container for SynxDB 2 supports Python 3.7+.</p>
+<p>If you want to use PL/Container to run the same function body in both Python2 and Python3, you must create 2 different user-defined functions.</p>
+<p>Keep in mind that UDFs that you created for Python 2 may not run in PL/Container with Python 3. The following Python references may be useful:</p>
+<ul>
+<li>Changes to Python - <a href="https://docs.python.org/3/whatsnew/3.0.html">What’s New in Python 3</a></li>
+<li>Porting from Python 2 to 3 - <a href="https://docs.python.org/3/howto/pyporting.html">Porting Python 2 Code to Python 3</a></li>
+</ul>
+<h3 id="developing-cuda-api-functions-with-plcontainer"><a class="header" href="#developing-cuda-api-functions-with-plcontainer"><a id="cuda"></a>Developing CUDA API Functions with PL/Container</a></h3>
+<p>Beginning with version 2.2, PL/Container supports developing Compute Unified Device Architecture (CUDA) API functions that utilize NVIDIA GPU hardware. This is accomplished by using the NVIDIA Container Toolkit <code>nvidia-docker</code> image and the <code>pycuda</code> python library. This procedure explains how to set up PL/Container for developing these functions.</p>
+<h4 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h4>
+<p>To develop CUDA functions with PL/Container you require:</p>
+<ul>
+<li>A Docker installation having Docker engine version v19.03 or newer</li>
+<li>PL/Container version 2.2.0 or newer</li>
+<li>At least one NVIDIA GPU with the required GPU driver installed on your host</li>
+</ul>
+<p>See the <a href="https://github.com/NVIDIA/nvidia-docker">Getting Started</a> section of the NVIDIA Container Toolkit GitHub project for information about installing the NVIDIA driver or Docker engine for your Linux distribution.</p>
+<p>Follow the <a href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html">Installation Guide</a> for the NVIDIA Container Toolkit GitHub project to install the <code>nvidia-docker</code> container.</p>
+<p>Verify that the Docker image can use your installed GPU(s) by running a command similar to:</p>
+<pre><code>$ docker run --rm --gpus=all -it nvidia/cuda:11.7.0-devel-ubuntu20.04 nvidia-smi –L
+</code></pre>
+<p>(Substitute the actual <code>nvidia-docker</code> image name and tag that you installed.) The command output should show that GPU hardware is utilized. For example:</p>
+<pre><code>GPU 0: NVIDIA GeForce RTX 2070 (UUID: GPU-d4d626a3-bbc9-ef88-98dc-44423ad081bf) 
+</code></pre>
+<p>Record the name of the GPU device ID (0 in the above example) or the device UUID (GPU-d4d626a3-bbc9-ef88-98dc-44423ad081bf) that you want to assign to the PL/Container image.</p>
+<h4 id="install-and-customize-the-plcontainer-image"><a class="header" href="#install-and-customize-the-plcontainer-image">Install and Customize the PL/Container Image</a></h4>
+<ol>
+<li>
+<p>Download the <code>plcontainer-python3-image-2.2.0-gp6.tar.gz</code> file.</p>
+</li>
+<li>
+<p>Load the downloaded PL/Container image into Docker:</p>
+<pre><code>$ docker image load &lt; plcontainer-python3-image-2.2.0-gp6.tar.gz
+</code></pre>
+</li>
+<li>
+<p>Customize the PL/Container image to add the required CUDA runtime and <code>pycuda</code> library. The following example Dockerfile contents show how to add CUDA 11.7 and <code>pycuda</code> 2021.1 to the PL/Container image. Use a text editor to create the Dockerfile:</p>
+<pre><code>FROM pivotaldata/plcontainer_python3_shared:devel 
+
+ENV XKBLAYOUT=en 
+ENV DEBIAN_FRONTEND=noninteractive 
+
+# Install CUDA from https://developer.nvidia.com/cuda-downloads 
+# By downloading and using the software, you agree to fully comply with the terms and conditions of the CUDA EULA. 
+RUN true &amp;&amp;\ 
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin &amp;&amp; \ 
+    mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600 &amp;&amp; \ 
+    wget https://developer.download.nvidia.com/compute/cuda/11.7.0/local_installers/cuda-repo-ubuntu1804-11-7-local_11.7.0-515.43.04-1_amd64.deb &amp;&amp; \ 
+    dpkg -i cuda-repo-ubuntu1804-11-7-local_11.7.0-515.43.04-1_amd64.deb &amp;&amp; \ 
+    cp /var/cuda-repo-ubuntu1804-11-7-local/cuda-*-keyring.gpg /usr/share/keyrings/ &amp;&amp; \ 
+    apt-get update &amp;&amp; \ 
+    apt-get -y install cuda &amp;&amp; \ 
+    rm cuda-repo-ubuntu1804-11-7-local_11.7.0-515.43.04-1_amd64.deb &amp;&amp;\ 
+    rm -rf /var/lib/apt/lists/* 
+
+ENV PATH="/usr/local/cuda-11.7/bin/:${PATH}" 
+ENV LD_LIBRARY_PATH="/usr/local/cuda-11.7/lib64:${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}" 
+ENV CUDA_HOME="/usr/local/cuda-11.7" 
+
+RUN true &amp;&amp; \ 
+    python3.7 -m pip --no-cache-dir install typing-extensions==3.10.0.0 &amp;&amp; \ 
+    python3.7 -m pip --no-cache-dir install Mako==1.2.0 &amp;&amp; \ 
+    python3.7 -m pip --no-cache-dir install platformdirs==2.5.2 &amp;&amp; \ 
+    python3.7 -m pip --no-cache-dir install pytools==2022.1.2 &amp;&amp; \ 
+    python3.7 -m pip --no-cache-dir install pycuda==2021.1 
+</code></pre>
+</li>
+<li>
+<p>Build the a customized container using your Dockerfile:</p>
+<pre><code>$ docker build . -t localhost/plcontainer_python3_cuda_shared:latest
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> The remaining instructions use the example image tag <code>localhost/plcontainer_python3_cuda_shared:latest</code>. Substitute the actual tag name as needed.</p>
+</blockquote>
+</li>
+<li>
+<p>Import the image runtime to PL/Container:</p>
+<pre><code>$ plcontainer runtime-add -r plc_python_cuda_shared -I localhost/plcontainer_python3_cuda_shared:latest -l python3  
+</code></pre>
+</li>
+<li>
+<p>Edit the image runtime to assign a GPU. The following example adds GPU device ID <code>0</code> as the GPU, and <code>gpadmin</code> as the designated role. Substitute either the GPU device ID or the device UUID that you recorded earlier:</p>
+<pre><code>$ plcontainer runtime-edit
+</code></pre>
+<pre><code>&lt;runtime&gt; 
+    &lt;id&gt;plc_python_cuda_shared&lt;/id&gt; 
+    &lt;image&gt;localhost/plcontainer_python3_cuda_shared:latest&lt;/image&gt; 
+    &lt;command&gt;/clientdir/py3client.sh&lt;/command&gt; 
+    &lt;setting roles="gpadmin"/&gt; 
+    &lt;shared_directory access="ro" container="/clientdir" host="/usr/local/synxdb/bin/plcontainer_clients"/&gt; 
+    &lt;device_request type="gpu"&gt; 
+        &lt;deviceid&gt;0&lt;/deviceid&gt; 
+    &lt;/device_request&gt; 
+&lt;/runtime&gt;
+</code></pre>
+</li>
+</ol>
+<h4 id="create-and-run-a-sample-cuda-function"><a class="header" href="#create-and-run-a-sample-cuda-function">Create and Run a Sample CUDA Function</a></h4>
+<ol>
+<li>
+<p>Connect to a SynxDB where PL/Container is installed:</p>
+<pre><code>$ psql -d mytest -h master_host -p 5432 -U `gpadmin`
+</code></pre>
+</li>
+<li>
+<p>Create a sample PL/Container function that uses the container you customized (<code>plc_python_cuda_shared</code> in this example). This simple function multiplies randomized, single-precision numbers by sending them to the CUDA constructor of <code>pycuda.compiler.SourceModule</code>:</p>
+<pre><code>CREATE FUNCTION hello_cuda() RETURNS float4[] AS $$ 
+# container: plc_python_cuda_shared 
+
+import pycuda.driver as drv 
+import pycuda.tools 
+import pycuda.autoinit 
+import numpy 
+import numpy.linalg as la 
+from pycuda.compiler import SourceModule 
+
+mod = SourceModule(""" 
+__global__ void multiply_them(float *dest, float *a, float *b) 
+{ 
+  const int i = threadIdx.x; 
+  dest[i] = a[i] * b[i]; 
+} 
+""") 
+
+multiply_them = mod.get_function("multiply_them") 
+  
+a = numpy.random.randn(400).astype(numpy.float32) 
+b = numpy.random.randn(400).astype(numpy.float32) 
+
+dest = numpy.zeros_like(a) 
+multiply_them( 
+        drv.Out(dest), drv.In(a), drv.In(b), 
+        block=(400,1,1)) 
+  
+return [float(i) for i in (dest-a*b)] 
+
+$$ LANGUAGE plcontainer; 
+</code></pre>
+</li>
+<li>
+<p>Run the sample function and verify its output:</p>
+<pre><code>$ WITH a AS (SELECT unnest(hello) AS cuda FROM hello_cuda() AS hello) SELECT sum(cuda) FROM a; 
+</code></pre>
+<pre><code>psql&gt;   +-----+ 
+psql&gt;   | sum | 
+psql&gt;   |-----| 
+psql&gt;   | 0.0 | 
+psql&gt;   +-----+ 
+psql&gt;   SELECT 1 
+psql&gt;   Time: 0.012s 
+</code></pre>
+<pre><code>$ SELECT * FROM hello_cuda();
+</code></pre>
+<pre><code>psql&gt;   +-----------------------+ 
+psql&gt;   |       hello_cuda      | 
+psql&gt;   |-----------------------| 
+psql&gt;   | {0, 0.... many 0 ...} | 
+psql&gt;   +-----------------------+ 
+psql&gt;   SELECT 1 
+psql&gt;   Time: 0.012s 
+</code></pre>
+</li>
+</ol>
+<h3 id="about-plr-functions-in-plcontainer"><a class="header" href="#about-plr-functions-in-plcontainer"><a id="topic_lqz_t3q_dw"></a>About PL/R Functions in PL/Container</a></h3>
+<p>In the R language container, the module <code>pg.spi</code> is implemented. The module contains these methods:</p>
+<ul>
+<li><code>pg.spi.exec(stmt)</code> - Runs the query string <code>stmt</code> and returns query result in R <code>data.frame</code>. To be able to access the result fields make sure your query returns named fields.</li>
+<li><code>pg.spi.prepare(stmt[, argtypes])</code> - Prepares the execution plan for a query. It is called with a query string and a list of parameter types if you have parameter references in the query.</li>
+<li><code>pg.spi.execp(plan[, argtypes])</code> - Runs a prepared plan.</li>
+<li><code>pg.spi.debug(msg)</code> - Sends a DEBUG2 message to the SynxDB log.</li>
+<li><code>pg.spi.log(msg)</code> - Sends a LOG message to the SynxDB log.</li>
+<li><code>pg.spi.info(msg)</code> - Sends an INFO message to the SynxDB log.</li>
+<li><code>pg.spi.notice(msg)</code> - Sends a NOTICE message to the SynxDB log.</li>
+<li><code>pg.spi.warning(msg)</code> - Sends a WARNING message to the SynxDB log.</li>
+<li><code>pg.spi.error(msg)</code> - Sends an ERROR message to the SynxDB log. An ERROR message raised in SynxDB causes the query execution process to stop and the transaction to rollback.</li>
+<li><code>pg.spi.fatal(msg)</code> - Sends a FATAL message to the SynxDB log. A FATAL message causes SynxDB session to be closed and transaction to be rolled back.</li>
+</ul>
+<p>PL/Container does not support this PL/R feature:</p>
+<ul>
+<li>Multi-dimensional arrays.</li>
+</ul>
+<p>For information about PL/R, see <a href="pl_r.html">PL/R Language</a>.</p>
+<p>For information about the <code>pg.spi</code> methods, see <a href="http://www.joeconway.com/plr/doc/plr-spi-rsupport-funcs-normal.html">http://www.joeconway.com/plr/doc/plr-spi-rsupport-funcs-normal.html</a></p>
+<h2 id="configuring-a-remote-plcontainer"><a class="header" href="#configuring-a-remote-plcontainer"><a id="remote_container"></a>Configuring a Remote PL/Container</a></h2>
+<p>You may configure one or more hosts outside your SynxDB cluster to use as a remote container host. The PL/Container workload can be dispatched to this host for execution and it will return the results, reducing the computing overload of the SynxDB hosts.</p>
+<h3 id="prerequisites-1"><a class="header" href="#prerequisites-1"><a id="prereq"></a>Prerequisites</a></h3>
+<ul>
+<li>You are using PL/Container version 2.4.0.</li>
+<li>You are using a Docker installation with a Docker engine version v19.03 or newer.</li>
+<li>You have root or sudo permission on the remote host.</li>
+</ul>
+<h3 id="configure-the-remote-host"><a class="header" href="#configure-the-remote-host"><a id="setup_host"></a>Configure the Remote Host</a></h3>
+<p>Install docker on the remote host. This step may vary depending on your operating system. For example, for RHEL 7:</p>
+<pre><code>sudo yum install -y yum-utils 
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo 
+sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin 
+sudo systemctl enable  --now docker 
+</code></pre>
+<p>Enable the remote API for Docker:</p>
+<pre><code>sudo systemctl edit docker.service 
+# add the following to the start of the file:
+ 
+[Service] 
+ExecStart= 
+ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375 
+# restart docker service 
+sudo systemctl restart docker 
+</code></pre>
+<p>Set up the remote host. This example assumes that you have created the <code>gpadmin</code> user, enabled password-less ssh access, and that <code>python3</code> and <code>rsync</code> are installed in the remote host.</p>
+<pre><code>ssh gpadmin@&lt;remoteip&gt; "sudo mkdir $GPHOME &amp;&amp; sudo chown gpadmin:gpadmin $GPHOME"  
+</code></pre>
+<p>From the SynxDB coordinator, copy the <code>plcontainer</code> client to the remote host.</p>
+<pre><code>plcontainer remote-setup --hosts &lt;remoteip&gt;
+</code></pre>
+<p>If you are configuring multiple hosts, you may run the command against multiple remote hosts:</p>
+<pre><code>plcontainer remote-setup --hosts &lt;remoteip_1&gt;, &lt;remoteip_2&gt;, &lt;remoteip_3&gt;
+</code></pre>
+<h3 id="load-the-docker-image-to-the-remote-host"><a class="header" href="#load-the-docker-image-to-the-remote-host"><a id="loading"></a>Load the Docker Image to the Remote Host</a></h3>
+<p>From the coordinator host, load the Docker image into the remote host. You may run the command against multiple remote hosts:</p>
+<pre><code>plcontainer image-add --hosts &lt;remoteip_1&gt;, &lt;remoteip_2&gt;, &lt;remoteip_3&gt; -f &lt;image_file&gt; 
+</code></pre>
+<h3 id="configure-a-backend-node"><a class="header" href="#configure-a-backend-node"><a id="backend"></a>Configure a Backend Node</a></h3>
+<p>Run the following command from the coordinator host:</p>
+<pre><code>plcontainer runtime-edit 
+</code></pre>
+<p>This command provides the PL/Container configuration XML file. Add the backend section, as depicted in the below example, specifying the remote host IP address and port. Then edit the existing runtime section to use the newly added backend.</p>
+<pre><code>&lt;?xml version="1.0" ?&gt; 
+&lt;configuration&gt; 
+	&lt;backend name="calculate_cluster" type="remote_docker"&gt; 
+		&lt;address&gt;{THE REMOTE ADDRESS}&lt;/address&gt; 
+		&lt;port&gt;2375&lt;/port&gt; 
+	&lt;/backend&gt; 
+	&lt;runtime&gt; 
+		&lt;id&gt;plc_python_cuda_shared&lt;/id&gt; 
+		&lt;image&gt;localhost/plcontainer_python3_cuda_shared:latest&lt;/image&gt; 
+		&lt;command&gt;/clientdir/py3client.sh&lt;/command&gt; 
+		&lt;shared_directory access="ro" container="/clientdir" host="/home/sa/GPDB/install/bin/plcontainer_clients"/&gt; 
+		&lt;backend name="calculate_cluster" /&gt; 
+	&lt;/runtime&gt; 
+&lt;/configuration&gt; 
+</code></pre>
+<p>If you are using multiple remote hosts, you must create separate backend sections. Because you can only set one backend per runtime, you must also create a separate runtime section per backend.</p>
+<h3 id="verify-the-configuration"><a class="header" href="#verify-the-configuration"><a id="verify"></a>Verify the Configuration</a></h3>
+<p>Run the following from the <code>psql</code> command line:</p>
+<pre><code>CREATE FUNCTION dummyPython() RETURNS text AS $$ 
+# container: plc_python_cuda_shared 
+return 'hello from Python' 
+$$ LANGUAGE plcontainer; 
+ 
+SELECT * from dummyPython() 
+</code></pre>
+<p>If the function runs successfully, it is running on the remote host.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../analytics/pl_container.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../analytics/pl_java.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../analytics/pl_container.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../analytics/pl_java.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

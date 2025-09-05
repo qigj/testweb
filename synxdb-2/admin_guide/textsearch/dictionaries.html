@@ -1,0 +1,485 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Text Search Dictionaries - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="text-search-dictionaries"><a class="header" href="#text-search-dictionaries">Text Search Dictionaries</a></h1>
+<p>Tokens produced by the SynxDB full text search parser are passed through a chain of dictionaries to produce a normalized term or “lexeme”. Different kinds of dictionaries are available to filter and transform tokens in different ways and for different languages.</p>
+<p>This section contains the following subtopics:</p>
+<ul>
+<li><a href="#section_j2z_lzw_4fb">About Text Search Dictionaries</a></li>
+<li><a href="#stop-words">Stop Words</a></li>
+<li><a href="#simple">Simple Dictionary</a></li>
+<li><a href="#synonym">Synonym Dictionary</a></li>
+<li><a href="#thesaurus-dictionary">Thesaurus Dictionary</a></li>
+<li><a href="#ispell">Ispell Dictionary</a></li>
+<li><a href="#section_xgc_2zw_4fb">SnowBall Dictionary</a></li>
+</ul>
+<h2 id="about-text-search-dictionaries"><a class="header" href="#about-text-search-dictionaries"><a id="section_j2z_lzw_4fb"></a>About Text Search Dictionaries</a></h2>
+<p>Dictionaries are used to eliminate words that should not be considered in a search (<em>stop words</em>), and to <em>normalize</em> words so that different derived forms of the same word will match. A successfully normalized word is called a <em>lexeme</em>. Aside from improving search quality, normalization and removal of stop words reduces the size of the <code>tsvector</code> representation of a document, thereby improving performance. Normalization does not always have linguistic meaning and usually depends on application semantics.</p>
+<p>Some examples of normalization:</p>
+<ul>
+<li>Linguistic - Ispell dictionaries try to reduce input words to a normalized form; stemmer dictionaries remove word endings</li>
+<li>URL locations can be canonicalized to make equivalent URLs match:
+<ul>
+<li><code>http://www.pgsql.ru/db/mw/index.html</code></li>
+<li><code>http://www.pgsql.ru/db/mw/</code></li>
+<li><code>http://www.pgsql.ru/db/../db/mw/index.html</code></li>
+</ul>
+</li>
+<li>Color names can be replaced by their hexadecimal values, e.g., <code>red</code>, <code>green</code>, <code>blue</code>, <code>magenta</code> -&gt; <code>FF0000</code>, <code>00FF00</code>, <code>0000FF</code>, <code>FF00FF</code></li>
+<li>If indexing numbers, we can remove some fractional digits to reduce the range of possible numbers, so for example 3.14159265359, 3.1415926, 3.14 will be the same after normalization if only two digits are kept after the decimal point.</li>
+</ul>
+<p>A dictionary is a program that accepts a token as input and returns:</p>
+<ul>
+<li>an array of lexemes if the input token is known to the dictionary (notice that one token can produce more than one lexeme)</li>
+<li>a single lexeme with the <code>TSL_FILTER</code> flag set, to replace the original token with a new token to be passed to subsequent dictionaries (a dictionary that does this is called a <em>filtering dictionary</em>)</li>
+<li>an empty array if the dictionary knows the token, but it is a stop word</li>
+<li><code>NULL</code> if the dictionary does not recognize the input token</li>
+</ul>
+<p>SynxDB provides predefined dictionaries for many languages. There are also several predefined templates that can be used to create new dictionaries with custom parameters. Each predefined dictionary template is described below. If no existing template is suitable, it is possible to create new ones; see the <code>contrib/</code> area of the SynxDB distribution for examples.</p>
+<p>A text search configuration binds a parser together with a set of dictionaries to process the parser’s output tokens. For each token type that the parser can return, a separate list of dictionaries is specified by the configuration. When a token of that type is found by the parser, each dictionary in the list is consulted in turn, until some dictionary recognizes it as a known word. If it is identified as a stop word, or if no dictionary recognizes the token, it will be discarded and not indexed or searched for. Normally, the first dictionary that returns a <code>non-NULL</code> output determines the result, and any remaining dictionaries are not consulted; but a filtering dictionary can replace the given word with a modified word, which is then passed to subsequent dictionaries.</p>
+<p>The general rule for configuring a list of dictionaries is to place first the most narrow, most specific dictionary, then the more general dictionaries, finishing with a very general dictionary, like a Snowball stemmer or <code>simple</code>, which recognizes everything. For example, for an astronomy-specific search (<code>astro_en</code> configuration) one could bind token type <code>asciiword</code> (ASCII word) to a synonym dictionary of astronomical terms, a general English dictionary and a Snowball English stemmer:</p>
+<pre><code>ALTER TEXT SEARCH CONFIGURATION astro_en
+    ADD MAPPING FOR asciiword WITH astrosyn, english_ispell, english_stem;
+</code></pre>
+<p>A filtering dictionary can be placed anywhere in the list, except at the end where it’d be useless. Filtering dictionaries are useful to partially normalize words to simplify the task of later dictionaries. For example, a filtering dictionary could be used to remove accents from accented letters, as is done by the <a href="https://www.postgresql.org/docs/9.4/unaccent.html">unaccent</a> module.</p>
+<h2 id="stop-words"><a class="header" href="#stop-words"><a id="stop-words"></a>Stop Words</a></h2>
+<p>Stop words are words that are very common, appear in almost every document, and have no discrimination value. Therefore, they can be ignored in the context of full text searching. For example, every English text contains words like a and the, so it is useless to store them in an index. However, stop words do affect the positions in <code>tsvector</code>, which in turn affect ranking:</p>
+<pre><code>SELECT to_tsvector('english','in the list of stop words');
+        to_tsvector
+----------------------------
+ 'list':3 'stop':5 'word':6
+</code></pre>
+<p>The missing positions 1,2,4 are because of stop words. Ranks calculated for documents with and without stop words are quite different:</p>
+<pre><code>SELECT ts_rank_cd (to_tsvector('english','in the list of stop words'), to_tsquery('list &amp; stop'));
+ ts_rank_cd
+------------
+       0.05
+
+SELECT ts_rank_cd (to_tsvector('english','list stop words'), to_tsquery('list &amp; stop'));
+ ts_rank_cd
+------------
+        0.1
+</code></pre>
+<p>It is up to the specific dictionary how it treats stop words. For example, <code>ispell</code> dictionaries first normalize words and then look at the list of stop words, while <code>Snowball</code> stemmers first check the list of stop words. The reason for the different behavior is an attempt to decrease noise.</p>
+<h2 id="simple-dictionary"><a class="header" href="#simple-dictionary"><a id="simple"></a>Simple Dictionary</a></h2>
+<p>The simple dictionary template operates by converting the input token to lower case and checking it against a file of stop words. If it is found in the file then an empty array is returned, causing the token to be discarded. If not, the lower-cased form of the word is returned as the normalized lexeme. Alternatively, the dictionary can be configured to report non-stop-words as unrecognized, allowing them to be passed on to the next dictionary in the list.</p>
+<p>Here is an example of a dictionary definition using the simple template:</p>
+<pre><code>CREATE TEXT SEARCH DICTIONARY public.simple_dict (
+    TEMPLATE = pg_catalog.simple,
+    STOPWORDS = english
+);
+</code></pre>
+<p>Here, <code>english</code> is the base name of a file of stop words. The file’s full name will be <code>$SHAREDIR/tsearch_data/english.stop</code>, where <code>$SHAREDIR</code> means the SynxDB installation’s shared-data directory, often <code>/usr/local/synxdb/share/postgresql</code> (use <code>pg_config --sharedir</code> to determine it if you’re not sure). The file format is simply a list of words, one per line. Blank lines and trailing spaces are ignored, and upper case is folded to lower case, but no other processing is done on the file contents.</p>
+<p>Now we can test our dictionary:</p>
+<pre><code>SELECT ts_lexize('public.simple_dict','YeS');
+ ts_lexize
+-----------
+ {yes}
+
+SELECT ts_lexize('public.simple_dict','The');
+ ts_lexize
+-----------
+ {}
+</code></pre>
+<p>We can also choose to return <code>NULL</code>, instead of the lower-cased word, if it is not found in the stop words file. This behavior is selected by setting the dictionary’s <code>Accept</code> parameter to false. Continuing the example:</p>
+<pre><code>ALTER TEXT SEARCH DICTIONARY public.simple_dict ( Accept = false );
+
+SELECT ts_lexize('public.simple_dict','YeS');
+ ts_lexize
+-----------
+ {yes}
+
+SELECT ts_lexize('public.simple_dict','The');
+ ts_lexize
+-----------
+ {}
+</code></pre>
+<p>With the default setting of <code>Accept = true</code>, it is only useful to place a simple dictionary at the end of a list of dictionaries, since it will never pass on any token to a following dictionary. Conversely, <code>Accept = false</code> is only useful when there is at least one following dictionary.</p>
+<blockquote>
+<p><strong>Caution</strong> Most types of dictionaries rely on configuration files, such as files of stop words. These files must be stored in UTF-8 encoding. They will be translated to the actual database encoding, if that is different, when they are read into the server.
+Normally, a database session will read a dictionary configuration file only once, when it is first used within the session. If you modify a configuration file and want to force existing sessions to pick up the new contents, issue an <code>ALTER TEXT SEARCH DICTIONARY</code>command on the dictionary. This can be a “dummy” update that doesn’t actually change any parameter values.</p>
+</blockquote>
+<h2 id="synonym-dictionary"><a class="header" href="#synonym-dictionary"><a id="synonym"></a>Synonym Dictionary</a></h2>
+<p>This dictionary template is used to create dictionaries that replace a word with a synonym. Phrases are not supported—use the thesaurus template (<a href="#thesaurus-dictionary">Thesaurus Dictionary</a>) for that. A synonym dictionary can be used to overcome linguistic problems, for example, to prevent an English stemmer dictionary from reducing the word “Paris” to “pari”. It is enough to have a <code>Paris paris</code> line in the synonym dictionary and put it before the <code>english_stem</code> dictionary. For example:</p>
+<pre><code>SELECT * FROM ts_debug('english', 'Paris');
+   alias   |   description   | token |  dictionaries  |  dictionary  | lexemes 
+-----------+-----------------+-------+----------------+--------------+---------
+ asciiword | Word, all ASCII | Paris | {english_stem} | english_stem | {pari}
+
+CREATE TEXT SEARCH DICTIONARY my_synonym (
+    TEMPLATE = synonym,
+    SYNONYMS = my_synonyms
+);
+
+ALTER TEXT SEARCH CONFIGURATION english
+    ALTER MAPPING FOR asciiword
+    WITH my_synonym, english_stem;
+
+SELECT * FROM ts_debug('english', 'Paris');
+   alias   |   description   | token |       dictionaries        | dictionary | lexemes 
+-----------+-----------------+-------+---------------------------+------------+---------
+ asciiword | Word, all ASCII | Paris | {my_synonym,english_stem} | my_synonym | {paris}
+</code></pre>
+<p>The only parameter required by the synonym template is <code>SYNONYMS</code>, which is the base name of its configuration file — <code>my_synonyms</code> in the above example. The file’s full name will be <code>$SHAREDIR/tsearch_data/my_synonyms.syn</code> (where <code>$SHAREDIR</code> means the SynxDB installation’s shared-data directory). The file format is just one line per word to be substituted, with the word followed by its synonym, separated by white space. Blank lines and trailing spaces are ignored.</p>
+<p>The synonym template also has an optional parameter <code>CaseSensitive</code>, which defaults to <code>false</code>. When <code>CaseSensitive</code> is <code>false</code>, words in the synonym file are folded to lower case, as are input tokens. When it is <code>true</code>, words and tokens are not folded to lower case, but are compared as-is.</p>
+<p>An asterisk (*) can be placed at the end of a synonym in the configuration file. This indicates that the synonym is a prefix. The asterisk is ignored when the entry is used in <code>to_tsvector()</code>, but when it is used in <code>to_tsquery()</code>, the result will be a query item with the prefix match marker (see <a href="controlling.html#parsing-queries">Parsing Queries</a>). For example, suppose we have these entries in <code>$SHAREDIR/tsearch_data/synonym_sample.syn</code>:</p>
+<pre><code>postgres pgsql postgresql pgsql postgre pgsql 
+gogle googl 
+indices index*
+</code></pre>
+<p>Then we will get these results:</p>
+<pre><code>mydb=# CREATE TEXT SEARCH DICTIONARY syn (template=synonym, synonyms='synonym_sample');
+mydb=# SELECT ts_lexize('syn','indices');
+ ts_lexize
+-----------
+ {index}
+(1 row)
+
+mydb=# CREATE TEXT SEARCH CONFIGURATION tst (copy=simple);
+mydb=# ALTER TEXT SEARCH CONFIGURATION tst ALTER MAPPING FOR asciiword WITH syn;
+mydb=# SELECT to_tsvector('tst','indices');
+ to_tsvector
+-------------
+ 'index':1
+(1 row)
+
+mydb=# SELECT to_tsquery('tst','indices');
+ to_tsquery
+------------
+ 'index':*
+(1 row)
+
+mydb=# SELECT 'indexes are very useful'::tsvector;
+            tsvector             
+---------------------------------
+ 'are' 'indexes' 'useful' 'very'
+(1 row)
+
+mydb=# SELECT 'indexes are very useful'::tsvector @@ to_tsquery('tst','indices');
+ ?column?
+----------
+ t
+(1 row)
+</code></pre>
+<h2 id="thesaurus-dictionary"><a class="header" href="#thesaurus-dictionary"><a id="thesaurus-dictionary"></a>Thesaurus Dictionary</a></h2>
+<p>A thesaurus dictionary (sometimes abbreviated as TZ) is a collection of words that includes information about the relationships of words and phrases, i.e., broader terms (BT), narrower terms (NT), preferred terms, non-preferred terms, related terms, etc.</p>
+<p>Basically a thesaurus dictionary replaces all non-preferred terms by one preferred term and, optionally, preserves the original terms for indexing as well. SynxDB’s current implementation of the thesaurus dictionary is an extension of the synonym dictionary with added <em>phrase</em> support. A thesaurus dictionary requires a configuration file of the following format:</p>
+<pre><code># this is a comment
+sample word(s) : indexed word(s)
+more sample word(s) : more indexed word(s)
+...
+</code></pre>
+<p>where the colon (<code>:</code>) symbol acts as a delimiter between a phrase and its replacement.</p>
+<p>A thesaurus dictionary uses a <em>subdictionary</em> (which is specified in the dictionary’s configuration) to normalize the input text before checking for phrase matches. It is only possible to select one subdictionary. An error is reported if the subdictionary fails to recognize a word. In that case, you should remove the use of the word or teach the subdictionary about it. You can place an asterisk (<code>*</code>) at the beginning of an indexed word to skip applying the subdictionary to it, but all sample words <strong>must</strong> be known to the subdictionary.</p>
+<p>The thesaurus dictionary chooses the longest match if there are multiple phrases matching the input, and ties are broken by using the last definition.</p>
+<p>Specific stop words recognized by the subdictionary cannot be specified; instead use <code>?</code> to mark the location where any stop word can appear. For example, assuming that <code>a</code> and <code>the</code> are stop words according to the subdictionary:</p>
+<pre><code>? one ? two : swsw
+</code></pre>
+<p>matches <code>a one the two</code> and <code>the one a two</code>; both would be replaced by <code>swsw</code>.</p>
+<p>Since a thesaurus dictionary has the capability to recognize phrases it must remember its state and interact with the parser. A thesaurus dictionary uses these assignments to check if it should handle the next word or stop accumulation. The thesaurus dictionary must be configured carefully. For example, if the thesaurus dictionary is assigned to handle only the <code>asciiword</code> token, then a thesaurus dictionary definition like <code>one 7</code> will not work since token type <code>uint</code> is not assigned to the thesaurus dictionary.</p>
+<blockquote>
+<p><strong>Caution</strong> Thesauruses are used during indexing so any change in the thesaurus dictionary’s parameters requires reindexing. For most other dictionary types, small changes such as adding or removing stopwords does not force reindexing.</p>
+</blockquote>
+<p><strong>Thesaurus Configuration</strong></p>
+<p>To define a new thesaurus dictionary, use the <code>thesaurus</code> template. For example:</p>
+<pre><code>CREATE TEXT SEARCH DICTIONARY thesaurus_simple (
+    TEMPLATE = thesaurus,
+    DictFile = mythesaurus,
+    Dictionary = pg_catalog.english_stem
+);
+</code></pre>
+<p>Here:</p>
+<ul>
+<li><code>thesaurus_simple</code> is the new dictionary’s name</li>
+<li><code>mythesaurus</code> is the base name of the thesaurus configuration file. (Its full name will be <code>$SHAREDIR/tsearch_data/mythesaurus.ths</code>, where <code>$SHAREDIR</code> means the installation shared-data directory.)</li>
+<li><code>pg_catalog.english_stem</code> is the subdictionary (here, a Snowball English stemmer) to use for thesaurus normalization. Notice that the subdictionary will have its own configuration (for example, stop words), which is not shown here.</li>
+</ul>
+<p>Now it is possible to bind the thesaurus dictionary <code>thesaurus_simple</code> to the desired token types in a configuration, for example:</p>
+<pre><code>ALTER TEXT SEARCH CONFIGURATION russian
+    ALTER MAPPING FOR asciiword, asciihword, hword_asciipart
+    WITH thesaurus_simple;
+</code></pre>
+<p><strong>Thesaurus Example</strong></p>
+<p>Consider a simple astronomical thesaurus <code>thesaurus_astro</code>, which contains some astronomical word combinations:</p>
+<pre><code>supernovae stars : sn
+crab nebulae : crab
+</code></pre>
+<p>Below we create a dictionary and bind some token types to an astronomical thesaurus and English stemmer:</p>
+<pre><code>CREATE TEXT SEARCH DICTIONARY thesaurus_astro (
+    TEMPLATE = thesaurus,
+    DictFile = thesaurus_astro,
+    Dictionary = english_stem
+);
+
+ALTER TEXT SEARCH CONFIGURATION russian
+    ALTER MAPPING FOR asciiword, asciihword, hword_asciipart
+    WITH thesaurus_astro, english_stem;
+</code></pre>
+<p>Now we can see how it works. <code>ts_lexize</code> is not very useful for testing a thesaurus, because it treats its input as a single token. Instead we can use <code>plainto_tsquery</code> and <code>to_tsvector</code>, which will break their input strings into multiple tokens:</p>
+<pre><code>SELECT plainto_tsquery('supernova star');
+ plainto_tsquery
+-----------------
+ 'supernova' &amp; 'star'
+
+SELECT to_tsvector('supernova star');
+ to_tsvector
+-------------
+ 'star':2 'supernova':1
+</code></pre>
+<p>In principle, one can use <code>to_tsquery</code> if you quote the argument:</p>
+<pre><code>SELECT to_tsquery('''supernova star''');
+ to_tsquery
+------------
+ 'supernova' &amp; 'star'
+</code></pre>
+<p>Notice that <code>supernova star</code> matches <code>supernovae stars</code> in <code>thesaurus_astro</code> because we specified the <code>english_stem</code> stemmer in the <code>thesaurus</code> definition. The stemmer removed the <code>e</code> and <code>s</code>.</p>
+<p>To index the original phrase as well as the substitute, just include it in the right-hand part of the definition:</p>
+<pre><code>supernovae stars : sn supernovae stars
+
+SELECT plainto_tsquery('supernova star');
+       plainto_tsquery
+-----------------------------
+ 'supernova' &amp; 'star'
+</code></pre>
+<h2 id="ispell-dictionary"><a class="header" href="#ispell-dictionary"><a id="ispell"></a>Ispell Dictionary</a></h2>
+<p>The Ispell dictionary template supports <em>morphological dictionaries</em>, which can normalize many different linguistic forms of a word into the same lexeme. For example, an English Ispell dictionary can match all declensions and conjugations of the search term <code>bank</code>, e.g., <code>banking</code>, <code>banked</code>, <code>banks</code>, <code>banks</code>’, and <code>bank's</code>.</p>
+<p>The standard SynxDB distribution does not include any Ispell configuration files. Dictionaries for a large number of languages are available from <a href="https://www.cs.hmc.edu/~geoff/ispell.html">Ispell</a>. Also, some more modern dictionary file formats are supported — <a href="http://en.wikipedia.org/wiki/MySpell">MySpell</a> (OO &lt; 2.0.1) and <a href="http://sourceforge.net/projects/hunspell/">Hunspell</a> (OO &gt;= 2.0.2). A large list of dictionaries is available on the <a href="http://wiki.services.openoffice.org/wiki/Dictionaries">OpenOffice Wiki</a>.</p>
+<p>To create an Ispell dictionary, use the built-in <code>ispell</code> template and specify several parameters:</p>
+<pre><code>CREATE TEXT SEARCH DICTIONARY english_ispell (
+    TEMPLATE = ispell,
+    DictFile = english,
+    AffFile = english,
+    StopWords = english
+);
+</code></pre>
+<p>Here, <code>DictFile</code>, <code>AffFile</code>, and <code>StopWords</code> specify the base names of the dictionary, affixes, and stop-words files. The stop-words file has the same format explained above for the <code>simple</code> dictionary type. The format of the other files is not specified here but is available from the above-mentioned web sites.</p>
+<p>Ispell dictionaries usually recognize a limited set of words, so they should be followed by another broader dictionary; for example, a Snowball dictionary, which recognizes everything.</p>
+<p>Ispell dictionaries support splitting compound words; a useful feature. Notice that the affix file should specify a special flag using the <code>compoundwords controlled</code> statement that marks dictionary words that can participate in compound formation:</p>
+<pre><code>compoundwords  controlled z
+</code></pre>
+<p>Here are some examples for the Norwegian language:</p>
+<pre><code>SELECT ts_lexize('norwegian_ispell', 'overbuljongterningpakkmesterassistent');
+   {over,buljong,terning,pakk,mester,assistent}
+SELECT ts_lexize('norwegian_ispell', 'sjokoladefabrikk');
+   {sjokoladefabrikk,sjokolade,fabrikk}
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> MySpell does not support compound words. Hunspell has sophisticated support for compound words. At present, SynxDB implements only the basic compound word operations of Hunspell.</p>
+</blockquote>
+<h2 id="snowball-dictionary"><a class="header" href="#snowball-dictionary"><a id="section_xgc_2zw_4fb"></a>SnowBall Dictionary</a></h2>
+<p>The Snowball dictionary template is based on a project by Martin Porter, inventor of the popular Porter’s stemming algorithm for the English language. Snowball now provides stemming algorithms for many languages (see the <a href="http://snowballstem.org/">Snowball site</a> for more information). Each algorithm understands how to reduce common variant forms of words to a base, or stem, spelling within its language. A Snowball dictionary requires a language parameter to identify which stemmer to use, and optionally can specify a stopword file name that gives a list of words to eliminate. (SynxDB’s standard stopword lists are also provided by the Snowball project.) For example, there is a built-in definition equivalent to</p>
+<pre><code>CREATE TEXT SEARCH DICTIONARY english_stem (
+    TEMPLATE = snowball,
+    Language = english,
+    StopWords = english
+);
+</code></pre>
+<p>The stopword file format is the same as already explained.</p>
+<p>A Snowball dictionary recognizes everything, whether or not it is able to simplify the word, so it should be placed at the end of the dictionary list. It is useless to have it before any other dictionary because a token will never pass through it to the next dictionary.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../admin_guide/textsearch/parsers.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../admin_guide/textsearch/configuration.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../admin_guide/textsearch/parsers.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../admin_guide/textsearch/configuration.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

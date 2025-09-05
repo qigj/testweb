@@ -1,0 +1,346 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>ALTER ROLE - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="alter-role"><a class="header" href="#alter-role">ALTER ROLE</a></h1>
+<p>Changes a database role (user or group).</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code class="language-{#sql_command_synopsis}">ALTER ROLE &lt;name&gt; [ [ WITH ] &lt;option&gt; [ ... ] ]
+
+where &lt;option&gt; can be:
+
+    SUPERUSER | NOSUPERUSER
+  | CREATEDB | NOCREATEDB
+  | CREATEROLE | NOCREATEROLE
+  | CREATEEXTTABLE | NOCREATEEXTTABLE  [ ( attribute='value' [, ...] )
+     where attributes and values are:
+       type='readable'|'writable'
+       protocol='gpfdist'|'http'
+  | INHERIT | NOINHERIT
+  | LOGIN | NOLOGIN
+  | REPLICATION | NOREPLICATION
+  | CONNECTION LIMIT &lt;connlimit&gt;
+  | [ ENCRYPTED | UNENCRYPTED ] PASSWORD '&lt;password&gt;'
+  | VALID UNTIL '&lt;timestamp&gt;'
+
+ALTER ROLE &lt;name&gt; RENAME TO &lt;new_name&gt;
+
+ALTER ROLE { &lt;name&gt; | ALL } [ IN DATABASE &lt;database_name&gt; ] SET &lt;configuration_parameter&gt; { TO | = } { &lt;value&gt; | DEFAULT }
+ALTER ROLE { &lt;name&gt; | ALL } [ IN DATABASE &lt;database_name&gt; ] SET &lt;configuration_parameter&gt; FROM CURRENT
+ALTER ROLE { &lt;name&gt; | ALL } [ IN DATABASE &lt;database_name&gt; ] RESET &lt;configuration_parameter&gt;
+ALTER ROLE { &lt;name&gt; | ALL } [ IN DATABASE &lt;database_name&gt; ] RESET ALL
+ALTER ROLE &lt;name&gt; RESOURCE QUEUE {&lt;queue_name&gt; | NONE}
+ALTER ROLE &lt;name&gt; RESOURCE GROUP {&lt;group_name&gt; | NONE}
+
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p><code>ALTER ROLE</code> changes the attributes of a SynxDB role. There are several variants of this command.</p>
+<h3 id="with-option"><a class="header" href="#with-option"><strong>WITH option</strong></a></h3>
+<p>Changes many of the role attributes that can be specified in <a href="CREATE_ROLE.html">CREATE ROLE</a>. (All of the possible attributes are covered, execept that there are no options for adding or removing memberships; use <a href="GRANT.html">GRANT</a> and <a href="REVOKE.html">REVOKE</a> for that.) Attributes not mentioned in the command retain their previous settings. Database superusers can change any of these settings for any role. Roles having <code>CREATEROLE</code> privilege can change any of these settings, but only for non-superuser and non-replication roles. Ordinary roles can only change their own password.</p>
+<h3 id="rename"><a class="header" href="#rename"><strong>RENAME</strong></a></h3>
+<p>Changes the name of the role. Database superusers can rename any role. Roles having <code>CREATEROLE</code> privilege can rename non-superuser roles. The current session user cannot be renamed (connect as a different user to rename a role). Because MD5-encrypted passwords use the role name as cryptographic salt, renaming a role clears its password if the password is MD5-encrypted.</p>
+<h3 id="set--reset"><a class="header" href="#set--reset"><strong>SET | RESET</strong></a></h3>
+<p>Changes a role’s session default for a specified configuration parameter, either for all databases or, when the <code>IN DATABASE</code> clause is specified, only for sessions in the named database. If <code>ALL</code> is specified instead of a role name, this changes the setting for all roles. Using <code>ALL</code> with <code>IN DATABASE</code> is effectively the same as using the command <code>ALTER DATABASE...SET...</code>.</p>
+<p>Whenever the role subsequently starts a new session, the specified value becomes the session default, overriding whatever setting is present in the server configuration file (<code>postgresql.conf</code>) or has been received from the <code>postgres</code> command line. This only happens at login time; running <a href="SET_ROLE.html">SET ROLE</a> or <a href="SET_SESSION_AUTHORIZATION.html">SET SESSION AUTHORIZATION</a> does not cause new configuration values to be set.</p>
+<p>Database-specific settings attached to a role override settings for all databases. Settings for specific databases or specific roles override settings for all roles.</p>
+<p>For a role without <code>LOGIN</code> privilege, session defaults have no effect. Ordinary roles can change their own session defaults. Superusers can change anyone’s session defaults. Roles having <code>CREATEROLE</code> privilege can change defaults for non-superuser roles. Ordinary roles can only set defaults for themselves. Certain configuration variables cannot be set this way, or can only be set if a superuser issues the command. See the <em>SynxDB Reference Guide</em> for information about all user-settable configuration parameters. Only superusers can change a setting for all roles in all databases.</p>
+<h3 id="resource-queue"><a class="header" href="#resource-queue"><strong>RESOURCE QUEUE</strong></a></h3>
+<p>Assigns the role to a resource queue. The role would then be subject to the limits assigned to the resource queue when issuing queries. Specify <code>NONE</code> to assign the role to the default resource queue. A role can only belong to one resource queue. For a role without <code>LOGIN</code> privilege, resource queues have no effect. See <a href="CREATE_RESOURCE_QUEUE.html">CREATE RESOURCE QUEUE</a> for more information.</p>
+<h3 id="resource-group"><a class="header" href="#resource-group"><strong>RESOURCE GROUP</strong></a></h3>
+<p>Assigns a resource group to the role. The role would then be subject to the concurrent transaction, memory, and CPU limits configured for the resource group. You can assign a single resource group to one or more roles. You cannot assign a resource group that you create for an external component to a role. See <a href="CREATE_RESOURCE_GROUP.html">CREATE RESOURCE GROUP</a> for additional information.</p>
+<h2 id="parameters"><a class="header" href="#parameters"><a id="section4"></a>Parameters</a></h2>
+<h3 id="name"><a class="header" href="#name">name</a></h3>
+<p>The name of the role whose attributes are to be altered.</p>
+<h3 id="new_name"><a class="header" href="#new_name">new_name</a></h3>
+<p>The new name of the role.</p>
+<h3 id="database_name"><a class="header" href="#database_name">database_name</a></h3>
+<p>The name of the database in which to set the configuration parameter.</p>
+<h3 id="config_parametervalue"><a class="header" href="#config_parametervalue">config_parameter=value</a></h3>
+<p>Set this role’s session default for the specified configuration parameter to the given value. If value is <code>DEFAULT</code> or if <code>RESET</code> is used, the role-specific parameter setting is removed, so the role will inherit the system-wide default setting in new sessions. Use <code>RESET ALL</code> to clear all role-specific settings. <code>SET FROM CURRENT</code> saves the session’s current value of the parameter as the role-specific value. If <code>IN DATABASE</code> is specified, the configuration parameter is set or removed for the given role and database only. Whenever the role subsequently starts a new session, the specified value becomes the session default, overriding whatever setting is present in <code>postgresql.conf</code> or has been received from the <code>postgres</code> command line.</p>
+<p>Role-specific variable settings take effect only at login; <code>SET ROLE</code> and <a href="SET_SESSION_AUTHORIZATION.html">SET SESSION AUTHORIZATION</a> do not process role-specific variable settings.</p>
+<p>See <a href="../config_params/guc_config.html">Server Configuration Parameters</a> for information about user-settable configuration parameters.</p>
+<h3 id="group_name"><a class="header" href="#group_name">group_name</a></h3>
+<p>The name of the resource group to assign to this role. Specifying the group_name <code>NONE</code> removes the role’s current resource group assignment and assigns a default resource group based on the role’s capability. <code>SUPERUSER</code> roles are assigned the <code>admin_group</code> resource group, while the <code>default_group</code> resource group is assigned to non-admin roles.</p>
+<p>You cannot assign a resource group that you create for an external component to a role.</p>
+<h3 id="queue_name"><a class="header" href="#queue_name">queue_name</a></h3>
+<p>The name of the resource queue to which the user-level role is to be assigned. Only roles with <code>LOGIN</code> privilege can be assigned to a resource queue. To unassign a role from a resource queue and put it in the default resource queue, specify <code>NONE</code>. A role can only belong to one resource queue.</p>
+<h3 id="superuser--nosuperusercreatedb--nocreatedbcreaterole--nocreaterolecreateuser--nocreateuser"><a class="header" href="#superuser--nosuperusercreatedb--nocreatedbcreaterole--nocreaterolecreateuser--nocreateuser">SUPERUSER | NOSUPERUSER<br/>CREATEDB | NOCREATEDB<br/>CREATEROLE | NOCREATEROLE<br/>CREATEUSER | NOCREATEUSER</a></h3>
+<p><code>CREATEUSER</code> and <code>NOCREATEUSER</code> are obsolete, but still accepted, spellings of <code>SUPERUSER</code> and <code>NOSUPERUSER</code>. Note that they are not equivalent to the <code>CREATEROLE and</code> <code>NOCREATEROLE</code> clauses.</p>
+<h3 id="createexttable--nocreateexttable-attributevalue"><a class="header" href="#createexttable--nocreateexttable-attributevalue">CREATEEXTTABLE | NOCREATEEXTTABLE [(attribute=‘value’)]</a></h3>
+<p>If <code>CREATEEXTTABLE</code> is specified, the role being defined is allowed to create external tables. The default <code>type</code> is <code>readable</code> and the default <code>protocol</code> is <code>gpfdist</code> if not specified. <code>NOCREATEEXTTABLE</code> (the default) denies the role the ability to create external tables. Note that external tables that use the <code>file</code> or <code>execute</code> protocols can only be created by superusers.</p>
+<h3 id="inherit--noinheritlogin--nologinreplicationnoreplicationconnection-limit-connlimitpassword-passwordencrypted--unencryptedvalid-until-timestamp"><a class="header" href="#inherit--noinheritlogin--nologinreplicationnoreplicationconnection-limit-connlimitpassword-passwordencrypted--unencryptedvalid-until-timestamp">INHERIT | NOINHERIT<br/>LOGIN | NOLOGIN<br/>REPLICATION<br/>NOREPLICATION<br/>CONNECTION LIMIT connlimit<br/>PASSWORD password<br/>ENCRYPTED | UNENCRYPTED<br/>VALID UNTIL ‘timestamp’</a></h3>
+<p>These clauses alter role attributes originally set by <a href="CREATE_ROLE.html">CREATE ROLE</a>.</p>
+<h3 id="deny-deny_pointdeny-between-deny_point-and-deny_point"><a class="header" href="#deny-deny_pointdeny-between-deny_point-and-deny_point">DENY deny_point<br/>DENY BETWEEN deny_point AND deny_point</a></h3>
+<p>The <code>DENY</code> and <code>DENY BETWEEN</code> keywords set time-based constraints that are enforced at login. <code>DENY</code> sets a day or a day and time to deny access. <code>DENY BETWEEN</code> sets an interval during which access is denied. Both use the parameter deny_point that has following format:</p>
+<pre><code>DAY day [ TIME 'time' ]
+</code></pre>
+<p>The two parts of the <code>deny_point</code> parameter use the following formats:</p>
+<p>For day:</p>
+<pre><code>{'Sunday' | 'Monday' | 'Tuesday' |'Wednesday' | 'Thursday' | 'Friday' | 
+'Saturday' | 0-6 }
+</code></pre>
+<p>For <code>time:</code></p>
+<pre><code>{ 00-23 : 00-59 | 01-12 : 00-59 { AM | PM }}
+</code></pre>
+<p>The <code>DENY BETWEEN</code> clause uses two deny_point parameters which must indicate day and time.</p>
+<pre><code>DENY BETWEEN &lt;deny_point&gt; AND &lt;deny_point&gt;
+</code></pre>
+<p>For example:</p>
+<pre><code>ALTER USER user1 DENY BETWEEN day 'Sunday' time '00:00' AND day 'Monday' time '00:00'; 
+</code></pre>
+<p>For more information about time-based constraints and examples, see “Managing Roles and Privileges” in the <em>SynxDB Administrator Guide</em>.</p>
+<h3 id="drop-deny-for-deny_point"><a class="header" href="#drop-deny-for-deny_point">DROP DENY FOR deny_point</a></h3>
+<p>The <code>DROP DENY FOR</code> clause removes a time-based constraint from the role. It uses the deny_point parameter described above.</p>
+<p>For more information about time-based constraints and examples, see “Managing Roles and Privileges” in the <em>SynxDB Administrator Guide</em>.</p>
+<h2 id="notes"><a class="header" href="#notes"><a id="section5"></a>Notes</a></h2>
+<p>Use <a href="CREATE_ROLE.html">CREATE ROLE</a> to add new roles, and <a href="DROP_ROLE.html">DROP ROLE</a> to remove a role.</p>
+<p>Use <a href="GRANT.html">GRANT</a> and <a href="REVOKE.html">REVOKE</a> for adding and removing role memberships.</p>
+<p>Caution must be exercised when specifying an unencrypted password with this command. The password will be transmitted to the server in clear text, and it might also be logged in the client’s command history or the server log. The <code>psql</code> command-line client contains a meta-command <code>\password</code> that can be used to change a role’s password without exposing the clear text password.</p>
+<p>It is also possible to tie a session default to a specific database rather than to a role; see <a href="ALTER_DATABASE.html">ALTER DATABASE</a>. If there is a conflict, database-role-specific settings override role-specific ones, which in turn override database-specific ones.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section6"></a>Examples</a></h2>
+<p>Change the password for a role:</p>
+<pre><code>ALTER ROLE daria WITH PASSWORD 'passwd123';
+</code></pre>
+<p>Remove a role’s password:</p>
+<pre><code>ALTER ROLE daria WITH PASSWORD NULL;
+</code></pre>
+<p>Change a password expiration date:</p>
+<pre><code>ALTER ROLE scott VALID UNTIL 'May 4 12:00:00 2015 +1';
+</code></pre>
+<p>Make a password valid forever:</p>
+<pre><code>ALTER ROLE luke VALID UNTIL 'infinity';
+</code></pre>
+<p>Give a role the ability to create other roles and new databases:</p>
+<pre><code>ALTER ROLE joelle CREATEROLE CREATEDB;
+</code></pre>
+<p>Give a role a non-default setting of the <code>maintenance_work_mem</code> parameter:</p>
+<pre><code>ALTER ROLE admin SET maintenance_work_mem = 100000;
+</code></pre>
+<p>Give a role a non-default, database-specific setting of the <code>client_min_messages</code> parameter:</p>
+<pre><code>ALTER ROLE fred IN DATABASE devel SET client_min_messages = DEBUG;
+</code></pre>
+<p>Assign a role to a resource queue:</p>
+<pre><code>ALTER ROLE sammy RESOURCE QUEUE poweruser;
+</code></pre>
+<p>Give a role permission to create writable external tables:</p>
+<pre><code>ALTER ROLE load CREATEEXTTABLE (type='writable');
+</code></pre>
+<p>Alter a role so it does not allow login access on Sundays:</p>
+<pre><code>ALTER ROLE user3 DENY DAY 'Sunday';
+</code></pre>
+<p>Alter a role to remove the constraint that does not allow login access on Sundays:</p>
+<pre><code>ALTER ROLE user3 DROP DENY FOR DAY 'Sunday';
+</code></pre>
+<p>Assign a new resource group to a role:</p>
+<pre><code>ALTER ROLE parttime_user RESOURCE GROUP rg_light;
+</code></pre>
+<h2 id="compatibility"><a class="header" href="#compatibility"><a id="section7"></a>Compatibility</a></h2>
+<p>The <code>ALTER ROLE</code> statement is a SynxDB extension.</p>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section8"></a>See Also</a></h2>
+<p><a href="CREATE_ROLE.html">CREATE ROLE</a>, <a href="DROP_ROLE.html">DROP ROLE</a>, <a href="ALTER_DATABASE.html">ALTER DATABASE</a>, <a href="SET.html">SET</a>, <a href="CREATE_RESOURCE_GROUP.html">CREATE RESOURCE GROUP</a>, <a href="CREATE_RESOURCE_QUEUE.html">CREATE RESOURCE QUEUE</a>, <a href="GRANT.html">GRANT</a>, <a href="REVOKE.html">REVOKE</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/sql_commands/ALTER_RESOURCE_QUEUE.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/sql_commands/ALTER_RULE.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/sql_commands/ALTER_RESOURCE_QUEUE.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/sql_commands/ALTER_RULE.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

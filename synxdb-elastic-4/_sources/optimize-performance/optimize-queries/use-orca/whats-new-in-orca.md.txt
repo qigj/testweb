@@ -1,0 +1,130 @@
+# What's New in GPORCA Optimizer
+
+This document describes the functional enhancements and behavioral changes of the GPORCA optimizer in release versions of {{ product_name }}.
+
+## v4.0
+
+In v4.0, the GPORCA optimizer added or improved the following features:
+
+- Added support for `FULL JOIN`, executed using `Hash Full Join`. This implementation does not depend on the sorting of join columns and is suitable for cases with large data volumes, high cardinality of join columns, or inconsistent distribution keys.
+
+    Currently, the `Merge Full Join` path is not yet supported, so all `FULL JOIN` queries are executed using `Hash Full Join`.
+
+    Compared to the traditional `Merge Join`, the advantages of `Hash Full Join` include:
+
+    - No need to sort join columns.
+    - Can reduce the data transfer overhead of Motion.
+    - May have better performance when join columns are unevenly distributed or have high cardinality.
+
+    Example:
+
+    ```sql
+    EXPLAIN SELECT * FROM t1 FULL JOIN t2 ON t1.id = t2.id;
+    ```
+
+    May generate a plan like the following:
+
+    ```sql
+    Hash Full Join
+    Hash Cond: t1.id = t2.id
+    ...
+    ```
+
+- GPORCA introduces a query rewrite rule that can push the `JOIN` operation down into each branch of a `UNION ALL`. When this optimization is enabled, the optimizer may decompose the `JOIN` operation into multiple subqueries, leading to the following performance improvements:
+
+    - Supports converting a join on a large table resulting from a `UNION ALL` into multiple joins on smaller tables.
+    - The `JOIN` can be pushed down to either the left or right side of the `UNION ALL`, making it applicable to more query structures.
+
+    This optimization is not enabled by default. It can be explicitly enabled with the following GUC parameter:
+
+    ```sql
+    SET optimizer_enable_push_join_below_union_all = on;
+    ```
+
+    The following example shows how the optimizer pushes the `JOIN` down into the `UNION ALL` branches after this optimization is enabled:
+
+    ```sql
+    -- Create test tables
+    CREATE TABLE dist_small_1(c1 int);
+    INSERT INTO dist_small_1 SELECT generate_series(1, 1000);
+    ANALYZE dist_small_1;
+
+    CREATE TABLE dist_small_2(c1 int);
+    INSERT INTO dist_small_2 SELECT generate_series(1, 1000);
+    ANALYZE dist_small_2;
+
+    CREATE TABLE inner_1(cc int);
+    INSERT INTO inner_1 VALUES(1);
+    ANALYZE inner_1;
+
+    -- Create a view
+    CREATE VIEW dist_view_small AS
+    SELECT c1 FROM dist_small_1
+    UNION ALL
+    SELECT c1 FROM dist_small_2;
+
+    -- Enable optimization and execute the query
+    SET optimizer_enable_push_join_below_union_all = on;
+    EXPLAIN ANALYZE
+    SELECT c1 FROM dist_view_small JOIN inner_1 ON c1 < cc;
+    ```
+
+    This optimization is applicable to the following types of query structures:
+
+    - Multiple large tables are aggregated via `UNION ALL` and then joined with a small table.
+    - One side of the join in the query structure is a view or a `UNION ALL` subquery.
+
+    :::{note}
+    - Currently, this optimization does not support `FULL JOIN` and Common Table Expressions (CTEs).
+    - Structures like 'JOIN of UNION ALL' and 'UNION ALL of JOIN' are also not yet supported.
+    :::
+
+- By default, GPORCA sets a higher cost for the broadcast path (Broadcast Motion) based on the `optimizer_penalize_broadcast_threshold` GUC parameter to prevent selecting overly expensive plans for large data volumes.
+
+    For `NOT IN` type queries (i.e., Left Anti Semi Join, LASJ), the broadcast path is no longer penalized. This optimization prevents the optimizer from, in some cases, concentrating large tables on the coordinator node for execution, which can cause severe performance issues or even out-of-memory (OOM) errors.
+
+    Allowing the use of the broadcast path preserves parallel execution and significantly improves the execution efficiency of `NOT IN` queries with large data volumes.
+
+    Feature description:
+
+    - Only affects `NOT IN` queries (LASJ).
+    - Ignores the setting of `optimizer_penalize_broadcast_threshold`.
+    - The penalty policy is still retained for other types of joins (such as `IN` or `EXISTS`).
+
+    Example:
+
+    ```sql
+    SELECT * FROM foo WHERE a NOT IN (SELECT a FROM bar);
+    ```
+
+    Example query plan:
+
+    ```sql
+    Gather Motion 2:1
+    -> Hash Left Anti Semi (Not-In) Join
+        -> Seq Scan on foo
+        -> Broadcast Motion
+                -> Seq Scan on bar
+    ```
+
+### Optimization for multi-level outer self-joins
+
+GPORCA can identify certain specific patterns of multi-level outer joins and skip unnecessary Redistribute Motion to improve execution efficiency:
+
+- The query structure contains multiple `LEFT OUTER JOIN`s or `RIGHT OUTER JOIN`s.
+- All tables involved in the join are aliases of the same base table.
+- The join condition is a symmetric condition (e.g., `t1.a = t2.a`).
+- All tables use the same distribution key, and the data distribution meets locality requirements.
+
+Example:
+
+```sql
+CREATE TABLE o1 (a1 int, b1 int);
+
+EXPLAIN (COSTS OFF)
+SELECT * FROM (SELECT DISTINCT a1 FROM o1) t1
+             LEFT OUTER JOIN o1 t2 ON t1.a1 = t2.a1
+             LEFT OUTER JOIN o1 t3 ON t2.a1 = t3.a1;
+```
+
+GPORCA can recognize this multi-level self-join structure and avoid redundant data redistribution, thereby improving overall query performance.

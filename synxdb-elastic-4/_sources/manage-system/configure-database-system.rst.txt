@@ -1,0 +1,111 @@
+Configure Database System
+============================
+
+Server configuration parameters affect the behavior of |product_name|. They are part of the PostgreSQL "Grand Unified Configuration" system, so they are sometimes called "GUCs". Most of the |product_name| server configuration parameters are the same as the PostgreSQL configuration parameters, but some are specific to |product_name|.
+
+Set parameters at the database level
+-----------------------------------------
+
+Use ``ALTER DATABASE`` to set parameters at the database level. For example:
+
+.. code-block:: sql
+
+   ALTER DATABASE mydatabase SET search_path TO myschema;
+
+When you set a session parameter at the database level, every session that connects to that database uses that parameter setting.
+
+Set parameters at the row level
+----------------------------------
+
+Use ``ALTER ROLE`` to set a parameter at the role level. For example:
+
+.. code-block:: sql
+
+   ALTER ROLE bob SET search_path TO bobschema;
+
+When you set a session parameter at the role level, every session initiated by that role uses that parameter setting. Settings at the role level override settings at the database level.
+
+Set parameters in a session level
+-----------------------------------
+
+Any session parameter can be set in an active database session using the ``SET`` command. For example:
+
+.. code-block:: sql
+
+   SET statement_mem TO '200MB';
+
+The parameter setting is valid for the rest of that session or until you issue a ``RESET`` command. For example:
+
+.. code-block:: sql
+
+   RESET statement_mem;
+
+Settings at the session level override those at the role level.
+
+View parameters using the ``pg_settings`` view
+------------------------------------------------
+
+In addition, you can use the ``pg_settings`` view to check all parameter settings:
+
+.. code-block:: 
+
+   SELECT name, setting, unit, category, short_desc, context, vartype, min_val, max_val
+   FROM pg_settings
+   ORDER BY category, name;
+
+Field descriptions:
+
+-  ``name``: Parameter name.
+-  ``setting``: Current parameter value.
+-  ``unit``: Parameter unit (if applicable, such as ``ms`` and ``kB``).
+-  ``category``: The configuration category that the parameter belongs to.
+-  ``short_desc``: Brief description of the parameter.
+-  ``context``: Required context for parameter modification, possible values include:
+
+   -  ``internal``: Used internally by the system, cannot be modified directly.
+   -  ``postmaster``: Requires database instance restart to take effect.
+   -  ``sighup``: Loads configuration via ``pg_ctl reload`` or ``SELECT pg_reload_conf();``.
+   -  ``superuser``: Only superusers can modify.
+   -  ``user``: Regular users can modify.
+-  ``vartype``: Parameter type, such as ``bool``, ``integer``, ``real``, ``string``.
+-  ``min_val`` and ``max_val``: Minimum and maximum allowed values (if applicable).
+
+Use cases:
+
+-  View parameters of a specific category:
+
+   .. code-block:: 
+
+      SELECT name, setting, short_desc
+      FROM pg_settings
+      WHERE category = 'Resource Usage / Memory';
+
+-  Search for parameters containing specific keywords:
+
+   .. code-block:: 
+
+      SELECT name, setting, short_desc
+      FROM pg_settings
+      WHERE name LIKE '%work_mem%';
+
+-  Check parameters requiring restart to take effect:
+
+   .. code-block:: 
+
+      SELECT name, setting, context
+      FROM pg_settings
+      WHERE context = 'postmaster';
+
+-  Display parameters effective in the current database session:
+
+   .. code-block:: 
+
+      SELECT name, setting
+      FROM pg_settings
+      WHERE context = 'user';
+
+   To change configuration parameters, you can use SQL commands, for example:
+
+   .. code-block:: sql
+
+      ALTER SYSTEM SET parameter_name = 'value';

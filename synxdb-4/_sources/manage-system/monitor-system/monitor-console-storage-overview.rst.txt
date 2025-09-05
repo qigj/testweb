@@ -1,0 +1,40 @@
+View Storage Information
+==========================
+
+Steps
+--------
+
+1. Access ``http://<ip>:8080/`` to log into the |monitor_console| console.
+
+2. Click **Storage Usage** in the left navigation menu to view the storage overview information.
+
+   .. image:: /images/monitor-console-view-storage-info-1.png
+
+3. Click the **Coordinator** and **Segments** cards at the top of the page to view the disk usage of the machines hosting the coordinator and segment nodes respectively.
+
+  .. raw:: latex
+
+     \begin{mytable-mid}
+
+   .. list-table::
+      :header-rows: 1
+      :align: left
+
+      * - Display item
+        - Description
+      * - Host Name
+        - Host names of the coordinator or segments. There might be multiple hosts.
+      * - Data Directory
+        - The mounting point and path information of each machine.
+      * - Used Disk Space (%)
+        - The disk usage of each machine and its percentage.
+      * - Disk Space Free (GB)
+        - The available amount of disks on each machine and its percentage.
+      * - Total Space (GB)
+        - The total capacity of disks on each machine.
+
+   .. raw:: latex
+
+      \end{mytable-mid}
+
+4. Click the small triangle to the left of the **Hostname** to expand and view the disk usage under different mount points.

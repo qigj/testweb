@@ -1,0 +1,649 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Configuring Your Systems - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="configuring-your-systems"><a class="header" href="#configuring-your-systems">Configuring Your Systems</a></h1>
+<p>Describes how to prepare your operating system environment for SynxDB software installation.</p>
+<p>Perform the following tasks in order:</p>
+<ol>
+<li>Make sure your host systems meet the requirements described in <a href="platform-requirements-overview.html">Platform Requirements</a>.</li>
+<li><a href="#topic_sqj_lt1_nfb">Deactivate or configure SELinux.</a></li>
+<li><a href="#topic_et2_y22_4nb">Deactivate or configure firewall software.</a></li>
+<li><a href="#topic3">Set the required operating system parameters.</a></li>
+<li><a href="#topic_qst_s5t_wy">Synchronize system clocks.</a></li>
+<li><a href="#topic23">Create the gpadmin account.</a></li>
+</ol>
+<p>Unless noted, these tasks should be performed for <em>all</em> hosts in your SynxDB array (master, standby master, and segment hosts).</p>
+<p>The SynxDB host naming convention for the master host is <code>mdw</code> and for the standby master host is <code>smdw</code>.</p>
+<p>The segment host naming convention is sdwN where sdw is a prefix and N is an integer. For example, segment host names would be <code>sdw1</code>, <code>sdw2</code> and so on. NIC bonding is recommended for hosts with multiple interfaces, but when the interfaces are not bonded, the convention is to append a dash (<code>-</code>) and number to the host name. For example, <code>sdw1-1</code> and <code>sdw1-2</code> are the two interface names for host <code>sdw1</code>.</p>
+<blockquote>
+<p><strong>Important</strong> When data loss is not acceptable for a SynxDB cluster, SynxDB master and segment mirroring is recommended. If mirroring is not enabled then SynxDB stores only one copy of the data, so the underlying storage media provides the only guarantee for data availability and correctness in the event of a hardware failure.</p>
+</blockquote>
+<p>The SynxDB on vSphere virtualized environment ensures the enforcement of anti-affinity rules required for SynxDB mirroring solutions and fully supports mirrorless deployments. Other virtualized or containerized deployment environments are generally not supported for production use unless both SynxDB master and segment mirroring are enabled.</p>
+<blockquote>
+<p><strong>Note</strong> For information about upgrading SynxDB from a previous version, see the <em>SynxDB Release Notes</em> for the release that you are installing.</p>
+</blockquote>
+<blockquote>
+<p><strong>Note</strong> Automating the configuration steps described in this topic and <a href="install_gpdb.html">Installing the SynxDB Software</a> with a system provisioning tool, such as Ansible, Chef, or Puppet, can save time and ensure a reliable and repeatable SynxDB installation.</p>
+</blockquote>
+<h2 id="deactivate-or-configure-selinux"><a class="header" href="#deactivate-or-configure-selinux"><a id="topic_sqj_lt1_nfb"></a>Deactivate or Configure SELinux</a></h2>
+<p>For all SynxDB host systems, SELinux must either be <code>Disabled</code> or configured to allow unconfined access to SynxDB processes, directories, and the gpadmin user.</p>
+<p>If you choose to deactivate SELinux:</p>
+<ol>
+<li>
+<p>As the root user, check the status of SELinux:</p>
+<pre><code># sestatus
+SELinuxstatus: disabled
+</code></pre>
+</li>
+<li>
+<p>If SELinux is not deactivated, deactivate it by editing the <code>/etc/selinux/config</code> file. As root, change the value of the <code>SELINUX</code> parameter in the <code>config</code> file as follows:</p>
+<pre><code>SELINUX=disabled
+</code></pre>
+</li>
+<li>
+<p>If the System Security Services Daemon (SSSD) is installed on your systems, edit the SSSD configuration file and set the <code>selinux_provider</code> parameter to <code>none</code> to prevent SELinux-related SSH authentication denials that could occur even with SELinux deactivated. As root, edit <code>/etc/sssd/sssd.conf</code> and add this parameter:</p>
+<pre><code>selinux_provider=none
+</code></pre>
+</li>
+<li>
+<p>Reboot the system to apply any changes that you made and verify that SELinux is deactivated.</p>
+</li>
+</ol>
+<p>If you choose to enable SELinux in <code>Enforcing</code> mode, then SynxDB processes and users can operate successfully in the default <code>Unconfined</code> context. If you require increased SELinux confinement for SynxDB processes and users, you must test your configuration to ensure that there are no functionality or performance impacts to SynxDB. See the <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/index">SELinux User’s and Administrator’s Guide</a> for detailed information about configuring SELinux and SELinux users.</p>
+<h2 id="deactivate-or-configure-firewall-software"><a class="header" href="#deactivate-or-configure-firewall-software"><a id="topic_et2_y22_4nb"></a>Deactivate or Configure Firewall Software</a></h2>
+<p>You should also deactivate firewall software such as <code>firewalld</code>. If firewall software is not deactivated, you must instead configure your software to allow required communication between SynxDB hosts.</p>
+<p>To deactivate <code>firewalld</code>:</p>
+<ol>
+<li>
+<p>check the status of <code>firewalld</code> with the command:</p>
+<pre><code># systemctl status firewalld
+</code></pre>
+<p>If <code>firewalld</code> is deactivated, the command output is:</p>
+<pre><code>* firewalld.service - firewalld - dynamic firewall daemon
+   Loaded: loaded (/usr/lib/systemd/system/firewalld.service; disabled; vendor preset: enabled)
+   Active: inactive (dead)
+</code></pre>
+</li>
+<li>
+<p>If necessary, run these commands as root to deactivate <code>firewalld</code>:</p>
+<pre><code># systemctl stop firewalld.service
+# systemctl deactivate firewalld.service
+</code></pre>
+</li>
+</ol>
+<p>See the documentation for the firewall or your operating system for additional information.</p>
+<h2 id="recommended-os-parameters-settings"><a class="header" href="#recommended-os-parameters-settings"><a id="topic3"></a>Recommended OS Parameters Settings</a></h2>
+<p>SynxDB requires that certain Linux operating system (OS) parameters be set on all hosts in your SynxDB system (masters and segments).</p>
+<p>In general, the following categories of system parameters need to be altered:</p>
+<ul>
+<li><strong>Shared Memory</strong> - A SynxDB instance will not work unless the shared memory segment for your kernel is properly sized. Most default OS installations have the shared memory values set too low for SynxDB. On Linux systems, you must also deactivate the OOM (out of memory) killer. For information about SynxDB shared memory requirements, see the SynxDB server configuration parameter <a href="../ref_guide/config_params/guc-list.html">shared_buffers</a> in the <em>SynxDB Reference Guide</em>.</li>
+<li><strong>Network</strong> - On high-volume SynxDB systems, certain network-related tuning parameters must be set to optimize network connections made by the SynxDB interconnect.</li>
+<li><strong>User Limits</strong> - User limits control the resources available to processes started by a user’s shell. SynxDB requires a higher limit on the allowed number of file descriptors that a single process can have open. The default settings may cause some SynxDB queries to fail because they will run out of file descriptors needed to process the query.</li>
+</ul>
+<p>More specifically, you need to edit the following Linux configuration settings:</p>
+<ul>
+<li><a href="#linux_hosts_file">The hosts File</a></li>
+<li><a href="#sysctl_file">The sysctl.conf File</a></li>
+<li><a href="#system_resources">System Resources Limits</a></li>
+<li><a href="#core_dump">Core Dump</a></li>
+<li><a href="#xfs_mount">XFS Mount Options</a></li>
+<li><a href="#disk_io_settings">Disk I/O Settings</a>
+<ul>
+<li>Read ahead values</li>
+<li>Disk I/O scheduler disk access</li>
+</ul>
+</li>
+<li><a href="#networking">Networking</a></li>
+<li><a href="#huge_pages">Transparent Huge Pages (THP)</a></li>
+<li><a href="#ssh_max_connections">SSH Connection Threshold</a></li>
+</ul>
+<h3 id="the-hosts-file"><a class="header" href="#the-hosts-file"><a id="linux_hosts_file"></a>The hosts File</a></h3>
+<p>Edit the <code>/etc/hosts</code> file and make sure that it includes the host names and all interface address names for every machine participating in your SynxDB system.</p>
+<h3 id="the-sysctlconf-file"><a class="header" href="#the-sysctlconf-file"><a id="sysctl_file"></a>The sysctl.conf File</a></h3>
+<p>The <code>sysctl.conf</code> parameters listed in this topic are for performance, optimization, and consistency in a wide variety of environments. Change these settings according to your specific situation and setup.</p>
+<p>Set the parameters in the <code>/etc/sysctl.conf</code> file and reload with <code>sysctl -p</code>:</p>
+<pre><code>
+# kernel.shmall = _PHYS_PAGES / 2 # See Shared Memory Pages
+kernel.shmall = 197951838
+# kernel.shmmax = kernel.shmall * PAGE_SIZE 
+kernel.shmmax = 810810728448
+kernel.shmmni = 4096
+vm.overcommit_memory = 2 # See Segment Host Memory
+vm.overcommit_ratio = 95 # See Segment Host Memory
+
+net.ipv4.ip_local_port_range = 10000 65535 # See Port Settings
+kernel.sem = 250 2048000 200 8192
+kernel.sysrq = 1
+kernel.core_uses_pid = 1
+kernel.msgmnb = 65536
+kernel.msgmax = 65536
+kernel.msgmni = 2048
+net.ipv4.tcp_syncookies = 1
+net.ipv4.conf.default.accept_source_route = 0
+net.ipv4.tcp_max_syn_backlog = 4096
+net.ipv4.conf.all.arp_filter = 1
+net.ipv4.ipfrag_high_thresh = 41943040
+net.ipv4.ipfrag_low_thresh = 31457280
+net.ipv4.ipfrag_time = 60
+net.core.netdev_max_backlog = 10000
+net.core.rmem_max = 2097152
+net.core.wmem_max = 2097152
+vm.swappiness = 10
+vm.zone_reclaim_mode = 0
+vm.dirty_expire_centisecs = 500
+vm.dirty_writeback_centisecs = 100
+vm.dirty_background_ratio = 0 # See System Memory
+vm.dirty_ratio = 0
+vm.dirty_background_bytes = 1610612736
+vm.dirty_bytes = 4294967296
+</code></pre>
+<p><strong>Shared Memory Pages</strong></p>
+<p>SynxDB uses shared memory to communicate between <code>postgres</code> processes that are part of the same <code>postgres</code> instance. <code>kernel.shmall</code> sets the total amount of shared memory, in pages, that can be used system wide. <code>kernel.shmmax</code> sets the maximum size of a single shared memory segment in bytes.</p>
+<p>Set <code>kernel.shmall</code> and <code>kernel.shmmax</code> values based on your system’s physical memory and page size. In general, the value for both parameters should be one half of the system physical memory.</p>
+<p>Use the operating system variables <code>_PHYS_PAGES</code> and <code>PAGE_SIZE</code> to set the parameters.</p>
+<pre><code>kernel.shmall = ( _PHYS_PAGES / 2)
+kernel.shmmax = ( _PHYS_PAGES / 2) * PAGE_SIZE
+</code></pre>
+<p>To calculate the values for <code>kernel.shmall</code> and <code>kernel.shmmax</code>, run the following commands using the <code>getconf</code> command, which returns the value of an operating system variable.</p>
+<pre><code>$ echo $(expr $(getconf _PHYS_PAGES) / 2) 
+$ echo $(expr $(getconf _PHYS_PAGES) / 2 \* $(getconf PAGE_SIZE))
+</code></pre>
+<p>As best practice, we recommend you set the following values in the <code>/etc/sysctl.conf</code> file using calculated values. For example, a host system has 1583 GB of memory installed and returns these values: _PHYS_PAGES = 395903676 and PAGE_SIZE = 4096. These would be the <code>kernel.shmall</code> and <code>kernel.shmmax</code> values:</p>
+<pre><code>kernel.shmall = 197951838
+kernel.shmmax = 810810728448
+</code></pre>
+<p>If the SynxDB master has a different shared memory configuration than the segment hosts, the _PHYS_PAGES and PAGE_SIZE values might differ, and the <code>kernel.shmall</code> and <code>kernel.shmmax</code> values on the master host will differ from those on the segment hosts.</p>
+<p><strong>Segment Host Memory</strong></p>
+<p>The <code>vm.overcommit_memory</code> Linux kernel parameter is used by the OS to determine how much memory can be allocated to processes. For SynxDB, this parameter should always be set to 2.</p>
+<p><code>vm.overcommit_ratio</code> is the percent of RAM that is used for application processes and the remainder is reserved for the operating system. The default is 50 on Red Hat Enterprise Linux.</p>
+<p>For <code>vm.overcommit_ratio</code> tuning and calculation recommendations with resource group-based resource management or resource queue-based resource management, refer to <a href="../admin_guide/wlmgmt_intro.html">Options for Configuring Segment Host Memory</a> in the <em>SynxDB Administrator Guide</em>.</p>
+<p><strong>Port Settings</strong></p>
+<p>To avoid port conflicts between SynxDB and other applications during SynxDB initialization, make a note of the port range specified by the operating system parameter <code>net.ipv4.ip_local_port_range</code>. When initializing SynxDB using the <code>gpinitsystem</code> cluster configuration file, do not specify SynxDB ports in that range. For example, if <code>net.ipv4.ip_local_port_range = 10000 65535</code>, set the SynxDB base port numbers to these values.</p>
+<pre><code>PORT_BASE = 6000
+MIRROR_PORT_BASE = 7000
+</code></pre>
+<p>For information about the <code>gpinitsystem</code> cluster configuration file, see <a href="../install_guide/init_gpdb.html">Initializing a SynxDB System</a>.</p>
+<p>For Azure deployments with SynxDB avoid using port 65330; add the following line to sysctl.conf:</p>
+<pre><code>net.ipv4.ip_local_reserved_ports=65330 
+</code></pre>
+<p>For additional requirements and recommendations for cloud deployments, see <a href="./platform-requirements-overview.html#public-cloud">SynxDB Cloud Technical Recommendations</a>.</p>
+<p><strong>IP Fragmentation Settings</strong></p>
+<p>When the SynxDB interconnect uses UDP (the default), the network interface card controls IP packet fragmentation and reassemblies.</p>
+<p>If the UDP message size is larger than the size of the maximum transmission unit (MTU) of a network, the IP layer fragments the message. (Refer to <a href="#networking">Networking</a> later in this topic for more information about MTU sizes for SynxDB.) The receiver must store the fragments in a buffer before it can reorganize and reassemble the message.</p>
+<p>The following <code>sysctl.conf</code> operating system parameters control the reassembly process:</p>
+<div class="table-wrapper"><table><thead><tr><th>OS Parameter</th><th>Description</th></tr></thead><tbody>
+<tr><td>net.ipv4.ipfrag_high_thresh</td><td>The maximum amount of memory used to reassemble IP fragments before the kernel starts to remove fragments to free up resources. The default value is 4194304 bytes (4MB).</td></tr>
+<tr><td>net.ipv4.ipfrag_low_thresh</td><td>The minimum amount of memory used to reassemble IP fragments. The default value is 3145728 bytes (3MB). (Deprecated after kernel version 4.17.)</td></tr>
+<tr><td>net.ipv4.ipfrag_time</td><td>The maximum amount of time (in seconds) to keep an IP fragment in memory. The default value is 30.</td></tr>
+</tbody></table>
+</div>
+<p>The recommended settings for these parameters for SynxDB follow:</p>
+<pre><code class="language-pre">net.ipv4.ipfrag_high_thresh = 41943040
+net.ipv4.ipfrag_low_thresh = 31457280
+net.ipv4.ipfrag_time = 60
+</code></pre>
+<p><strong>System Memory</strong></p>
+<p>For host systems with more than 64GB of memory, these settings are recommended:</p>
+<pre><code>vm.dirty_background_ratio = 0
+vm.dirty_ratio = 0
+vm.dirty_background_bytes = 1610612736 # 1.5GB
+vm.dirty_bytes = 4294967296 # 4GB
+</code></pre>
+<p>For host systems with 64GB of memory or less, remove <code>vm.dirty_background_bytes</code> and <code>vm.dirty_bytes</code> and set the two <code>ratio</code> parameters to these values:</p>
+<pre><code>vm.dirty_background_ratio = 3
+vm.dirty_ratio = 10
+</code></pre>
+<p>Increase <code>vm.min_free_kbytes</code> to ensure <code>PF_MEMALLOC</code> requests from network and storage drivers are easily satisfied. This is especially critical on systems with large amounts of system memory. The default value is often far too low on these systems. Use this awk command to set <code>vm.min_free_kbytes</code> to a recommended 3% of system physical memory:</p>
+<pre><code>awk 'BEGIN {OFMT = "%.0f";} /MemTotal/ {print "vm.min_free_kbytes =", $2 * .03;}'
+               /proc/meminfo &gt;&gt; /etc/sysctl.conf 
+</code></pre>
+<p>Do not set <code>vm.min_free_kbytes</code> to higher than 5% of system memory as doing so might cause out of memory conditions.</p>
+<h3 id="system-resources-limits"><a class="header" href="#system-resources-limits"><a id="system_resources"></a>System Resources Limits</a></h3>
+<p>Set the following parameters in the <code>/etc/security/limits.conf</code> file:</p>
+<pre><code>* soft nofile 524288
+* hard nofile 524288
+* soft nproc 131072
+* hard nproc 131072
+</code></pre>
+<p>Parameter values in the <code>/etc/security/limits.d/20-nproc.conf</code> file override the values in the <code>limits.conf</code> file. Ensure that any parameters in the override file are set to the required value. The Linux module <code>pam_limits</code> sets user limits by reading the values from the <code>limits.conf</code> file and then from the override file. For information about PAM and user limits, see the documentation on PAM and <code>pam_limits</code>.</p>
+<p>Run the <code>ulimit -u</code> command on each segment host to display the maximum number of processes that are available to each user. Validate that the return value is 131072.</p>
+<h3 id="core-dump"><a class="header" href="#core-dump"><a id="core_dump"></a>Core Dump</a></h3>
+<p>Enable core file generation to a known location by adding the following line to <code>/etc/sysctl.conf</code>:</p>
+<pre><code>kernel.core_pattern=/var/core/core.%h.%t
+
+</code></pre>
+<p>Add the following line to <code>/etc/security/limits.conf</code>:</p>
+<pre><code>* soft  core unlimited
+</code></pre>
+<p>To apply the changes to the live kernel, run the following command:</p>
+<pre><code># sysctl -p
+</code></pre>
+<h3 id="xfs-mount-options"><a class="header" href="#xfs-mount-options"><a id="xfs_mount"></a>XFS Mount Options</a></h3>
+<p>XFS is the preferred data storage file system on Linux platforms. Use the <code>mount</code> command with the following recommended XFS mount options:</p>
+<pre><code>rw,nodev,noatime,nobarrier,inode64
+</code></pre>
+<p>See the <code>mount</code> manual page (<code>man mount</code> opens the man page) for more information about using this command.</p>
+<p>The XFS options can also be set in the <code>/etc/fstab</code> file. This example entry from an <code>fstab</code> file specifies the XFS options.</p>
+<pre><code>/dev/data /data xfs nodev,noatime,inode64 0 0
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> You must have root permission to edit the <code>/etc/fstab</code> file.</p>
+</blockquote>
+<h3 id="disk-io-settings"><a class="header" href="#disk-io-settings"><a id="disk_io_settings"></a>Disk I/O Settings</a></h3>
+<ul>
+<li>
+<p>Read-ahead value</p>
+<p>Each disk device file should have a read-ahead (<code>blockdev</code>) value of 16384. To verify the read-ahead value of a disk device:</p>
+<pre><code># sudo /sbin/blockdev --getra &lt;devname&gt;
+</code></pre>
+<p>For example:</p>
+<pre><code># sudo /sbin/blockdev --getra /dev/sdb
+</code></pre>
+<p>To set blockdev (read-ahead) on a device:</p>
+<pre><code># sudo /sbin/blockdev --setra &lt;bytes&gt; &lt;devname&gt;
+</code></pre>
+<p>For example:</p>
+<pre><code># sudo /sbin/blockdev --setra 16384 /dev/sdb
+</code></pre>
+<p>See the manual page (man) for the <code>blockdev</code> command for more information about using that command (<code>man blockdev</code> opens the man page).</p>
+<blockquote>
+<p><strong>Note</strong> The <code>blockdev --setra</code> command is not persistent. You must ensure the read-ahead value is set whenever the system restarts. How to set the value will vary based on your system.</p>
+</blockquote>
+<p>One method to set the <code>blockdev</code> value at system startup is by adding the <code>/sbin/blockdev --setra</code> command in the <code>rc.local</code> file. For example, add this line to the <code>rc.local</code> file to set the read-ahead value for the disk <code>sdb</code>.</p>
+<pre><code>/sbin/blockdev --setra 16384 /dev/sdb
+</code></pre>
+<p>On systems that use systemd, you must also set the execute permissions on the <code>rc.local</code> file to enable it to run at startup. For example, this command sets execute permissions on the file.</p>
+<pre><code># chmod +x /etc/rc.d/rc.local
+</code></pre>
+<p>Restart the system to have the setting take effect.</p>
+</li>
+<li>
+<p>Disk I/O scheduler</p>
+<p>The Linux disk scheduler orders the I/O requests submitted to a storage device, controlling the way the kernel commits reads and writes to disk.</p>
+<p>A typical Linux disk I/O scheduler supports multiple access policies. The optimal policy selection depends on the underlying storage infrastructure. The recommended scheduler policy settings for SynxDB systems for specific OSs and storage device types follow:</p>
+<div class="table-wrapper"><table><thead><tr><th>Storage Device Type</th><th>Recommended Scheduler Policy</th></tr></thead><tbody>
+<tr><td>Non-Volatile Memory Express (NVMe)</td><td><code>none</code></td></tr>
+<tr><td>Solid-State Drives (SSD)</td><td><code>none</code></td></tr>
+<tr><td>Other</td><td><code>mqdeadline</code></td></tr>
+</tbody></table>
+</div>
+<p>To specify a scheduler until the next system reboot, run the following:</p>
+<pre><code># echo schedulername &gt; /sys/block/&lt;devname&gt;/queue/scheduler
+</code></pre>
+<p>For example:</p>
+<pre><code># echo deadline &gt; /sys/block/sbd/queue/scheduler
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> Using the <code>echo</code> command to set the disk I/O scheduler policy is not persistent; you must ensure that you run the command whenever the system reboots. How to run the command will vary based on your system.</p>
+</blockquote>
+<p>To specify the I/O scheduler at boot time on systems that use <code>grub2</code>, use the system utility <code>grubby</code>. This command adds the parameter when run as <code>root</code>:</p>
+<pre><code># grubby --update-kernel=ALL --args="elevator=deadline"
+</code></pre>
+<p>After adding the parameter, reboot the system.</p>
+<p>This <code>grubby</code> command displays kernel parameter settings:</p>
+<pre><code># grubby --info=ALL
+</code></pre>
+<p>Refer to your operating system documentation for more information about the <code>grubby</code> utility.</p>
+<p>For additional information about configuring the disk scheduler, refer to the Enterprise Linux documentation for <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/monitoring_and_managing_system_status_and_performance/setting-the-disk-scheduler_monitoring-and-managing-system-status-and-performance">EL 8</a> or <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/monitoring_and_managing_system_status_and_performance/setting-the-disk-scheduler_monitoring-and-managing-system-status-and-performance">EL 9</a>.</p>
+</li>
+</ul>
+<h3 id="networking"><a class="header" href="#networking"><a id="networking"></a>Networking</a></h3>
+<p>The maximum transmission unit (MTU) of a network specifies the size (in bytes) of the largest data packet/frame accepted by a network-connected device. A jumbo frame is a frame that contains more than the standard MTU of 1500 bytes.</p>
+<p>You may control the value of the MTU at various locations:</p>
+<ul>
+<li>The SynxDB <a href="../ref_guide/config_params/guc-list.html#gp_max_packet_size">gp_max_packet_size</a> server configuration parameter. The default max packet size is 8192. This default assumes a jumbo frame MTU.</li>
+<li>The operating system MTU settings for network interfaces.</li>
+<li>The physical switch MTU settings.</li>
+<li>The virtual switch MTU setting when using vSphere.</li>
+</ul>
+<p>These settings are connected, in that they should always be either the same, or close to the same, value, or otherwise in the order of SynxDB &lt; Operating System &lt; Virtual or Physical switch for MTU size.</p>
+<p>9000 is a common supported setting for switches, and is the recommended OS and rack switch MTU setting for your SynxDB hosts.</p>
+<h3 id="transparent-huge-pages-thp"><a class="header" href="#transparent-huge-pages-thp"><a id="huge_pages"></a>Transparent Huge Pages (THP)</a></h3>
+<p>Deactivate Transparent Huge Pages (THP) as it degrades SynxDB performance. THP is enabled by default. On systems that use <code>grub2</code>, use the system utility <code>grubby</code>. This command adds the parameter when run as root:</p>
+<pre><code># grubby --update-kernel=ALL --args="transparent_hugepage=never"
+</code></pre>
+<p>After adding the parameter, reboot the system.</p>
+<p>This cat command checks the state of THP. The output indicates that THP is deactivated.</p>
+<pre><code>$ cat /sys/kernel/mm/*transparent_hugepage/enabled
+always [never]
+</code></pre>
+<p>For more information about Transparent Huge Pages or the <code>grubby</code> utility, see your operating system documentation.</p>
+<h3 id="ssh-connection-threshold"><a class="header" href="#ssh-connection-threshold"><a id="ssh_max_connections"></a>SSH Connection Threshold</a></h3>
+<p>Certain SynxDB management utilities including <code>gpexpand</code>, <code>gpinitsystem</code>, and <code>gpaddmirrors</code>, use secure shell (SSH) connections between systems to perform their tasks. In large SynxDB deployments, cloud deployments, or deployments with a large number of segments per host, these utilities may exceed the host’s maximum threshold for unauthenticated connections. When this occurs, you receive errors such as: <code>ssh_exchange_identification: Connection closed by remote host</code>.</p>
+<p>To increase this connection threshold for your SynxDB system, update the SSH <code>MaxStartups</code> and <code>MaxSessions</code> configuration parameters in one of the <code>/etc/ssh/sshd_config</code> or <code>/etc/sshd_config</code> SSH daemon configuration files.</p>
+<blockquote>
+<p><strong>Note</strong> You must have root permission to edit these two files.</p>
+</blockquote>
+<p>If you specify <code>MaxStartups</code> and <code>MaxSessions</code> using a single integer value, you identify the maximum number of concurrent unauthenticated connections (<code>MaxStartups</code>) and maximum number of open shell, login, or subsystem sessions permitted per network connection (<code>MaxSessions</code>). For example:</p>
+<pre><code>MaxStartups 200
+MaxSessions 200
+</code></pre>
+<p>If you specify <code>MaxStartups</code> using the “start:rate:full” syntax, you enable random early connection drop by the SSH daemon. start identifies the maximum number of unauthenticated SSH connection attempts allowed. Once start number of unauthenticated connection attempts is reached, the SSH daemon refuses rate percent of subsequent connection attempts. full identifies the maximum number of unauthenticated connection attempts after which all attempts are refused. For example:</p>
+<pre><code>Max Startups 10:30:200
+MaxSessions 200
+</code></pre>
+<p>Restart the SSH daemon after you update <code>MaxStartups</code> and <code>MaxSessions</code>. For example, run the following command as the <code>root</code> user:</p>
+<pre><code># service sshd restart
+</code></pre>
+<p>For detailed information about SSH configuration options, refer to the SSH documentation for your Linux distribution.</p>
+<h2 id="synchronizing-system-clocks"><a class="header" href="#synchronizing-system-clocks"><a id="topic_qst_s5t_wy"></a>Synchronizing System Clocks</a></h2>
+<p>You must use NTP (Network Time Protocol) to synchronize the system clocks on all hosts that comprise your SynxDB system. Accurate time keeping is essential to ensure reliable operations on the database and data integrity.</p>
+<p>There are many different architectures you may choose from to implement NTP. We recommend you use one of the following:</p>
+<ul>
+<li>Configure master as the NTP primary source and the other hosts in the cluster connect to it.</li>
+<li>Configure an external NTP primary source and all hosts in the cluster connect to it.</li>
+</ul>
+<p>Depending on your operating system version, the NTP protocol may be implemented by the <code>ntpd</code> daemon, the <code>chronyd</code> daemon, or other. Refer to your preferred NTP protocol documentation for more details.</p>
+<h3 id="option-1-configure-system-clocks-with-the-coordinator-as-the-primary-source"><a class="header" href="#option-1-configure-system-clocks-with-the-coordinator-as-the-primary-source"><a id="ji162603"></a>Option 1: Configure System Clocks with the Coordinator as the Primary Source</a></h3>
+<ol>
+<li>
+<p>On the master host, log in as root and edit your NTP daemon configuration file. Set the <code>server</code> parameter to point to your data center’s NTP time server. For example (if <code>10.6.220.20</code> was the IP address of your data center’s NTP server):</p>
+<pre><code>server 10.6.220.20
+</code></pre>
+</li>
+<li>
+<p>On each segment host, log in as root and edit your NTP daemon configuration file. Set the first <code>server</code> parameter to point to the master host, and the second server parameter to point to the standby master host. For example:</p>
+<pre><code>server mdw prefer
+server smdw
+</code></pre>
+</li>
+<li>
+<p>On the standby master host, log in as root and edit the <code>/etc/ntp.conf</code> file. Set the first <code>server</code> parameter to point to the primary master host, and the second server parameter to point to your data center’s NTP time server. For example:</p>
+<pre><code>server mdw prefer
+server 10.6.220.20
+</code></pre>
+</li>
+<li>
+<p>Synchronize the system clocks on all SynxDB hosts as root.
+If you are using the <code>ntpd</code> daemon:</p>
+<pre><code>systemctl restart ntp
+</code></pre>
+<p>If you are using the <code>chronyd</code> daemon:</p>
+<pre><code>systemctl restart chronyd
+</code></pre>
+</li>
+</ol>
+<h3 id="option-2-configure-system-clocks-with-an-external-primary-source"><a class="header" href="#option-2-configure-system-clocks-with-an-external-primary-source"><a id="ji162603"></a>Option 2: Configure System Clocks with an External Primary Source</a></h3>
+<ol>
+<li>
+<p>On each host, including coordinator, standby coordinator, and segments, log in as root and edit your NTP daemon configuration file. Set the first <code>server</code> parameter to point to your data center’s NTP time server. For example (if <code>10.6.220.20</code> was the IP address of your data center’s NTP server):</p>
+<pre><code>server 10.6.220.20
+</code></pre>
+</li>
+<li>
+<p>On the coordinator host, use your NTP daemon to synchronize the system clocks on all SynxDB hosts. For example, using <a href="../utility_guide/ref/gpssh.html">gpssh</a>:
+If you are using the <code>ntpd</code> daemon:</p>
+<pre><code>gpssh -f hostfile_gpssh_allhosts -v -e 'ntpd'
+</code></pre>
+<p>If you are using the <code>chronyd</code> daemon:</p>
+<pre><code>gpssh -f hostfile_gpssh_allhosts -v -e 'chronyd'
+
+
+</code></pre>
+</li>
+</ol>
+<h2 id="creating-the-synxdb-administrative-user"><a class="header" href="#creating-the-synxdb-administrative-user"><a id="topic23"></a>Creating the SynxDB Administrative User</a></h2>
+<p>Create a dedicated operating system user account on each node to run and administer SynxDB. This user account is named <code>gpadmin</code> by convention.</p>
+<blockquote>
+<p><strong>Important</strong> You cannot run the SynxDB server as <code>root</code>.</p>
+</blockquote>
+<p>The <code>gpadmin</code> user must have permission to access the services and directories required to install and run SynxDB.</p>
+<p>The <code>gpadmin</code> user on each SynxDB host must have an SSH key pair installed and be able to SSH from any host in the cluster to any other host in the cluster without entering a password or passphrase (called “passwordless SSH”). If you enable passwordless SSH from the master host to every other host in the cluster (“1-<em>n</em> passwordless SSH”), you can use the SynxDB <code>gpssh-exkeys</code> command-line utility later to enable passwordless SSH from every host to every other host (“<em>n</em>-<em>n</em> passwordless SSH”).</p>
+<p>You can optionally give the <code>gpadmin</code> user sudo privilege, so that you can easily administer all hosts in the SynxDB cluster as <code>gpadmin</code> using the <code>sudo</code>, <code>ssh/scp</code>, and <code>gpssh/gpscp</code> commands.</p>
+<p>The following steps show how to set up the <code>gpadmin</code> user on a host, set a password, create an SSH key pair, and (optionally) enable sudo capability. These steps must be performed as root on every SynxDB cluster host. (For a large SynxDB cluster you will want to automate these steps using your system provisioning tools.)</p>
+<blockquote>
+<p><strong>Note</strong> See <a href="ansible-example.html">Example Ansible Playbook</a> for an example that shows how to automate the tasks of creating the <code>gpadmin</code> user and installing the SynxDB software on all hosts in the cluster.</p>
+</blockquote>
+<ol>
+<li>
+<p>Create the <code>gpadmin</code> group and user.</p>
+<p>This example creates the <code>gpadmin</code> group, creates the <code>gpadmin</code> user as a system account with a home directory and as a member of the <code>gpadmin</code> group, and creates a password for the user.</p>
+<pre><code># groupadd gpadmin
+# useradd gpadmin -r -m -g gpadmin
+# passwd gpadmin
+New password: &lt;changeme&gt;
+Retype new password: &lt;changeme&gt;
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> You must have root permission to create the <code>gpadmin</code> group and user.</p>
+</blockquote>
+<blockquote>
+<p><strong>Note</strong> Make sure the <code>gpadmin</code> user has the same user id (uid) and group id (gid) numbers on each host to prevent problems with scripts or services that use them for identity or permissions. For example, backing up SynxDB databases to some networked filesy stems or storage appliances could fail if the <code>gpadmin</code> user has different uid or gid numbers on different segment hosts. When you create the <code>gpadmin</code> group and user, you can use the <code>groupadd -g</code> option to specify a gid number and the <code>useradd -u</code> option to specify the uid number. Use the command <code>id gpadmin</code> to see the uid and gid for the <code>gpadmin</code> user on the current host.</p>
+</blockquote>
+</li>
+<li>
+<p>Switch to the <code>gpadmin</code> user and generate an SSH key pair for the <code>gpadmin</code> user.</p>
+<pre><code>$ su gpadmin
+$ ssh-keygen -t rsa -b 4096
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/gpadmin/.ssh/id_rsa):
+Created directory '/home/gpadmin/.ssh'.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+
+</code></pre>
+<p>At the passphrase prompts, press Enter so that SSH connections will not require entry of a passphrase.</p>
+</li>
+<li>
+<p>Grant sudo access to the <code>gpadmin</code> user. Run <code>visudo</code> and uncomment the <code>%wheel</code> group entry.</p>
+<pre><code>%wheel        ALL=(ALL)       NOPASSWD: ALL
+</code></pre>
+<p>Make sure you uncomment the line that has the <code>NOPASSWD</code> keyword.</p>
+<p>Add the <code>gpadmin</code> user to the <code>wheel</code> group with this command.</p>
+<pre><code># usermod -aG wheel gpadmin
+</code></pre>
+</li>
+</ol>
+<h2 id="next-steps"><a class="header" href="#next-steps"><a id="topic_acx_5xb_vhb"></a>Next Steps</a></h2>
+<ul>
+<li><a href="install_gpdb.html">Installing SynxDB Software</a></li>
+<li><a href="validate.html">Validating Your Systems</a></li>
+<li><a href="init_gpdb.html">Initializing a SynxDB System</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../install_guide/capacity_planning.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../install_guide/install_gpdb.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../install_guide/capacity_planning.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../install_guide/install_gpdb.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

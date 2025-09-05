@@ -1,0 +1,29 @@
+Comparison with Apache Cloudberry
+=====================================================
+
+.. list-table::
+   :header-rows: 1
+   :align: left
+
+   * - Dimension
+     - Apache Cloudberry
+     - |product_name|
+   * - Architecture
+     - MPP (Massively Parallel Processing), tightly coupled compute and storage
+     - Separation of compute and storage, stateless compute layer with elastic scaling
+   * - Database kernel
+     - Based on PostgreSQL 14, with enhancements
+     - Uses Apache Cloudberry as the database kernel, modified for cloud-native architecture
+   * - Scalability
+     - Fixed cluster, scaling requires data redistribution
+     - Elastic scaling, compute and storage layers expand independently
+   * - Use cases
+     - Suitable for on-premises big data analytics
+     - Suitable for large-scale commercial customers, especially in cloud environments
+   * - Deployment model
+     - Traditional on-premises deployment
+     - Kubernetes deployment
+   * - Open-source / Commercial
+     - Open-source, managed by Apache Foundation
+     - Commercial, closed-source with additional enterprise features
+

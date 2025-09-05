@@ -1,0 +1,69 @@
+.. raw:: latex
+
+   \newpage
+
+Use Index Scan on AO Tables
+=============================
+
+|product_name| supports IndexScan on Append-Optimized (AO) tables to improve query efficiency in certain scenarios, such as the following query:
+
+.. code:: sql
+
+   SELECT * FROM tbl WHERE val > 100 ORDER BY val LIMIT 10;
+
+.. tip:: 
+
+   An Append-Optimized (AO) table is an optimized storage method oriented towards batch-insert-heavy scenarios, such as big data analytics and data warehousing.
+
+   When new data is inserted into an AO table, |product_name| appends the new data to the end of the table instead of finding free space for insertion as it would with a regular table. This means that inserting data into an AO table only requires appending to the file, which results in higher insertion efficiency.
+
+For the query statement above:
+
+-  If using heap table storage, |product_name| can execute this query by finding 10 tuples where ``val`` is greater than ``100`` through an IndexScan. It only needs to read about 10 tuples from the index and the data table.
+-  If using AO table storage, and assuming the ``tbl`` table has 1 billion rows, while we only need to return 10 tuples specified by the ``LIMIT`` clause:
+
+   |product_name| supports using the IndexScan operation to scan AO tables. This can substantially reduce the amount of data scanned and significantly improve scanning efficiency, making it a better scanning method than SeqScan and BitmapScan.
+
+Use cases
+---------
+
+This feature is suitable for querying large tables while using ``ORDER BY`` and ``LIMIT`` clauses to restrict the size of the returned result set:
+
+.. code:: sql
+
+   SELECT * FROM tbl WHERE val > 100 ORDER BY val LIMIT 10;
+
+..note:: 
+
+   "A large table" can be understood as a table that is about 3000 times the size of the data to be queried. For example, when using `LIMIT 10` to return 10 records, a table with more than 30,000 records can be considered large.
+
+The degree of optimization might vary depending on the amount of data. In the most suitable scenarios, a query that originally took tens of minutes can return in under a second.
+
+Usage example
+-------------
+
+To enable AO IndexScan, you first need to disable the GPORCA optimizer by running ``SET optimizer TO off;`` and then set the system parameter ``gp_enable_ao_indexscan`` to ``ON``.
+
+As the following example shows, the execution time without AO IndexScan is 5888.235 ms, which is much longer than the 15.462 ms execution time with AO IndexScan enabled.
+
+.. code:: sql
+
+   SET optimizer TO off; -- To enable AO IndexScan, you need to disable the ORCA optimizer first
+
+   -- Creates a test table, generate 100 million rows of data, and create an index on the val column.
+   CREATE TABLE tbl (id int, val int) WITH (orientation='column', appendonly=true);
+   INSERT INTO tbl SELECT i, i FROM generate_series(1, 100000000) s(i);
+
+   -- Queries directly.
+   EXPLAIN ANALYZE SELECT * FROM tbl WHERE val > 100 ORDER BY val LIMIT 10;
+
+   (Execution Time: 5888.235 ms)
+
+
+   -- Queries again after enabling AO table IndexScan.
+   SET gp_enable_ao_indexscan TO on;
+   EXPLAIN ANALYZE SELECT * FROM tbl WHERE val > 100 ORDER BY val LIMIT 10;
+
+   (Execution Time: 15.462 ms)
+
+Currently, this feature is only applicable to the PostgreSQL optimizer. Also, because random I/O can be up to 30,000 times less efficient than sequential I/O on some mechanical hard drives, the execution efficiency of IndexScan might not be high if this feature is enabled on underperforming mechanical hard drives.

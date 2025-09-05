@@ -1,0 +1,9 @@
+Choose Table Storage Model
+****************************
+
+.. toctree:: 
+   :maxdepth: 2
+
+   heap-and-ao-table-formats
+   pax-table-format
+   unionstore-table-format

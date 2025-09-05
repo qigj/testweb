@@ -1,0 +1,701 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>ALTER TABLE - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="alter-table"><a class="header" href="#alter-table">ALTER TABLE</a></h1>
+<p>Changes the definition of a table.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code class="language-{#sql_command_synopsis}">ALTER TABLE [IF EXISTS] [ONLY] &lt;name&gt; 
+    &lt;action&gt; [, ... ]
+
+ALTER TABLE [IF EXISTS] [ONLY] &lt;name&gt; 
+    RENAME [COLUMN] &lt;column_name&gt; TO &lt;new_column_name&gt;
+
+ALTER TABLE [ IF EXISTS ] [ ONLY ] &lt;name&gt; 
+    RENAME CONSTRAINT &lt;constraint_name&gt; TO &lt;new_constraint_name&gt;
+
+ALTER TABLE [IF EXISTS] &lt;name&gt; 
+    RENAME TO &lt;new_name&gt;
+
+ALTER TABLE [IF EXISTS] &lt;name&gt; 
+    SET SCHEMA &lt;new_schema&gt;
+
+ALTER TABLE ALL IN TABLESPACE &lt;name&gt; [ OWNED BY &lt;role_name&gt; [, ... ] ]
+    SET TABLESPACE &lt;new_tablespace&gt; [ NOWAIT ]
+
+ALTER TABLE [IF EXISTS] [ONLY] &lt;name&gt; SET 
+     WITH (REORGANIZE=true|false)
+   | DISTRIBUTED BY ({&lt;column_name&gt; [&lt;opclass&gt;]} [, ... ] )
+   | DISTRIBUTED RANDOMLY
+   | DISTRIBUTED REPLICATED 
+
+ALTER TABLE &lt;name&gt;
+   [ ALTER PARTITION { &lt;partition_name&gt; | FOR (RANK(&lt;number&gt;)) 
+   | FOR (&lt;value&gt;) } [...] ] &lt;partition_action&gt;
+
+where &lt;action&gt; is one of:
+                        
+  ADD [COLUMN] &lt;column_name data_type&gt; [ DEFAULT &lt;default_expr&gt; ]
+      [&lt;column_constraint&gt; [ ... ]]
+      [ COLLATE &lt;collation&gt; ]
+      [ ENCODING ( &lt;storage_parameter&gt; [,...] ) ]
+  DROP [COLUMN] [IF EXISTS] &lt;column_name&gt; [RESTRICT | CASCADE]
+  ALTER [COLUMN] &lt;column_name&gt; [ SET DATA ] TYPE &lt;type&gt; [COLLATE &lt;collation&gt;] [USING &lt;expression&gt;]
+  ALTER [COLUMN] &lt;column_name&gt; SET DEFAULT &lt;expression&gt;
+  ALTER [COLUMN] &lt;column_name&gt; DROP DEFAULT
+  ALTER [COLUMN] &lt;column_name&gt; { SET | DROP } NOT NULL
+  ALTER [COLUMN] &lt;column_name&gt; SET STATISTICS &lt;integer&gt;
+  ALTER [COLUMN] column SET ( &lt;attribute_option&gt; = &lt;value&gt; [, ... ] )
+  ALTER [COLUMN] column RESET ( &lt;attribute_option&gt; [, ... ] )
+  ADD &lt;table_constraint&gt; [NOT VALID]
+  ADD &lt;table_constraint_using_index&gt;
+  VALIDATE CONSTRAINT &lt;constraint_name&gt;
+  DROP CONSTRAINT [IF EXISTS] &lt;constraint_name&gt; [RESTRICT | CASCADE]
+  DISABLE TRIGGER [&lt;trigger_name&gt; | ALL | USER]
+  ENABLE TRIGGER [&lt;trigger_name&gt; | ALL | USER]
+  CLUSTER ON &lt;index_name&gt;
+  SET WITHOUT CLUSTER
+  SET WITHOUT OIDS
+  SET (&lt;storage_parameter&gt; = &lt;value&gt;)
+  RESET (&lt;storage_parameter&gt; [, ... ])
+  INHERIT &lt;parent_table&gt;
+  NO INHERIT &lt;parent_table&gt;
+  OF `type_name`
+  NOT OF
+  OWNER TO &lt;new_owner&gt;
+  SET TABLESPACE &lt;new_tablespace&gt;
+</code></pre>
+<p>where table_constraint_using_index is:</p>
+<pre><code>  [ CONSTRAINT constraint\_name ]
+  { UNIQUE | PRIMARY KEY } USING INDEX index\_name
+  [ DEFERRABLE | NOT DEFERRABLE ] [ INITIALLY DEFERRED | INITIALLY IMMEDIATE ]
+</code></pre>
+<p>where partition_action is one of:</p>
+<pre><code>  ALTER DEFAULT PARTITION
+  DROP DEFAULT PARTITION [IF EXISTS]
+  DROP PARTITION [IF EXISTS] { &lt;partition_name&gt; | 
+      FOR (RANK(&lt;number&gt;)) | FOR (&lt;value&gt;) } [CASCADE]
+  TRUNCATE DEFAULT PARTITION
+  TRUNCATE PARTITION { &lt;partition_name&gt; | FOR (RANK(&lt;number&gt;)) | 
+      FOR (&lt;value&gt;) }
+  RENAME DEFAULT PARTITION TO &lt;new_partition_name&gt;
+  RENAME PARTITION { &lt;partition_name&gt; | FOR (RANK(&lt;number&gt;)) | 
+      FOR (&lt;value&gt;) } TO &lt;new_partition_name&gt;
+  ADD DEFAULT PARTITION &lt;name&gt; [ ( &lt;subpartition_spec&gt; ) ]
+  ADD PARTITION [&lt;partition_name&gt;] &lt;partition_element&gt;
+     [ ( &lt;subpartition_spec&gt; ) ]
+  EXCHANGE PARTITION { &lt;partition_name&gt; | FOR (RANK(&lt;number&gt;)) | 
+       FOR (&lt;value&gt;) } WITH TABLE &lt;table_name&gt;
+        [ WITH | WITHOUT VALIDATION ]
+  EXCHANGE DEFAULT PARTITION WITH TABLE &lt;table_name&gt;
+   [ WITH | WITHOUT VALIDATION ]
+  SET SUBPARTITION TEMPLATE (&lt;subpartition_spec&gt;)
+  SPLIT DEFAULT PARTITION
+    {  AT (&lt;list_value&gt;)
+     | START([&lt;datatype&gt;] &lt;range_value&gt;) [INCLUSIVE | EXCLUSIVE] 
+        END([&lt;datatype&gt;] &lt;range_value&gt;) [INCLUSIVE | EXCLUSIVE] }
+    [ INTO ( PARTITION &lt;new_partition_name&gt;, 
+             PARTITION &lt;default_partition_name&gt; ) ]
+  SPLIT PARTITION { &lt;partition_name&gt; | FOR (RANK(&lt;number&gt;)) | 
+     FOR (&lt;value&gt;) } AT (&lt;value&gt;) 
+    [ INTO (PARTITION &lt;partition_name&gt;, PARTITION &lt;partition_name&gt;)]  
+</code></pre>
+<p>where partition_element is:</p>
+<pre><code>    VALUES (&lt;list_value&gt; [,...] )
+  | START ([&lt;datatype&gt;] '&lt;start_value&gt;') [INCLUSIVE | EXCLUSIVE]
+     [ END ([&lt;datatype&gt;] '&lt;end_value&gt;') [INCLUSIVE | EXCLUSIVE] ]
+  | END ([&lt;datatype&gt;] '&lt;end_value&gt;') [INCLUSIVE | EXCLUSIVE]
+[ WITH ( &lt;partition_storage_parameter&gt;=&lt;value&gt; [, ... ] ) ]
+[ TABLESPACE &lt;tablespace&gt; ]
+</code></pre>
+<p>where subpartition_spec is:</p>
+<pre><code>&lt;subpartition_element&gt; [, ...]
+</code></pre>
+<p>and subpartition_element is:</p>
+<pre><code>   DEFAULT SUBPARTITION &lt;subpartition_name&gt;
+  | [SUBPARTITION &lt;subpartition_name&gt;] VALUES (&lt;list_value&gt; [,...] )
+  | [SUBPARTITION &lt;subpartition_name&gt;] 
+     START ([&lt;datatype&gt;] '&lt;start_value&gt;') [INCLUSIVE | EXCLUSIVE]
+     [ END ([&lt;datatype&gt;] '&lt;end_value&gt;') [INCLUSIVE | EXCLUSIVE] ]
+     [ EVERY ( [&lt;number | datatype&gt;] '&lt;interval_value&gt;') ]
+  | [SUBPARTITION &lt;subpartition_name&gt;] 
+     END ([&lt;datatype&gt;] '&lt;end_value&gt;') [INCLUSIVE | EXCLUSIVE]
+     [ EVERY ( [&lt;number | datatype&gt;] '&lt;interval_value&gt;') ]
+[ WITH ( &lt;partition_storage_parameter&gt;=&lt;value&gt; [, ... ] ) ]
+[ TABLESPACE &lt;tablespace&gt; ]
+</code></pre>
+<p>where storage_parameter is:</p>
+<pre><code>   appendoptimized={true | false}
+   blocksize={8192-2097152}
+   orientation={COLUMN|ROW}
+   compresstype={ZLIB|ZSTD|RLE_TYPE|NONE}
+   compresslevel={0-9}
+   fillfactor={10-100}
+   analyze_hll_non_part_table={true | false }
+   [oids=FALSE]
+</code></pre>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p><code>ALTER TABLE</code> changes the definition of an existing table. There are several subforms:</p>
+<ul>
+<li>
+<p><strong>ADD COLUMN</strong> — Adds a new column to the table, using the same syntax as <a href="CREATE_TABLE.html">CREATE TABLE</a>. The <code>ENCODING</code> clause is valid only for append-optimized, column-oriented tables.</p>
+<p>When you add a column to an append-optimized, column-oriented table, SynxDB sets each data compression parameter for the column (<code>compresstype</code>, <code>compresslevel</code>, and <code>blocksize</code>) based on the following setting, in order of preference.</p>
+<ol>
+<li>The compression parameter setting specified in the <code>ALTER TABLE</code> command <code>ENCODING</code> clause.</li>
+<li>If the server configuration parameter <a href="../config_params/guc-list.html">gp_add_column_inherits_table_setting</a> is <code>on</code>, use the table’s data compression parameters specified in the <code>WITH</code> clause when the table was created. The default server configuration parameter default is <code>off</code>, the <code>WITH</code> clause parameters are ignored.</li>
+<li>The compression parameter setting specified in the server configuration parameter <a href="../config_params/guc-list.html">gp_default_storage_option</a>.</li>
+<li>The default compression parameter value.
+For append-optimized and hash tables, <code>ADD COLUMN</code> requires a table rewrite. For information about table rewrites performed by <code>ALTER TABLE</code>, see <a href="#section5">Notes</a>.</li>
+</ol>
+</li>
+<li>
+<p><strong>DROP COLUMN [IF EXISTS]</strong> — Drops a column from a table. Note that if you drop table columns that are being used as the SynxDB distribution key, the distribution policy for the table will be changed to <code>DISTRIBUTED RANDOMLY</code>. Indexes and table constraints involving the column are automatically dropped as well. You need to say <code>CASCADE</code> if anything outside the table depends on the column (such as views). If <code>IF EXISTS</code> is specified and the column does not exist, no error is thrown; a notice is issued instead.</p>
+</li>
+<li>
+<p><strong>IF EXISTS</strong> — Do not throw an error if the table does not exist. A notice is issued in this case.</p>
+</li>
+<li>
+<p><strong>SET DATA TYPE</strong> — This form changes the data type of a column of a table. Note that you cannot alter column data types that are being used as distribution or partitioning keys. Indexes and simple table constraints involving the column will be automatically converted to use the new column type by reparsing the originally supplied expression. The optional <code>COLLATE</code> clause specifies a collation for the new column; if omitted, the collation is the default for the new column type. The optional <code>USING</code> clause specifies how to compute the new column value from the old. If omitted, the default conversion is the same as an assignment cast from old data type to new. A <code>USING</code> clause must be provided if there is no implicit or assignment cast from old to new type.</p>
+<blockquote>
+<p><strong>Note</strong> GPORCA supports collation only when all columns in the query use the same collation. If columns in the query use different collations, then SynxDB uses the Postgres Planner.</p>
+</blockquote>
+<p>Changing a column data type requires a table rewrite. For information about table rewrites performed by <code>ALTER TABLE</code>, see <a href="#section5">Notes</a>.</p>
+</li>
+<li>
+<p><strong>SET/DROP DEFAULT</strong> — Sets or removes the default value for a column. Default values only apply in subsequent <code>INSERT</code> or <code>UPDATE</code> commands; they do not cause rows already in the table to change.</p>
+</li>
+<li>
+<p><strong>SET/DROP NOT NULL</strong> — Changes whether a column is marked to allow null values or to reject null values. You can only use <code>SET NOT NULL</code> when the column contains no null values.</p>
+</li>
+<li>
+<p><strong>SET STATISTICS</strong> — Sets the per-column statistics-gathering target for subsequent <code>ANALYZE</code> operations. The target can be set in the range 0 to 10000, or set to -1 to revert to using the system default statistics target (<code>default_statistics_target</code>). When set to 0, no statistics are collected.</p>
+</li>
+<li>
+<p><strong>SET ( attribute_option = value [, … ])</strong></p>
+<p><strong>RESET ( attribute_option [, …] )</strong>— Sets or resets per-attribute options. Currently, the only defined per-attribute options are <code>n_distinct</code> and <code>n_distinct_inherited</code>, which override the number-of-distinct-values estimates made by subsequent <a href="ANALYZE.html">ANALYZE</a> operations. <code>n_distinct</code> affects the statistics for the table itself, while <code>n_distinct_inherited</code> affects the statistics gathered for the table plus its inheritance children. When set to a positive value, <code>ANALYZE</code> will assume that the column contains exactly the specified number of distinct non-null values. When set to a negative value, which must be greater than or equal to -1, <code>ANALYZE</code> will assume that the number of distinct non-null values in the column is linear in the size of the table; the exact count is to be computed by multiplying the estimated table size by the absolute value of the given number. For example, a value of -1 implies that all values in the column are distinct, while a value of -0.5 implies that each value appears twice on the average. This can be useful when the size of the table changes over time, since the multiplication by the number of rows in the table is not performed until query planning time. Specify a value of 0 to revert to estimating the number of distinct values normally.</p>
+</li>
+<li>
+<p><strong>ADD table_constraint [NOT VALID]</strong> — Adds a new constraint to a table (not just a partition) using the same syntax as <code>CREATE TABLE</code>. The <code>NOT VALID</code> option is currently only allowed for foreign key and <code>CHECK</code> constraints. If the constraint is marked <code>NOT VALID</code>, SynxDB skips the potentially-lengthy initial check to verify that all rows in the table satisfy the constraint. The constraint will still be enforced against subsequent inserts or updates (that is, they’ll fail unless there is a matching row in the referenced table, in the case of foreign keys; and they’ll fail unless the new row matches the specified check constraints). But the database will not assume that the constraint holds for all rows in the table, until it is validated by using the <code>VALIDATE CONSTRAINT</code> option. Constraint checks are skipped at create table time, so the <a href="CREATE_TABLE.html">CREATE TABLE</a> syntax does not include this option.</p>
+</li>
+<li>
+<p><strong>VALIDATE CONSTRAINT</strong> — This form validates a foreign key constraint that was previously created as <code>NOT VALID</code>, by scanning the table to ensure there are no rows for which the constraint is not satisfied. Nothing happens if the constraint is already marked valid. The advantage of separating validation from initial creation of the constraint is that validation requires a lesser lock on the table than constraint creation does.</p>
+</li>
+<li>
+<p><strong>ADD table_constraint_using_index</strong> — Adds a new <code>PRIMARY KEY</code> or <code>UNIQUE</code> constraint to a table based on an existing unique index. All the columns of the index will be included in the constraint. The index cannot have expression columns nor be a partial index. Also, it must be a b-tree index with default sort ordering. These restrictions ensure that the index is equivalent to one that would be built by a regular <code>ADD PRIMARY KEY</code> or <code>ADD UNIQUE</code> command.</p>
+<p>Adding a <code>PRIMARY KEY</code> or <code>UNIQUE</code> constraint to a table based on an existing unique index is not supported on a partitioned table.</p>
+<p>If <code>PRIMARY KEY</code> is specified, and the index’s columns are not already marked <code>NOT NULL</code>, then this command will attempt to do <code>ALTER COLUMN SET NOT NULL</code> against each such column. That requires a full table scan to verify the column(s) contain no nulls. In all other cases, this is a fast operation.</p>
+<p>If a constraint name is provided then the index will be renamed to match the constraint name. Otherwise the constraint will be named the same as the index.</p>
+<p>After this command is run, the index is “owned” by the constraint, in the same way as if the index had been built by a regular <code>ADD PRIMARY KEY</code> or <code>ADD UNIQUE</code> command. In particular, dropping the constraint will make the index disappear too.</p>
+</li>
+<li>
+<p><strong>DROP CONSTRAINT [IF EXISTS]</strong> — Drops the specified constraint on a table. If <code>IF EXISTS</code> is specified and the constraint does not exist, no error is thrown. In this case a notice is issued instead.</p>
+</li>
+<li>
+<p><strong>DISABLE/ENABLE TRIGGER</strong> — Deactivates or activates trigger(s) belonging to the table. A deactivated trigger is still known to the system, but is not run when its triggering event occurs. For a deferred trigger, the enable status is checked when the event occurs, not when the trigger function is actually run. One may deactivate or activate a single trigger specified by name, or all triggers on the table, or only user-created triggers. Deactivating or activating constraint triggers requires superuser privileges.</p>
+<blockquote>
+<p><strong>Note</strong> triggers are not supported in SynxDB. Triggers in general have very limited functionality due to the parallelism of SynxDB.</p>
+</blockquote>
+</li>
+<li>
+<p><strong>CLUSTER ON/SET WITHOUT CLUSTER</strong> — Selects or removes the default index for future <code>CLUSTER</code> operations. It does not actually re-cluster the table. Note that <code>CLUSTER</code> is not the recommended way to physically reorder a table in SynxDB because it takes so long. It is better to recreate the table with <a href="CREATE_TABLE_AS.html">CREATE TABLE AS</a> and order it by the index column(s).</p>
+<blockquote>
+<p><strong>Note</strong> <code>CLUSTER ON</code> is not supported on append-optimized tables.</p>
+</blockquote>
+</li>
+<li>
+<p><strong>SET WITHOUT OIDS</strong> — Removes the OID system column from the table.</p>
+<p>You cannot create OIDS on a partitioned or column-oriented table (an error is displayed). This syntax is deprecated and will be removed in a future SynxDB release.</p>
+<blockquote>
+<p><strong>Caution</strong> SynxDB does not support using <code>SET WITH OIDS</code> or <code>oids=TRUE</code> to assign an OID system column. On large tables, such as those in a typical SynxDB system, using OIDs for table rows can cause the 32-bit counter to wrap-around. After the counter wraps around, OIDs can no longer be assumed to be unique, which not only makes them useless to user applications, but can also cause problems in the SynxDB system catalog tables. In addition, excluding OIDs from a table reduces the space required to store the table on disk by 4 bytes per row, slightly improving performance.</p>
+</blockquote>
+</li>
+<li>
+<p><strong>SET ( FILLFACTOR = value) / RESET (FILLFACTOR)</strong> — Changes the fillfactor for the table. The fillfactor for a table is a percentage between 10 and 100. 100 (complete packing) is the default. When a smaller fillfactor is specified, <code>INSERT</code> operations pack table pages only to the indicated percentage; the remaining space on each page is reserved for updating rows on that page. This gives <code>UPDATE</code> a chance to place the updated copy of a row on the same page as the original, which is more efficient than placing it on a different page. For a table whose entries are never updated, complete packing is the best choice, but in heavily updated tables smaller fillfactors are appropriate. Note that the table contents will not be modified immediately by this command. You will need to rewrite the table to get the desired effects. That can be done with <a href="VACUUM.html">VACUUM</a> or one of the forms of <code>ALTER TABLE</code> that forces a table rewrite. For information about the forms of <code>ALTER TABLE</code> that perform a table rewrite, see <a href="#section5">Notes</a>.</p>
+</li>
+<li>
+<p><strong>SET DISTRIBUTED</strong> — Changes the distribution policy of a table. Changing a hash distribution policy, or changing to or from a replicated policy, will cause the table data to be physically redistributed on disk, which can be resource intensive. <em>SynxDB does not permit changing the distribution policy of a writable external table.</em></p>
+</li>
+<li>
+<p><strong>INHERIT parent_table / NO INHERIT parent_table</strong> — Adds or removes the target table as a child of the specified parent table. Queries against the parent will include records of its child table. To be added as a child, the target table must already contain all the same columns as the parent (it could have additional columns, too). The columns must have matching data types, and if they have <code>NOT NULL</code> constraints in the parent then they must also have <code>NOT NULL</code> constraints in the child. There must also be matching child-table constraints for all <code>CHECK</code> constraints of the parent, except those marked non-inheritable (that is, created with <code>ALTER TABLE ... ADD CONSTRAINT ... NO INHERIT</code>) in the parent, which are ignored; all child-table constraints matched must not be marked non-inheritable. Currently <code>UNIQUE</code>, <code>PRIMARY KEY</code>, and <code>FOREIGN KEY</code> constraints are not considered, but this may change in the future.</p>
+</li>
+<li>
+<p>OF type_name — This form links the table to a composite type as though <code>CREATE TABLE OF</code> had formed it. The table’s list of column names and types must precisely match that of the composite type; the presence of an <code>oid</code> system column is permitted to differ. The table must not inherit from any other table. These restrictions ensure that <code>CREATE TABLE OF</code> would permit an equivalent table definition.</p>
+</li>
+<li>
+<p><strong>NOT OF</strong> — This form dissociates a typed table from its type.</p>
+</li>
+<li>
+<p><strong>OWNER</strong> — Changes the owner of the table, sequence, or view to the specified user.</p>
+</li>
+<li>
+<p><strong>SET TABLESPACE</strong> — Changes the table’s tablespace to the specified tablespace and moves the data file(s) associated with the table to the new tablespace. Indexes on the table, if any, are not moved; but they can be moved separately with additional <code>SET TABLESPACE</code> commands. All tables in the current database in a tablespace can be moved by using the <code>ALL IN TABLESPACE</code> form, which will lock all tables to be moved first and then move each one. This form also supports <code>OWNED BY</code>, which will only move tables owned by the roles specified. If the <code>NOWAIT</code> option is specified then the command will fail if it is unable to acquire all of the locks required immediately. Note that system catalogs are not moved by this command, use <code>ALTER DATABASE</code> or explicit <code>ALTER TABLE</code> invocations instead if desired. The <code>information_schema</code> relations are not considered part of the system catalogs and will be moved. See also <code>CREATE TABLESPACE</code>. If changing the tablespace of a partitioned table, all child table partitions will also be moved to the new tablespace.</p>
+</li>
+<li>
+<p><strong>RENAME</strong> — Changes the name of a table (or an index, sequence, view, or materialized view), the name of an individual column in a table, or the name of a constraint of the table. There is no effect on the stored data. Note that SynxDB distribution key columns cannot be renamed.</p>
+</li>
+<li>
+<p><strong>SET SCHEMA</strong> — Moves the table into another schema. Associated indexes, constraints, and sequences owned by table columns are moved as well.</p>
+</li>
+<li>
+<p><strong>ALTER PARTITION | DROP PARTITION | RENAME PARTITION | TRUNCATE PARTITION | ADD PARTITION | SPLIT PARTITION | EXCHANGE PARTITION | SET SUBPARTITION TEMPLATE</strong>— Changes the structure of a partitioned table. In most cases, you must go through the parent table to alter one of its child table partitions.</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> If you add a partition to a table that has subpartition encodings, the new partition inherits the storage directives for the subpartitions. For more information about the precedence of compression settings, see <a href="../../admin_guide/ddl/ddl-storage.html#topic40">Using Compression</a>.</p>
+</blockquote>
+<p>All the forms of <code>ALTER TABLE</code> that act on a single table, except <code>RENAME</code> and <code>SET SCHEMA</code>, can be combined into a list of multiple alterations to apply together. For example, it is possible to add several columns and/or alter the type of several columns in a single command. This is particularly useful with large tables, since only one pass over the table need be made.</p>
+<p>You must own the table to use <code>ALTER TABLE</code>. To change the schema or tablespace of a table, you must also have <code>CREATE</code> privilege on the new schema or tablespace. To add the table as a new child of a parent table, you must own the parent table as well. To alter the owner, you must also be a direct or indirect member of the new owning role, and that role must have <code>CREATE</code> privilege on the table’s schema. To add a column or alter a column type or use the <code>OF</code> clause, you must also have <code>USAGE</code> privilege on the data type. A superuser has these privileges automatically.</p>
+<blockquote>
+<p><strong>Note</strong> Memory usage increases significantly when a table has many partitions, if a table has compression, or if the blocksize for a table is large. If the number of relations associated with the table is large, this condition can force an operation on the table to use more memory. For example, if the table is a CO table and has a large number of columns, each column is a relation. An operation like <code>ALTER TABLE ALTER COLUMN</code> opens all the columns in the table allocates associated buffers. If a CO table has 40 columns and 100 partitions, and the columns are compressed and the blocksize is 2 MB (with a system factor of 3), the system attempts to allocate 24 GB, that is (40 ×100) × (2 ×3) MB or 24 GB.</p>
+</blockquote>
+<h2 id="parameters"><a class="header" href="#parameters"><a id="section4"></a>Parameters</a></h2>
+<h3 id="only"><a class="header" href="#only">ONLY</a></h3>
+<p>Only perform the operation on the table name specified. If the <code>ONLY</code> keyword is not used, the operation will be performed on the named table and any child table partitions associated with that table.</p>
+<blockquote>
+<p><strong>Note</strong> Adding or dropping a column, or changing a column’s type, in a parent or descendant table only is not permitted. The parent table and its descendents must always have the same columns and types.</p>
+</blockquote>
+<h3 id="name"><a class="header" href="#name">name</a></h3>
+<p>The name (possibly schema-qualified) of an existing table to alter. If <code>ONLY</code> is specified, only that table is altered. If <code>ONLY</code> is not specified, the table and all its descendant tables (if any) are updated.</p>
+<blockquote>
+<p><strong>Note</strong> Constraints can only be added to an entire table, not to a partition. Because of that restriction, the name parameter can only contain a table name, not a partition name.</p>
+</blockquote>
+<h3 id="column_name"><a class="header" href="#column_name">column_name</a></h3>
+<p>Name of a new or existing column. Note that SynxDB distribution key columns must be treated with special care. Altering or dropping these columns can change the distribution policy for the table.</p>
+<h3 id="new_column_name"><a class="header" href="#new_column_name">new_column_name</a></h3>
+<p>New name for an existing column.</p>
+<h3 id="new_name"><a class="header" href="#new_name">new_name</a></h3>
+<p>New name for the table.</p>
+<h3 id="type"><a class="header" href="#type">type</a></h3>
+<p>Data type of the new column, or new data type for an existing column. If changing the data type of a SynxDB distribution key column, you are only allowed to change it to a compatible type (for example, <code>text</code> to <code>varchar</code> is OK, but <code>text</code> to <code>int</code> is not).</p>
+<h3 id="table_constraint"><a class="header" href="#table_constraint">table_constraint</a></h3>
+<p>New table constraint for the table. Note that foreign key constraints are currently not supported in SynxDB. Also a table is only allowed one unique constraint and the uniqueness must be within the SynxDB distribution key.</p>
+<h3 id="constraint_name"><a class="header" href="#constraint_name">constraint_name</a></h3>
+<p>Name of an existing constraint to drop.</p>
+<h3 id="cascade"><a class="header" href="#cascade">CASCADE</a></h3>
+<p>Automatically drop objects that depend on the dropped column or constraint (for example, views referencing the column).</p>
+<h3 id="restrict"><a class="header" href="#restrict">RESTRICT</a></h3>
+<p>Refuse to drop the column or constraint if there are any dependent objects. This is the default behavior.</p>
+<h3 id="trigger_name"><a class="header" href="#trigger_name">trigger_name</a></h3>
+<p>Name of a single trigger to deactivate or enable. Note that SynxDB does not support triggers.</p>
+<h3 id="all"><a class="header" href="#all">ALL</a></h3>
+<p>Deactivate or activate all triggers belonging to the table including constraint related triggers. This requires superuser privilege if any of the triggers are internally generated constraint triggers such as those that are used to implement foreign key constraints or deferrable uniqueness and exclusion constraints.</p>
+<h3 id="user"><a class="header" href="#user">USER</a></h3>
+<p>Deactivate or activate all triggers belonging to the table except for internally generated constraint triggers such as those that are used to implement foreign key constraints or deferrable uniqueness and exclusion constraints.</p>
+<h3 id="index_name"><a class="header" href="#index_name">index_name</a></h3>
+<p>The index name on which the table should be marked for clustering. Note that <code>CLUSTER</code> is not the recommended way to physically reorder a table in SynxDB because it takes so long. It is better to recreate the table with <a href="CREATE_TABLE_AS.html">CREATE TABLE AS</a> and order it by the index column(s).</p>
+<h3 id="fillfactor"><a class="header" href="#fillfactor">FILLFACTOR</a></h3>
+<p>Set the fillfactor percentage for a table.</p>
+<p>The fillfactor option is valid only for heap tables (<code>appendoptimized=false</code>).</p>
+<h3 id="value"><a class="header" href="#value">value</a></h3>
+<p>The new value for the <code>FILLFACTOR</code> parameter, which is a percentage between 10 and 100. 100 is the default.</p>
+<h3 id="distributed-by-column_name-opclass--distributed-randomly--distributed-replicated"><a class="header" href="#distributed-by-column_name-opclass--distributed-randomly--distributed-replicated">DISTRIBUTED BY ({column_name [opclass]}) | DISTRIBUTED RANDOMLY | DISTRIBUTED REPLICATED</a></h3>
+<p>Specifies the distribution policy for a table. Changing a hash distribution policy causes the table data to be physically redistributed, which can be resource intensive. If you declare the same hash distribution policy or change from hash to random distribution, data will not be redistributed unless you declare <code>SET WITH (REORGANIZE=true)</code>.</p>
+<p>Changing to or from a replicated distribution policy causes the table data to be redistributed.</p>
+<h3 id="analyze_hll_non_part_tabletruefalse"><a class="header" href="#analyze_hll_non_part_tabletruefalse">analyze_hll_non_part_table=true|false</a></h3>
+<p>Use <code>analyze_hll_non_part_table=true</code> to force collection of HLL statistics even if the table is not part of a partitioned table. The default is false.</p>
+<h3 id="reorganizetruefalse"><a class="header" href="#reorganizetruefalse">reorganize=true|false</a></h3>
+<p>Use <code>REORGANIZE=true</code> when the hash distribution policy has not changed or when you have changed from a hash to a random distribution, and you want to redistribute the data anyways.</p>
+<h3 id="parent_table"><a class="header" href="#parent_table">parent_table</a></h3>
+<p>A parent table to associate or de-associate with this table.</p>
+<h3 id="new_owner"><a class="header" href="#new_owner">new_owner</a></h3>
+<p>The role name of the new owner of the table.</p>
+<h3 id="new_tablespace"><a class="header" href="#new_tablespace">new_tablespace</a></h3>
+<p>The name of the tablespace to which the table will be moved.</p>
+<h3 id="new_schema"><a class="header" href="#new_schema">new_schema</a></h3>
+<p>The name of the schema to which the table will be moved.</p>
+<h3 id="parent_table_name"><a class="header" href="#parent_table_name">parent_table_name</a></h3>
+<p>When altering a partitioned table, the name of the top-level parent table.</p>
+<h3 id="alter-default-partition"><a class="header" href="#alter-default-partition">ALTER [DEFAULT] PARTITION</a></h3>
+<p>If altering a partition deeper than the first level of partitions, use <code>ALTER PARTITION</code> clauses to specify which subpartition in the hierarchy you want to alter. For each partition level in the table hierarchy that is above the target partition, specify the partition that is related to the target partition in an <code>ALTER PARTITION</code> clause.</p>
+<h3 id="drop-default-partition"><a class="header" href="#drop-default-partition">DROP [DEFAULT] PARTITION</a></h3>
+<p>Drops the specified partition. If the partition has subpartitions, the subpartitions are automatically dropped as well.</p>
+<h3 id="truncate-default-partition"><a class="header" href="#truncate-default-partition">TRUNCATE [DEFAULT] PARTITION</a></h3>
+<p>Truncates the specified partition. If the partition has subpartitions, the subpartitions are automatically truncated as well.</p>
+<h3 id="rename-default-partition"><a class="header" href="#rename-default-partition">RENAME [DEFAULT] PARTITION</a></h3>
+<p>Changes the partition name of a partition (not the relation name). Partitioned tables are created using the naming convention: <code>&lt;</code>parentname<code>&gt;_&lt;</code>level<code>&gt;_prt_&lt;</code>partition_name<code>&gt;</code>.</p>
+<h3 id="add-default-partition"><a class="header" href="#add-default-partition">ADD DEFAULT PARTITION</a></h3>
+<p>Adds a default partition to an existing partition design. When data does not match to an existing partition, it is inserted into the default partition. Partition designs that do not have a default partition will reject incoming rows that do not match to an existing partition. Default partitions must be given a name.</p>
+<h3 id="add-partition"><a class="header" href="#add-partition">ADD PARTITION</a></h3>
+<ul>
+<li>
+<p>partition_element - Using the existing partition type of the table (range or list), defines the boundaries of new partition you are adding.</p>
+</li>
+<li>
+<p>name - A name for this new partition.</p>
+</li>
+<li>
+<p><strong>VALUES</strong> - For list partitions, defines the value(s) that the partition will contain.</p>
+</li>
+<li>
+<p><strong>START</strong> - For range partitions, defines the starting range value for the partition. By default, start values are <code>INCLUSIVE</code>. For example, if you declared a start date of ‘<code>2016-01-01</code>’, then the partition would contain all dates greater than or equal to ‘<code>2016-01-01</code>’. Typically the data type of the <code>START</code> expression is the same type as the partition key column. If that is not the case, then you must explicitly cast to the intended data type.</p>
+</li>
+<li>
+<p><strong>END</strong> - For range partitions, defines the ending range value for the partition. By default, end values are <code>EXCLUSIVE</code>. For example, if you declared an end date of ‘<code>2016-02-01</code>’, then the partition would contain all dates less than but not equal to ‘<code>2016-02-01</code>’. Typically the data type of the <code>END</code> expression is the same type as the partition key column. If that is not the case, then you must explicitly cast to the intended data type.</p>
+</li>
+<li>
+<p><strong>WITH</strong> - Sets the table storage options for a partition. For example, you may want older partitions to be append-optimized tables and newer partitions to be regular heap tables. See <a href="CREATE_TABLE.html">CREATE TABLE</a> for a description of the storage options.</p>
+</li>
+<li>
+<p><strong>TABLESPACE</strong> - The name of the tablespace in which the partition is to be created.</p>
+</li>
+<li>
+<p>subpartition_spec - Only allowed on partition designs that were created without a subpartition template. Declares a subpartition specification for the new partition you are adding. If the partitioned table was originally defined using a subpartition template, then the template will be used to generate the subpartitions automatically.</p>
+</li>
+</ul>
+<h3 id="exchange-default-partition"><a class="header" href="#exchange-default-partition">EXCHANGE [DEFAULT] PARTITION</a></h3>
+<p>Exchanges another table into the partition hierarchy into the place of an existing partition. In a multi-level partition design, you can only exchange the lowest level partitions (those that contain data).</p>
+<p>The SynxDB server configuration parameter <code>gp_enable_exchange_default_partition</code> controls availability of the <code>EXCHANGE DEFAULT PARTITION</code> clause. The default value for the parameter is <code>off</code>. The clause is not available and SynxDB returns an error if the clause is specified in an <code>ALTER TABLE</code> command.</p>
+<p>For information about the parameter, see <a href="../config_params/guc_config.html">Server Configuration Parameters</a>.</p>
+<blockquote>
+<p><strong>Caution</strong> Before you exchange the default partition, you must ensure the data in the table to be exchanged, the new default partition, is valid for the default partition. For example, the data in the new default partition must not contain data that would be valid in other leaf child partitions of the partitioned table. Otherwise, queries against the partitioned table with the exchanged default partition that are run by GPORCA might return incorrect results.</p>
+</blockquote>
+<p><strong>WITH TABLE</strong> table_name - The name of the table you are swapping into the partition design. You can exchange a table where the table data is stored in the database. For example, the table is created with the <code>CREATE TABLE</code> command. The table must have the same number of columns, column order, column names, column types, and distribution policy as the parent table.</p>
+<p>With the <code>EXCHANGE PARTITION</code> clause, you can also exchange a readable external table (created with the <code>CREATE EXTERNAL TABLE</code> command) into the partition hierarchy in the place of an existing leaf child partition. If you specify a readable external table, you must also specify the <code>WITHOUT VALIDATION</code> clause to skip table validation against the <code>CHECK</code> constraint of the partition you are exchanging.</p>
+<p>Exchanging a leaf child partition with an external table is not supported if the partitioned table contains a column with a check constraint or a <code>NOT NULL</code> constraint.</p>
+<p>You cannot exchange a partition with a replicated table. Exchanging a partition with a partitioned table or a child partition of a partitioned table is not supported.</p>
+<p><strong>WITH</strong> | <strong>WITHOUT VALIDATION</strong> - Validates that the data in the table matches the <code>CHECK</code> constraint of the partition you are exchanging. The default is to validate the data against the <code>CHECK</code> constraint.</p>
+<blockquote>
+<p><strong>Caution</strong> If you specify the <code>WITHOUT VALIDATION</code> clause, you must ensure that the data in table that you are exchanging for an existing child leaf partition is valid against the <code>CHECK</code> constraints on the partition. Otherwise, queries against the partitioned table might return incorrect results.</p>
+</blockquote>
+<h3 id="set-subpartition-template"><a class="header" href="#set-subpartition-template">SET SUBPARTITION TEMPLATE</a></h3>
+<p>Modifies the subpartition template for an existing partition. After a new subpartition template is set, all new partitions added will have the new subpartition design (existing partitions are not modified).</p>
+<h3 id="split-default-partition"><a class="header" href="#split-default-partition">SPLIT DEFAULT PARTITION</a></h3>
+<p>Splits a default partition. In a multi-level partition, only a range partition can be split, not a list partition, and you can only split the lowest level default partitions (those that contain data). Splitting a default partition creates a new partition containing the values specified and leaves the default partition containing any values that do not match to an existing partition.</p>
+<p><strong>AT</strong> - For list partitioned tables, specifies a single list value that should be used as the criteria for the split.</p>
+<p><strong>START</strong> - For range partitioned tables, specifies a starting value for the new partition.</p>
+<p><strong>END</strong> - For range partitioned tables, specifies an ending value for the new partition.</p>
+<p><strong>INTO</strong> - Allows you to specify a name for the new partition. When using the <code>INTO</code> clause to split a default partition, the second partition name specified should always be that of the existing default partition. If you do not know the name of the default partition, you can look it up using the pg_partitions view.</p>
+<h3 id="split-partition"><a class="header" href="#split-partition">SPLIT PARTITION</a></h3>
+<p>Splits an existing partition into two partitions. In a multi-level partition, only a range partition can be split, not a list partition, and you can only split the lowest level partitions (those that contain data).</p>
+<p><strong>AT</strong> - Specifies a single value that should be used as the criteria for the split. The partition will be divided into two new partitions with the split value specified being the starting range for the latter partition.</p>
+<p><strong>INTO</strong> - Allows you to specify names for the two new partitions created by the split.</p>
+<h3 id="partition_name"><a class="header" href="#partition_name">partition_name</a></h3>
+<p>The given name of a partition. The given partition name is the <code>partitionname</code> column value in the <em><a href="../system_catalogs/pg_partitions.html">pg_partitions</a></em> system view.</p>
+<h3 id="for-ranknumber"><a class="header" href="#for-ranknumber">FOR (RANK(number))</a></h3>
+<p>For range partitions, the rank of the partition in the range.</p>
+<h3 id="for-value"><a class="header" href="#for-value">FOR (‘value’)</a></h3>
+<p>Specifies a partition by declaring a value that falls within the partition boundary specification. If the value declared with <code>FOR</code> matches to both a partition and one of its subpartitions (for example, if the value is a date and the table is partitioned by month and then by day), then <code>FOR</code> will operate on the first level where a match is found (for example, the monthly partition). If your intent is to operate on a subpartition, you must declare so as follows: <code>ALTER TABLE name ALTER PARTITION FOR ('2016-10-01') DROP PARTITION FOR ('2016-10-01');</code></p>
+<h2 id="notes"><a class="header" href="#notes"><a id="section5"></a>Notes</a></h2>
+<p>The table name specified in the <code>ALTER TABLE</code> command cannot be the name of a partition within a table.</p>
+<p>Take special care when altering or dropping columns that are part of the SynxDB distribution key as this can change the distribution policy for the table.</p>
+<p>SynxDB does not currently support foreign key constraints. For a unique constraint to be enforced in SynxDB, the table must be hash-distributed (not <code>DISTRIBUTED RANDOMLY</code>), and all of the distribution key columns must be the same as the initial columns of the unique constraint columns.</p>
+<p>Adding a <code>CHECK</code> or <code>NOT NULL</code> constraint requires scanning the table to verify that existing rows meet the constraint, but does not require a table rewrite.</p>
+<p>This table lists the <code>ALTER TABLE</code> operations that require a table rewrite when performed on tables defined with the specified type of table storage.</p>
+<div class="table-wrapper"><table><thead><tr><th>Operation (See Note)</th><th>Append-Optimized, Column-Oriented</th><th>Append-Optimized</th><th>Heap</th></tr></thead><tbody>
+<tr><td><code>ALTER COLUMN TYPE</code></td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code>ADD COLUMN</code></td><td>No</td><td>Yes</td><td>Yes</td></tr>
+</tbody></table>
+</div>
+<blockquote>
+<p><strong>Note</strong> Dropping a system <code>oid</code> column also requires a table rewrite.</p>
+</blockquote>
+<p>When a column is added with <code>ADD COLUMN</code>, all existing rows in the table are initialized with the column’s default value, or <code>NULL</code> if no <code>DEFAULT</code> clause is specified. Adding a column with a non-null default or changing the type of an existing column will require the entire table and indexes to be rewritten. As an exception, if the <code>USING</code> clause does not change the column contents and the old type is either binary coercible to the new type or an unconstrained domain over the new type, a table rewrite is not needed, but any indexes on the affected columns must still be rebuilt. Table and/or index rebuilds may take a significant amount of time for a large table; and will temporarily require as much as double the disk space.</p>
+<blockquote>
+<p><strong>Important</strong> The forms of <code>ALTER TABLE</code> that perform a table rewrite on an append-optimized table are not MVCC-safe. After a table rewrite, the table will appear empty to concurrent transactions if they are using a snapshot taken before the rewrite occurred. See <a href="https://www.postgresql.org/docs/9.4/mvcc-caveats.html">MVCC Caveats</a> for more details.</p>
+</blockquote>
+<p>You can specify multiple changes in a single <code>ALTER TABLE</code> command, which will be done in a single pass over the table.</p>
+<p>The <code>DROP COLUMN</code> form does not physically remove the column, but simply makes it invisible to SQL operations. Subsequent insert and update operations in the table will store a null value for the column. Thus, dropping a column is quick but it will not immediately reduce the on-disk size of your table, as the space occupied by the dropped column is not reclaimed. The space will be reclaimed over time as existing rows are updated. If you drop the system <code>oid</code> column, however, the table is rewritten immediately.</p>
+<p>To force immediate reclamation of space occupied by a dropped column, you can run one of the forms of <code>ALTER TABLE</code> that performs a rewrite of the whole table. This results in reconstructing each row with the dropped column replaced by a null value.</p>
+<p>The <code>USING</code> option of <code>SET DATA TYPE</code> can actually specify any expression involving the old values of the row; that is, it can refer to other columns as well as the one being converted. This allows very general conversions to be done with the <code>SET DATA TYPE</code> syntax. Because of this flexibility, the <code>USING</code> expression is not applied to the column’s default value (if any); the result might not be a constant expression as required for a default. This means that when there is no implicit or assignment cast from old to new type, <code>SET DATA TYPE</code> might fail to convert the default even though a <code>USING</code> clause is supplied. In such cases, drop the default with <code>DROP DEFAULT</code>, perform the <code>ALTER TYPE</code>, and then use <code>SET DEFAULT</code> to add a suitable new default. Similar considerations apply to indexes and constraints involving the column.</p>
+<p>If a table is partitioned or has any descendant tables, it is not permitted to add, rename, or change the type of a column, or rename an inherited constraint in the parent table without doing the same to the descendants. This ensures that the descendants always have columns matching the parent.</p>
+<p>To see the structure of a partitioned table, you can use the view <a href="../system_catalogs/pg_partitions.html">pg_partitions</a>. This view can help identify the particular partitions you may want to alter.</p>
+<p>A recursive <code>DROP COLUMN</code> operation will remove a descendant table’s column only if the descendant does not inherit that column from any other parents and never had an independent definition of the column. A nonrecursive <code>DROP COLUMN</code> (<code>ALTER TABLE ONLY ... DROP COLUMN</code>) never removes any descendant columns, but instead marks them as independently defined rather than inherited.</p>
+<p>The <code>TRIGGER</code>, <code>CLUSTER</code>, <code>OWNER</code>, and <code>TABLESPACE</code> actions never recurse to descendant tables; that is, they always act as though <code>ONLY</code> were specified. Adding a constraint recurses only for <code>CHECK</code> constraints that are not marked <code>NO INHERIT</code>.</p>
+<p>These <code>ALTER PARTITION</code> operations are supported if no data is changed on a partitioned table that contains a leaf child partition that has been exchanged to use an external table. Otherwise, an error is returned.</p>
+<ul>
+<li>Adding or dropping a column.</li>
+<li>Changing the data type of column.</li>
+</ul>
+<p>These <code>ALTER PARTITION</code> operations are not supported for a partitioned table that contains a leaf child partition that has been exchanged to use an external table:</p>
+<ul>
+<li>Setting a subpartition template.</li>
+<li>Altering the partition properties.</li>
+<li>Creating a default partition.</li>
+<li>Setting a distribution policy.</li>
+<li>Setting or dropping a <code>NOT NULL</code> constraint of column.</li>
+<li>Adding or dropping constraints.</li>
+<li>Splitting an external partition.</li>
+</ul>
+<p>Changing any part of a system catalog table is not permitted.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section6"></a>Examples</a></h2>
+<p>Add a column to a table:</p>
+<pre><code>ALTER TABLE distributors ADD COLUMN address varchar(30);
+</code></pre>
+<p>Rename an existing column:</p>
+<pre><code>ALTER TABLE distributors RENAME COLUMN address TO city;
+</code></pre>
+<p>Rename an existing table:</p>
+<pre><code>ALTER TABLE distributors RENAME TO suppliers;
+</code></pre>
+<p>Add a not-null constraint to a column:</p>
+<pre><code>ALTER TABLE distributors ALTER COLUMN street SET NOT NULL;
+</code></pre>
+<p>Rename an existing constraint:</p>
+<pre><code>ALTER TABLE distributors RENAME CONSTRAINT zipchk TO zip_check;
+</code></pre>
+<p>Add a check constraint to a table and all of its children:</p>
+<pre><code>ALTER TABLE distributors ADD CONSTRAINT zipchk CHECK 
+(char_length(zipcode) = 5);
+</code></pre>
+<p>To add a check constraint only to a table and not to its children:</p>
+<pre><code>ALTER TABLE distributors ADD CONSTRAINT zipchk CHECK (char_length(zipcode) = 5) NO INHERIT;
+</code></pre>
+<p>(The check constraint will not be inherited by future children, either.)</p>
+<p>Remove a check constraint from a table and all of its children:</p>
+<pre><code>ALTER TABLE distributors DROP CONSTRAINT zipchk;
+</code></pre>
+<p>Remove a check constraint from one table only:</p>
+<pre><code>ALTER TABLE ONLY distributors DROP CONSTRAINT zipchk;
+</code></pre>
+<p>(The check constraint remains in place for any child tables that inherit <code>distributors</code>.)</p>
+<p>Move a table to a different schema:</p>
+<pre><code>ALTER TABLE myschema.distributors SET SCHEMA yourschema;
+</code></pre>
+<p>Change the distribution policy of a table to replicated:</p>
+<pre><code>ALTER TABLE myschema.distributors SET DISTRIBUTED REPLICATED;
+</code></pre>
+<p>Add a new partition to a partitioned table:</p>
+<pre><code>ALTER TABLE sales ADD PARTITION 
+            START (date '2017-02-01') INCLUSIVE 
+            END (date '2017-03-01') EXCLUSIVE;
+</code></pre>
+<p>Add a default partition to an existing partition design:</p>
+<pre><code>ALTER TABLE sales ADD DEFAULT PARTITION other;
+</code></pre>
+<p>Rename a partition:</p>
+<pre><code>ALTER TABLE sales RENAME PARTITION FOR ('2016-01-01') TO 
+jan08;
+</code></pre>
+<p>Drop the first (oldest) partition in a range sequence:</p>
+<pre><code>ALTER TABLE sales DROP PARTITION FOR (RANK(1));
+</code></pre>
+<p>Exchange a table into your partition design:</p>
+<pre><code>ALTER TABLE sales EXCHANGE PARTITION FOR ('2016-01-01') WITH 
+TABLE jan08;
+</code></pre>
+<p>Split the default partition (where the existing default partition’s name is <code>other</code>) to add a new monthly partition for January 2017:</p>
+<pre><code>ALTER TABLE sales SPLIT DEFAULT PARTITION 
+START ('2017-01-01') INCLUSIVE 
+END ('2017-02-01') EXCLUSIVE 
+INTO (PARTITION jan09, PARTITION other);
+</code></pre>
+<p>Split a monthly partition into two with the first partition containing dates January 1-15 and the second partition containing dates January 16-31:</p>
+<pre><code>ALTER TABLE sales SPLIT PARTITION FOR ('2016-01-01')
+AT ('2016-01-16')
+INTO (PARTITION jan081to15, PARTITION jan0816to31);
+</code></pre>
+<p>For a multi-level partitioned table that consists of three levels, year, quarter, and region, exchange a leaf partition <code>region</code> with the table <code>region_new</code>.</p>
+<pre><code>ALTER TABLE sales ALTER PARTITION year_1 ALTER PARTITION quarter_4 EXCHANGE PARTITION region WITH TABLE region_new ;
+</code></pre>
+<p>In the previous command, the two <code>ALTER PARTITION</code> clauses identify which <code>region</code> partition to exchange. Both clauses are required to identify the specific partition to exchange.</p>
+<h2 id="compatibility"><a class="header" href="#compatibility"><a id="section7"></a>Compatibility</a></h2>
+<p>The forms <code>ADD</code> (without <code>USING INDEX</code>), <code>DROP</code>, <code>SET DEFAULT</code>, and <code>SET DATA TYPE</code> (without <code>USING</code>) conform with the SQL standard. The other forms are SynxDB extensions of the SQL standard. Also, the ability to specify more than one manipulation in a single <code>ALTER TABLE</code> command is an extension.</p>
+<p><code>ALTER TABLE DROP COLUMN</code> can be used to drop the only column of a table, leaving a zero-column table. This is an extension of SQL, which disallows zero-column tables.</p>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section8"></a>See Also</a></h2>
+<p><a href="CREATE_TABLE.html">CREATE TABLE</a>, <a href="DROP_TABLE.html">DROP TABLE</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/sql_commands/ALTER_SERVER.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/sql_commands/ALTER_TABLESPACE.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/sql_commands/ALTER_SERVER.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/sql_commands/ALTER_TABLESPACE.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

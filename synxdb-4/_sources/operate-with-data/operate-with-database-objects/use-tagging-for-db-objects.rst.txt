@@ -1,0 +1,367 @@
+.. raw:: latex
+
+   \newpage
+
+Use Tags to Manage Database Objects
+=======================================
+
+What is a tag?
+------------------
+
+A tag is a database-level object that helps users label, classify, and manage other objects in the database. using tags, you can add custom labels to database objects such as databases, users, and tables, making it easier to manage and monitor different objects in the database.
+
+You can use tags in the database mainly used for the following purposes:
+
+-  Compliance monitoring for sensitive data: Tags can mark sensitive data to help administrators track and protect data, thus ensuring compliance.
+-  Data governance and resource usage management: Tags can classify and label different types of database objects, which helps discover data, protect it, and monitor resource usage.
+
+Tags are stored as key-value pairs, with a tag name and its value making up the pair. You can assign the same tag to multiple database objects with different values for flexible management.
+
+|product_name| supports and enables tags by default, with no extra setup needed.
+
+Features of tags
+------------------
+
+-  You can assign tags to any object in the database, such as databases, users, or tables.
+-  You can assign tags when creating a database object with the ``CREATE <object>`` statement, or add or change tags later using the ``ALTER <object>`` statement.
+-  You can assign the same tag to different types of objects (like databases and tables) at the same time, and the tag value can be the same or different each time.
+
+Usage scenarios
+-------------------
+
+The tag is suitable for these situations:
+
+-  Object classification: Tags can be used to classify database objects. For example, you can use tags to tell the difference between objects in a development environment and a production environment. This makes it easier to quickly find and manage database objects in different environments.
+-  Permission management: By giving objects-specific tags, you can mark objects with special permissions or sensitive data. This helps administrators be more accurate when checking data, giving permissions, and managing compliance.
+-  Version control and status tracking: Tags can also be used to mark the version or status of database objects. This helps teams track the history of changes or see the database setup at a specific point in time. For example, a tag can show which project stage or version an object belongs to.
+-  Resource usage monitoring: Giving tags to resources (such as warehouses or tables) can help you accurately monitor resource usage. For example, tags can be used to group data warehouses by cost centers or business units, making it easier to analyze how resources are used and their efficiency.
+
+Use tags
+----------
+
+Query existing tag information
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can use the following commands to check the structure and content of the ``pg_tag`` and ``pg_tag_description`` tables:
+
+.. code:: 
+
+   \d+ pg_tag;  -- Views the detailed structure of the pg_tag table.
+   \d+ pg_tag_description;  -- Views the detailed structure of the pg_tag_description table.
+   SELECT * FROM pg_tag;  -- Gets all tag information.
+   SELECT * FROM pg_tag_description;  -- Gets all tag description information.
+
+You can use the following commands to query the created tags and descriptions:
+
+.. code:: sql
+
+   SELECT tagname, tagowner, allowed_values FROM pg_tag ORDER BY 1;  -- Gets all tag names, owners, and allowed values.
+   SELECT count(*) FROM pg_tag_description;  -- Gets the total count of tag descriptions.
+
+You can also use the following views to quickly query tag information in the database system:
+
+- ``database_tag_descriptions``: Queries tag information for database objects.
+- ``user_tag_descriptions``: Queries tag information for user (role) objects.
+- ``tablespace_tag_descriptions``: Queries tag information for tablespaces.
+- ``schema_tag_descriptions``: Queries tag information for schemas.
+- ``relation_tag_descriptions``: Queries tag information for relation objects such as tables, views, and indexes.
+
+Example queries:
+
+.. code-block:: sql
+
+   SELECT * FROM database_tag_descriptions;
+   SELECT * FROM user_tag_descriptions;
+   SELECT * FROM tablespace_tag_descriptions;
+   SELECT * FROM schema_tag_descriptions;
+   SELECT * FROM relation_tag_descriptions;
+
+Create tags
+~~~~~~~~~~~~~
+
+You can create a tag using the ``CREATE TAG`` statement and specify allowed values. The syntax is:
+
+.. code:: sql
+
+   CREATE TAG [ IF NOT EXISTS ] <tag_name>
+   CREATE TAG [ IF NOT EXISTS ] <tag_name> [ ALLOWED_VALUES '<val_1>' [ , '<val_2>' [ , ...] ] ]
+
+In the above statements, ``ALLOWED_VALUES`` can define up to 300 allowed values. By default, any string (including empty strings) is allowed, and each string can be up to 256 characters long.
+
+Examples:
+
+.. code:: sql
+
+   CREATE TAG tag_test_a;  -- Creates a tag named tag_test_a.
+   CREATE TAG IF NOT EXISTS tag_test_b;  -- Creates tag_test_b if it does not exist.
+   CREATE TAG tag_test_c ALLOWED_VALUES '123';  -- Creates a tag_test_c tag with the allowed value '123'.
+   CREATE TAG tag_test_d ALLOWED_VALUES '123', '456', ' ';  -- Creates a tag_test_d tag with multiple allowed values.
+   CREATE TAG IF NOT EXISTS tag_test_e ALLOWED_VALUES '123', 'val1';  -- Creates a tag_test_e tag if it does not exist.
+
+Delete tags
+~~~~~~~~~~~~~
+
+Use the ``DROP TAG`` statement to delete a tag. The syntax is:
+
+.. code:: sql
+
+   DROP TAG [ IF EXISTS ] <tag_name>;
+
+Before deleting a tag, the system checks whether the tag is referenced by any database object. If it is, an error is thrown. The user who executes the deletion must be a superuser or the owner of the tag.
+
+Examples:
+
+.. code:: sql
+
+   DROP TAG tag_test_a;  -- Deletes the tag_test_a tag.
+   DROP TAG IF EXISTS tag_test_b;  -- Deletes the tag_test_b tag if it exists.
+
+Modify tags
+~~~~~~~~~~~~~~
+
+Use the ``ALTER TAG`` statement to change the tag name or allowed values. The syntax is:
+
+.. code:: 
+
+   ALTER TAG [ IF EXISTS ] <tag_name> RENAME TO <new_name>;
+   ALTER TAG [ IF EXISTS ] <tag_name> { ADD | DROP } ALLOWED_VALUES '<val_1>' [, '<val_2>', ...];
+   ALTER TAG <tag_name> UNSET ALLOWED_VALUES;
+
+-  ``RENAME TO``: Renames the existing tag to a new name.
+
+-  ``ADD`` or ``DROP``: Adds or removes allowed values for the tag.
+
+-  ``UNSET ALLOWED_VALUES``: Resets the allowed values for the tag.
+
+Rename tags
+^^^^^^^^^^^^^
+
+.. code:: sql
+
+   ALTER TAG tag_test_a RENAME TO tag_test_a_new;  -- Renames tag_test_a to tag_test_a_new.
+   ALTER TAG IF EXISTS tag_test_b RENAME TO tag_test_b_new;  -- If tag_test_b exists, renames it to tag_test_b_new.
+   ALTER TAG tag_test_c_new RENAME TO tag_test_c;  -- Renames tag_test_c_new back to tag_test_c.
+   ALTER TAG tag_test_d_new RENAME TO tag_test_d;  -- Renames tag_test_d_new to tag_test_d.
+
+Modify allowed values
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Example of removing allowed values:
+
+.. code:: sql
+
+   ALTER TAG tag_test_a UNSET ALLOWED_VALUES;  -- Removes all allowed values from tag_test_a.
+   ALTER TAG tag_test_b UNSET ALLOWED_VALUES;  -- Removes all allowed values from tag_test_b.
+   ALTER TAG tag_test_c UNSET ALLOWED_VALUES;  -- Removes all allowed values from tag_test_c.
+
+Example of adding allowed values:
+
+.. code:: sql
+
+   ALTER TAG tag_test_a ADD ALLOWED_VALUES 'val1';  -- Adds 'val1' as an allowed value to tag_test_a.
+   ALTER TAG tag_test_b ADD ALLOWED_VALUES 'val2', 'val3';  -- Adds multiple allowed values to tag_test_b.
+   ALTER TAG IF EXISTS tag_test_c ADD ALLOWED_VALUES ' ';  -- Adds an empty string as an allowed value to tag_test_c.
+
+Assign tags to objects
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can use the ``TAG`` keyword to assign tags when creating or modifying database objects.
+
+Assign tags to a database
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The syntax is:
+
+.. code:: sql
+
+   CREATE [ OR REPLACE ] DATABASE <database_name> ... [ TAG ( <tag_name> = '<tag_value>' [, ...] ) ];
+   ALTER DATABASE [ IF EXISTS ] <database_name> TAG ( <tag_name> = '<tag_value>' [, ...] );
+   ALTER DATABASE [ IF EXISTS ] <database_name> UNSET TAG ( <tag_name> [, <tag_name>, ...] );
+
+You can assign or remove tags for a database object using the ``TAG`` keyword in the ``CREATE DATABASE`` and ``ALTER DATABASE`` statements.
+
+Examples:
+
+.. code:: sql
+
+   CREATE DATABASE sales_db TAG ( environment = 'production' );
+
+   ALTER DATABASE sales_db TAG ( environment = 'staging' );  -- Updates the environment tag of the sales_db database to staging.
+   ALTER DATABASE sales_db UNSET TAG ( environment );  -- Removes the environment tag from the sales_db database.
+
+Assign tags to tables
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The syntax is:
+
+.. code:: sql
+
+   CREATE [ OR REPLACE ] TABLE <table_name> ... [ TAG ( <tag_name> = '<tag_value>' [, ...] ) ];
+   ALTER TABLE [ IF EXISTS ] <table_name> TAG ( <tag_name> = '<tag_value>' [, ...] );
+   ALTER TABLE [ IF EXISTS ] <table_name> UNSET TAG ( <tag_name> [, <tag_name>, ...] );
+
+-  You can use ``TAG`` in the ``CREATE TABLE`` and ``ALTER TABLE`` statements to assign or remove tags from table objects.
+
+-  A database object can have up to 50 tags, and each tag must be unique.
+
+Example:
+
+.. code:: sql
+
+   CREATE TABLE orders (
+       order_id SERIAL PRIMARY KEY,
+       order_date DATE
+   ) TAG ( priority = 'high' );
+
+   ALTER TABLE orders TAG ( priority = 'urgent' );
+   ALTER TABLE orders UNSET TAG ( priority );
+
+Assign tags to users
+^^^^^^^^^^^^^^^^^^^^^^
+
+The syntax is:
+
+.. code:: sql
+
+   CREATE [ OR REPLACE ] USER <user_name> ... [ TAG ( <tag_name> = '<tag_value>' [, ...] ) ];
+   ALTER USER [ IF EXISTS ] <user_name> TAG ( <tag_name> = '<tag_value>' [, ...] );
+   ALTER USER [ IF EXISTS ] <user_name> UNSET TAG ( <tag_name> [, <tag_name>, ...] );
+
+You can use ``TAG`` in the ``CREATE USER`` and ``ALTER USER`` statements to assign or remove tags from user objects.
+
+Example:
+
+.. code:: sql
+
+   CREATE USER john_doe TAG ( role = 'admin' );
+
+   ALTER USER john_doe TAG ( role = 'super_admin' );
+   ALTER USER john_doe UNSET TAG ( role );
+
+Tag comments
+~~~~~~~~~~~~~~~~
+
+Use ``COMMENT ON TAG`` to add a comment to a tag. The syntax is:
+
+.. code:: sql
+
+   COMMENT ON TAG <tag_name> IS '<comment>';
+
+Example:
+
+.. code:: sql
+
+   COMMENT ON TAG priority IS 'This tag indicates the urgency level of orders.';
+
+System tables related to tags
+--------------------------------
+
+|product_name| uses two metadata tables to store tag information and the relationship between database objects and tags: ``pg_tag`` and ``pg_tag_description``.
+
+-  ``pg_tag``: Stores information about all tags, including the tag's OID, name, owner, and allowed values.
+-  ``pg_tag_description``: Records the relationship between database objects and tags, including the object's database ID, class ID, object ID, sub-object number, tag OID, and tag value.
+
+pg_tag table
+~~~~~~~~~~~~~~
+
+The ``pg_tag`` table is used to store information about all tags, including the tag identifier, name, owner, and allowed values. The table structure is as follows:
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :widths: 6 8 10
+
+   * - Column name
+     - Data type
+     - Description
+   * - ``OID``
+     - ``OID``
+     - Unique identifier for the tag.
+   * - ``TAGNAME``
+     - ``NAMEDATA``
+     - Name of the tag.
+   * - ``TAGOWNER``
+     - ``OID``
+     - The OID of the tag owner (user).
+   * - ``ALLOWED_VALUES``
+     - ``ARRAY[TEXT]``
+     - Allowed values for this tag (if any).
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+Indexes:
+
+-  ``pg_tag_name_index``: Primary key index, a ``btree`` index based on the tag name (``tagname``), ensuring that tag names are unique.
+-  ``pg_tag_oid_index``: Unique index, based on the tag's ``OID``, ensuring that each tag has a unique identifier.
+
+With the ``pg_tag`` table, the database system can efficiently manage and store all defined tag information, and each tag can have a set of allowed values, making it flexible to use.
+
+pg_tag_description table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``pg_tag_description`` table records the relationships between database objects and tags. Each record represents a tag and its value associated with a specific database object. The structure of the table is as follows:
+
+.. raw:: latex
+
+   \begin{mytable-mid}
+
+.. list-table::
+   :header-rows: 1
+   :widths: 7 7 12
+
+   * - Column name
+     - Data type
+     - Description
+   * - ``oid``
+     - ``OID``
+     - The unique identifier for the table.
+   * - ``tddatabaseid``
+     - ``OID``
+     - The database ID associated with the tag (set to ``0`` for globally shared objects).
+   * - ``tdclassid``
+     - ``OID``
+     - The class ID of the database object.
+   * - ``tdobjid``
+     - ``OID``
+     - The ``OID`` of the database object.
+   * - ``tagid``
+     - ``OID``
+     - The ``OID`` of the tag, indicating the tag associated with the object.
+   * - ``tagvalue``
+     - ``TEXT``
+     - The specific value of the tag for the object.
+
+.. raw:: latex
+
+   \end{mytable-mid}
+
+Indexes:
+
+-  ``pg_tag_description_d_c_o_t_index``: Primary key index, a ``btree`` index based on database ID, class ID, object ID, and tag ID, used to quickly locate the tag of a specific database object.
+-  ``pg_tag_description_oid_index``: Unique constraint, a ``btree`` index based on ``oid``, ensuring the uniqueness of each record.
+-  ``pg_tag_description_tagidvalue_index``: Regular index, a ``btree`` index based on tag ``OID`` (``tagid``) and tag value (``tagvalue``), used to quickly find all objects associated with a specific tag and its value.
+
+The ``pg_tag_description`` table stores the tag information for each database object along with its values, supporting many-to-many relationships between tags and objects.
+
+Handle global and non-global objects
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For globally shared objects (such as users and repositories), the ``DBID`` field value is ``0``. This means that these objects are not part of a specific database and have global properties. For non-global shared objects (such as a specific database object), the ``DBID`` field stores the OID of the database where the object belongs.
+
+Sub-object number (``OBJSUBID``): Currently, the database system does not support adding labels to sub-objects (like columns), so ``OBJSUBID`` is always ``0``.
+
+Common errors and tips
+--------------------------
+
+-  **Duplicate labels**: If you assign duplicate labels to the same object, the database system returns an error message.
+
+-  **Permission denied**: If a non-superuser or non-label owner tries to delete or modify a label, the database system returns a permission error.
+
+-  **Exceeded label limit**: An object can have a maximum of 50 labels. Adding more than 50 will cause an error.
+
+Using this feature, database administrators can organize and manage database objects more effectively, making the system more flexible and easier to operate.

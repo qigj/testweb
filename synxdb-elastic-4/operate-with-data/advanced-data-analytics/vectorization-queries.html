@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vectorization Query Computing &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Work with Transactions" href="../work-with-transactions.html" />
+    <link rel="prev" title="Use pgvector for Vector Similarity Search" href="pgvector.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../operate-with-data-index.html">Operate with Data</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../operate-with-db-objects/operate-with-db-objects-index.html">Operate with Database Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../choose-table-storage-models/choose-table-storage-models-index.html">Choose Table Storage Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-queries/sql-queries-index.html">Perform SQL Queries</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="advanced-data-analytics-index.html">Advanced Data Analytics</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="directory-table.html">Directory Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pgvector.html">Use pgvector for Vector Similarity Search</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Vectorization Query Computing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#enable-vectorization">Enable vectorization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../work-with-transactions.html">Work with Transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transaction-concurrency-control.html">Control Transactional Concurrency</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../operate-with-data-index.html">Operate with Data</a></li>
+          <li class="breadcrumb-item"><a href="advanced-data-analytics-index.html">Advanced Data Analytics</a></li>
+      <li class="breadcrumb-item active">Vectorization Query Computing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="vectorization-query-computing">
+<h1>Vectorization Query Computing<a class="headerlink" href="#vectorization-query-computing" title="Link to this heading"></a></h1>
+<p>When handling large datasets, the vectorization execution engine can greatly improve computing efficiency. By vectorizing data, multiple data elements can be processed at the same time, using parallel computing and SIMD instruction sets to speed up the process. SynxDB Elastic Vectorization (referred to as Vectorization) is a vectorization plugin based on the SynxDB Elastic kernel, designed to optimize query performance.</p>
+<section id="enable-vectorization">
+<h2>Enable vectorization<a class="headerlink" href="#enable-vectorization" title="Link to this heading"></a></h2>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">vector</span><span class="p">.</span><span class="n">enable_vectorization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<p>Vectorization provides two parameters for users: <code class="docutils literal notranslate"><span class="pre">vector.enable_vectorization</span></code> and <code class="docutils literal notranslate"><span class="pre">vector.max_batch_size</span></code>.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Parameter name</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">vector.enable_vectorization</span></code></p></td>
+<td><p>Controls whether vectorized queries are enabled. It is disabled by default.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">vector.max_batch_size</span></code></p></td>
+<td><p>The size of the vectorized batch, which controls how many rows the executor processes in one cycle. The range is <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">600000]</span></code>, and the default value is <code class="docutils literal notranslate"><span class="pre">16384</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="enable-or-disable-vectorization-queries">
+<h3>Enable or disable vectorization queries<a class="headerlink" href="#enable-or-disable-vectorization-queries" title="Link to this heading"></a></h3>
+<p>You can temporarily enable or disable the vectorization feature in a connection by setting the <code class="docutils literal notranslate"><span class="pre">vector.enable_vectorization</span></code> variable. This setting is effective only for the current connection, and it will reset to the default value after disconnecting.</p>
+<p>After uninstalling vectorization, setting the <code class="docutils literal notranslate"><span class="pre">vector.enable_vectorization</span></code> variable will have no effect. When you reinstall it, the <code class="docutils literal notranslate"><span class="pre">vector.enable_vectorization</span></code> will be restored to the default value <code class="docutils literal notranslate"><span class="pre">on</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">vector</span><span class="p">.</span><span class="n">enable_vectorization</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="p">[</span><span class="k">on</span><span class="o">|</span><span class="k">off</span><span class="p">];</span>
+</pre></div>
+</div>
+</section>
+<section id="set-vectorization-batch-size">
+<h3>Set vectorization batch size<a class="headerlink" href="#set-vectorization-batch-size" title="Link to this heading"></a></h3>
+<p>The batch size of vectorization greatly affects performance. If the value is too small, queries might slow down. If the value is too large, it might increase memory usage without improving performance.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">vector</span><span class="p">.</span><span class="n">max_batch_size</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="o">&lt;</span><span class="n">batch_number</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="verify-whether-a-query-is-vectorized">
+<h3>Verify whether a query is vectorized<a class="headerlink" href="#verify-whether-a-query-is-vectorized" title="Link to this heading"></a></h3>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">EXPLAIN</span></code> to check whether a query is a vectorization query.</p>
+<ul>
+<li><p>If the first line of the <code class="docutils literal notranslate"><span class="pre">QUERY</span> <span class="pre">PLAN</span></code> has a “Vec” label, it means the query uses vectorization.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">gpadmin</span><span class="o">=#</span><span class="w"> </span><span class="k">EXPLAIN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">int8_tbl</span><span class="p">;</span>
+<span class="w">                                    </span><span class="n">QUERY</span><span class="w"> </span><span class="n">PLAN</span><span class="w">                                     </span>
+<span class="c1">-----------------------------------------------------------------------------------</span>
+<span class="n">Vec</span><span class="w"> </span><span class="n">Gather</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span><span class="w">  </span><span class="p">(</span><span class="n">slice1</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">431</span><span class="p">.</span><span class="mi">00</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="o">-&gt;</span><span class="w">  </span><span class="n">Vec</span><span class="w"> </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">int8_tbl</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">431</span><span class="p">.</span><span class="mi">00</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">Optimizer</span><span class="p">:</span><span class="w"> </span><span class="n">Pivotal</span><span class="w"> </span><span class="n">Optimizer</span><span class="w"> </span><span class="p">(</span><span class="n">GPORCA</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>If the first line of the <code class="docutils literal notranslate"><span class="pre">QUERY</span> <span class="pre">PLAN</span></code> does not have a “Vec” label, it means the query does not use vectorization.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">gpadmin</span><span class="o">=#</span><span class="w"> </span><span class="k">EXPLAIN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">int8_tbl</span><span class="p">;</span>
+<span class="w">                                </span><span class="n">QUERY</span><span class="w"> </span><span class="n">PLAN</span><span class="w">                                   </span>
+<span class="c1">-------------------------------------------------------------------------------</span>
+<span class="n">Gather</span><span class="w"> </span><span class="n">Motion</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span><span class="w">  </span><span class="p">(</span><span class="n">slice1</span><span class="p">;</span><span class="w"> </span><span class="n">segments</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">431</span><span class="p">.</span><span class="mi">00</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="o">-&gt;</span><span class="w">  </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">int8_tbl</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">431</span><span class="p">.</span><span class="mi">00</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">Optimizer</span><span class="p">:</span><span class="w"> </span><span class="n">Pivotal</span><span class="w"> </span><span class="n">Optimizer</span><span class="w"> </span><span class="p">(</span><span class="n">GPORCA</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="supported-features">
+<h3>Supported features<a class="headerlink" href="#supported-features" title="Link to this heading"></a></h3>
+<p>The following table describes the operators, functions, and data types supported by vectorized execution.</p>
+<table class="longtable docutils align-default" id="vectorization-queries-support-matrix-en">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 15.0%" />
+<col style="width: 60.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p>Supported or not</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Storage format</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>AOCS</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Storage format</strong></p></td>
+<td><p>Not supported</p></td>
+<td><p>HEAP</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Data types</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>int2, int4, int8, float8, bool, char, tid, date, time, timestamp, timestamptz, varchar, text, numeric</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Data types</strong></p></td>
+<td><p>Not supported</p></td>
+<td><p>Custom type</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Scan operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>Scanning AOCS tables, complex filter conditions</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Scan operator</strong></p></td>
+<td><p>Not supported</p></td>
+<td><p>Non-AOCS tables</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Agg operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>Aggregate functions: min, max, count, sum, avg Aggregation plans: PlanAggregate (simple aggregate), GroupAggregate (sorted aggregate), HashAggregate (hash aggregate)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Agg operator</strong></p></td>
+<td><p>Not Supported</p></td>
+<td><p>Aggregate functions: sum(int8), sum(float8), stddev (standard deviation), variance Aggregation plans: MixedAggregate (mixed aggregate)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Limit operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>ForeignScan operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Result operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Append operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Subquery operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Sequence operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>NestedLoopJoin operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>Join types: inner join, left join, semi join, anti join</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>NestedLoopJoin operator</strong></p></td>
+<td><p>Not supported</p></td>
+<td><p>Join types: right join, full join, semi-anti join Join conditions: different data types, complex inequality conditions</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Material operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>ShareInputScan operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>ForeignScan operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>HashJoin operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>Join types: inner join, left join, right join, full join, semi join, anti join, semi-anti join</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>HashJoin operator</strong></p></td>
+<td><p>Not Supported</p></td>
+<td><p>Join conditions: different data types, complex inequality conditions</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Sort operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>Sorting order: ascending, descending algorithms: order by, order by limit</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Motion operator</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>GATHER (sending tuples from multiple senders to one receiver), GATHER_SINGLE (single-node gathering), HASH (simple hash conditions), BROADCAST (broadcast gathering), EXPLICIT (explicit gathering)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Motion operator</strong></p></td>
+<td><p>Not supported</p></td>
+<td><p>Hash gathering (complex hash conditions)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Expressions</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>case when, is distinct, is not distinct, grouping, groupid, stddev_sample, abs, round, upper, textcat, date_pli, coalesce, substr</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Bench</strong></p></td>
+<td><p>Supported</p></td>
+<td><p>ClickHouse, TPC-H, TPC-DS, ICW, ICW-ORCA</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="single-node-threaded-execution">
+<h3>Single-node threaded execution<a class="headerlink" href="#single-node-threaded-execution" title="Link to this heading"></a></h3>
+<p>By performing threaded parallel computation within the execution node, better utilization of multi-core machine resources can be achieved, reducing query time and improving query performance. The following vectorized operators support threaded acceleration:</p>
+<ul class="simple">
+<li><p>Scan (Filter)</p></li>
+<li><p>Join</p></li>
+<li><p>Agg</p></li>
+<li><p>Sort</p></li>
+</ul>
+<p>Currently, the vectorized query feature supports enabling threaded queries in a single-node deployment. To enable it, the following GUC values need to be configured:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">set</span><span class="w"> </span><span class="n">vector</span><span class="p">.</span><span class="n">enable_vectorization</span><span class="o">=</span><span class="k">on</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Enables vectorized query.</span>
+<span class="k">set</span><span class="w"> </span><span class="n">vector</span><span class="p">.</span><span class="n">enable_plan_merge</span><span class="o">=</span><span class="k">on</span><span class="p">;</span><span class="w"> </span><span class="c1">-- Enables Pipeline scheduling execution.</span>
+<span class="k">set</span><span class="w"> </span><span class="n">vector</span><span class="p">.</span><span class="n">pool_threads</span><span class="o">=</span><span class="mi">8</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Configures the number of execution threads.</span>
+</pre></div>
+</div>
+<p>Vectorized threaded execution relies on the underlying PAX storage file format. Take the <code class="docutils literal notranslate"><span class="pre">tpcds</span></code> PAX table <code class="docutils literal notranslate"><span class="pre">store_sales</span></code> as an example. When threaded execution is not enabled:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">gpadmin</span><span class="o">=#</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="n">vector</span><span class="p">.</span><span class="n">pool_threads</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="k">SET</span>
+<span class="n">gpadmin</span><span class="o">=#</span><span class="w"> </span><span class="k">explain</span><span class="w"> </span><span class="k">analyze</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="n">ss_quantity</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">store_sales</span><span class="w"> </span>
+<span class="k">where</span><span class="w"> </span><span class="n">ss_quantity</span><span class="w"> </span><span class="k">between</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">ss_list_price</span><span class="w"> </span><span class="k">between</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="mi">5</span><span class="o">+</span><span class="mi">10</span><span class="p">;</span>
+<span class="w">                                                               </span><span class="n">QUERY</span><span class="w"> </span><span class="n">PLAN</span><span class="w">                                 </span>
+
+<span class="c1">------------------------------------------------------------------------------------------------------------</span>
+<span class="c1">---------------------------------</span>
+<span class="n">Vec</span><span class="w"> </span><span class="n">Seq</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">store_sales</span><span class="w">  </span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">..</span><span class="mi">661957</span><span class="p">.</span><span class="mi">82</span><span class="w"> </span><span class="k">rows</span><span class="o">=</span><span class="mi">28801</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">actual</span><span class="w"> </span><span class="k">time</span><span class="o">=</span><span class="mi">8804</span><span class="p">.</span><span class="mi">432</span><span class="p">..</span><span class="mi">8805</span><span class="p">.</span><span class="mi">236</span><span class="w"> </span><span class="k">rows</span>
+<span class="o">=</span><span class="mi">94117</span><span class="w"> </span><span class="n">loops</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">   </span><span class="n">Filter</span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">ss_quantity</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="p">(</span><span class="n">ss_quantity</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="p">(</span><span class="n">ss_list_price</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="s1">&#39;5&#39;</span><span class="p">::</span><span class="nb">numeric</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="p">(</span><span class="n">ss_lis</span>
+<span class="n">t_price</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="s1">&#39;15&#39;</span><span class="p">::</span><span class="nb">numeric</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+<span class="n">Planning</span><span class="w"> </span><span class="k">Time</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">.</span><span class="mi">475</span><span class="w"> </span><span class="n">ms</span>
+<span class="w">   </span><span class="p">(</span><span class="n">slice0</span><span class="p">)</span><span class="w">    </span><span class="n">Executor</span><span class="w"> </span><span class="n">memory</span><span class="p">:</span><span class="w"> </span><span class="mi">114</span><span class="n">K</span><span class="w"> </span><span class="n">bytes</span><span class="p">.</span>
+<span class="n">Memory</span><span class="w"> </span><span class="n">used</span><span class="p">:</span><span class="w">  </span><span class="mi">128000</span><span class="n">kB</span>
+<span class="n">Optimizer</span><span class="p">:</span><span class="w"> </span><span class="n">Postgres</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="n">optimizer</span>
+<span class="n">Execution</span><span class="w"> </span><span class="k">Time</span><span class="p">:</span><span class="w"> </span><span class="mi">8809</span><span class="p">.</span><span class="mi">841</span><span class="w"> </span><span class="n">ms</span>
+<span class="p">(</span><span class="mi">7</span><span class="w"> </span><span class="k">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When threaded execution is enabled and the <code class="docutils literal notranslate"><span class="pre">pool_threads</span></code> parameter is set to <code class="docutils literal notranslate"><span class="pre">8</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">gpadmin</span><span class="o">=#</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="n">vector</span><span class="p">.</span><span class="n">pool_threads</span><span class="o">=</span><span class="mi">8</span><span class="p">;</span>
+<span class="k">SET</span>
+<span class="n">gpadmin</span><span class="o">=#</span><span class="w"> </span><span class="k">explain</span><span class="w"> </span><span class="k">analyze</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="n">ss_quantity</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">store_sales</span><span class="w"> </span>
+<span class="k">where</span><span class="w"> </span><span class="n">ss_quantity</span><span class="w"> </span><span class="k">between</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">ss_list_price</span><span class="w"> </span><span class="k">between</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="mi">5</span><span class="o">+</span><span class="mi">10</span><span class="p">;</span>
+<span class="w">                                                               </span><span class="n">QUERY</span><span class="w"> </span><span class="n">PLAN</span><span class="w">                                 </span>
+
+<span class="c1">------------------------------------------------------------------------------------------------------------</span>
+<span class="c1">---------------------------------</span>
+</pre></div>
+</div>
+<p>After enabling threaded queries, the query time is significantly reduced.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="../work-with-transactions.html" class="btn btn-neutral float-right" title="Work with Transactions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="pgvector.html" class="btn btn-neutral float-left" title="Use pgvector for Vector Similarity Search" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

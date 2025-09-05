@@ -1,0 +1,381 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>WITH Queries (Common Table Expressions) - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../../highlight.css">
+        <link rel="stylesheet" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="with-queries-common-table-expressions"><a class="header" href="#with-queries-common-table-expressions">WITH Queries (Common Table Expressions)</a></h1>
+<p>The <code>WITH</code> clause provides a way to use subqueries or perform a data modifying operation in a larger <code>SELECT</code> query. You can also use the <code>WITH</code> clause in an <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code> command.</p>
+<p>See <a href="#topic_xyn_dgh_5gb">SELECT in a WITH Clause</a> for information about using <code>SELECT</code> in a <code>WITH</code> clause.</p>
+<p>See <a href="#topic_zg3_bgh_5gb">Data-Modifying Statements in a WITH clause</a>, for information about using <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code> in a <code>WITH</code> clause.</p>
+<blockquote>
+<p><strong>Note</strong> These are limitations for using a <code>WITH</code> clause.</p>
+</blockquote>
+<ul>
+<li>For a <code>SELECT</code> command that includes a <code>WITH</code> clause, the clause can contain at most a single clause that modifies table data (<code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code> command).</li>
+<li>For a data-modifying command (<code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code>) that includes a <code>WITH</code> clause, the clause can only contain a <code>SELECT</code> command, the <code>WITH</code> clause cannot contain a data-modifying command.</li>
+</ul>
+<p>By default, the <code>RECURSIVE</code> keyword for the <code>WITH</code> clause is enabled. <code>RECURSIVE</code> can be deactivated by setting the server configuration parameter <a href="../../../ref_guide/config_params/guc-list.html">gp_recursive_cte</a> to <code>false</code>.</p>
+<h2 id="select-in-a-with-clause"><a class="header" href="#select-in-a-with-clause"><a id="topic_xyn_dgh_5gb"></a>SELECT in a WITH Clause</a></h2>
+<p>The subqueries, which are often referred to as Common Table Expressions or CTEs, can be thought of as defining temporary tables that exist just for the query. These examples show the <code>WITH</code> clause being used with a <code>SELECT</code> command. The example <code>WITH</code> clauses can be used the same way with <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code>. In each case, the <code>WITH</code> clause effectively provides temporary tables that can be referred to in the main command.</p>
+<p>A <code>SELECT</code> command in the <code>WITH</code> clause is evaluated only once per execution of the parent query, even if it is referred to more than once by the parent query or sibling <code>WITH</code> clauses. Thus, expensive calculations that are needed in multiple places can be placed within a <code>WITH</code> clause to avoid redundant work. Another possible application is to prevent unwanted multiple evaluations of functions with side-effects. However, the other side of this coin is that the optimizer is less able to push restrictions from the parent query down into a <code>WITH</code> query than an ordinary sub-query. The <code>WITH</code> query will generally be evaluated as written, without suppression of rows that the parent query might discard afterwards. However, evaluation might stop early if the references to the query demand only a limited number of rows.</p>
+<p>One use of this feature is to break down complicated queries into simpler parts. This example query displays per-product sales totals in only the top sales regions:</p>
+<pre><code>WITH regional_sales AS (
+     SELECT region, SUM(amount) AS total_sales
+     FROM orders
+     GROUP BY region
+  ), top_regions AS (
+     SELECT region
+     FROM regional_sales
+     WHERE total_sales &gt; (SELECT SUM(total_sales)/10 FROM regional_sales)
+  )
+SELECT region,
+    product,
+    SUM(quantity) AS product_units,
+    SUM(amount) AS product_sales
+FROM orders
+WHERE region IN (SELECT region FROM top_regions)
+GROUP BY region, product;
+
+</code></pre>
+<p>The query could have been written without the <code>WITH</code> clause, but would have required two levels of nested sub-SELECTs. It is easier to follow with the <code>WITH</code> clause.</p>
+<p>When the optional <code>RECURSIVE</code> keyword is enabled, the <code>WITH</code> clause can accomplish things not otherwise possible in standard SQL. Using <code>RECURSIVE</code>, a query in the <code>WITH</code> clause can refer to its own output. This is a simple example that computes the sum of integers from 1 through 100:</p>
+<pre><code>WITH RECURSIVE t(n) AS (
+    VALUES (1)
+  UNION ALL
+    SELECT n+1 FROM t WHERE n &lt; 100
+)
+SELECT sum(n) FROM t;
+
+</code></pre>
+<p>The general form of a recursive <code>WITH</code> clause (a <code>WITH</code> clause that uses a the <code>RECURSIVE</code> keyword) is a <em>non-recursive term</em>, followed by a <code>UNION</code> (or <code>UNION ALL</code>), and then a <em>recursive term</em>, where only the <em>recursive term</em> can contain a reference to the query output.</p>
+<pre><code>&lt;non_recursive_term&gt; UNION [ ALL ] &lt;recursive_term&gt;
+</code></pre>
+<p>A recursive <code>WITH</code> query that contains a <code>UNION [ ALL ]</code> is run as follows:</p>
+<ol>
+<li>Evaluate the non-recursive term. For <code>UNION</code> (but not <code>UNION ALL</code>), discard duplicate rows. Include all remaining rows in the result of the recursive query, and also place them in a temporary <em>working table</em>.</li>
+<li>As long as the working table is not empty, repeat these steps:
+<ol>
+<li>Evaluate the recursive term, substituting the current contents of the working table for the recursive self-reference. For <code>UNION</code> (but not <code>UNION ALL</code>), discard duplicate rows and rows that duplicate any previous result row. Include all remaining rows in the result of the recursive query, and also place them in a temporary <em>intermediate table</em>.</li>
+<li>Replace the contents of the <em>working table</em> with the contents of the <em>intermediate table</em>, then empty the <em>intermediate table</em>.</li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong> Strictly speaking, the process is iteration not recursion, but <code>RECURSIVE</code> is the terminology chosen by the SQL standards committee.</p>
+</blockquote>
+<p>Recursive <code>WITH</code> queries are typically used to deal with hierarchical or tree-structured data. An example is this query to find all the direct and indirect sub-parts of a product, given only a table that shows immediate inclusions:</p>
+<pre><code>WITH RECURSIVE included_parts(sub_part, part, quantity) AS (
+    SELECT sub_part, part, quantity FROM parts WHERE part = 'our_product'
+  UNION ALL
+    SELECT p.sub_part, p.part, p.quantity
+    FROM included_parts pr, parts p
+    WHERE p.part = pr.sub_part
+  )
+SELECT sub_part, SUM(quantity) as total_quantity
+FROM included_parts
+GROUP BY sub_part ;
+
+</code></pre>
+<p>When working with recursive <code>WITH</code> queries, you must ensure that the recursive part of the query eventually returns no tuples, or else the query loops indefinitely. In the example that computes the sum of integers, the working table contains a single row in each step, and it takes on the values from 1 through 100 in successive steps. In the 100th step, there is no output because of the <code>WHERE</code> clause, and the query terminates.</p>
+<p>For some queries, using <code>UNION</code> instead of <code>UNION ALL</code> can ensure that the recursive part of the query eventually returns no tuples by discarding rows that duplicate previous output rows. However, often a cycle does not involve output rows that are complete duplicates: it might be sufficient to check just one or a few fields to see if the same point has been reached before. The standard method for handling such situations is to compute an array of the visited values. For example, consider the following query that searches a table graph using a link field:</p>
+<pre><code>WITH RECURSIVE search_graph(id, link, data, depth) AS (
+        SELECT g.id, g.link, g.data, 1
+        FROM graph g
+      UNION ALL
+        SELECT g.id, g.link, g.data, sg.depth + 1
+        FROM graph g, search_graph sg
+        WHERE g.id = sg.link
+)
+SELECT * FROM search_graph;
+
+</code></pre>
+<p>This query loops if the link relationships contain cycles. Because the query requires a <code>depth</code> output, changing <code>UNION ALL</code> to <code>UNION</code> does not eliminate the looping. Instead the query needs to recognize whether it has reached the same row again while following a particular path of links. This modified query adds two columns, <code>path</code> and <code>cycle</code>, to the loop-prone query:</p>
+<pre><code>WITH RECURSIVE search_graph(id, link, data, depth, path, cycle) AS (
+        SELECT g.id, g.link, g.data, 1,
+          ARRAY[g.id],
+          false
+        FROM graph g
+      UNION ALL
+        SELECT g.id, g.link, g.data, sg.depth + 1,
+          path || g.id,
+          g.id = ANY(path)
+        FROM graph g, search_graph sg
+        WHERE g.id = sg.link AND NOT cycle
+)
+SELECT * FROM search_graph;
+
+</code></pre>
+<p>Aside from detecting cycles, the array value of <code>path</code> is useful in its own right since it represents the path taken to reach any particular row.</p>
+<p>In the general case where more than one field needs to be checked to recognize a cycle, an array of rows can be used. For example, if we needed to compare fields <code>f1</code> and <code>f2</code>:</p>
+<pre><code>WITH RECURSIVE search_graph(id, link, data, depth, path, cycle) AS (
+        SELECT g.id, g.link, g.data, 1,
+          ARRAY[ROW(g.f1, g.f2)],
+          false
+        FROM graph g
+      UNION ALL
+        SELECT g.id, g.link, g.data, sg.depth + 1,
+          path || ROW(g.f1, g.f2),
+          ROW(g.f1, g.f2) = ANY(path)
+        FROM graph g, search_graph sg
+        WHERE g.id = sg.link AND NOT cycle
+)
+SELECT * FROM search_graph;
+
+</code></pre>
+<p><strong>Tip:</strong> Omit the <code>ROW()</code> syntax in the case where only one field needs to be checked to recognize a cycle. This uses a simple array rather than a composite-type array, gaining efficiency.</p>
+<p><strong>Tip:</strong> The recursive query evaluation algorithm produces its output in breadth-first search order. You can display the results in depth-first search order by making the outer query <code>ORDER BY</code> a path column constructed in this way.</p>
+<p>A helpful technique for testing a query when you are not certain if it might loop indefinitely is to place a <code>LIMIT</code> in the parent query. For example, this query would loop forever without the <code>LIMIT</code> clause:</p>
+<pre><code>WITH RECURSIVE t(n) AS (
+    SELECT 1
+  UNION ALL
+    SELECT n+1 FROM t
+)
+SELECT n FROM t LIMIT 100;
+</code></pre>
+<p>The technique works because the recursive <code>WITH</code> implementation evaluates only as many rows of a <code>WITH</code> query as are actually fetched by the parent query. Using this technique in production is not recommended, because other systems might work differently. Also, the technique might not work if the outer query sorts the recursive <code>WITH</code> results or join the results to another table.</p>
+<h2 id="data-modifying-statements-in-a-with-clause"><a class="header" href="#data-modifying-statements-in-a-with-clause"><a id="topic_zg3_bgh_5gb"></a>Data-Modifying Statements in a WITH clause</a></h2>
+<p>For a <code>SELECT</code> command, you can use the data-modifying commands <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code> in a <code>WITH</code> clause. This allows you to perform several different operations in the same query.</p>
+<p>A data-modifying statement in a <code>WITH</code> clause is run exactly once, and always to completion, independently of whether the primary query reads all (or indeed any) of the output. This is different from the rule when using <code>SELECT</code> in a <code>WITH</code> clause, the execution of a <code>SELECT</code> continues only as long as the primary query demands its output.</p>
+<p>This simple CTE query deletes rows from <code>products</code>. The <code>DELETE</code> in the <code>WITH</code> clause deletes the specified rows from products, returning their contents by means of its <code>RETURNING</code> clause.</p>
+<pre><code>WITH deleted_rows AS (
+    DELETE FROM products
+    WHERE
+        "date" &gt;= '2010-10-01' AND
+        "date" &lt; '2010-11-01'
+    RETURNING *
+)
+SELECT * FROM deleted_rows;
+</code></pre>
+<p>Data-modifying statements in a <code>WITH</code> clause must have <code>RETURNING</code> clauses, as shown in the previous example. It is the output of the <code>RETURNING</code> clause, not the target table of the data-modifying statement, that forms the temporary table that can be referred to by the rest of the query. If a data-modifying statement in a <code>WITH</code> lacks a <code>RETURNING</code> clause, an error is returned.</p>
+<p>If the optional <code>RECURSIVE</code> keyword is enabled, recursive self-references in data-modifying statements are not allowed. In some cases it is possible to work around this limitation by referring to the output of a recursive <code>WITH</code>. For example, this query would remove all direct and indirect subparts of a product.</p>
+<pre><code>WITH RECURSIVE included_parts(sub_part, part) AS (
+    SELECT sub_part, part FROM parts WHERE part = 'our_product'
+  UNION ALL
+    SELECT p.sub_part, p.part
+    FROM included_parts pr, parts p
+    WHERE p.part = pr.sub_part
+  )
+DELETE FROM parts
+  WHERE part IN (SELECT part FROM included_parts);
+</code></pre>
+<p>The sub-statements in a <code>WITH</code> clause are run concurrently with each other and with the main query. Therefore, when using a data-modifying statement in a <code>WITH</code>, the statement is run in a <em>snapshot</em>. The effects of the statement are not visible on the target tables. The <code>RETURNING</code> data is the only way to communicate changes between different <code>WITH</code> sub-statements and the main query. In this example, the outer <code>SELECT</code> returns the original prices before the action of the <code>UPDATE</code> in the <code>WITH</code> clause.</p>
+<pre><code>WITH t AS (
+    UPDATE products SET price = price * 1.05
+    RETURNING *
+)
+SELECT * FROM products;
+</code></pre>
+<p>In this example the outer <code>SELECT</code> returns the updated data.</p>
+<pre><code>WITH t AS (
+    UPDATE products SET price = price * 1.05
+    RETURNING *
+)
+SELECT * FROM t;
+</code></pre>
+<p>Updating the same row twice in a single statement is not supported. The effects of such a statement will not be predictable. Only one of the modifications takes place, but it is not easy (and sometimes not possible) to predict which modification occurs.</p>
+<p>Any table used as the target of a data-modifying statement in a <code>WITH</code> clause must not have a conditional rule, or an <code>ALSO</code> rule, or an <code>INSTEAD</code> rule that expands to multiple statements.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../admin_guide/query/topics/defining-queries.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../admin_guide/query/topics/functions-operators.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../admin_guide/query/topics/defining-queries.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../admin_guide/query/topics/functions-operators.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

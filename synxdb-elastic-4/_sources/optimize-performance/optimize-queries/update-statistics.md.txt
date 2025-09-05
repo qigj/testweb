@@ -1,0 +1,68 @@
+# Update Statistics
+
+Accurate statistics are crucial for good query performance. Using the `ANALYZE` statement to update statistics allows the query optimizer to generate optimal query plans. When {{ product_name }} analyzes a table, the relevant data information is stored in the system catalog tables. If this stored information becomes outdated, the query optimizer may generate inefficient query plans.
+
+## Check whether statistics are updated
+
+To check whether a table's statistics are up-to-date, you can use the `pg_stat_all_tables` system view. The `last_analyze` column in this view shows the last time the table was manually analyzed, while the `last_autoanalyze` column shows the last time it was auto-analyzed. The timestamps in both columns are updated when an `ANALYZE` statement is executed.
+
+For example, to check whether the statistics for the `test_analyze` table are updated, you can execute the following query:
+
+```sql
+SELECT schemaname, relname, last_analyze, last_autoanalyze 
+FROM pg_stat_all_tables 
+WHERE relname = 'test_analyze';
+```
+
+## Selectively generate statistics
+
+Executing `ANALYZE` without any arguments updates the statistics for all tables in the database. This is a very time-consuming process and is not recommended. It is advisable to selectively run `ANALYZE` on tables when data has changed, or to use the `analyzedb` utility.
+
+Running `ANALYZE` on a large table can take a long time. If you cannot run `ANALYZE` on all columns of a large table, you can generate statistics for specific columns only using `ANALYZE table(column, ...)`. Make sure to include columns that are used in joins, `WHERE` clauses, `SORT` clauses, `GROUP BY` clauses, or `HAVING` clauses.
+
+For partitioned tables, you can run `ANALYZE` only on the partitions that have changed, for example, when a new partition is added. Note that for a partitioned table, you can run `ANALYZE` on the root partition table or on a leaf partition (the file that actually stores the data and statistics). In {{ product_name }}, running `ANALYZE` on a single partition of a partitioned table also updates the statistics of the root table, which means collecting statistics on one partition can affect the optimizer statistics for the entire partitioned table. You can use the `pg_partition_tree()` function to find the names of the leaf partitions.
+
+```sql
+SELECT * FROM pg_partition_tree( 'parent_table' );
+```
+
+## Improve statistics quality
+
+There is a trade-off between the time it takes to generate statistics and the quality or accuracy of those statistics. You need to find a balance.
+
+To analyze large tables in a reasonable amount of time, `ANALYZE` takes a random sample of the table contents rather than checking every row. To increase the number of sample values for all columns on a table, you can adjust the `default_statistics_target` configuration parameter. The target value for this parameter ranges from `1` to `10000`, with a default value of `100`.
+
+By default, the `default_statistics_target` parameter applies to all columns and specifies how many values are stored in the list of most common values. A larger target value can improve the quality of the query planner's estimates, especially for columns with irregular data patterns.
+
+You can set `default_statistics_target` at the session level using the `SET default_statistics_target` statement. To set the default value for this parameter, you need to set it in the `postgresql.conf` configuration file and then reload the file.
+
+## When to run ANALYZE
+
+Run `ANALYZE` in the following situations:
+
+- After loading data
+- After performing `INSERT`, `UPDATE`, and `DELETE` operations that significantly change the underlying data
+
+`ANALYZE` only requires a read lock on the table, so it can be run in parallel with other database operations. However, for performance reasons, it is not recommended to run `ANALYZE` at the same time as loading, `INSERT`, `UPDATE`, and `DELETE` operations.
+
+:::{note}
+{{ product_name }} has optimized the behavior of running `ANALYZE` on partitioned tables. When statistics are explicitly collected on a leaf partition (e.g., `ANALYZE sales_1_prt_p2023`), the system no longer automatically updates the statistics of the root table or other partitions. Only when `ANALYZE` is explicitly run on the root table (e.g., `ANALYZE sales`) will the statistics for the entire table, including all sub-partitions, be updated.
+
+This behavioral improvement provides greater control over statistics management and avoids unnecessary statistical refreshes. In practice, it is recommended to selectively analyze specific partitions or the entire table based on data changes.
+:::
+
+## Configure automatic statistics collection
+
+The `gp_autostats_mode` configuration parameter, in conjunction with `gp_autostats_on_change_threshold`, determines when to trigger an automatic analysis operation. When automatic statistics collection is triggered, the optimizer adds an `ANALYZE` step to the query.
+
+By default, the value of `gp_autostats_mode` is `none`. If this parameter is set to `on_no_stats`, statistics collection will be triggered for `CREATE TABLE AS SELECT`, `INSERT`, or `COPY` operations on tables that have no existing statistics, when performed by the table owner.
+
+When `gp_autostats_mode` is set to `on_change`, statistics are collected only when the number of affected rows exceeds the threshold set by `gp_autostats_on_change_threshold`. The default value for this threshold is `2147483647`. Automatic statistics collection is triggered when the number of affected rows in `CREATE TABLE AS SELECT`, `UPDATE`, `DELETE`, `INSERT`, and `COPY` operations, performed by the table owner, exceeds this threshold.
+
+In addition, if the `gp_autostats_allow_nonowner` server configuration parameter is set to `true`, {{ product_name }} will perform automatic statistics collection on a table in the following case:
+
+- When `gp_autostats_mode` is set to `on_no_stats`, and a non-owner user is the first to perform an `INSERT` or `COPY` operation on the table.
+
+Setting `gp_autostats_mode` to `none` disables automatic statistics collection.
+
+For partitioned tables, inserting data into the top-level parent table does not trigger automatic statistics collection. However, if data is inserted directly into a leaf table of the partitioned table (where the data is actually stored), automatic statistics collection will be triggered.

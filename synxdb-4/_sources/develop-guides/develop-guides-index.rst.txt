@@ -1,0 +1,7 @@
+Developer Guides
+***********************
+
+.. toctree::
+   :maxdepth: 2
+
+   develop-extensions-using-rust

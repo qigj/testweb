@@ -1,0 +1,430 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Reading and Writing Parquet Data - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="reading-and-writing-hdfs-parquet-data"><a class="header" href="#reading-and-writing-hdfs-parquet-data">Reading and Writing HDFS Parquet Data</a></h1>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<p>Use the PXF HDFS connector to read and write Parquet-format data. This section describes how to read and write HDFS files that are stored in Parquet format, including how to create, query, and insert into external tables that reference files in the HDFS data store.</p>
+<p>PXF supports reading or writing Parquet files compressed with these codecs: <code>snappy</code>, <code>gzip</code>, and <code>lzo</code>.</p>
+<p>PXF currently supports reading and writing primitive Parquet data types only.</p>
+<h2 id="prerequisites"><a class="header" href="#prerequisites"><a id="prereq"></a>Prerequisites</a></h2>
+<p>Ensure that you have met the PXF Hadoop <a href="access_hdfs.html#hadoop_prereq">Prerequisites</a> before you attempt to read data from or write data to HDFS.</p>
+<h2 id="data-type-mapping"><a class="header" href="#data-type-mapping"><a id="datatype_map"></a>Data Type Mapping</a></h2>
+<p>To read and write Parquet primitive data types in SynxDB, map Parquet data values to SynxDB columns of the same type.</p>
+<p>Parquet supports a small set of primitive data types, and uses metadata annotations to extend the data types that it supports. These annotations specify how to interpret the primitive type. For example, Parquet stores both <code>INTEGER</code> and <code>DATE</code> types as the <code>INT32</code> primitive type. An annotation identifies the original type as a <code>DATE</code>.</p>
+<h3 id="read-mapping"><a class="header" href="#read-mapping"><a id="datatype_map_read "></a>Read Mapping</a></h3>
+<p><a id="p2g_type_mapping_table"></a></p>
+<p>PXF uses the following data type mapping when reading Parquet data:</p>
+<div class="table-wrapper"><table><thead><tr><th>Parquet Physical Type</th><th>Parquet Logical Type</th><th>PXF/SynxDB Data Type</th></tr></thead><tbody>
+<tr><td>boolean</td><td>–</td><td>Boolean</td></tr>
+<tr><td>binary (byte_array)</td><td>–</td><td>Bytea</td></tr>
+<tr><td>binary (byte_array)</td><td>Date</td><td>Date</td></tr>
+<tr><td>binary (byte_array)</td><td>Timestamp_millis</td><td>Timestamp</td></tr>
+<tr><td>binary (byte_array)</td><td>UTF8</td><td>Text</td></tr>
+<tr><td>double</td><td>–</td><td>Float8</td></tr>
+<tr><td>fixed_len_byte_array</td><td>Decimal</td><td>Numeric</td></tr>
+<tr><td>float</td><td>–</td><td>Real</td></tr>
+<tr><td>int32</td><td>int_8</td><td>Smallint</td></tr>
+<tr><td>int32</td><td>Date</td><td>Date</td></tr>
+<tr><td>int32</td><td>Decimal</td><td>Numeric</td></tr>
+<tr><td>int32</td><td>–</td><td>Integer</td></tr>
+<tr><td>int64</td><td>Decimal</td><td>Numeric</td></tr>
+<tr><td>int64</td><td>–</td><td>Bigint</td></tr>
+<tr><td>int96</td><td>–</td><td>Timestamp</td></tr>
+</tbody></table>
+</div>
+<p><strong>Note</strong>: PXF supports filter predicate pushdown on all parquet data types listed above, <em>except</em> the <code>fixed_len_byte_array</code> and <code>int96</code> types.</p>
+<p>PXF can read a Parquet <code>LIST</code> nested type when it represents a one-dimensional array of certain Parquet types. The supported mappings follow:</p>
+<div class="table-wrapper"><table><thead><tr><th>Parquet Data Type</th><th>PXF/SynxDB Data Type</th></tr></thead><tbody>
+<tr><td>list of &lt;boolean&gt;</td><td>Boolean[]</td></tr>
+<tr><td>list of &lt;binary&gt;</td><td>Bytea[]</td></tr>
+<tr><td>list of &lt;binary&gt; (Date)</td><td>Date[]</td></tr>
+<tr><td>list of &lt;binary&gt; (Timestamp_millis)</td><td>Timestamp[]</td></tr>
+<tr><td>list of &lt;binary&gt; (UTF8)</td><td>Text[]</td></tr>
+<tr><td>list of &lt;double&gt;</td><td>Float8[]</td></tr>
+<tr><td>list of &lt;fixed_len_byte_array&gt; (Decimal)</td><td>Numeric[]</td></tr>
+<tr><td>list of &lt;float&gt;</td><td>Real[]</td></tr>
+<tr><td>list of &lt;int32&gt; (int_8)</td><td>Smallint[]</td></tr>
+<tr><td>list of &lt;int32&gt; (Date)</td><td>Date[]</td></tr>
+<tr><td>list of &lt;int32&gt; (Decimal)</td><td>Numeric[]</td></tr>
+<tr><td>list of &lt;int32&gt;</td><td>Integer[]</td></tr>
+<tr><td>list of &lt;int64&gt; (Decimal)</td><td>Numeric[]</td></tr>
+<tr><td>list of &lt;int64&gt;</td><td>Bigint[]</td></tr>
+<tr><td>list of &lt;int96&gt;</td><td>Timestamp[]</td></tr>
+</tbody></table>
+</div>
+<h3 id="write-mapping"><a class="header" href="#write-mapping"><a id="datatype_map_Write "></a>Write Mapping</a></h3>
+<p>PXF uses the following data type mapping when writing Parquet data:</p>
+<div class="table-wrapper"><table><thead><tr><th>PXF/SynxDB Data Type</th><th>Parquet Physical Type</th><th>Parquet Logical Type</th></tr></thead><tbody>
+<tr><td>Bigint</td><td>int64</td><td>–</td></tr>
+<tr><td>Boolean</td><td>boolean</td><td>–</td></tr>
+<tr><td>Bpchar<sup>1</sup></td><td>binary (byte_array)</td><td>UTF8</td></tr>
+<tr><td>Bytea</td><td>binary (byte_array)</td><td>–</td></tr>
+<tr><td>Date</td><td>int32</td><td>Date</td></tr>
+<tr><td>Float8</td><td>double</td><td>–</td></tr>
+<tr><td>Integer</td><td>int32</td><td>–</td></tr>
+<tr><td>Numeric/Decimal</td><td>fixed_len_byte_array</td><td>Decimal</td></tr>
+<tr><td>Real</td><td>float</td><td>–</td></tr>
+<tr><td>SmallInt</td><td>int32</td><td>int_8</td></tr>
+<tr><td>Text</td><td>binary (byte_array)</td><td>UTF8</td></tr>
+<tr><td>Timestamp<sup>2</sup></td><td>int96</td><td>–</td></tr>
+<tr><td>Timestamptz<sup>3</sup></td><td>int96</td><td>–</td></tr>
+<tr><td>Varchar</td><td>binary (byte_array)</td><td>UTF8</td></tr>
+<tr><td>OTHERS</td><td>UNSUPPORTED</td><td>–</td></tr>
+</tbody></table>
+</div>
+<p></br><sup>1</sup> Because Parquet does not save the field length, a Bpchar that PXF writes to Parquet will be a text of undefined length.
+</br><sup>2</sup> PXF localizes a <code>Timestamp</code> to the current system time zone and converts it to universal time (UTC) before finally converting to <code>int96</code>.
+</br><sup>3</sup> PXF converts a <code>Timestamptz</code> to a UTC <code>timestamp</code> and then converts to <code>int96</code>. PXF loses the time zone information during this conversion.</p>
+<p>PXF can write a one-dimensional <code>LIST</code> of certain Parquet data types. The supported mappings follow:</p>
+<div class="table-wrapper"><table><thead><tr><th>PXF/SynxDB Data Type</th><th>Parquet Data Type</th></tr></thead><tbody>
+<tr><td>Bigint[]</td><td>list of &lt;int64&gt;</td></tr>
+<tr><td>Boolean[]</td><td>list of &lt;boolean&gt;</td></tr>
+<tr><td>Bpchar[]<sup>1</sup></td><td>list of &lt;binary&gt; (UTF8)</td></tr>
+<tr><td>Bytea[]</td><td>list of &lt;binary&gt;</td></tr>
+<tr><td>Date[]</td><td>list of &lt;int32&gt; (Date)</td></tr>
+<tr><td>Float8[]</td><td>list of &lt;double&gt;</td></tr>
+<tr><td>Integer[]</td><td>list of &lt;int32&gt;</td></tr>
+<tr><td>Numeric[]/Decimal[]</td><td>list of &lt;fixed_len_byte_array&gt; (Decimal)</td></tr>
+<tr><td>Real[]</td><td>list of &lt;float&gt;</td></tr>
+<tr><td>SmallInt[]</td><td>list of &lt;int32&gt; (int_8)</td></tr>
+<tr><td>Text[]</td><td>list of &lt;binary&gt; (UTF8)</td></tr>
+<tr><td>Timestamp[]<sup>2</sup></td><td>list of &lt;int96&gt;</td></tr>
+<tr><td>Timestamptz[]<sup>3</sup></td><td>list of &lt;int96&gt;</td></tr>
+<tr><td>Varchar[]</td><td>list of &lt;binary&gt; (UTF8)</td></tr>
+<tr><td>OTHERS</td><td>UNSUPPORTED</td></tr>
+</tbody></table>
+</div>
+<h3 id="about-parquet-schemas-and-data"><a class="header" href="#about-parquet-schemas-and-data"><a id="schema "></a>About Parquet Schemas and Data</a></h3>
+<p>Parquet is a columnar storage format. A Parquet data file contains a compact binary representation of the data. The <em>schema</em> defines the structure of the data, and is composed of the same primitive and complex types identified in the data type mapping section above.</p>
+<p>A Parquet data file includes an embedded schema. You can choose to provide the schema that PXF uses to write the data to HDFS via the <code>SCHEMA</code> custom option in the <code>CREATE WRITABLE EXTERNAL TABLE</code> <code>LOCATION</code> clause (described below):</p>
+<div class="table-wrapper"><table><thead><tr><th>External Table Type</th><th><code>SCHEMA</code> Specified?</th><th>Behaviour</th></tr></thead><tbody>
+<tr><td>writable</td><td>yes</td><td>PXF uses the specified schema.</td></tr>
+<tr><td>writable</td><td>no</td><td>PXF creates the Parquet schema based on the external table definition.</td></tr>
+</tbody></table>
+</div>
+<p>When you provide the Parquet schema file to PXF, you must specify the absolute path to the file, and the file must reside on the Hadoop file system.</p>
+<h2 id="creating-the-external-table"><a class="header" href="#creating-the-external-table"><a id="profile_cet"></a>Creating the External Table</a></h2>
+<p>The PXF HDFS connector <code>hdfs:parquet</code> profile supports reading and writing HDFS data in Parquet-format. When you insert records into a writable external table, the block(s) of data that you insert are written to one or more files in the directory that you specified.</p>
+<p>Use the following syntax to create a SynxDB external table that references an HDFS directory:</p>
+<pre><code class="language-sql">CREATE [WRITABLE] EXTERNAL TABLE &lt;table_name&gt;
+    ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table&gt; )
+LOCATION ('pxf://&lt;path-to-hdfs-dir&gt;
+    ?PROFILE=hdfs:parquet[&amp;SERVER=&lt;server_name&gt;][&amp;&lt;custom-option&gt;=&lt;value&gt;[...]]')
+FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import'|'pxfwritable_export')
+[DISTRIBUTED BY (&lt;column_name&gt; [, ... ] ) | DISTRIBUTED RANDOMLY];
+</code></pre>
+<p>The specific keywords and values used in the SynxDB <a href="../ref_guide/sql_commands/CREATE_EXTERNAL_TABLE.html">CREATE EXTERNAL TABLE</a> command are described in the table below.</p>
+<div class="table-wrapper"><table><thead><tr><th>Keyword</th><th>Value</th></tr></thead><tbody>
+<tr><td>&lt;path‑to‑hdfs‑file&gt;</td><td>The path to the directory in the HDFS data store. When the <code>&lt;server_name&gt;</code> configuration includes a <a href="cfg_server.html#pxf-fs-basepath"><code>pxf.fs.basePath</code></a> property setting, PXF considers &lt;path‑to‑hdfs‑file&gt; to be relative to the base path specified. Otherwise, PXF considers it to be an absolute path. &lt;path‑to‑hdfs‑file&gt; must not specify a relative path nor include the dollar sign (<code>$</code>) character.</td></tr>
+<tr><td>PROFILE</td><td>The <code>PROFILE</code> keyword must specify <code>hdfs:parquet</code>.</td></tr>
+<tr><td>SERVER=&lt;server_name&gt;</td><td>The named server configuration that PXF uses to access the data. PXF uses the <code>default</code> server if not specified.</td></tr>
+<tr><td>&lt;custom‑option&gt;</td><td>&lt;custom-option&gt;s are described below.</td></tr>
+<tr><td>FORMAT ‘CUSTOM’</td><td>Use <code>FORMAT</code> ‘<code>CUSTOM</code>’ with <code>(FORMATTER='pxfwritable_export')</code> (write) or <code>(FORMATTER='pxfwritable_import')</code> (read).</td></tr>
+<tr><td>DISTRIBUTED BY</td><td>If you want to load data from an existing SynxDB table into the writable external table, consider specifying the same distribution policy or <code>&lt;column_name&gt;</code> on both tables. Doing so will avoid extra motion of data between segments on the load operation.</td></tr>
+</tbody></table>
+</div>
+<p><a id="customopts"></a>
+The PXF <code>hdfs:parquet</code> profile supports the following read option. You specify this option in the <code>CREATE EXTERNAL TABLE</code> <code>LOCATION</code> clause:</p>
+<div class="table-wrapper"><table><thead><tr><th>Read Option</th><th>Value Description</th></tr></thead><tbody>
+<tr><td>IGNORE_MISSING_PATH</td><td>A Boolean value that specifies the action to take when &lt;path-to-hdfs-file&gt; is missing or invalid. The default value is <code>false</code>, PXF returns an error in this situation. When the value is <code>true</code>, PXF ignores missing path errors and returns an empty fragment.</td></tr>
+</tbody></table>
+</div>
+<p>The PXF <code>hdfs:parquet</code> profile supports encoding- and compression-related write options. You specify these write options in the <code>CREATE WRITABLE EXTERNAL TABLE</code> <code>LOCATION</code> clause. The <code>hdfs:parquet</code> profile supports the following custom write options:</p>
+<div class="table-wrapper"><table><thead><tr><th>Write Option</th><th>Value Description</th></tr></thead><tbody>
+<tr><td>COMPRESSION_CODEC</td><td>The compression codec alias. Supported compression codecs for writing Parquet data include: <code>snappy</code>, <code>gzip</code>, <code>lzo</code>, and <code>uncompressed</code> . If this option is not provided, PXF compresses the data using <code>snappy</code> compression.</td></tr>
+<tr><td>ROWGROUP_SIZE</td><td>A Parquet file consists of one or more row groups, a logical partitioning of the data into rows. <code>ROWGROUP_SIZE</code> identifies the size (in bytes) of the row group. The default row group size is <code>8 * 1024 * 1024</code> bytes.</td></tr>
+<tr><td>PAGE_SIZE</td><td>A row group consists of column chunks that are divided up into pages. <code>PAGE_SIZE</code> is the size (in bytes) of such a page. The default page size is <code>1 * 1024 * 1024</code> bytes.</td></tr>
+<tr><td>ENABLE_DICTIONARY</td><td>A boolean value that specifies whether or not to enable dictionary encoding. The default value is <code>true</code>; dictionary encoding is enabled when PXF writes Parquet files.</td></tr>
+<tr><td>DICTIONARY_PAGE_SIZE</td><td>When dictionary encoding is enabled, there is a single dictionary page per column, per row group. <code>DICTIONARY_PAGE_SIZE</code> is similar to <code>PAGE_SIZE</code>, but for the dictionary. The default dictionary page size is <code>1 * 1024 * 1024</code> bytes.</td></tr>
+<tr><td>PARQUET_VERSION</td><td>The Parquet version; PXF supports the values <code>v1</code> and <code>v2</code> for this option. The default Parquet version is <code>v1</code>.</td></tr>
+<tr><td>SCHEMA</td><td>The absolute path to the Parquet schema file on the SynxDB host or on HDFS.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Note</strong>: You must explicitly specify <code>uncompressed</code> if you do not want PXF to compress the data.</p>
+<p>Parquet files that you write to HDFS with PXF have the following naming format: <code>&lt;file&gt;.&lt;compress_extension&gt;.parquet</code>, for example <code>1547061635-0000004417_0.gz.parquet</code>.</p>
+<h2 id="example"><a class="header" href="#example"><a id="parquet_write"></a> Example</a></h2>
+<p>This example utilizes the data schema introduced in <a href="hdfs_text.html#profile_text_query">Example: Reading Text Data on HDFS</a> and adds a new column, <code>item_quantity_per_order</code>, an array with length equal to <code>number_of_orders</code>, that identifies the number of items in each order.</p>
+<div class="table-wrapper"><table><thead><tr><th>Column Name</th><th>Data Type</th></tr></thead><tbody>
+<tr><td>location</td><td>text</td></tr>
+<tr><td>month</td><td>text</td></tr>
+<tr><td>number_of_orders</td><td>int</td></tr>
+<tr><td>item_quantity_per_order</td><td>int[]</td></tr>
+<tr><td>total_sales</td><td>float8</td></tr>
+</tbody></table>
+</div>
+<p>In this example, you create a Parquet-format writable external table that uses the default PXF server to reference Parquet-format data in HDFS, insert some data into the table, and then create a readable external table to read the data.</p>
+<ol>
+<li>
+<p>Use the <code>hdfs:parquet</code> profile to create a writable external table. For example:</p>
+<pre><code class="language-sql">postgres=# CREATE WRITABLE EXTERNAL TABLE pxf_tbl_parquet (location text, month text, number_of_orders int, item_quantity_per_order int[], total_sales double precision)
+    LOCATION ('pxf://data/pxf_examples/pxf_parquet?PROFILE=hdfs:parquet')
+  FORMAT 'CUSTOM' (FORMATTER='pxfwritable_export');
+</code></pre>
+</li>
+<li>
+<p>Write a few records to the <code>pxf_parquet</code> HDFS directory by inserting directly into the <code>pxf_tbl_parquet</code> table. For example:</p>
+<pre><code class="language-sql">postgres=# INSERT INTO pxf_tbl_parquet VALUES ( 'Frankfurt', 'Mar', 3, '{1,11,111}', 3956.98 );
+postgres=# INSERT INTO pxf_tbl_parquet VALUES ( 'Cleveland', 'Oct', 2, '{3333,7777}', 96645.37 );
+</code></pre>
+</li>
+<li>
+<p>Recall that SynxDB does not support directly querying a writable external table. To read the data in <code>pxf_parquet</code>, create a readable external SynxDB referencing this HDFS directory:</p>
+<pre><code class="language-sql">postgres=# CREATE EXTERNAL TABLE read_pxf_parquet(location text, month text, number_of_orders int, item_quantity_per_order int[], total_sales double precision)
+    LOCATION ('pxf://data/pxf_examples/pxf_parquet?PROFILE=hdfs:parquet')
+    FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import');
+</code></pre>
+</li>
+<li>
+<p>Query the readable external table <code>read_pxf_parquet</code>:</p>
+<pre><code class="language-sql">postgres=# SELECT * FROM read_pxf_parquet ORDER BY total_sales;
+</code></pre>
+<pre><code class="language-pre"> location  | month | number_of_orders | item_quantity_per_order | total_sales
+-----------+-------+------------------+-------------------------+-------------
+ Frankfurt | Mar   |              777 | {1,11,111}              |     3956.98
+ Cleveland | Oct   |             3812 | {3333,7777}             |    96645.4
+(2 rows)
+</code></pre>
+</li>
+</ol>
+<h2 id="understanding-overflow-conditions-when-writing-numeric-data"><a class="header" href="#understanding-overflow-conditions-when-writing-numeric-data"><a id="overflow"></a>Understanding Overflow Conditions When Writing Numeric Data</a></h2>
+<p>PXF uses the <code>HiveDecimal</code> class to write numeric Parquet data. <code>HiveDecimal</code> limits both the precision and the scale of a numeric type to a maximum of 38.</p>
+<p>When you define a <code>NUMERIC</code> column in an external table without specifying a precision or scale, PXF internally maps the column to a <code>DECIMAL(38, 18)</code>.</p>
+<p>PXF handles the following precision overflow conditions:</p>
+<ul>
+<li>You define a <code>NUMERIC</code> column in the external table, and the integer digit count of a value exceeds the maximum supported precision of 38. For example, <code>1234567890123456789012345678901234567890.12345</code>, which has an integer digit count of 45.</li>
+<li>You define a <code>NUMERIC(&lt;precision&gt;)</code> column with a <code>&lt;precision&gt;</code> greater than 38. For example, <code>NUMERIC(55)</code>.</li>
+<li>You define a <code>NUMERIC</code> column in the external table, and the integer digit count of a value is greater than 20 (38-18). For example, <code>123456789012345678901234567890.12345</code>, which has an integer digit count of 30.</li>
+</ul>
+<p>If you define a <code>NUMERIC(&lt;precision&gt;, &lt;scale&gt;)</code> column and the integer digit count of a value is greater than <code>&lt;precision&gt; - &lt;scale&gt;</code>, PXF returns an error. For example, you define a <code>NUMERIC(20,4)</code> column and the value is <code>12345678901234567.12</code>, which has an integer digit count of 19, which is greater than 20-4=16.</p>
+<p>PXF can take one of three actions when it detects an overflow while writing numeric data to a Parquet file: round the value (the default), return an error, or ignore the overflow. The <code>pxf.parquet.write.decimal.overflow</code> property in the <code>pxf-site.xml</code> server configuration governs PXF’s action in this circumstance; valid values for this property follow:</p>
+<div class="table-wrapper"><table><thead><tr><th>Value</th><th>PXF Action</th></tr></thead><tbody>
+<tr><td><code>round</code></td><td>When PXF encounters an overflow, it attempts to round the value to meet both precision and scale requirements before writing. PXF reports an error if rounding fails. This may potentially leave an incomplete data set in the external system.  <code>round</code> is the default.</td></tr>
+<tr><td><code>error</code></td><td>PXF reports an error when it encounters an overflow, and the transaction fails.</td></tr>
+<tr><td><code>ignore</code></td><td>PXF attempts to round the value to meet both precision and scale requirements; otherwise PXF writes a NULL value. (This was PXF’s behavior prior to version 6.6.0.)</td></tr>
+</tbody></table>
+</div>
+<p>PXF logs a warning when it detects an overflow and the <code>pxf.parquet.write.decimal.overflow</code> property is set to <code>ignore</code>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pxf/hdfs_orc.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pxf/hdfs_seqfile.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pxf/hdfs_orc.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pxf/hdfs_seqfile.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

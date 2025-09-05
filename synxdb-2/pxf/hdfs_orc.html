@@ -1,0 +1,477 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Reading and Writing ORC Data - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="reading-and-writing-hdfs-orc-data"><a class="header" href="#reading-and-writing-hdfs-orc-data">Reading and Writing HDFS ORC Data</a></h1>
+<p>Use the PXF HDFS connector <code>hdfs:orc</code> profile to read and write ORC-formatted data. This section describes how to read and write HDFS files that are stored in ORC format, including how to create, query, and insert into external tables that references files in the HDFS data store.</p>
+<p>When you use the <code>hdfs:orc</code> profile to read ORC-formatted data, the connector:</p>
+<ul>
+<li>Reads 1024 rows of data at a time.</li>
+<li>Supports column projection.</li>
+<li>Supports filter pushdown based on file-level, stripe-level, and row-level ORC statistics.</li>
+<li>Supports the compound list type for a subset of ORC scalar types.</li>
+<li>Does not support the map, union, or struct compound types.</li>
+</ul>
+<p>When you use the <code>hdfs:orc</code> profile to write ORC-formatted data, the connector:</p>
+<ul>
+<li>Supports writing the same subset of primitives that are supported for reading ORC-formatted data.</li>
+<li>Supports writing compound list types only for one-dimensional arrays. User-provided schemas are not supported.</li>
+<li>Does not support the map, union, or struct compound types.</li>
+</ul>
+<p>The <code>hdfs:orc</code> profile currently supports reading and writing scalar data types and lists of certain scalar types from ORC files. If the data resides in a Hive table, and you want to read complex types or the Hive table is partitioned, use the <a href="hive_pxf.html#hive_orc"><code>hive:orc</code></a> profile.</p>
+<h2 id="prerequisites"><a class="header" href="#prerequisites"><a id="prereq"></a>Prerequisites</a></h2>
+<p>Ensure that you have met the PXF Hadoop <a href="access_hdfs.html#hadoop_prereq">Prerequisites</a> before you attempt to read data from or write data to HDFS.</p>
+<h2 id="about-the-orc-data-format"><a class="header" href="#about-the-orc-data-format"><a id="about_orc"></a>About the ORC Data Format</a></h2>
+<p>The Optimized Row Columnar (ORC) file format is a columnar file format that provides a highly efficient way to both store and access HDFS data. ORC format offers improvements over text and RCFile formats in terms of both compression and performance. PXF supports ORC file versions v0 and v1.</p>
+<p>ORC is type-aware and specifically designed for Hadoop workloads. ORC files store both the type of, and encoding information for, the data in the file. All columns within a single group of row data (also known as stripe) are stored together on disk in ORC format files. The columnar nature of the ORC format type enables read projection, helping avoid accessing unnecessary columns during a query.</p>
+<p>ORC also supports predicate pushdown with built-in indexes at the file, stripe, and row levels, moving the filter operation to the data loading phase.</p>
+<p>Refer to the <a href="https://orc.apache.org/docs/">Apache orc</a> documentation for detailed information about the ORC file format.</p>
+<h2 id="data-type-mapping"><a class="header" href="#data-type-mapping"><a id="datatype_map"></a>Data Type Mapping</a></h2>
+<p>To read and write ORC primitive data types in SynxDB, map ORC data values to SynxDB columns of the same type.</p>
+<h3 id="read-mapping"><a class="header" href="#read-mapping"><a id="read_map"></a>Read Mapping</a></h3>
+<p>To read ORC scalar data types in SynxDB, map ORC data values to SynxDB columns of the same type.</p>
+<p>PXF uses the following data type mapping when it reads ORC data:</p>
+<div class="table-wrapper"><table><thead><tr><th>ORC Physical Type</th><th>ORC Logical Type</th><th>PXF/SynxDB Data Type</th></tr></thead><tbody>
+<tr><td>binary</td><td>decimal</td><td>Numeric</td></tr>
+<tr><td>binary</td><td>timestamp</td><td>Timestamp</td></tr>
+<tr><td>byte[]</td><td>string</td><td>Text</td></tr>
+<tr><td>byte[]</td><td>char</td><td>Bpchar</td></tr>
+<tr><td>byte[]</td><td>varchar</td><td>Varchar</td></tr>
+<tr><td>byte[]</td><td>binary</td><td>Bytea</td></tr>
+<tr><td>Double</td><td>float</td><td>Real</td></tr>
+<tr><td>Double</td><td>double</td><td>Float8</td></tr>
+<tr><td>Integer</td><td>boolean (1 bit)</td><td>Boolean</td></tr>
+<tr><td>Integer</td><td>tinyint (8 bit)</td><td>Smallint</td></tr>
+<tr><td>Integer</td><td>smallint (16 bit)</td><td>Smallint</td></tr>
+<tr><td>Integer</td><td>int (32 bit)</td><td>Integer</td></tr>
+<tr><td>Integer</td><td>bigint (64 bit)</td><td>Bigint</td></tr>
+<tr><td>Integer</td><td>date</td><td>Date</td></tr>
+</tbody></table>
+</div>
+<p>PXF supports only the list ORC compound type, and only for a subset of the ORC scalar types. The supported mappings follow:</p>
+<div class="table-wrapper"><table><thead><tr><th>ORC Compound Type</th><th>PXF/SynxDB Data Type</th></tr></thead><tbody>
+<tr><td>array&lt;string&gt;</td><td>Text[]</td></tr>
+<tr><td>array&lt;char&gt;</td><td>Bpchar[]</td></tr>
+<tr><td>array&lt;varchar&gt;</td><td>Varchar[]</td></tr>
+<tr><td>array&lt;binary&gt;</td><td>Bytea[]</td></tr>
+<tr><td>array&lt;float&gt;</td><td>Real[]</td></tr>
+<tr><td>array&lt;double&gt;</td><td>Float8[]</td></tr>
+<tr><td>array&lt;boolean&gt;</td><td>Boolean[]</td></tr>
+<tr><td>array&lt;tinyint&gt;</td><td>Smallint[]</td></tr>
+<tr><td>array&lt;smallint&gt;</td><td>Smallint[]</td></tr>
+<tr><td>array&lt;int&gt;</td><td>Integer[]</td></tr>
+<tr><td>array&lt;bigint&gt;</td><td>Bigint[]</td></tr>
+</tbody></table>
+</div>
+<h3 id="write-mapping"><a class="header" href="#write-mapping"><a id="write_map"></a>Write Mapping</a></h3>
+<p>PXF uses the following data type mapping when writing ORC data:</p>
+<div class="table-wrapper"><table><thead><tr><th>PXF/SynxDB Data Type</th><th>ORC Logical Type</th><th>ORC Physical Type</th></tr></thead><tbody>
+<tr><td>Numeric</td><td>decimal</td><td>binary</td></tr>
+<tr><td>Timestamp</td><td>timestamp</td><td>binary</td></tr>
+<tr><td>Timestamp with Timezone</td><td>timestamp with local time zone</td><td>timestamp</td></tr>
+<tr><td>Text</td><td>string</td><td>byte[]</td></tr>
+<tr><td>Bpchar</td><td>char</td><td>byte[]</td></tr>
+<tr><td>Varchar</td><td>varchar</td><td>byte[]</td></tr>
+<tr><td>Bytea</td><td>binary</td><td>byte[]</td></tr>
+<tr><td>Real</td><td>float</td><td>Double</td></tr>
+<tr><td>Float8</td><td>double</td><td>Double</td></tr>
+<tr><td>Boolean</td><td>boolean (1 bit)</td><td>Integer</td></tr>
+<tr><td>Smallint</td><td>tinyint (8 bit)</td><td>Integer</td></tr>
+<tr><td>Smallint</td><td>smallint (16 bit)</td><td>Integer</td></tr>
+<tr><td>Integer</td><td>int (32 bit)</td><td>Integer</td></tr>
+<tr><td>Bigint</td><td>bigint (64 bit)</td><td>Integer</td></tr>
+<tr><td>Date</td><td>date</td><td>Integer</td></tr>
+<tr><td>UUID</td><td>string</td><td>byte[]</td></tr>
+</tbody></table>
+</div>
+<p>PXF supports writing the list ORC compound type for one-dimensional arrays, for all of the above of the ORC primitive types. The supported mappings are:</p>
+<div class="table-wrapper"><table><thead><tr><th>ORC Compound Type</th><th>PXF/SynxDB Data Type</th></tr></thead><tbody>
+<tr><td>array&lt;decimal&gt;</td><td>Numeric[]</td></tr>
+<tr><td>array&lt;timestamp&gt;</td><td>Timestamp[]</td></tr>
+<tr><td>array&lt;string&gt;</td><td>Text[]</td></tr>
+<tr><td>array&lt;char&gt;</td><td>Bpchar[]</td></tr>
+<tr><td>array&lt;varchar&gt;</td><td>Varchar[]</td></tr>
+<tr><td>array&lt;binary&gt;</td><td>Bytea[]</td></tr>
+<tr><td>array&lt;float&gt;</td><td>Real[]</td></tr>
+<tr><td>array&lt;double&gt;</td><td>Float8[]</td></tr>
+<tr><td>array&lt;boolean&gt;</td><td>Boolean[]</td></tr>
+<tr><td>array&lt;tinyint&gt;</td><td>Smallint[]</td></tr>
+<tr><td>array&lt;smallint&gt;</td><td>Smallint[]</td></tr>
+<tr><td>array&lt;int&gt;</td><td>Integer[]</td></tr>
+<tr><td>array&lt;bigint&gt;</td><td>Bigint[]</td></tr>
+<tr><td>array&lt;date&gt;</td><td>Date[]</td></tr>
+</tbody></table>
+</div>
+<h2 id="creating-the-external-table"><a class="header" href="#creating-the-external-table"><a id="createexttbl"></a>Creating the External Table</a></h2>
+<p>The PXF HDFS connector <code>hdfs:orc</code> profile supports reading and writing ORC-formatted HDFS files. When you insert records into a writable external table, the block(s) of data that you insert are written to one file per segment in the directory that you specified.</p>
+<p>Use the following syntax to create a SynxDB external table that references an HDFS file or directory:</p>
+<pre><code class="language-sql">CREATE [WRITABLE] EXTERNAL TABLE &lt;table_name&gt;
+    ( &lt;column_name&gt; &lt;data_type&gt; [, ...] | LIKE &lt;other_table&gt; )
+LOCATION ('pxf://&lt;path-to-hdfs-file&gt;
+    ?PROFILE=hdfs:orc[&amp;SERVER=&lt;server_name&gt;][&amp;&lt;custom-option&gt;=&lt;value&gt;[...]]')
+FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import'|'pxfwritable_export')
+[DISTRIBUTED BY (&lt;column_name&gt; [, ... ] ) | DISTRIBUTED RANDOMLY];
+</code></pre>
+<p>The specific keywords and values used in the SynxDB <a href="../ref_guide/sql_commands/CREATE_EXTERNAL_TABLE.html">CREATE EXTERNAL TABLE</a> command are described below.</p>
+<div class="table-wrapper"><table><thead><tr><th>Keyword</th><th>Value</th></tr></thead><tbody>
+<tr><td>&lt;path‑to‑hdfs‑file&gt;</td><td>The path to the file or directory in the HDFS data store. When the <code>&lt;server_name&gt;</code> configuration includes a <a href="cfg_server.html#pxf-fs-basepath"><code>pxf.fs.basePath</code></a> property setting, PXF considers &lt;path‑to‑hdfs‑file&gt; to be relative to the base path specified. Otherwise, PXF considers it to be an absolute path. &lt;path‑to‑hdfs‑file&gt; must not specify a relative path nor include the dollar sign (<code>$</code>) character.</td></tr>
+<tr><td>PROFILE</td><td>The <code>PROFILE</code> keyword must specify <code>hdfs:orc</code>.</td></tr>
+<tr><td>SERVER=&lt;server_name&gt;</td><td>The named server configuration that PXF uses to access the data. PXF uses the <code>default</code> server if not specified.</td></tr>
+<tr><td>&lt;custom-option&gt;</td><td>&lt;custom-option&gt;s are described below.</td></tr>
+<tr><td>FORMAT ‘CUSTOM’</td><td>Use <code>FORMAT 'CUSTOM'</code>with <code>(FORMATTER='pxfwritable_export')</code> (write) or <code>(FORMATTER='pxfwritable_import')</code> (read).</td></tr>
+<tr><td>DISTRIBUTED BY</td><td>If you want to load data from an existing SynxDB table into the writable external table, consider specifying the same distribution policy or <code>&lt;column_name&gt;</code> on both tables. Doing so will avoid extra motion of data between segments on the load operation.</td></tr>
+</tbody></table>
+</div>
+<p><a id="customopts"></a>
+The PXF <code>hdfs:orc</code> profile supports the following <em>read</em> options. You specify this option in the <code>LOCATION</code> clause:</p>
+<div class="table-wrapper"><table><thead><tr><th>Read Option</th><th>Value Description</th></tr></thead><tbody>
+<tr><td>IGNORE_MISSING_PATH</td><td>A Boolean value that specifies the action to take when &lt;path-to-hdfs-file&gt; is missing or invalid. The default value is <code>false</code>, PXF returns an error in this situation. When the value is <code>true</code>, PXF ignores missing path errors and returns an empty fragment.</td></tr>
+<tr><td>MAP_BY_POSITION</td><td>A Boolean value that, when set to <code>true</code>, specifies that PXF should map an ORC column to a SynxDB column by position. The default value is <code>false</code>, PXF maps an ORC column to a SynxDB column by name.</td></tr>
+</tbody></table>
+</div>
+<p>The PXF <code>hdfs:orc</code> profile supports a single compression-related write option; you specify this option in the <code>CREATE WRITABLE EXTERNAL TABLE</code> <code>LOCATION</code> clause:</p>
+<div class="table-wrapper"><table><thead><tr><th>Write Option</th><th>Value Description</th></tr></thead><tbody>
+<tr><td>COMPRESSION_CODEC</td><td>The compression codec alias. Supported compression codecs for writing ORC data include: <code>lz4</code>, <code>lzo</code>, <code>zstd</code>, <code>snappy</code>, <code>zlib</code>, and <code>none</code> . If this option is not specified, PXF compresses the data using <code>zlib</code> compression.</td></tr>
+</tbody></table>
+</div>
+<h2 id="about-writing-orc-data"><a class="header" href="#about-writing-orc-data"><a id="write"></a>About Writing ORC data</a></h2>
+<p>When you insert records into a writable external table, the block(s) of data that you insert are written to one or more files in the directory that you specify in the <code>LOCATION</code> clause.</p>
+<p>When you insert ORC data records, the <code>pxf.orc.write.timezone.utc</code> property in the <code>pxf-site.xml</code> file governs how PXF writes timestamp values to the external data store. By default, PXF writes a timestamp type using the UTC time zone. If you require PXF to write a timestamp type using the local time zone of the PXF JVM, set the <code>pxf.orc.write.timezone.utc</code> property to <code>false</code> for the server and synchronize the PXF configuration.</p>
+<h2 id="example-reading-an-orc-file-on-hdfs"><a class="header" href="#example-reading-an-orc-file-on-hdfs"><a id="read_example"></a>Example: Reading an ORC File on HDFS</a></h2>
+<p>This example operates on a simple data set that models a retail sales operation. The data includes fields with the following names and types:</p>
+<div class="table-wrapper"><table><thead><tr><th>Column Name</th><th>Data Type</th></tr></thead><tbody>
+<tr><td>location</td><td>text</td></tr>
+<tr><td>month</td><td>text</td></tr>
+<tr><td>num_orders</td><td>integer</td></tr>
+<tr><td>total_sales</td><td>numeric(10,2)</td></tr>
+<tr><td>items_sold</td><td>text[]</td></tr>
+</tbody></table>
+</div>
+<p>In this example, you:</p>
+<ul>
+<li>Create a sample data set in JSON format, use the <code>orc-tools</code> JAR utilities to convert the JSON file into an ORC-formatted file, and then copy the ORC file to HDFS.</li>
+<li>Create a SynxDB readable external table that references the ORC file and that specifies the <code>hdfs:orc</code> profile.</li>
+<li>Query the external table.</li>
+</ul>
+<p>You must have administrative privileges to both a Hadoop cluster and a SynxDB cluster to run the example. You must also have configured a PXF server to access Hadoop.</p>
+<p>Procedure:</p>
+<ol>
+<li>
+<p>Create a JSON file named <code>sampledata.json</code> in the <code>/tmp</code> directory:</p>
+<pre><code class="language-shell">$ echo '{"location": "Prague", "month": "Jan","num_orders": 101, "total_sales": 4875.33, "items_sold": ["boots", "hats"]}
+{"location": "Rome", "month": "Mar","num_orders": 87, "total_sales": 1557.39, "items_sold": ["coats"]}
+{"location": "Bangalore", "month": "May","num_orders": 317, "total_sales": 8936.99, "items_sold": ["winter socks", "long-sleeved shirts", "boots"]}
+{"location": "Beijing", "month": "Jul","num_orders": 411, "total_sales": 11600.67, "items_sold": ["hoodies/sweaters", "pants"]}
+{"location": "Los Angeles", "month": "Dec","num_orders": 0, "total_sales": 0.00, "items_sold": null}' &gt; /tmp/sampledata.json
+</code></pre>
+</li>
+<li>
+<p><a href="https://repo1.maven.org/maven2/org/apache/orc/orc-tools">Download</a> the most recent version of the <code>orc-tools</code> JAR to the current working directory.</p>
+</li>
+<li>
+<p>Run the <code>orc-tools</code> <code>convert</code> command to convert <code>sampledata.json</code> to the ORC file <code>/tmp/sampledata.orc</code>; provide the schema to the command:</p>
+<pre><code class="language-shell">$ java -jar orc-tools-1.7.3-uber.jar convert /tmp/sampledata.json \
+  --schema 'struct&lt;location:string,month:string,num_orders:int,total_sales:decimal(10,2),items_sold:array&lt;string&gt;&gt;' \
+  -o /tmp/sampledata.orc
+</code></pre>
+</li>
+<li>
+<p>Copy the ORC file to HDFS. The following command copies the file to the <code>/data/pxf_examples/orc_example</code> directory:</p>
+<pre><code class="language-shell">$ hdfs dfs -put /tmp/sampledata.orc /data/pxf_examples/orc_example/
+</code></pre>
+</li>
+<li>
+<p>Log in to the SynxDB coordinator host and connect to a database. This command connects to the database named <code>testdb</code> as the <code>gpadmin</code> user:</p>
+<pre><code class="language-shell">gpadmin@coordinator$ psql -d testdb
+</code></pre>
+</li>
+<li>
+<p>Create an external table named <code>sample_orc</code> that references the <code>/data/pxf_examples/orc_example/sampledata.orc</code> file on HDFS. This command creates the table with the column names specified in the ORC schema, and uses the <code>default</code> PXF server:</p>
+<pre><code class="language-sql">testdb=# CREATE EXTERNAL TABLE sample_orc(location text, month text, num_orders int, total_sales numeric(10,2), items_sold text[])
+           LOCATION ('pxf://data/pxf_examples/orc_example?PROFILE=hdfs:orc')
+         FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import');
+</code></pre>
+</li>
+<li>
+<p>Read the data in the file by querying the <code>sample_orc</code> table:</p>
+<pre><code class="language-sql">testdb=# SELECT * FROM sample_orc;
+</code></pre>
+<pre><code class="language-shell">  location   | month | num_orders | total_sales |                  items_sold
+-------------+-------+------------+-------------+----------------------------------------------
+ Prague      | Jan   |        101 |     4875.33 | {boots,hats}
+ Rome        | Mar   |         87 |     1557.39 | {coats}
+ Bangalore   | May   |        317 |     8936.99 | {"winter socks","long-sleeved shirts",boots}
+ Beijing     | Jul   |        411 |    11600.67 | {hoodies/sweaters,pants}
+ Los Angeles | Dec   |          0 |        0.00 |
+(5 rows)
+</code></pre>
+</li>
+<li>
+<p>You can query the data on any column, including the <code>items_sold</code> array column. For example, this query returns the rows where the items sold include <code>boots</code> and/or <code>pants</code>:</p>
+<pre><code class="language-sql">testdb=# SELECT * FROM sample_orc WHERE items_sold &amp;&amp; '{"boots", "pants"}';
+</code></pre>
+<pre><code class="language-shell"> location  | month | num_orders | total_sales |                  items_sold
+-----------+-------+------------+-------------+----------------------------------------------
+ Prague    | Jan   |        101 |     4875.33 | {boots,hats}
+ Bangalore | May   |        317 |     8936.99 | {"winter socks","long-sleeved shirts",boots}
+ Beijing   | Jul   |        411 |    11600.67 | {hoodies/sweaters,pants}
+(3 rows)
+</code></pre>
+</li>
+<li>
+<p>This query returns the rows where the first item sold is <code>boots</code>:</p>
+<pre><code class="language-sql">testdb=# SELECT * FROM sample_orc WHERE items_sold[0] = 'boots';
+</code></pre>
+<pre><code class="language-shell"> location  | month | num_orders | total_sales |                  items_sold
+-----------+-------+------------+-------------+----------------------------------------------
+ Prague    | Jan   |        101 |     4875.33 | {boots,hats}
+(1 row)
+</code></pre>
+</li>
+</ol>
+<h2 id="example-writing-to-an-orc-file-on-hdfs"><a class="header" href="#example-writing-to-an-orc-file-on-hdfs"><a id="write_example"></a>Example: Writing to an ORC File on HDFS</a></h2>
+<p>In this example, you create a writable external table to write some data to the directory referenced by the <code>sample_orc</code> table.</p>
+<ol>
+<li>
+<p>Create an external table that specifies the <code>hdfs:orc</code> profile and the HDFS directory <code>/data/pxf_examples/orc_example</code> in the <code>LOCATION</code> URL:</p>
+<pre><code class="language-sql">postgres=# CREATE WRITABLE EXTERNAL TABLE write_to_sample_orc (location text, month text, num_orders int, total_sales numeric(10,2), items_sold text[] )
+    LOCATION ('pxf://data/pxf_examples/orc_example?PROFILE=hdfs:orc')
+  FORMAT 'CUSTOM' (FORMATTER='pxfwritable_export');
+</code></pre>
+</li>
+<li>
+<p>Write a few records to segment files in the <code>orc_example</code> directory by inserting into the <code>write_to_sample_orc</code> table:</p>
+<pre><code class="language-sql">postgres=# INSERT INTO write_to_sample_orc VALUES ( 'Frankfurt', 'Mar', 777, 3956.98, '{"winter socks","pants",boots}' );
+postgres=# INSERT INTO write_to_sample_orc VALUES ( 'Cleveland', 'Oct', 3218, 96645.37, '{"long-sleeved shirts",hats}' );
+</code></pre>
+</li>
+<li>
+<p>Recall that SynxDB does not support directly querying a writable external table. Query the <code>sample_orc</code> table that you created in the previous example to read the new data that you added:</p>
+<pre><code class="language-sql">postgres=# SELECT * FROM sample_orc ORDER BY num_orders;
+</code></pre>
+</li>
+</ol>
+<h2 id="understanding-overflow-conditions-when-writing-numeric-data"><a class="header" href="#understanding-overflow-conditions-when-writing-numeric-data"><a id="overflow"></a>Understanding Overflow Conditions When Writing Numeric Data</a></h2>
+<p>PXF uses the <code>HiveDecimal</code> class to write numeric ORC data. In versions prior to 6.7.0, PXF limited only the precision of a numeric type to a maximum of 38. In versions 6.7.0 and later, PXF must meet both precision and scale requirements before writing numeric ORC data.</p>
+<p>When you define a <code>NUMERIC</code> column in an external table without specifying a precision or scale, PXF internally maps the column to a <code>DECIMAL(38, 10)</code>.</p>
+<p>PXF handles the following precision overflow conditions:</p>
+<ul>
+<li>You define a <code>NUMERIC</code> column in the external table, and the integer digit count of a value exceeds the maximum supported precision of 38. For example, <code>1234567890123456789012345678901234567890.12345</code>, which has an integer digit count of 45.</li>
+<li>You define a <code>NUMERIC(&lt;precision&gt;)</code> column with a <code>&lt;precision&gt;</code> greater than 38. For example, <code>NUMERIC(55)</code>.</li>
+<li>You define a <code>NUMERIC</code> column in the external table, and the integer digit count of a value is greater than 28 (38-10). For example, <code>123456789012345678901234567890.12345</code>, which has an integer digit count of 30.</li>
+</ul>
+<p>If you define a <code>NUMERIC(&lt;precision&gt;, &lt;scale&gt;)</code> column and the integer digit count of a value is greater than <code>&lt;precision&gt; - &lt;scale&gt;</code>, PXF returns an error. For example, you define a <code>NUMERIC(20,4)</code> column and the value is <code>12345678901234567.12</code>, which has an integer digit count of 19, which is greater than 20-4=16.</p>
+<p>PXF can take one of three actions when it detects an overflow while writing numeric data to an ORC file: round the value (the default), return an error, or ignore the overflow. The <code>pxf.orc.write.decimal.overflow</code> property in the <code>pxf-site.xml</code> server configuration governs PXF’s action in this circumstance; valid values for this property follow:</p>
+<div class="table-wrapper"><table><thead><tr><th>Value</th><th>PXF Action</th></tr></thead><tbody>
+<tr><td><code>round</code></td><td>When PXF encounters an overflow, it attempts to round the value to meet both precision and scale requirements before writing. PXF reports an error if rounding fails. This may potentially leave an incomplete data set in the external system.  <code>round</code> is the default.</td></tr>
+<tr><td><code>error</code></td><td>PXF reports an error when it encounters an overflow, and the transaction fails.</td></tr>
+<tr><td><code>ignore</code></td><td>PXF attempts to round the value to meet only the precision requirement and ignores validation of precision and scale; otherwise PXF writes a NULL value. (This was PXF’s behavior prior to version 6.7.0.)</td></tr>
+</tbody></table>
+</div>
+<p>PXF logs a warning when it detects an overflow and the <code>pxf.orc.write.decimal.overflow</code> property is set to <code>ignore</code>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pxf/hdfs_json.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pxf/hdfs_parquet.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pxf/hdfs_json.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pxf/hdfs_parquet.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

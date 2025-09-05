@@ -1,0 +1,487 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Directory Tables &mdash; SynxDB Elastic Documentation Preview documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=529101c1"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Use pgvector for Vector Similarity Search" href="pgvector.html" />
+    <link rel="prev" title="Advanced Data Analytics" href="advanced-data-analytics-index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SynxDB Elastic Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../product-overview/product-index.html">Product Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploy-guides/deploy-guides-index.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../load-data/load-data-index.html">Load Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../operate-with-data-index.html">Operate with Data</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../operate-with-db-objects/operate-with-db-objects-index.html">Operate with Database Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../choose-table-storage-models/choose-table-storage-models-index.html">Choose Table Storage Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-queries/sql-queries-index.html">Perform SQL Queries</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="advanced-data-analytics-index.html">Advanced Data Analytics</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Directory Tables</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#instructions">Instructions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pgvector.html">Use pgvector for Vector Similarity Search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vectorization-queries.html">Vectorization Query Computing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../work-with-transactions.html">Work with Transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transaction-concurrency-control.html">Control Transactional Concurrency</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimize-performance/optimize-performance-index.html">Optimize Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manage-system/manage-system-index.html">Manage System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security-and-permissions/set-security-and-permission-index.html">Configure Security and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop-guides/develop-with-db-index.html">Developer Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references/references-index.html">Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SynxDB Elastic Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../operate-with-data-index.html">Operate with Data</a></li>
+          <li class="breadcrumb-item"><a href="advanced-data-analytics-index.html">Advanced Data Analytics</a></li>
+      <li class="breadcrumb-item active">Directory Tables</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="directory-tables">
+<h1>Directory Tables<a class="headerlink" href="#directory-tables" title="Link to this heading"></a></h1>
+<p>SynxDB Elastic supports directory tables to uniformly manage unstructured data on object storage.</p>
+<p>Large-scale AI applications need to handle unstructured, multi-modal datasets. Therefore, AI application developers must continually prepare a large amount high-quality unstructured data, train large models through repeated iterations, and build rich knowledge bases. This creates technical challenges in managing and processing unstructured data.</p>
+<p>To address these challenges, SynxDB Elastic introduces directory tables for managing multiple types of unstructured data. Developers can use simple SQL statements to leverage multiple computing engines for unified data processing and application development.</p>
+<p>A directory table stores, manages, and analyzes unstructured data objects. Users can either <strong>upload</strong> local files to a directory table for unified management or directly <strong>map</strong> and manage files that already exist in external object storage, to efficiently manage unstructured data.</p>
+<ul class="simple">
+<li><p><strong>Upload mode</strong>: When an unstructured data file is imported into a directory table, a record (that is, the file’s metadata) is created in the directory table, and the file itself is loaded into the object storage managed by SynxDB Elastic.</p></li>
+<li><p><strong>Map mode</strong>: This mode directly scans and identifies files in a user-specified external object storage path and synchronizes their metadata to the directory table. The file entities remain in their original object storage location and are managed by the user.</p></li>
+</ul>
+<section id="instructions">
+<h2>Instructions<a class="headerlink" href="#instructions" title="Link to this heading"></a></h2>
+<section id="create-a-directory-table">
+<h3>Create a directory table<a class="headerlink" href="#create-a-directory-table" title="Link to this heading"></a></h3>
+<p>You can create a directory table in a tablespace on local storage or in a tablespace on external storage (such as object storage services or HDFS).</p>
+<section id="create-in-local-storage">
+<h4>Create in local storage<a class="headerlink" href="#create-in-local-storage" title="Link to this heading"></a></h4>
+<p>The syntax for creating a directory table in local storage is as follows. You need to replace <code class="docutils literal notranslate"><span class="pre">&lt;table_name&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;tablespace_name&gt;</span></code> with the actual table name and tablespace name.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Method 1: Does not specify a tablespace, which means creating the directory table in the existing default tablespace.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="c1">-- Method 2: First creates a tablespace, and then creates the directory table in that tablespace.</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tablespace_name</span><span class="o">&gt;</span>
+<span class="w">       </span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;&lt;tablespace_path&gt;&#39;</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span>
+<span class="w">       </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tablespace_name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="create-in-external-storage">
+<h4>Create in external storage<a class="headerlink" href="#create-in-external-storage" title="Link to this heading"></a></h4>
+<p>To create a directory table in external storage, you first need to create a tablespace in the external storage. You must provide the connection information required to access the external storage server, including the server’s IP address, protocol, and access keys. The following examples show how to create a directory table on a major cloud provider like Amazon S3 and HDFS.</p>
+<ol class="arabic">
+<li><p>Create a server object and define the connection method for the external data source. SynxDB Elastic supports multiple storage protocols, including S3 object storage and HDFS. The following examples create server objects named <code class="docutils literal notranslate"><span class="pre">oss_server</span></code> and <code class="docutils literal notranslate"><span class="pre">hdfs_server</span></code> on Amazon S3 and HDFS, respectively.</p>
+<ul>
+<li><p>Amazon S3:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">STORAGE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">oss_server</span><span class="w"> </span><span class="k">OPTIONS</span><span class="p">(</span><span class="n">protocol</span><span class="w"> </span><span class="s1">&#39;s3&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">prefix</span><span class="w"> </span><span class="s1">&#39;&lt;path_prefix&gt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">endpoint</span><span class="w"> </span><span class="s1">&#39;&lt;endpoint_address&gt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">https</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">virtual_host</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>HDFS:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">STORAGE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">hdfs_server</span><span class="w"> </span><span class="k">OPTIONS</span><span class="p">(</span><span class="n">port</span><span class="w"> </span><span class="s1">&#39;&lt;port_number&gt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">protocol</span><span class="w"> </span><span class="s1">&#39;hdfs&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">namenode</span><span class="w"> </span><span class="s1">&#39;&lt;HDFS_node_IP:port&gt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">https</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>The parameters in the commands above are as follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">protocol</span></code>: The protocol used to connect to the external data source. In the examples above, <code class="docutils literal notranslate"><span class="pre">'s3'</span></code> indicates the protocol for Amazon S3 Object Storage, and <code class="docutils literal notranslate"><span class="pre">'hdfs'</span></code> indicates the HDFS protocol.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prefix</span></code>: Sets the path prefix for accessing object storage. When set, all operations are confined to this specific path, for example, <code class="docutils literal notranslate"><span class="pre">prefix</span> <span class="pre">'/rose-oss-test4/usf1'</span></code>. This is typically used to organize and isolate data within the same storage bucket.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">endpoint</span></code>: Specifies the network address of the external object storage service. For example, <code class="docutils literal notranslate"><span class="pre">'s3.us-west-2.amazonaws.com'</span></code> is a specific regional endpoint for Amazon S3 services. SynxDB Elastic can access external data through this endpoint.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">https</span></code>: Specifies whether to connect to the object storage service via HTTPS. In this command, <code class="docutils literal notranslate"><span class="pre">'false'</span></code> means using an unencrypted HTTP connection. This setting may be influenced by data transmission security requirements; using HTTPS is generally recommended to ensure data security.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">virtual_host</span></code>: Determines whether to use virtual host style for bucket access. <code class="docutils literal notranslate"><span class="pre">'false'</span></code> means not using virtual host style bucket access (that is, the bucket name is not included in the URL). This option usually depends on the URL format supported by the storage service provider.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">namenode</span></code>: The IP address of the HDFS node. You need to replace <code class="docutils literal notranslate"><span class="pre">&lt;HDFS_node_IP:port&gt;</span></code> with the actual IP address and port number, such as <code class="docutils literal notranslate"><span class="pre">'192.168.51.106:8020'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">port</span></code>: The port number of the HDFS node. You need to replace <code class="docutils literal notranslate"><span class="pre">&lt;port_number&gt;</span></code> with the actual port number, for example, <code class="docutils literal notranslate"><span class="pre">8020</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Create a user mapping to provide the current user with the authentication information needed to access these external servers.</p>
+<ul>
+<li><p>Amazon S3:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">STORAGE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">CURRENT_USER</span><span class="w"> </span><span class="k">STORAGE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">oss_server</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">accesskey</span><span class="w"> </span><span class="s1">&#39;&lt;aws_access_key_id&gt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">secretkey</span><span class="w"> </span><span class="s1">&#39;&lt;aws_secret_access_key&gt;&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>HDFS:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">STORAGE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">MAPPING</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">CURRENT_USER</span><span class="w"> </span><span class="k">STORAGE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">hdfs_server</span><span class="w"> </span><span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">auth_method</span><span class="w"> </span><span class="s1">&#39;simple&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>The parameters in the commands above are as follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">accesskey</span></code> and <code class="docutils literal notranslate"><span class="pre">secretkey</span></code>: These parameters provide the necessary authentication information. <code class="docutils literal notranslate"><span class="pre">'accesskey'</span></code> and <code class="docutils literal notranslate"><span class="pre">'secretkey'</span></code> are like a username and password used to access the object storage service.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">auth_method</span></code>: Indicates the authentication mode for accessing HDFS. <code class="docutils literal notranslate"><span class="pre">simple</span></code> means simple authentication mode, and <code class="docutils literal notranslate"><span class="pre">kerberos</span></code> means using Kerberos authentication mode.</p></li>
+</ul>
+</li>
+<li><p>Create a tablespace on the external server. These tablespaces are specifically linked to the previously defined external servers, and the <code class="docutils literal notranslate"><span class="pre">location</span></code> option of the tablespace points to a specific path on the external storage. The following examples create tablespaces <code class="docutils literal notranslate"><span class="pre">dir_oss</span></code> and <code class="docutils literal notranslate"><span class="pre">dir_hdfs</span></code> on Amazon S3 and HDFS, respectively.</p>
+<ul>
+<li><p>Amazon S3:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="n">dir_oss</span><span class="w"> </span><span class="k">location</span><span class="w"> </span><span class="s1">&#39;&lt;tablespace_path_on_object_storage&gt;&#39;</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">oss_server</span><span class="w"> </span><span class="k">HANDLER</span><span class="w"> </span><span class="s1">&#39;$libdir/dfs_tablespace, remote_file_handler&#39;</span><span class="p">;</span>
+
+<span class="c1">-- You need to replace &lt;tablespace_path_on_object_storage&gt; with the actual path,</span>
+<span class="c1">-- for example, /tbs-49560-0-mgq-multi/oss-server-01-17.</span>
+</pre></div>
+</div>
+</li>
+<li><p>HDFS:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="n">dir_hdfs</span><span class="w"> </span><span class="k">location</span><span class="w"> </span><span class="s1">&#39;&lt;tablespace_path_on_object_storage&gt;&#39;</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">hdfs_server</span><span class="w"> </span><span class="k">HANDLER</span><span class="w"> </span><span class="s1">&#39;$libdir/dfs_tablespace, remote_file_handler&#39;</span><span class="p">;</span>
+
+<span class="c1">-- You need to replace &lt;tablespace_path_on_object_storage&gt; with the actual path,</span>
+<span class="c1">-- for example, /tbs-49560-0-mgq-multi/oss-server-01-17.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Create a directory table in the tablespace. The following statements create directory tables <code class="docutils literal notranslate"><span class="pre">dir_table_oss</span></code> and <code class="docutils literal notranslate"><span class="pre">dir_table_hdfs</span></code> in tablespaces <code class="docutils literal notranslate"><span class="pre">dir_oss</span></code> and <code class="docutils literal notranslate"><span class="pre">dir_hdfs</span></code>, respectively.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">dir_table_oss</span><span class="w"> </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="n">dir_oss</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">dir_table_hdfs</span><span class="w"> </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="n">dir_hdfs</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="view-field-information-of-a-directory-table">
+<h3>View field information of a directory table<a class="headerlink" href="#view-field-information-of-a-directory-table" title="Link to this heading"></a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="err">\</span><span class="n">dY</span><span class="w">   </span><span class="c1">-- Lists all current directory tables.</span>
+<span class="err">\</span><span class="n">d</span><span class="w"> </span><span class="o">&lt;</span><span class="n">directory_table</span><span class="o">&gt;</span><span class="w">   </span><span class="c1">-- Views the field information of a specific directory table.</span>
+</pre></div>
+</div>
+<p>The fields of a directory table are typically as follows:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Field name</strong></p></th>
+<th class="head"><p><strong>Data type</strong></p></th>
+<th class="head"><p><strong>Notes</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">RELATIVE_PATH</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TEXT</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SIZE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">NUMBER</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">LAST_MODIFIED</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TIMESTAMP_LTZ</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MD5</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">HEX</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TAG</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TEXT</span></code></p></td>
+<td><p>User-defined tags. Can be used to mark data lineage, uploading department/team, classification. “k1=v1, k2=v2”.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Field descriptions</p>
+</section>
+<section id="add-files-to-a-directory-table">
+<h3>Add files to a directory table<a class="headerlink" href="#add-files-to-a-directory-table" title="Link to this heading"></a></h3>
+<p>Directory tables support two ways to manage files: uploading new files or mapping files that already exist in external object storage.</p>
+<section id="upload-files">
+<h4>Upload files<a class="headerlink" href="#upload-files" title="Link to this heading"></a></h4>
+<p>In upload mode, the file entity is copied to a storage space uniformly managed by SynxDB Elastic, while its metadata is recorded in the directory table.</p>
+<p>The syntax for uploading files from a local path to the database object storage is as follows:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="err">\</span><span class="k">COPY</span><span class="w"> </span><span class="nb">BINARY</span><span class="w"> </span><span class="s1">&#39;&lt;directory_table_name&gt;&#39;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="s1">&#39;&lt;local_path_to_file&gt;&#39;</span><span class="w"> </span><span class="s1">&#39;&lt;relative_path&gt;&#39;</span><span class="p">;</span>
+<span class="k">COPY</span><span class="w"> </span><span class="nb">BINARY</span><span class="w"> </span><span class="s1">&#39;&lt;directory_table_name&gt;&#39;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="s1">&#39;&lt;local_path_to_file&gt;&#39;</span><span class="w"> </span><span class="s1">&#39;&lt;relative_path&gt;&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- The leading \ can be omitted.</span>
+
+<span class="c1">-- &lt;directory_table_name&gt; is the name of the directory table.</span>
+<span class="c1">-- &lt;local_path_to_file&gt; is the local path of the file to be uploaded.</span>
+<span class="c1">-- &lt;relative_path&gt; is the target path in local or object storage.</span>
+<span class="c1">-- The file will be uploaded to this path.</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>It is recommended to use the subdirectory capability of <code class="docutils literal notranslate"><span class="pre">&lt;path&gt;</span></code> to ensure that the uploaded directory path is consistent with the local one, which facilitates file management.</p>
+</div>
+<p>To better manage or track files and data flows, you can also add a <code class="docutils literal notranslate"><span class="pre">tag</span></code> to the upload command to provide additional information or markers:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="err">\</span><span class="k">COPY</span><span class="w"> </span><span class="nb">BINARY</span><span class="w"> </span><span class="s1">&#39;&lt;directory_table_name&gt;&#39;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="s1">&#39;&lt;local_path_to_file&gt;&#39;</span><span class="w"> </span><span class="s1">&#39;&lt;relative_path&gt;&#39;</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="s1">&#39;&lt;tag_name&gt;&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Examples are as follows:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Uploads a file to the root directory.</span>
+<span class="err">\</span><span class="k">COPY</span><span class="w"> </span><span class="nb">BINARY</span><span class="w"> </span><span class="n">dir_table_oss</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="s1">&#39;/data/country.data&#39;</span><span class="w"> </span><span class="s1">&#39;country.data&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Uploads a file to a specific path: top_level/second_level.</span>
+<span class="err">\</span><span class="k">COPY</span><span class="w"> </span><span class="nb">BINARY</span><span class="w"> </span><span class="n">dir_table_oss</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="s1">&#39;/data/region.tbl&#39;</span><span class="w"> </span><span class="s1">&#39;top_level/second_level/region.tbl&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Uploads a file to the root directory with a tag.</span>
+<span class="err">\</span><span class="k">COPY</span><span class="w"> </span><span class="nb">BINARY</span><span class="w"> </span><span class="n">dir_table_oss</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="s1">&#39;/data/country1.data&#39;</span><span class="w"> </span><span class="s1">&#39;country1.data&#39;</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="s1">&#39;country&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Uploads a file to a specific path top_level/second_level with a tag.</span>
+<span class="err">\</span><span class="k">COPY</span><span class="w"> </span><span class="nb">BINARY</span><span class="w"> </span><span class="n">dir_table_oss</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="s1">&#39;/data/region1.tbl&#39;</span><span class="w"> </span><span class="s1">&#39;top_level/second_level/region1.tbl&#39;</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="s1">&#39;region&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="map-external-object-storage-files">
+<h4>Map external object storage files<a class="headerlink" href="#map-external-object-storage-files" title="Link to this heading"></a></h4>
+<p>In map mode, you can directly manage files already stored in external object storage (such as S3, and HDFS) without moving or uploading them. SynxDB Elastic scans the specified external path and synchronizes the file metadata to the directory table.</p>
+<p>When creating a directory table, you can use the <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">LOCATION</span></code> clause to directly specify a path on the object storage (for example, a bucket). This way, the directory table is directly associated with the specified external path. Subsequent file mapping operations (such as <code class="docutils literal notranslate"><span class="pre">ATTACH</span> <span class="pre">LOCATION</span></code>) will be based on this path.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">directory_table_name</span><span class="o">&gt;</span>
+<span class="n">TABLESPACE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tablespace_name</span><span class="o">&gt;</span>
+<span class="k">WITH</span><span class="w"> </span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;&lt;oss_bucket_path&gt;&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Example</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">dir_table_with_location</span><span class="w"> </span>
+<span class="n">TABLESPACE</span><span class="w"> </span><span class="n">dir_oss</span><span class="w"> </span>
+<span class="k">WITH</span><span class="w"> </span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;/test_dirtable&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In the example above, <code class="docutils literal notranslate"><span class="pre">&lt;oss_bucket_path&gt;</span></code> is the bucket path on the object storage, for example, <code class="docutils literal notranslate"><span class="pre">/test_dirtable</span></code>. This allows you to use a directory table to manage data in an entire bucket or a specified directory.</p>
+<p>Once the directory table is created, you can use the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">DIRECTORY</span> <span class="pre">TABLE</span> <span class="pre">...</span> <span class="pre">ATTACH</span> <span class="pre">LOCATION</span></code> statement to attach one or more paths (<code class="docutils literal notranslate"><span class="pre">LOCATION</span></code>) from external object storage to the directory table, thereby managing specific files.</p>
+<p>The syntax is as follows:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">directory_table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ATTACH</span><span class="w"> </span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;&lt;location_path&gt;&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Alternatively, attaches a path and add a uniform tag to all files under that path.</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">directory_table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ATTACH</span><span class="w"> </span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;&lt;location_path&gt;&#39;</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="s1">&#39;&lt;tag_name&gt;&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;directory_table_name&gt;</span></code>: The name of the directory table.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;location_path&gt;</span></code>: The path in the external object storage. This path is relative to the <code class="docutils literal notranslate"><span class="pre">location</span></code> specified when creating the tablespace.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;tag_name&gt;</span></code>: The tag set for all files under this path.</p></li>
+</ul>
+<p>Examples are as follows:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Maps the path named nation1.</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">dir_table_oss</span><span class="w"> </span><span class="n">ATTACH</span><span class="w"> </span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;nation1&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Maps the path named nation2 and add the &#39;random&#39; tag to its files.</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">dir_table_oss</span><span class="w"> </span><span class="n">ATTACH</span><span class="w"> </span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;nation2&#39;</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="s1">&#39;random&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>When a <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code> is attached, the directory table records the metadata of all files under that path. You can query, export, or delete these mapped files just as you would with uploaded files. For example, use <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">&lt;directory_table&gt;</span></code> to query all files, or use the <code class="docutils literal notranslate"><span class="pre">remove_file()</span></code> function to delete a specific file.</p>
+</section>
+</section>
+<section id="export-files-from-a-directory-table-to-a-local-path">
+<h3>Export files from a directory table to a local path<a class="headerlink" href="#export-files-from-a-directory-table-to-a-local-path" title="Link to this heading"></a></h3>
+<p>You can export data from a directory table to your local file system for backup:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="err">\</span><span class="k">COPY</span><span class="w"> </span><span class="nb">BINARY</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="s1">&#39;&lt;directory_table_name&gt;&#39;</span><span class="w"> </span><span class="s1">&#39;&lt;relative_path&gt;&#39;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;&lt;target_path&gt;&#39;</span><span class="p">;</span><span class="w"> </span><span class="c1">-- Downloads to the psql machine.</span>
+
+<span class="err">\</span><span class="k">COPY</span><span class="w"> </span><span class="nb">BINARY</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="s1">&#39;&lt;directory_table_name&gt;&#39;</span><span class="w"> </span><span class="s1">&#39;&lt;relative_path&gt;&#39;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;&lt;target_path&gt;&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Downloads to the Coordinator machine.</span>
+
+<span class="c1">-- &lt;directory_table_name&gt; is the name of the directory table.</span>
+<span class="c1">-- &lt;relative_path&gt; is the relative path in the directory table.</span>
+<span class="c1">-- &lt;target_path&gt; is the destination path, including the local file path and the target file name.</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Downloads a file to the local root directory.</span>
+<span class="err">\</span><span class="k">COPY</span><span class="w"> </span><span class="nb">BINARY</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">dir_table_oss</span><span class="w"> </span><span class="s1">&#39;country.data&#39;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;/data/country.CSV&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>You can also use the <code class="docutils literal notranslate"><span class="pre">gpdirtableload</span></code> command-line tool to bulk download files to the local file system. For details on command-line parameters, see the <code class="docutils literal notranslate"><span class="pre">gpdirtableload_usage</span></code> section.</p>
+</section>
+<section id="query-and-use-directory-table-files">
+<h3>Query and use directory table files<a class="headerlink" href="#query-and-use-directory-table-files" title="Link to this heading"></a></h3>
+<p>Query file metadata within a directory table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Uses the directory_table() table function to read file metadata and content.</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">relative_path</span><span class="p">,</span><span class="w"> </span>
+<span class="w">       </span><span class="k">size</span><span class="p">,</span><span class="w"> </span>
+<span class="w">       </span><span class="n">last_modified</span><span class="p">,</span><span class="w"> </span>
+<span class="w">       </span><span class="n">md5</span><span class="p">,</span>
+<span class="w">       </span><span class="n">tag</span><span class="p">,</span>
+<span class="w">       </span><span class="n">content</span>
+<span class="w">       </span><span class="k">FROM</span><span class="w"> </span><span class="n">directory_table</span><span class="p">(</span><span class="s1">&#39;&lt;directory_table&gt;&#39;</span><span class="p">);</span>
+
+<span class="c1">-- Uses any of the following statements to query data in a directory table.</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="o">&lt;</span><span class="n">directory_table</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">DIRECTORY_TABLE</span><span class="p">(</span><span class="s1">&#39;&lt;directory_table&gt;&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="add-transaction-locks-to-a-directory-table">
+<h3>Add transaction locks to a directory table<a class="headerlink" href="#add-transaction-locks-to-a-directory-table" title="Link to this heading"></a></h3>
+<p>Directory tables support locking statements to control concurrent access, ensuring data consistency and integrity. By using different lock modes, you can restrict other transactions’ access to the table to avoid potential data conflicts.</p>
+<p>The syntax for locking a table is as follows:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">LOCK</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="o">&lt;</span><span class="n">lock_mode</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">&lt;lock_mode&gt;</span></code> can be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ACCESS</span> <span class="pre">SHARE</span> <span class="pre">MODE</span></code>: Allows other transactions to read the table but not modify it. Used for read-only queries.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ROW</span> <span class="pre">SHARE</span> <span class="pre">MODE</span></code>: Allows other transactions to read rows of the table but not modify them. Suitable for <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">FOR</span> <span class="pre">UPDATE</span></code>/<code class="docutils literal notranslate"><span class="pre">FOR</span> <span class="pre">SHARE</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ROW</span> <span class="pre">EXCLUSIVE</span> <span class="pre">MODE</span></code>: Allows a transaction to update the table. Other transactions can read but not modify.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SHARE</span> <span class="pre">UPDATE</span> <span class="pre">EXCLUSIVE</span> <span class="pre">MODE</span></code>: Allows online maintenance operations. Other transactions can read but not modify.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SHARE</span> <span class="pre">MODE</span></code>: Allows other transactions to read the table but not modify it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SHARE</span> <span class="pre">ROW</span> <span class="pre">EXCLUSIVE</span> <span class="pre">MODE</span></code>: Allows certain operations, such as creating triggers. Other transactions can read but not modify.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EXCLUSIVE</span></code>: Allows only concurrent <code class="docutils literal notranslate"><span class="pre">Access</span> <span class="pre">Share</span></code> locks. The lock holder can only perform read-only operations on the table. Typically acquired by <code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span> <span class="pre">CONCURRENTLY</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ACCESS</span> <span class="pre">EXCLUSIVE</span> <span class="pre">MODE</span></code>: The highest level of lock, ensuring the holder is the only transaction accessing the table. Acquired by commands like <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">TRUNCATE</span></code>, and <code class="docutils literal notranslate"><span class="pre">VACUUM</span> <span class="pre">FULL</span></code>.</p></li>
+</ul>
+<p>Here is an example of using the <code class="docutils literal notranslate"><span class="pre">ACCESS</span> <span class="pre">SHARE</span> <span class="pre">MODE</span></code> lock:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">BEGIN</span><span class="p">;</span>
+<span class="k">LOCK</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">dir_table1</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">ACCESS</span><span class="w"> </span><span class="k">SHARE</span><span class="w"> </span><span class="k">MODE</span><span class="p">;</span><span class="w">  </span><span class="c1">-- In this mode, other transactions can still query dir_table1.</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">dir_table1</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Queries dir_table1.</span>
+<span class="k">LOCK</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">dir_table1</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">ACCESS</span><span class="w"> </span><span class="k">EXCLUSIVE</span><span class="w"> </span><span class="k">MODE</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Requests an exclusive lock; other transactions cannot access dir_table1.</span>
+<span class="k">COMMIT</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Here is an example of using the <code class="docutils literal notranslate"><span class="pre">ACCESS</span> <span class="pre">EXCLUSIVE</span> <span class="pre">MODE</span></code> lock:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">BEGIN</span><span class="p">;</span>
+<span class="k">LOCK</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">dir_table1</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">ACCESS</span><span class="w"> </span><span class="k">EXCLUSIVE</span><span class="w"> </span><span class="k">MODE</span><span class="p">;</span><span class="w">  </span><span class="c1">-- In this mode, other transactions cannot query or modify dir_table1.</span>
+
+<span class="c1">-- Performs some operations.</span>
+<span class="k">ROLLBACK</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Rolls back the operations and releases the lock.</span>
+</pre></div>
+</div>
+</section>
+<section id="delete-files-managed-by-a-directory-table">
+<h3>Delete files managed by a directory table<a class="headerlink" href="#delete-files-managed-by-a-directory-table" title="Link to this heading"></a></h3>
+<p>To delete files managed by a directory table, you need administrator privileges:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">remove_file</span><span class="p">(</span><span class="s1">&#39;dir_table_oss&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;country.data&#39;</span><span class="p">);</span>
+
+<span class="c1">-- This command deletes the file country.data managed by the dir_table_oss table.</span>
+</pre></div>
+</div>
+</section>
+<section id="drop-a-directory-table">
+<h3>Drop a directory table<a class="headerlink" href="#drop-a-directory-table" title="Link to this heading"></a></h3>
+<p>Deletes the specified directory table. After deletion, all files within the table are also deleted. You need administrator privileges to drop a directory table.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      <a href="pgvector.html" class="btn btn-neutral float-right" title="Use pgvector for Vector Similarity Search" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      <a href="advanced-data-analytics-index.html" class="btn btn-neutral float-left" title="Advanced Data Analytics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+  </div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; 2025, Synx Data Labs, Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <p>SynxDB Elastic Documentation</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+</style>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

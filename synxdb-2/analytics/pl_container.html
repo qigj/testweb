@@ -1,0 +1,654 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>PL/Container Language - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="plcontainer-language"><a class="header" href="#plcontainer-language">PL/Container Language</a></h1>
+<p>PL/Container enables users to run SynxDB procedural language functions inside a Docker container, to avoid security risks associated with running Python or R code on SynxDB segment hosts. For Python, PL/Container also enables you to use the Compute Unified Device Architecture (CUDA) API with NVIDIA GPU hardware in your procedural language functions. This topic covers information about the architecture, installation, and setup of PL/Container:</p>
+<ul>
+<li><a href="#about_pl_container">About the PL/Container Language Extension</a></li>
+<li><a href="#topic3">Install PL/Container</a></li>
+<li><a href="#upgrade_plcontainer">Upgrade PL/Container</a></li>
+<li><a href="#uninstall_plcontainer">Uninstall PL/Container</a></li>
+<li><a href="#topic_kds_plk_rbb">Docker References</a></li>
+</ul>
+<p>For detailed information about using PL/Container, refer to:</p>
+<ul>
+<li><a href="pl_container_using.html">PL/Container Resource Management</a></li>
+<li><a href="pl_container_using.html">PL/Container Functions</a></li>
+</ul>
+<p>The PL/Container language extension is available as an open source module. For information about the module, see the README file in the GitHub repository at <a href="https://github.com/greenplum-db/plcontainer-archive">https://github.com/greenplum-db/plcontainer-archive</a>.</p>
+<h2 id="about-the-plcontainer-language-extension"><a class="header" href="#about-the-plcontainer-language-extension"><a id="about_pl_container"></a>About the PL/Container Language Extension</a></h2>
+<p>The SynxDB PL/Container language extension allows you to create and run PL/Python or PL/R user-defined functions (UDFs) securely, inside a Docker container. Docker provides the ability to package and run an application in a loosely isolated environment called a container. For information about Docker, see the <a href="https://www.docker.com">Docker web site</a>.</p>
+<p>Running UDFs inside the Docker container ensures that:</p>
+<ul>
+<li>The function execution process takes place in a separate environment and allows decoupling of the data processing. SQL operators such as “scan,” “filter,” and “project” are run at the query executor (QE) side, and advanced data analysis is run at the container side.</li>
+<li>User code cannot access the OS or the file system of the local host.</li>
+<li>User code cannot introduce any security risks.</li>
+<li>Functions cannot connect back to the SynxDB if the container is started with limited or no network access.</li>
+</ul>
+<h3 id="plcontainer-architecture"><a class="header" href="#plcontainer-architecture"><a id="plcontainer_arch"></a>PL/Container Architecture</a></h3>
+<p><img src="graphics/pl_container_architecture.png" alt="PL/Container architecture" /></p>
+<p><strong>Example of the process flow</strong>:</p>
+<p>Consider a query that selects table data using all available segments, and transforms the data using a PL/Container function. On the first call to a function in a segment container, the query executor on the master host starts the container on that segment host. It then contacts the running container to obtain the results. The container might respond with a Service Provider Interface (SPI) - a SQL query run by the container to get some data back from the database - returning the result to the query executor.</p>
+<p>A container running in standby mode waits on the socket and does not consume any CPU resources. PL/Container memory consumption depends on the amount of data cached in global dictionaries.</p>
+<p>The container connection is closed by closing the SynxDB session that started the container, and the container shuts down.</p>
+<h3 id="about-plcontainer-3-beta"><a class="header" href="#about-plcontainer-3-beta"><a id="section_d32_nv1_rqb"></a>About PL/Container 3 Beta</a></h3>
+<blockquote>
+<p><em>Note</em> PL/Container 3 Beta is deprecated and will be removed in a future SynxDB release.</p>
+</blockquote>
+<p>SynxDB 2 includes PL/Container version 3 Beta, which:</p>
+<ul>
+<li>Reduces the number of processes created by PL/Container, in order to save system resources.</li>
+<li>Supports more containers running concurrently.</li>
+<li>Includes improved log messages to help diagnose problems.</li>
+<li>Supports the <code>DO</code> command (anonymous code block).</li>
+</ul>
+<p>PL/Container 3 is currently a Beta feature, and provides only a Beta R Docker image for running functions; Python images are not yet available. Save and uninstall any existing PL/Container software before you install PL/Container 3 Beta.</p>
+<h2 id="install-plcontainer"><a class="header" href="#install-plcontainer"><a id="topic3"></a>Install PL/Container</a></h2>
+<p>This topic includes how to:</p>
+<ul>
+<li><a href="#install_docker">Install Docker</a></li>
+<li><a href="#install_pl_utility">Install PL/Container</a></li>
+<li><a href="#install_docker_images">Install the PL/Container Docker images</a></li>
+<li><a href="#test_installation">Test the PL/Container installation</a></li>
+</ul>
+<p>The following sections describe these tasks in detail.</p>
+<h3 id="prerequisites"><a class="header" href="#prerequisites"><a id="requirements"></a>Prerequisites</a></h3>
+<ul>
+<li>
+<p>For PL/Container 2.1.x use SynxDB 2 on CentOS 7.x (or later), RHEL 7.x (or later), or Ubuntu 18.04.</p>
+<blockquote>
+<p><strong>Note</strong> PL/Container 2.1.x supports Docker images with Python 3 installed.</p>
+</blockquote>
+</li>
+<li>
+<p>For PL/Container 3 Beta use SynxDB 2 on CentOS 7.x (or later), RHEL 7.x (or later), or Ubuntu 18.04.</p>
+</li>
+<li>
+<p>The minimum Linux OS kernel version supported is 3.10. To verify your kernel release use:</p>
+<pre><code>$ uname -r
+</code></pre>
+</li>
+<li>
+<p>The minimum supported Docker versions on all hosts is Docker 19.03.</p>
+</li>
+</ul>
+<h3 id="install-docker"><a class="header" href="#install-docker"><a id="install_docker"></a>Install Docker</a></h3>
+<p>To use PL/Container you need to install Docker on all SynxDB host systems. These instructions show how to set up the Docker service on CentOS 7 but RHEL 7 is a similar process.</p>
+<p>These steps install the docker package and start the Docker service as a user with sudo privileges.</p>
+<ol>
+<li>
+<p>Ensure the user has sudo privileges or is root.</p>
+</li>
+<li>
+<p>Install the dependencies required for Docker:</p>
+<pre><code>sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+</code></pre>
+</li>
+<li>
+<p>Add the Docker repo:</p>
+<pre><code>sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+</code></pre>
+</li>
+<li>
+<p>Update yum cache:</p>
+<pre><code>sudo yum makecache fast
+</code></pre>
+</li>
+<li>
+<p>Install Docker:</p>
+<pre><code>sudo yum -y install docker-ce
+</code></pre>
+</li>
+<li>
+<p>Start Docker daemon:</p>
+<pre><code>sudo systemctl start docker
+</code></pre>
+</li>
+<li>
+<p>On each SynxDB host, the <code>gpadmin</code> user should be part of the docker group for the user to be able to manage Docker images and containers. Assign the SynxDB administrator <code>gpadmin</code> to the group <code>docker</code>:</p>
+<pre><code>sudo usermod -aG docker gpadmin
+</code></pre>
+</li>
+<li>
+<p>Exit the session and login again to update the privileges.</p>
+</li>
+<li>
+<p>Configure Docker to start when the host system starts:</p>
+<pre><code>sudo systemctl enable docker.service
+</code></pre>
+<pre><code>sudo systemctl start docker.service
+</code></pre>
+</li>
+<li>
+<p>Run a Docker command to test the Docker installation. This command lists the currently running Docker containers.</p>
+<pre><code>docker ps
+</code></pre>
+</li>
+<li>
+<p>After you install Docker on all SynxDB hosts, restart the SynxDB system to give SynxDB access to Docker.</p>
+<pre><code>gpstop -ra
+</code></pre>
+</li>
+</ol>
+<p>For a list of observations while using Docker and PL/Container, see the <a href="#plc_notes">Notes</a> section. For a list of Docker reference documentation, see <a href="#topic_kds_plk_rbb">Docker References</a>.</p>
+<h3 id="install-plcontainer-1"><a class="header" href="#install-plcontainer-1"><a id="install_pl_utility"></a>Install PL/Container</a></h3>
+<p>Install the PL/Container language extension using the <code>gppkg</code> utility.</p>
+<ol>
+<li>
+<p>Download the “PL/Container for RHEL 7” package that applies to your SynxDB version. PL/Container is listed under SynxDB Procedural Languages.</p>
+</li>
+<li>
+<p>As <code>gpadmin</code>, copy the PL/Container language extension package to the master host.</p>
+</li>
+<li>
+<p>Run the package installation command:</p>
+<pre><code>gppkg -i plcontainer-2.1.1-rhel7-x86_64.gppkg
+</code></pre>
+</li>
+<li>
+<p>Source the file <code>$GPHOME/synxdb_path.sh</code>:</p>
+<pre><code>source $GPHOME/synxdb_path.sh
+</code></pre>
+</li>
+<li>
+<p>Make sure SynxDB is up and running:</p>
+<pre><code>gpstate -s
+</code></pre>
+<p>If it’s not, start it:</p>
+<pre><code>gpstart -a
+</code></pre>
+</li>
+<li>
+<p>For PL/Container version 3 Beta only, add the <code>plc_coordinator</code> shared library to the SynxDB <code>shared_preload_libraries</code> server configuration parameter. Be sure to retain any previous setting of the parameter. For example:</p>
+<pre><code>gpconfig -s shared_preload_libraries
+Values on all segments are consistent
+GUC              : shared_preload_libraries
+Coordinator value: diskquota
+Segment     value: diskquota
+gpconfig -c shared_preload_libraries -v 'diskquota,plc_coordinator'
+</code></pre>
+</li>
+<li>
+<p>Restart SynxDB:</p>
+<pre><code>gpstop -ra
+</code></pre>
+</li>
+<li>
+<p>Login into one of the available databases, for example:</p>
+<pre><code>psql postgres
+</code></pre>
+</li>
+<li>
+<p>Register the PL/Container extension, which installs the <code>plcontainer</code> utility:</p>
+<pre><code>CREATE EXTENSION plcontainer; 
+</code></pre>
+<p>You’ll need to register the utility separately on each database that might need the PL/Container functionality.</p>
+</li>
+</ol>
+<h3 id="install-plcontainer-docker-images"><a class="header" href="#install-plcontainer-docker-images"><a id="install_docker_images"></a>Install PL/Container Docker Images</a></h3>
+<p>Install the Docker images that PL/Container will use to create language-specific containers to run the UDFs. Before installing, review this compatiblity matrix:</p>
+<div class="table-wrapper"><table><thead><tr><th>plcontainer version</th><th>R image version</th><th>python2 image version</th><th>python3 image version</th></tr></thead><tbody>
+<tr><td>2.3.2</td><td>2.1.3</td><td>2.1.3</td><td>2.3.2</td></tr>
+<tr><td>2.4.0</td><td>2.1.3</td><td>2.1.3</td><td>2.4.0</td></tr>
+</tbody></table>
+</div>
+<blockquote>
+<p><strong>Note</strong>:
+The PL/Container open source module contains dockerfiles to build Docker images that can be used with PL/Container. You can build a Docker image to run PL/Python UDFs and a Docker image to run PL/R UDFs. See the dockerfiles in the GitHub repository at <a href="https://github.com/greenplum-db/plcontainer-archive">https://github.com/greenplum-db/plcontainer-archive</a>.</p>
+</blockquote>
+<ul>
+<li>
+<p>Download the files that contain the Docker images. For example, click on “PL/Container Image for Python 2.2.0” which downloads <strong>plcontainer-python3-image-2.2.0-gp6.tar.gz</strong> with Python 3.9 and the <em>Python 3.9 Data Science Module Package</em>.</p>
+<p>If you require different images from the ones provided by SynxDB, you can create custom Docker images, install the image and add the image to the PL/ Container configuration.</p>
+</li>
+<li>
+<p>If you are using PL/Container 3 Beta, note that this Beta version is compatible only with the associated <code>plcontainer-r-image-3.0.0-beta-gp6.tar.gz</code> image.</p>
+</li>
+<li>
+<p>Use the <code>plcontainer image-add</code> command to install an image on all SynxDB hosts. Provide the <code>-f</code> option to specify the file system location of a downloaded image file. For example:</p>
+<pre><code># Install a Python 2 based Docker image
+plcontainer image-add -f /home/gpadmin/plcontainer-python-image-2.2.0-gp6.tar.gz
+            
+# Install a Python 3 based Docker image
+plcontainer image-add -f /home/gpadmin/plcontainer-python3-image-2.2.0-gp6.tar.gz
+            
+# Install an R based Docker image
+plcontainer image-add -f /home/gpadmin/plcontainer-r-image-2.1.3-gp6.tar.gz
+
+# Install the Beta R image for use with PL/Container 3.0.0 Beta
+plcontainer image-add -f /home/gpadmin/plcontainer-r-image-3.0.0-beta-gp6.tar.gz
+</code></pre>
+<p>The utility displays progress information, similar to:</p>
+<pre><code>20200127:21:54:43:004607 plcontainer:mdw:gpadmin-[INFO]:-Checking whether docker is installed on all hosts...
+20200127:21:54:43:004607 plcontainer:mdw:gpadmin-[INFO]:-Distributing image file /home/gpadmin/plcontainer-python-images-1.5.0.tar to all hosts...
+20200127:21:54:55:004607 plcontainer:mdw:gpadmin-[INFO]:-Loading image on all hosts...
+20200127:21:55:37:004607 plcontainer:mdw:gpadmin-[INFO]:-Removing temporary image files on all hosts...
+</code></pre>
+<p>By default, the <code>image-add</code> command copies the image to each SynxDB segment and standby master host, and installs the image. When you specify the <code>[-ulc | --use_local_copy]</code> option, <code>plcontainer</code> installs the image only on the host on which you run the command. Use this option when the PL/Container image already resides on disk on a host.</p>
+<p>For more information on <code>image-add</code> options, visit the <a href="../utility_guide/ref/plcontainer.html">plcontainer</a> reference page.</p>
+</li>
+<li>
+<p>To display the installed Docker images on the local host use:</p>
+<pre><code>$ plcontainer image-list
+</code></pre>
+<div class="table-wrapper"><table><thead><tr><th>REPOSITORY</th><th>TAG</th><th>IMAGE ID</th><th>CREATED</th></tr></thead><tbody>
+<tr><td>pivotaldata/plcontainer_r_shared</td><td>devel</td><td>7427f920669d</td><td>10 months ago</td></tr>
+<tr><td>pivotaldata/plcontainer_python_shared</td><td>devel</td><td>e36827eba53e</td><td>10 months ago</td></tr>
+<tr><td>pivotaldata/plcontainer_python3_shared</td><td>devel</td><td>y32827ebe55b</td><td>5 months ago</td></tr>
+</tbody></table>
+</div></li>
+<li>
+<p>Add the image information to the PL/Container configuration file using <code>plcontainer runtime-add</code>, to allow PL/Container to associate containers with specified Docker images.</p>
+<p>Use the <code>-r</code> option to specify your own user defined runtime ID name, use the <code>-i</code> option to specify the Docker image, and the <code>-l</code> option to specify the Docker image language. When there are multiple versions of the same docker image, for example 1.0.0 or 1.2.0, specify the TAG version using “:” after the image name.</p>
+<pre><code># Add a Python 2 based runtime
+plcontainer runtime-add -r plc_python_shared -i pivotaldata/plcontainer_python_shared:devel -l python
+            
+# Add a Python 3 based runtime that is supported with PL/Container 2.2.x
+plcontainer runtime-add -r plc_python3_shared -i pivotaldata/plcontainer_python3_shared:devel -l python3
+            
+# Add an R based runtime
+plcontainer runtime-add -r plc_r_shared -i pivotaldata/plcontainer_r_shared:devel -l r
+</code></pre>
+<p>The utility displays progress information as it updates the PL/Container configuration file on the SynxDB instances.</p>
+<p>For details on other <code>runtime-add</code> options, see the <a href="../utility_guide/ref/plcontainer.html">plcontainer</a> reference page.</p>
+</li>
+<li>
+<p>Optional: Use SynxDB resource groups to manage and limit the total CPU and memory resources of containers in PL/Container runtimes. In this example, the Python runtime will be used with a preconfigured resource group 16391:</p>
+<pre><code>plcontainer runtime-add -r plc_python_shared -i pivotaldata/plcontainer_python_shared:devel -l
+      python -s resource_group_id=16391
+</code></pre>
+<p>For more information about enabling, configuring, and using SynxDB resource groups with PL/Container, see <a href="pl_container_using.html">PL/Container Resource Management</a>.</p>
+</li>
+</ul>
+<p>You can now create a simple function to test your PL/Container installation.</p>
+<h3 id="test-the-plcontainer-installation"><a class="header" href="#test-the-plcontainer-installation"><a id="test_installation"></a>Test the PL/Container Installation</a></h3>
+<p>List the names of the runtimes your created and added to the PL/Container XML file:</p>
+<pre><code>plcontainer runtime-show
+
+</code></pre>
+<p>which will show a list of all installed runtimes:</p>
+<pre><code>PL/Container Runtime Configuration: 
+---------------------------------------------------------
+  Runtime ID: plc_python_shared
+  Linked Docker Image: pivotaldata/plcontainer_python_shared:devel
+  Runtime Setting(s): 
+  Shared Directory: 
+  ---- Shared Directory From HOST '/usr/local/synxdb/./bin/plcontainer_clients' to Container '/clientdir', access mode is 'ro'
+---------------------------------------------------------
+
+
+</code></pre>
+<p>You can also view the PL/Container configuration information with the <code>plcontainer runtime-show -r &lt;runtime_id&gt;</code> command. You can view the PL/Container configuration XML file with the <code>plcontainer runtime-edit</code> command.</p>
+<p>Use the <code>psql</code> utility and select an existing database:</p>
+<pre><code>psql postgres;
+</code></pre>
+<p>If the PL/Container extension is not registered with the selected database, first enable it using:</p>
+<pre><code>postgres=# CREATE EXTENSION plcontainer;
+</code></pre>
+<p>Create a simple function to test your installation; in the example, the function will use the runtime <code>plc_python_shared</code>:</p>
+<pre><code>postgres=# CREATE FUNCTION dummyPython() RETURNS text AS $$
+# container: plc_python_shared
+return 'hello from Python'
+$$ LANGUAGE plcontainer;
+</code></pre>
+<p>And test the function using:</p>
+<pre><code>postgres=# SELECT dummyPython();
+    dummypython    
+-------------------
+ hello from Python
+(1 row)
+
+</code></pre>
+<p>Similarly, to test the R runtime:</p>
+<pre><code>postgres=# CREATE FUNCTION dummyR() RETURNS text AS $$
+# container: plc_r_shared
+return ('hello from R')
+$$ LANGUAGE plcontainer;
+CREATE FUNCTION
+postgres=# select dummyR();
+    dummyr    
+--------------
+ hello from R
+(1 row)
+</code></pre>
+<p>For further details and examples about using PL/Container functions, see <a href="pl_container_using.html">PL/Container Functions</a>.</p>
+<h2 id="upgrade-plcontainer"><a class="header" href="#upgrade-plcontainer"><a id="upgrade_plcontainer"></a>Upgrade PL/Container</a></h2>
+<p>To upgrade PL/Container, you save the current configuration, upgrade PL/Container, and then restore the configuration after upgrade. There is no need to update the Docker images when you upgrade PL/Container.</p>
+<blockquote>
+<p><strong>Note</strong> Before you perform this upgrade procedure, ensure that you have migrated your PL/Container package from your previous SynxDB installation to your new SynxDB installation. Refer to the <a href="../utility_guide/ref/gppkg.html">gppkg</a> command for package installation and migration information.</p>
+</blockquote>
+<blockquote>
+<p><strong>Note</strong> You cannot upgrade to PL/Container 3 Beta. To install PL/Container 3 Beta, first save and then uninstall your existing PL/Container software. Then follow the instructions in <a href="#install_pl_utility">Install PL/Container</a>.</p>
+</blockquote>
+<p>To upgrade, perform the following procedure:</p>
+<ol>
+<li>
+<p>Save the PL/Container configuration. For example, to save the configuration to a file named <code>plcontainer202-backup.xml</code> in the local directory:</p>
+<pre><code>$ plcontainer runtime-backup -f plcontainer202-backup.xml
+</code></pre>
+</li>
+<li>
+<p>Use the SynxDB <code>gppkg</code> utility with the <code>-u</code> option to update the PL/Container language extension. For example, the following command updates the PL/Container language extension to version 2.2.0 on a Linux system:</p>
+<pre><code>$ gppkg -u plcontainer-2.2.0-gp6-rhel7_x86_64.gppkg
+</code></pre>
+</li>
+<li>
+<p>Source the SynxDB environment file <code>$GPHOME/synxdb_path.sh</code>.</p>
+<pre><code>$ source $GPHOME/synxdb_path.sh
+</code></pre>
+</li>
+<li>
+<p>Restore the PL/Container configuration that you saved in a previous step:</p>
+<pre><code>$ plcontainer runtime-restore -f plcontainer202-backup.xml
+</code></pre>
+</li>
+<li>
+<p>Restart SynxDB.</p>
+<pre><code>$ gpstop -ra
+</code></pre>
+</li>
+<li>
+<p>You do not need to re-register the PL/Container extension in the databases in which you previously created the extension but ensure that you register the PL/Container extension in each new database that will run PL/Container UDFs. For example, the following command registers PL/Container in a database named <code>mytest</code>:</p>
+<pre><code>$ psql -d mytest -c 'CREATE EXTENSION plcontainer;'
+</code></pre>
+<p>The command also creates PL/Container-specific functions and views.</p>
+</li>
+</ol>
+<h2 id="uninstall-plcontainer"><a class="header" href="#uninstall-plcontainer"><a id="uninstall_plcontainer"></a>Uninstall PL/Container</a></h2>
+<p>To uninstall PL/Container, remove Docker containers and images, and then remove the PL/Container support from SynxDB.</p>
+<p>When you remove support for PL/Container, the <code>plcontainer</code> user-defined functions that you created in the database will no longer work.</p>
+<h3 id="uninstall-docker-containers-and-images"><a class="header" href="#uninstall-docker-containers-and-images"><a id="topic_rnb_4s5_lw"></a>Uninstall Docker Containers and Images</a></h3>
+<p>On the SynxDB hosts, uninstall the Docker containers and images that are no longer required.</p>
+<p>The <code>plcontainer image-list</code> command lists the Docker images that are installed on the local SynxDB host.</p>
+<p>The <code>plcontainer image-delete</code> command deletes a specified Docker image from all SynxDB hosts.</p>
+<p>Some Docker containers might exist on a host if the containers were not managed by PL/Container. You might need to remove the containers with Docker commands. These <code>docker</code> commands manage Docker containers and images on a local host.</p>
+<ul>
+<li>The command <code>docker ps -a</code> lists all containers on a host. The command <code>docker stop</code> stops a container.</li>
+<li>The command <code>docker images</code> lists the images on a host.</li>
+<li>The command <code>docker rmi</code> removes images.</li>
+<li>The command <code>docker rm</code> removes containers.</li>
+</ul>
+<h3 id="remove-plcontainer-support-for-a-database"><a class="header" href="#remove-plcontainer-support-for-a-database"><a id="topic_qnb_3cj_kw"></a>Remove PL/Container Support for a Database</a></h3>
+<p>To remove support for PL/Container, drop the extension from the database. Use the <code>psql</code> utility with <code>DROP EXTENSION</code> command (using <code>-c</code>) to remove PL/Container from <code>mytest</code> database.</p>
+<pre><code>psql -d mytest -c 'DROP EXTENSION plcontainer CASCADE;'
+</code></pre>
+<p>The <code>CASCADE</code> keyword drops PL/Container-specific functions and views.</p>
+<h3 id="remove-plcontainer-3-beta-shared-library"><a class="header" href="#remove-plcontainer-3-beta-shared-library"><a id="topic_llg_d4w_blb"></a>Remove PL/Container 3 Beta Shared Library</a></h3>
+<p>This step is required only if you have installed PL/Container 3 Beta. Before you remove the extension from your system with <code>gppkg</code>, remove the shared library configuration for the <code>plc_coordinator</code> process:</p>
+<ol>
+<li>
+<p>Examine the <code>shared_preload_libraries</code> server configuration parameter setting.</p>
+<pre><code>$ gpconfig -s shared_preload_libraries
+</code></pre>
+<ul>
+<li>
+<p>If <code>plc_coordinator</code> is the only library listed, remove the configuration parameter setting:</p>
+<pre><code>$ gpconfig -r shared_preload_libraries
+</code></pre>
+<p>Removing a server configuration parameter comments out the setting in the postgresql.conf file.</p>
+</li>
+<li>
+<p>If there are multiple libraries listed, remove <code>plc_coordinator</code> from the list and re-set the configuration parameter. For example, if <code>shared_preload_libraries</code> is set to <code>'diskquota,plc_coordinator'</code>:</p>
+<pre><code>$ gpconfig -c shared_preload_libraries -v 'diskquota'
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>Restart the SynxDB cluster:</p>
+<pre><code>$ gpstop -ra
+</code></pre>
+</li>
+</ol>
+<h3 id="uninstall-the-plcontainer-language-extension"><a class="header" href="#uninstall-the-plcontainer-language-extension"><a id="topic_dty_fcj_kw"></a>Uninstall the PL/Container Language Extension</a></h3>
+<p>If no databases have <code>plcontainer</code> as a registered language, uninstall the SynxDB PL/Container language extension with the <code>gppkg</code> utility.</p>
+<ol>
+<li>
+<p>Use the SynxDB <code>gppkg</code> utility with the <code>-r</code> option to uninstall the PL/Container language extension. This example uninstalls the PL/Container language extension on a Linux system:</p>
+<pre><code>$ gppkg -r plcontainer-2.1.1
+</code></pre>
+<p>You can run the <code>gppkg</code> utility with the options <code>-q --all</code> to list the installed extensions and their versions.</p>
+</li>
+<li>
+<p>Reload <code>synxdb_path.sh</code>.</p>
+<pre><code>$ source $GPHOME/synxdb_path.sh
+</code></pre>
+</li>
+<li>
+<p>Restart the database.</p>
+<pre><code>$ gpstop -ra
+</code></pre>
+</li>
+</ol>
+<h2 id="notes"><a class="header" href="#notes"><a id="plc_notes"></a>Notes</a></h2>
+<p><strong>Docker Notes</strong></p>
+<ul>
+<li>
+<p>If a PL/Container Docker container exceeds the maximum allowed memory, it is terminated and an out of memory warning is displayed.</p>
+</li>
+<li>
+<p>PL/Container does not limit the Docker base device size, the size of the Docker container. In some cases, the Docker daemon controls the base device size. For example, if the Docker storage driver is devicemapper, the Docker daemon <code>--storage-opt</code> option flag <code>dm.basesize</code> controls the base device size. The default base device size for devicemapper is 10GB. The Docker command <code>docker info</code> displays Docker system information including the storage driver. The base device size is displayed in Docker 1.12 and later. For information about Docker storage drivers, see the Docker information <a href="https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-storage-driver">Daemon storage-driver</a>.</p>
+<p>When setting the Docker base device size, the size must be set on all SynxDB hosts.</p>
+</li>
+<li>
+<p><em>Known issue</em>:</p>
+<p>Occasionally, when PL/Container is running in a high concurrency environment, the Docker daemon hangs with log entries that indicate a memory shortage. This can happen even when the system seems to have adequate free memory.</p>
+<p>The issue seems to be triggered by the aggressive virtual memory requirement of the Go language (golang) runtime that is used by PL/Container, and the SynxDB Linux server kernel parameter setting for <em>overcommit_memory</em>. The parameter is set to 2 which does not allow memory overcommit.</p>
+<p>A workaround that might help is to increase the amount of swap space and increase the Linux server kernel parameter overcommit_ratio. If the issue still occurs after the changes, there might be memory shortage. You should check free memory on the system and add more RAM if needed. You can also decrease the cluster load.</p>
+</li>
+</ul>
+<h2 id="docker-references"><a class="header" href="#docker-references"><a id="topic_kds_plk_rbb"></a>Docker References</a></h2>
+<p>Docker home page <a href="https://www.docker.com/">https://www.docker.com/</a></p>
+<p>Docker command line interface <a href="https://docs.docker.com/engine/reference/commandline/cli/">https://docs.docker.com/engine/reference/commandline/cli/</a></p>
+<p>Dockerfile reference <a href="https://docs.docker.com/engine/reference/builder/">https://docs.docker.com/engine/reference/builder/</a></p>
+<p>For CentOS, see <a href="https://docs.docker.com/engine/installation/linux/centos/">Docker site installation instructions for CentOS</a>.</p>
+<p>For a list of Docker commands, see the <a href="https://docs.docker.com/engine/reference/run/">Docker engine Run Reference</a>.</p>
+<p>Installing Docker on Linux systems <a href="https://docs.docker.com/engine/installation/linux/centos/">https://docs.docker.com/engine/installation/linux/centos/</a></p>
+<p>Control and configure Docker with systemd <a href="https://docs.docker.com/engine/admin/systemd/">https://docs.docker.com/engine/admin/systemd/</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../analytics/intro.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../analytics/pl_container_using.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../analytics/intro.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../analytics/pl_container_using.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

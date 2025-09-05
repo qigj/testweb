@@ -1,0 +1,17 @@
+Load Data
+***********************
+
+.. toctree::
+   :maxdepth: 2
+
+   load-data-overview
+   load-data-from-local-files/load-data-from-local-files-index
+   load-external-data-source-using-foreign-table
+   load-data-from-web-services
+   load-data-using-pxf
+   load-data-using-kafka-fdw
+   load-data-using-kafka-connector
+   load-data-from-oss-and-hdfs
+   load-data-from-hive
+   load-data-from-mysql
+   customize-multi-char-delimiters

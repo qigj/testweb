@@ -1,0 +1,483 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>gp_parallel_retrieve_cursor - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gp_parallel_retrieve_cursor"><a class="header" href="#gp_parallel_retrieve_cursor">gp_parallel_retrieve_cursor</a></h1>
+<p>The <code>gp_parallel_retrieve_cursor</code> module is an enhanced cursor implementation that you can use to create a special kind of cursor on the SynxDB master node, and retrieve query results, on demand and in parallel, directly from the SynxDB segments. SynxDB refers to such a cursor as a <em>parallel retrieve cursor</em>.</p>
+<p>The <code>gp_parallel_retrieve_cursor</code> module is a SynxDB-specific cursor implementation loosely based on the PostgreSQL cursor.</p>
+<h2 id="installing-and-registering-the-module"><a class="header" href="#installing-and-registering-the-module"><a id="topic_reg"></a>Installing and Registering the Module</a></h2>
+<p>The <code>gp_parallel_retrieve_cursor</code> module is installed when you install SynxDB. Before you can use any of the functions or views defined in the module, you must register the <code>gp_parallel_retrieve_cursor</code> extension in each database where you want to use the functionality:</p>
+<pre><code>CREATE EXTENSION gp_parallel_retrieve_cursor;
+</code></pre>
+<p>Refer to <a href="../../install_guide/install_modules.html">Installing Additional Supplied Modules</a> for more information.</p>
+<h2 id="about-the-gp_parallel_retrieve_cursor-module"><a class="header" href="#about-the-gp_parallel_retrieve_cursor-module"><a id="topic_about"></a>About the gp_parallel_retrieve_cursor Module</a></h2>
+<p>You use a cursor to retrieve a smaller number of rows at a time from a larger query. When you declare a parallel retrieve cursor, the SynxDB Query Dispatcher (QD) dispatches the query plan to each Query Executor (QE), and creates an <em>endpoint</em> on each QE before it executes the query. An endpoint is a query result source for a parallel retrieve cursor on a specific QE. Instead of returning the query result to the QD, an endpoint retains the query result for retrieval via a different process: a direct connection to the endpoint. You open a special retrieve mode connection, called a <em>retrieve session</em>, and use the new <code>RETRIEVE</code> SQL command to retrieve query results from each parallel retrieve cursor endpoint. You can retrieve from parallel retrieve cursor endpoints on demand and in parallel.</p>
+<p>The <code>gp_parallel_retrieve_cursor</code> module provides the following functions and views that you can use to examine and manage parallel retrieve cursors and endpoints:</p>
+<div class="table-wrapper"><table><thead><tr><th>Function, View Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>gp_get_endpoints()<br/><br/><a href="../system_catalogs/gp_endpoints.html">gp_endpoints</a></td><td>List the endpoints associated with all active parallel retrieve cursors declared by the current user in the current database. When the SynxDB superuser invokes this function, it returns a list of all endpoints for all parallel retrieve cursors declared by all users in the current database.</td></tr>
+<tr><td>gp_get_session_endpoints()<br/><br/><a href="../system_catalogs/gp_session_endpoints.html">gp_session_endpoints</a></td><td>List the endpoints associated with all parallel retrieve cursors declared in the current session for the current user.</td></tr>
+<tr><td>gp_get_segment_endpoints()<br/><br/><a href="../system_catalogs/gp_segment_endpoints.html">gp_segment_endpoints</a></td><td>List the endpoints created in the QE for all active parallel retrieve cursors declared by the current user. When the SynxDB superuser accesses this view, it returns a list of all endpoints on the QE created for all parallel retrieve cursors declared by all users.</td></tr>
+<tr><td>gp_wait_parallel_retrieve_cursor(cursorname text, timeout_sec int4 )</td><td>Return cursor status or block and wait for results to be retrieved from all endpoints associated with the specified parallel retrieve cursor.</td></tr>
+</tbody></table>
+</div>
+<blockquote>
+<p><strong>Note</strong> Each of these functions and views is located in the <code>pg_catalog</code> schema, and each <code>RETURNS TABLE</code>.</p>
+</blockquote>
+<h2 id="using-the-gp_parallel_retrieve_cursor-module"><a class="header" href="#using-the-gp_parallel_retrieve_cursor-module"><a id="topic_using"></a>Using the gp_parallel_retrieve_cursor Module</a></h2>
+<p>You will perform the following tasks when you use a SynxDB parallel retrieve cursor to read query results in parallel from SynxDB segments:</p>
+<ol>
+<li><a href="#declare_cursor">Declare the parallel retrieve cursor</a>.</li>
+<li><a href="#list_endpoints">List the endpoints of the parallel retrieve cursor</a>.</li>
+<li><a href="#open_retrieve_conn">Open a retrieve connection to each endpoint</a>.</li>
+<li><a href="#retrieve_data">Retrieve data from each endpoint</a>.</li>
+<li><a href="#wait">Wait for data retrieval to complete</a>.</li>
+<li><a href="#error_handling">Handle data retrieval errors</a>.</li>
+<li><a href="#close">Close the parallel retrieve cursor</a>.</li>
+</ol>
+<p>In addition to the above, you may optionally choose to open a utility-mode connection to an endpoint to <a href="#utility_endpoints">List segment-specific retrieve session information</a>.</p>
+<h3 id="declaring-a-parallel-retrieve-cursor"><a class="header" href="#declaring-a-parallel-retrieve-cursor"><a id="declare_cursor"></a>Declaring a Parallel Retrieve Cursor</a></h3>
+<p>You <a href="../sql_commands/DECLARE.html">DECLARE</a> a cursor to retrieve a smaller number of rows at a time from a larger query. When you declare a parallel retrieve cursor, you can retrieve the query results directly from the SynxDB segments.</p>
+<p>The syntax for declaring a parallel retrieve cursor is similar to that of declaring a regular cursor; you must additionally include the <code>PARALLEL RETRIEVE</code> keywords in the command. You can declare a parallel retrieve cursor only within a transaction, and the cursor name that you specify when you declare the cursor must be unique within the transaction.</p>
+<p>For example, the following commands begin a transaction and declare a parallel retrieve cursor named <code>prc1</code> to retrieve the results from a specific query:</p>
+<pre><code>BEGIN;
+DECLARE prc1 PARALLEL RETRIEVE CURSOR FOR &lt;query&gt;;
+</code></pre>
+<p>SynxDB creates the endpoint(s) on the QD or QEs, depending on the <em>query</em> parameters:</p>
+<ul>
+<li>
+<p>SynxDB creates an endpoint on the QD when the query results must be gathered by the master. For example, this <code>DECLARE</code> statement requires that the master gather the query results:</p>
+<pre><code>DECLARE c1 PARALLEL RETRIEVE CURSOR FOR SELECT * FROM t1 ORDER BY a;
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> You may choose to run the <code>EXPLAIN</code> command on the parallel retrieve cursor query to identify when motion is involved. Consider using a regular cursor for such queries.</p>
+</blockquote>
+</li>
+<li>
+<p>When the query involves direct dispatch to a segment (the query is filtered on the distribution key), SynxDB creates the endpoint(s) on specific segment host(s). For example, this <code>DECLARE</code> statement may result in the creation of single endpoint:</p>
+<pre><code>DECLARE c2 PARALLEL RETRIEVE CURSOR FOR SELECT * FROM t1 WHERE a=1;
+</code></pre>
+</li>
+<li>
+<p>SynxDB creates the endpoints on all segment hosts when all hosts contribute to the query results. This example <code>DECLARE</code> statement results in all segments contributing query results:</p>
+<pre><code>DECLARE c3 PARALLEL RETRIEVE CURSOR FOR SELECT * FROM t1;
+</code></pre>
+</li>
+</ul>
+<p>The <code>DECLARE</code> command returns when the endpoints are ready and query execution has begun.</p>
+<h3 id="listing-a-parallel-retrieve-cursors-endpoints"><a class="header" href="#listing-a-parallel-retrieve-cursors-endpoints"><a id="list_endpoints"></a>Listing a Parallel Retrieve Cursor’s Endpoints</a></h3>
+<p>You can obtain the information that you need to initiate a retrieve connection to an endpoint by invoking the <code>gp_get_endpoints()</code> function or examining the <code>gp_endpoints</code> view in a session on the SynxDB master host:</p>
+<pre><code>SELECT * FROM gp_get_endpoints();
+SELECT * FROM gp_endpoints;
+</code></pre>
+<p>These commands return the list of endpoints in a table with the following columns:</p>
+<div class="table-wrapper"><table><thead><tr><th>Column Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>gp_segment_id</td><td>The QE’s endpoint <code>gp_segment_id</code>.</td></tr>
+<tr><td>auth_token</td><td>The authentication token for a retrieve session.</td></tr>
+<tr><td>cursorname</td><td>The name of the parallel retrieve cursor.</td></tr>
+<tr><td>sessionid</td><td>The identifier of the session in which the parallel retrieve cursor was created.</td></tr>
+<tr><td>hostname</td><td>The name of the host from which to retrieve the data for the endpoint.</td></tr>
+<tr><td>port</td><td>The port number from which to retrieve the data for the endpoint.</td></tr>
+<tr><td>username</td><td>The name of the current user; <em>you must initiate the retrieve session as this user</em>.</td></tr>
+<tr><td>state</td><td>The state of the endpoint; the valid states are:<br/><br/>READY: The endpoint is ready to be retrieved.<br/><br/>ATTACHED: The endpoint is attached to a retrieve connection.<br/><br/>RETRIEVING: A retrieve session is retrieving data from the endpoint at this moment.<br/><br/>FINISHED: The endpoint has been fully retrieved.<br/><br/>RELEASED: Due to an error, the endpoint has been released and the connection closed.</td></tr>
+<tr><td>endpointname</td><td>The endpoint identifier; you provide this identifier to the <code>RETRIEVE</code> command.</td></tr>
+</tbody></table>
+</div>
+<p>Refer to the <a href="../system_catalogs/gp_endpoints.html">gp_endpoints</a> view reference page for more information about the endpoint attributes returned by these commands.</p>
+<p>You can similarly invoke the <code>gp_get_session_endpoints()</code> function or examine the <code>gp_session_endpoints</code> view to list the endpoints created for the parallel retrieve cursors declared in the current session and by the current user.</p>
+<h3 id="opening-a-retrieve-session"><a class="header" href="#opening-a-retrieve-session"><a id="open_retrieve_conn"></a>Opening a Retrieve Session</a></h3>
+<p>After you declare a parallel retrieve cursor, you can open a retrieve session to each endpoint. Only a single retrieve session may be open to an endpoint at any given time.</p>
+<blockquote>
+<p><strong>Note</strong> A retrieve session is independent of the parallel retrieve cursor itself and the endpoints.</p>
+</blockquote>
+<p>Retrieve session authentication does not depend on the <code>pg_hba.conf</code> file, but rather on an authentication token (<code>auth_token</code>) generated by SynxDB.</p>
+<blockquote>
+<p><strong>Note</strong> Because SynxDB skips <code>pg_hba.conf</code>-controlled authentication for a retrieve session, for security purposes you may invoke only the <code>RETRIEVE</code> command in the session.</p>
+</blockquote>
+<p>When you initiate a retrieve session to an endpoint:</p>
+<ul>
+<li>The user that you specify for the retrieve session must be the user that declared the parallel retrieve cursor (the <code>username</code> returned by <code>gp_endpoints</code>). This user must have SynxDB login privileges.</li>
+<li>You specify the <code>hostname</code> and <code>port</code> returned by <code>gp_endpoints</code> for the endpoint.</li>
+<li>You authenticate the retrieve session by specifying the <code>auth_token</code> returned for the endpoint via the <code>PGPASSWORD</code> environment variable, or when prompted for the retrieve session <code>Password</code>.</li>
+<li>You must specify the <a href="../config_params/guc-list.html#gp_retrieve_conn">gp_retrieve_conn</a> server configuration parameter on the connection request, and set the value to <code>true</code> .</li>
+</ul>
+<p>For example, if you are initiating a retrieve session via <code>psql</code>:</p>
+<pre><code>PGOPTIONS='-c gp_retrieve_conn=true' psql -h &lt;hostname&gt; -p &lt;port&gt; -U &lt;username&gt; -d &lt;dbname&gt;
+</code></pre>
+<p>To distinguish a retrieve session from other sessions running on a segment host, SynxDB includes the <code>[retrieve]</code> tag on the <code>ps</code> command output display for the process.</p>
+<h3 id="retrieving-data-from-the-endpoint"><a class="header" href="#retrieving-data-from-the-endpoint"><a id="retrieve_data"></a>Retrieving Data From the Endpoint</a></h3>
+<p>Once you establish a retrieve session, you retrieve the tuples associated with a query result on that endpoint using the <a href="../sql_commands/RETRIEVE.html">RETRIEVE</a> command.</p>
+<p>You can specify a (positive) number of rows to retrieve, or <code>ALL</code> rows:</p>
+<pre><code>RETRIEVE 7 FROM ENDPOINT prc10000003300000003;
+RETRIEVE ALL FROM ENDPOINT prc10000003300000003;
+</code></pre>
+<p>SynxDB returns an empty set if there are no more rows to retrieve from the endpoint.</p>
+<blockquote>
+<p><strong>Note</strong> You can retrieve from multiple parallel retrieve cursors from the same retrieve session only when their <code>auth_token</code>s match.</p>
+</blockquote>
+<h3 id="waiting-for-data-retrieval-to-complete"><a class="header" href="#waiting-for-data-retrieval-to-complete"><a id="wait"></a>Waiting for Data Retrieval to Complete</a></h3>
+<p>Use the <code>gp_wait_parallel_retrieve_cursor()</code> function to display the the status of data retrieval from a parallel retrieve cursor, or to wait for all endpoints to finishing retrieving the data. You invoke this function in the transaction block in which you declared the parallel retrieve cursor.</p>
+<p><code>gp_wait_parallel_retrieve_cursor()</code> returns <code>true</code> only when all tuples are fully retrieved from all endpoints. In all other cases, the function returns <code>false</code> and may additionally throw an error.</p>
+<p>The function signatures of <code>gp_wait_parallel_retrieve_cursor()</code> follow:</p>
+<pre><code>gp_wait_parallel_retrieve_cursor( cursorname text )
+gp_wait_parallel_retrieve_cursor( cursorname text, timeout_sec int4 )
+</code></pre>
+<p>You must identify the name of the cursor when you invoke this function. The timeout argument is optional:</p>
+<ul>
+<li>The default timeout is <code>0</code> seconds: SynxDB checks the retrieval status of all endpoints and returns the result immediately.</li>
+<li>A timeout value of <code>-1</code> seconds instructs SynxDB to block until all data from all endpoints has been retrieved, or block until an error occurs.</li>
+<li>The function reports the retrieval status after a timeout occurs for any other positive timeout value that you specify.</li>
+</ul>
+<p><code>gp_wait_parallel_retrieve_cursor()</code> returns when it encounters one of the following conditions:</p>
+<ul>
+<li>All data has been retrieved from all endpoints.</li>
+<li>A timeout has occurred.</li>
+<li>An error has occurred.</li>
+</ul>
+<h3 id="handling-data-retrieval-errors"><a class="header" href="#handling-data-retrieval-errors"><a id="error_handling"></a>Handling Data Retrieval Errors</a></h3>
+<p>An error can occur in a retrieve sesson when:</p>
+<ul>
+<li>You cancel or interrupt the retrieve operation.</li>
+<li>The endpoint is only partially retrieved when the retrieve session quits.</li>
+</ul>
+<p>When an error occurs in a specific retrieve session, SynxDB removes the endpoint from the QE. Other retrieve sessions continue to function as normal.</p>
+<p>If you close the transaction before fully retrieving from all endpoints, or if <code>gp_wait_parallel_retrieve_cursor()</code> returns an error, SynxDB terminates all remaining open retrieve sessions.</p>
+<h3 id="closing-the-cursor"><a class="header" href="#closing-the-cursor"><a id="close"></a>Closing the Cursor</a></h3>
+<p>When you have completed retrieving data from the parallel retrieve cursor, close the cursor and end the transaction:</p>
+<pre><code>CLOSE prc1;
+END;
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> When you close a parallel retrieve cursor, SynxDB terminates any open retrieve sessions associated with the cursor.</p>
+</blockquote>
+<p>On closing, SynxDB frees all resources associated with the parallel retrieve cursor and its endpoints.</p>
+<h3 id="listing-segment-specific-retrieve-session-information"><a class="header" href="#listing-segment-specific-retrieve-session-information"><a id="utility_endpoints"></a>Listing Segment-Specific Retrieve Session Information</a></h3>
+<p>You can obtain information about all retrieve sessions to a specific QE endpoint by invoking the <code>gp_get_segment_endpoints()</code> function or examining the <code>gp_segment_endpoints</code> view:</p>
+<pre><code>SELECT * FROM gp_get_segment_endpoints();
+SELECT * FROM gp_segment_endpoints;
+</code></pre>
+<p>These commands provide information about the retrieve sessions associated with a QE endpoint for all active parallel retrieve cursors declared by the current user. When the SynxDB superuser invokes the command, it returns the retrieve session information for all endpoints on the QE created for all parallel retrieve cursors declared by all users.</p>
+<p>You can obtain segment-specific retrieve session information in two ways: from the QD, or via a utility-mode connection to the endpoint:</p>
+<ul>
+<li>
+<p>QD example:</p>
+<pre><code>SELECT * from gp_dist_random('gp_segment_endpoints');
+</code></pre>
+<p>Display the information filtered to a specific segment:</p>
+<pre><code>SELECT * from gp_dist_random('gp_segment_endpoints') WHERE gp_segment_id = 0;
+</code></pre>
+</li>
+<li>
+<p>Example utilizing a utility-mode connection to the endpoint:</p>
+<pre><code>$ PGOPTIONS='-c gp_session_role=utility' psql -h sdw3 -U localuser -p 6001 -d testdb
+
+testdb=&gt; SELECT * from gp_segment_endpoints;
+</code></pre>
+</li>
+</ul>
+<p>The commands return endpoint and retrieve session information in a table with the following columns:</p>
+<div class="table-wrapper"><table><thead><tr><th>Column Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>auth_token</td><td>The authentication token for a the retrieve session.</td></tr>
+<tr><td>databaseid</td><td>The identifier of the database in which the parallel retrieve cursor was created.</td></tr>
+<tr><td>senderpid</td><td>The identifier of the process sending the query results.</td></tr>
+<tr><td>receiverpid</td><td>The process identifier of the retrieve session that is receiving the query results.</td></tr>
+<tr><td>state</td><td>The state of the endpoint; the valid states are:<br/><br/>READY: The endpoint is ready to be retrieved.<br/><br/>ATTACHED: The endpoint is attached to a retrieve connection.<br/><br/>RETRIEVING: A retrieve session is retrieving data from the endpoint at this moment.<br/><br/>FINISHED: The endpoint has been fully retrieved.<br/><br/>RELEASED: Due to an error, the endpoint has been released and the connection closed.</td></tr>
+<tr><td>gp_segment_id</td><td>The QE’s endpoint <code>gp_segment_id</code>.</td></tr>
+<tr><td>sessionid</td><td>The identifier of the session in which the parallel retrieve cursor was created.</td></tr>
+<tr><td>username</td><td>The name of the user that initiated the retrieve session.</td></tr>
+<tr><td>endpointname</td><td>The endpoint identifier.</td></tr>
+<tr><td>cursorname</td><td>The name of the parallel retrieve cursor.</td></tr>
+</tbody></table>
+</div>
+<p>Refer to the <a href="../system_catalogs/gp_segment_endpoints.html">gp_segment_endpoints</a> view reference page for more information about the endpoint attributes returned by these commands.</p>
+<h2 id="limiting-the-number-of-concurrently-open-cursors"><a class="header" href="#limiting-the-number-of-concurrently-open-cursors"><a id="topic_cfg"></a>Limiting the Number of Concurrently Open Cursors</a></h2>
+<p>By default, SynxDB does not limit the number of parallel retrieve cursors that are active in the cluster (up to the maximum value of 1024). The SynxDB superuser can set the <a href="../config_params/guc-list.html#gp_max_parallel_cursors">gp_max_parallel_cursors</a> server configuration parameter to limit the number of open cursors.</p>
+<h2 id="known-issues-and-limitations"><a class="header" href="#known-issues-and-limitations"><a id="topic_limits"></a>Known Issues and Limitations</a></h2>
+<p>The <code>gp_parallel_retrieve_cursor</code> module has the following limitations:</p>
+<ul>
+<li>The SynxDB Query Optimizer (GPORCA) does not support queries on a parallel retrieve cursor.</li>
+<li>SynxDB ignores the <code>BINARY</code> clause when you declare a parallel retrieve cursor.</li>
+<li>Parallel retrieve cursors cannot be declared <code>WITH HOLD</code>.</li>
+<li>Parallel retrieve cursors do not support the <code>FETCH</code> and <code>MOVE</code> cursor operations.</li>
+<li>Parallel retrieve cursors are not supported in SPI; you cannot declare a parallel retrieve cursor in a PL/pgSQL function.</li>
+</ul>
+<h2 id="example"><a class="header" href="#example"><a id="topic_examples"></a>Example</a></h2>
+<p>Create a parallel retrieve cursor and use it to pull query results from a SynxDB cluster:</p>
+<ol>
+<li>
+<p>Open a <code>psql</code> session to the SynxDB master host:</p>
+<pre><code>psql -d testdb
+</code></pre>
+</li>
+<li>
+<p>Register the <code>gp_parallel_retrieve_cursor</code> extension if it does not already exist:</p>
+<pre><code>CREATE EXTENSION IF NOT EXISTS gp_parallel_retrieve_cursor;
+</code></pre>
+</li>
+<li>
+<p>Start the transaction:</p>
+<pre><code>BEGIN;
+</code></pre>
+</li>
+<li>
+<p>Declare a parallel retrieve cursor named <code>prc1</code> for a <code>SELECT *</code> query on a table:</p>
+<pre><code>DECLARE prc1 PARALLEL RETRIEVE CURSOR FOR SELECT * FROM t1;
+</code></pre>
+</li>
+<li>
+<p>Obtain the endpoints for this parallel retrieve cursor:</p>
+<pre><code>SELECT * FROM gp_endpoints WHERE cursorname='prc1';
+ gp_segment_id |            auth_token            | cursorname | sessionid | hostname | port | username | state |     endpointname     
+---------------+----------------------------------+------------+-----------+----------+------+----------+-------+----------------------
+             2 | 39a2dc90a82fca668e04d04e0338f105 | prc1       |        51 | sdw1     | 6000 | bill     | READY | prc10000003300000003
+             3 | 1a6b29f0f4cad514a8c3936f9239c50d | prc1       |        51 | sdw1     | 6001 | bill     | READY | prc10000003300000003
+             4 | 1ae948c8650ebd76bfa1a1a9fa535d93 | prc1       |        51 | sdw2     | 6000 | bill     | READY | prc10000003300000003
+             5 | f10f180133acff608275d87966f8c7d9 | prc1       |        51 | sdw2     | 6001 | bill     | READY | prc10000003300000003
+             6 | dda0b194f74a89ed87b592b27ddc0e39 | prc1       |        51 | sdw3     | 6000 | bill     | READY | prc10000003300000003
+             7 | 037f8c747a5dc1b75fb10524b676b9e8 | prc1       |        51 | sdw3     | 6001 | bill     | READY | prc10000003300000003
+             8 | c43ac67030dbc819da9d2fd8b576410c | prc1       |        51 | sdw4     | 6000 | bill     | READY | prc10000003300000003
+             9 | e514ee276f6b2863142aa2652cbccd85 | prc1       |        51 | sdw4     | 6001 | bill     | READY | prc10000003300000003
+(8 rows)
+</code></pre>
+</li>
+<li>
+<p>Wait until all endpoints are fully retrieved:</p>
+<pre><code>SELECT gp_wait_parallel_retrieve_cursor( 'prc1', -1 );
+</code></pre>
+</li>
+<li>
+<p>For each endpoint:</p>
+<ol>
+<li>
+<p>Open a retrieve session. For example, to open a retrieve session to the segment instance running on <code>sdw3</code>, port number <code>6001</code>, run the following command in a <em>different terminal window</em>; when prompted for the password, provide the <code>auth_token</code> identified in row 7 of the <code>gp_endpoints</code> output:</p>
+<pre><code>$ PGOPTIONS='-c gp_retrieve_conn=true' psql -h sdw3 -U localuser -p 6001 -d testdb
+Password:
+</code></pre>
+</li>
+<li>
+<p>Retrieve data from the endpoint:</p>
+<pre><code>-- Retrieve 7 rows of data from this session
+RETRIEVE 7 FROM ENDPOINT prc10000003300000003
+-- Retrieve the remaining rows of data from this session
+RETRIEVE ALL FROM ENDPOINT prc10000003300000003
+</code></pre>
+</li>
+<li>
+<p>Exit the retrieve session.</p>
+<pre><code>\q
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p>In the original <code>psql</code> session (the session in which you declared the parallel retrieve cursor), verify that the <code>gp_wait_parallel_retrieve_cursor()</code> function returned <code>t</code>. Then close the cursor and complete the transaction:</p>
+<pre><code>CLOSE prc1;
+END;
+</code></pre>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/modules/gp_legacy_string_agg.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/modules/gp_percentile_agg.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/modules/gp_legacy_string_agg.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/modules/gp_percentile_agg.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

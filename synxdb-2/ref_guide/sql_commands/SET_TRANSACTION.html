@@ -1,0 +1,272 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>SET TRANSACTION - SynxDB 2 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SynxDB 2 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://www.synxdata.com/"><img id="fa fa-print" src="../../SYNX-Text-and-Circular-Logo-142x28-White-text-Black-background.png" alt="Synx Data Labs Logo"/></a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="set-transaction"><a class="header" href="#set-transaction">SET TRANSACTION</a></h1>
+<p>Sets the characteristics of the current transaction.</p>
+<h2 id="synopsis"><a class="header" href="#synopsis"><a id="section2"></a>Synopsis</a></h2>
+<pre><code class="language-{#sql_command_synopsis}">SET TRANSACTION [&lt;transaction_mode&gt;] [READ ONLY | READ WRITE]
+
+SET TRANSACTION SNAPSHOT &lt;snapshot_id&gt;
+
+SET SESSION CHARACTERISTICS AS TRANSACTION &lt;transaction_mode&gt; 
+     [READ ONLY | READ WRITE]
+     [NOT] DEFERRABLE
+</code></pre>
+<p>where transaction_mode is one of:</p>
+<pre><code>   ISOLATION LEVEL {SERIALIZABLE | REPEATABLE READ | READ COMMITTED | READ UNCOMMITTED}
+</code></pre>
+<p>and snapshot_id is the id of the existing transaction whose snapshot you want this transaction to run with.</p>
+<h2 id="description"><a class="header" href="#description"><a id="section3"></a>Description</a></h2>
+<p>The <code>SET TRANSACTION</code> command sets the characteristics of the current transaction. It has no effect on any subsequent transactions.</p>
+<p>The available transaction characteristics are the transaction isolation level, the transaction access mode (read/write or read-only), and the deferrable mode.</p>
+<blockquote>
+<p><strong>Note</strong> Deferrable transactions require the transaction to be serializable. SynxDB does not support serializable transactions, so including the <code>DEFERRABLE</code> clause has no effect.</p>
+</blockquote>
+<p>The isolation level of a transaction determines what data the transaction can see when other transactions are running concurrently.</p>
+<ul>
+<li><strong>READ COMMITTED</strong> — A statement can only see rows committed before it began. This is the default.</li>
+<li><strong>REPEATABLE READ</strong> — All statements in the current transaction can only see rows committed before the first query or data-modification statement run in the transaction.</li>
+</ul>
+<p>The SQL standard defines two additional levels, <code>READ UNCOMMITTED</code> and <code>SERIALIZABLE</code>. In SynxDB <code>READ UNCOMMITTED</code> is treated as <code>READ COMMITTED</code>. If you specify <code>SERIALIZABLE</code>, SynxDB falls back to <code>REPEATABLE READ</code>.</p>
+<p>The transaction isolation level cannot be changed after the first query or data-modification statement (<code>SELECT</code>, <code>INSERT</code>, <code>DELETE</code>, <code>UPDATE</code>, <code>FETCH</code>, or <code>COPY</code>) of a transaction has been run.</p>
+<p>The transaction access mode determines whether the transaction is read/write or read-only. Read/write is the default. When a transaction is read-only, the following SQL commands are disallowed: <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, and <code>COPY FROM</code> if the table they would write to is not a temporary table; all <code>CREATE</code>, <code>ALTER</code>, and <code>DROP</code> commands; <code>GRANT</code>, <code>REVOKE</code>, <code>TRUNCATE</code>; and <code>EXPLAIN ANALYZE</code> and <code>EXECUTE</code> if the command they would run is among those listed. This is a high-level notion of read-only that does not prevent all writes to disk.</p>
+<p>The <code>DEFERRABLE</code> transaction property has no effect unless the transaction is also <code>SERIALIZABLE</code> and <code>READ ONLY</code>. When all of these properties are set on a transaction, the transaction may block when first acquiring its snapshot, after which it is able to run without the normal overhead of a <code>SERIALIZABLE</code> transaction and without any risk of contributing to or being cancelled by a serialization failure. Because SynxDB does not support serializable transactions, the <code>DEFERRABLE</code> transaction property has no effect in SynxDB.</p>
+<h2 id="parameters"><a class="header" href="#parameters"><a id="section4"></a>Parameters</a></h2>
+<h3 id="snapshot"><a class="header" href="#snapshot">SNAPSHOT</a></h3>
+<p>Allows a new transaction to run with the same snapshot as an existing transaction. You pass the id of the existing transaction to the <code>SET TRANSACTION SNAPSHOT</code> command. You must first call the <code>pg_export_snapshot</code> function to obtain the existing transaction’s id.</p>
+<h3 id="session-characteristics"><a class="header" href="#session-characteristics">SESSION CHARACTERISTICS</a></h3>
+<p>Sets the default transaction characteristics for subsequent transactions of a session.</p>
+<h3 id="read-uncommittedread-committedrepeatable-readserializable"><a class="header" href="#read-uncommittedread-committedrepeatable-readserializable">READ UNCOMMITTED<br/>READ COMMITTED<br/>REPEATABLE READ<br/>SERIALIZABLE</a></h3>
+<p>The SQL standard defines four transaction isolation levels: <code>READ UNCOMMITTED</code>, <code>READ COMMITTED</code>, <code>REPEATABLE READ</code>, and <code>SERIALIZABLE</code>.</p>
+<p><code>READ UNCOMMITTED</code> allows transactions to see changes made by uncomitted concurrent transactions. This is not possible in SynxDB, so <code>READ UNCOMMITTED</code> is treated the same as <code>READ COMMITTED</code>.</p>
+<p><code>READ COMMITTED</code>, the default isolation level in SynxDB, guarantees that a statement can only see rows committed before it began. The same statement run twice in a transaction can produce different results if another concurrent transaction commits after the statement is run the first time.</p>
+<p>The <code>REPEATABLE READ</code> isolation level guarantees that a transaction can only see rows committed before it began. <code>REPEATABLE READ</code> is the strictest transaction isolation level SynxDB supports. Applications that use the <code>REPEATABLE READ</code> isolation level must be prepared to retry transactions due to serialization failures.</p>
+<p>The <code>SERIALIZABLE</code> transaction isolation level guarantees that all statements of the current transaction can only see rows committed before the first query or data-modification statement was run in this transaction. If a pattern of reads and writes among concurrent serializable transactions would create a situation which could not have occurred for any serial (one-at-a-time) execution of those transactions, one of the transactions will be rolled back with a <code>serialization_failure</code> error. SynxDB does not fully support <code>SERIALIZABLE</code> as defined by the standard, so if you specify <code>SERIALIZABLE</code>, SynxDB falls back to <code>REPEATABLE READ</code>. See <a href="#section7">Compatibility</a> for more information about transaction serializability in SynxDB.</p>
+<h3 id="read-writeread-only"><a class="header" href="#read-writeread-only">READ WRITE<br/>READ ONLY</a></h3>
+<p>Determines whether the transaction is read/write or read-only. Read/write is the default. When a transaction is read-only, the following SQL commands are disallowed: <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, and <code>COPY FROM</code> if the table they would write to is not a temporary table; all <code>CREATE</code>, <code>ALTER</code>, and <code>DROP</code> commands; <code>GRANT</code>, <code>REVOKE</code>, <code>TRUNCATE</code>; and <code>EXPLAIN ANALYZE</code> and <code>EXECUTE</code> if the command they would run is among those listed.</p>
+<h3 id="not-deferrable"><a class="header" href="#not-deferrable">[NOT] DEFERRABLE</a></h3>
+<p>The <code>DEFERRABLE</code> transaction property has no effect in SynxDB because <code>SERIALIZABLE</code> transactions are not supported. If <code>DEFERRABLE</code> is specified and the transaction is also <code>SERIALIZABLE</code> and <code>READ ONLY</code>, the transaction may block when first acquiring its snapshot, after which it is able to run without the normal overhead of a <code>SERIALIZABLE</code> transaction and without any risk of contributing to or being cancelled by a serialization failure. This mode is well suited for long-running reports or backups.</p>
+<h2 id="notes"><a class="header" href="#notes"><a id="section5"></a>Notes</a></h2>
+<p>If <code>SET TRANSACTION</code> is run without a prior <code>START TRANSACTION</code> or <code>BEGIN</code>, a warning is issued and the command has no effect.</p>
+<p>It is possible to dispense with <code>SET TRANSACTION</code> by instead specifying the desired transaction modes in <code>BEGIN</code> or <code>START TRANSACTION</code>.</p>
+<p>The session default transaction modes can also be set by setting the configuration parameters <a href="../config_params/guc-list.html">default_transaction_isolation</a>, <a href="../config_params/guc-list.html">default_transaction_read_only</a>, and <a href="../config_params/guc-list.html">default_transaction_deferrable</a>.</p>
+<h2 id="examples"><a class="header" href="#examples"><a id="section6"></a>Examples</a></h2>
+<p>Set the transaction isolation level for the current transaction:</p>
+<pre><code>BEGIN;
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+</code></pre>
+<h2 id="compatibility"><a class="header" href="#compatibility"><a id="section7"></a>Compatibility</a></h2>
+<p>Both commands are defined in the SQL standard. <code>SERIALIZABLE</code> is the default transaction isolation level in the standard. In SynxDB the default is <code>READ COMMITTED</code>. Due to lack of predicate locking, SynxDB does not fully support the <code>SERIALIZABLE</code> level, so it falls back to the <code>REPEATABLE READ</code> level when <code>SERIAL</code> is specified. Essentially, a predicate-locking system prevents phantom reads by restricting what is written, whereas a multi-version concurrency control model (MVCC) as used in SynxDB prevents them by restricting what is read.</p>
+<p>PostgreSQL provides a true serializable isolation level, called serializable snapshot isolation (SSI), which monitors concurrent transactions and rolls back transactions that could introduce serialization anomalies. SynxDB does not implement this isolation mode.</p>
+<p>In the SQL standard, there is one other transaction characteristic that can be set with these commands: the size of the diagnostics area. This concept is specific to embedded SQL, and therefore is not implemented in the SynxDB server.</p>
+<p>The <code>DEFERRABLE</code> transaction mode is a SynxDB language extension.</p>
+<p>The SQL standard requires commas between successive transaction_modes, but for historical reasons SynxDB allows the commas to be omitted.</p>
+<h2 id="see-also"><a class="header" href="#see-also"><a id="section8"></a>See Also</a></h2>
+<p><a href="BEGIN.html">BEGIN</a>, <a href="LOCK.html">LOCK</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ref_guide/sql_commands/SET_SESSION_AUTHORIZATION.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ref_guide/sql_commands/SHOW.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ref_guide/sql_commands/SET_SESSION_AUTHORIZATION.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ref_guide/sql_commands/SHOW.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
