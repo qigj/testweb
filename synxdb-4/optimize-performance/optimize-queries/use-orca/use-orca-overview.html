@@ -1721,7 +1721,7 @@
 </ul>
 <p>In SynxDB, GPORCA and the PostgreSQL-based planner coexist. By default, the system first attempts to use GPORCA. If GPORCA does not support a particular query, the system automatically falls back to the PostgreSQL optimizer.</p>
 <p>The following diagram illustrates GPORCA’s role in the overall query planning architecture:</p>
-<img alt="../../../_images/orca-architecture.png" src="../../../_images/orca-architecture.png" />
+<img alt="../../../images/orca-architecture.png" src="../../../images/orca-architecture.png" />
 <p>Note that all server parameters used to configure PostgreSQL planner behavior are ignored when GPORCA is enabled. These parameters only take effect if the system falls back to using the PostgreSQL optimizer.</p>
 <section id="enable-or-disable-gporca">
 <h2>Enable or disable GPORCA<a class="headerlink" href="#enable-or-disable-gporca" title="Link to this heading"></a></h2>

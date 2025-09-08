@@ -1718,11 +1718,11 @@
 <h2>How it works<a class="headerlink" href="#how-it-works" title="Link to this heading"></a></h2>
 <p>ZomboDB connects SynxDB clusters with Elasticsearch clusters, regardless of whether these two clusters are deployed on the same or different hosts, as long as network connectivity between the cluster hosts is maintained.</p>
 <p>A ZomboDB index in a SynxDB data table actually corresponds to an index in Elasticsearch. With large data volumes, to avoid having each segment in SynxDB scan the full dataset under the index, data from different segments can be distributed to various shards under the index, ensuring efficient ES data scanning for each segment.</p>
-<img alt="../_images/zombodb-1.png" src="../_images/zombodb-1.png" />
+<img alt="../images/zombodb-1.png" src="../images/zombodb-1.png" />
 <section id="create-index-and-load-data-process">
 <h3>Create index and load data process<a class="headerlink" href="#create-index-and-load-data-process" title="Link to this heading"></a></h3>
 <p>The following diagram shows the general process of creating a ZomboDB index for a data table and loading data.</p>
-<img alt="../_images/zombodb-2.png" src="../_images/zombodb-2.png" />
+<img alt="../images/zombodb-2.png" src="../images/zombodb-2.png" />
 <p>The entire process involves communication and interaction with the Coordinator node in the SynxDB cluster.</p>
 <ol class="arabic simple">
 <li><p>Create a data table in the SynxDB cluster and load the corresponding data.</p></li>
@@ -1734,7 +1734,7 @@
 <section id="query-data-process">
 <h3>Query data process<a class="headerlink" href="#query-data-process" title="Link to this heading"></a></h3>
 <p>The following diagram shows the general process of querying data when a ZomboDB index exists.</p>
-<img alt="../_images/zombodb-3.png" src="../_images/zombodb-3.png" />
+<img alt="../images/zombodb-3.png" src="../images/zombodb-3.png" />
 <ol class="arabic simple">
 <li><p>The user uses ZomboDB query syntax to query based on the ZomboDB index. ZomboDB queries are essentially the same as regular select statements, except they need to use the ZomboDB-specific identifier <code class="docutils literal notranslate"><span class="pre">==&gt;</span></code>.</p></li>
 <li><p>The Coordinator node in the SynxDB cluster distributes the query to each Segment.</p></li>

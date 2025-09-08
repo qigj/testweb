@@ -1716,7 +1716,7 @@
 <p>MPP, known as the shared-nothing architecture, refers to systems with multiple hosts that work together to perform a task. Each host has its own processor, memory, disk, network resources, and operating system. SynxDB uses this high-performance architecture to distribute data loads and can use all system resources in parallel to process queries.</p>
 <p>From users’ view, SynxDB is a complete relational database management system (RDBMS). In a physical view, it contains multiple PostgreSQL instances. To make these independent PostgreSQL instances work together, SynxDB performs distributed cluster processing at different levels for data storage, computing, communication, and management. SynxDB hides the complex details of the distributed system, giving users a single logical database view. This greatly eases the work of developers and operational staff.</p>
 <p>The architecture diagram of SynxDB is as follows:</p>
-<img alt="../_images/product-architecture.png" src="../_images/product-architecture.png" />
+<img alt="../images/product-architecture.png" src="../images/product-architecture.png" />
 <section id="coordinator-node">
 <h2>Coordinator node<a class="headerlink" href="#coordinator-node" title="Link to this heading"></a></h2>
 <p>Coordinator node (or control node) is the gateway to the SynxDB system, which accepts client connections and SQL queries, and allocates tasks to data node instances. Users interact with SynxDB by connecting to the coordinator node using a client program (such as psql) or an application programming interface (API) (such as JDBC, ODBC, or libpq PostgreSQL C API).</p>
