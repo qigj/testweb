@@ -7,22 +7,22 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cluster Failover &mdash; SynxDB Elastic Documentation Preview documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+      <link rel="stylesheet" type="text/css" href="../../static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../static/custom.css?v=53dc447f" />
 
   
-      <script src="../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../_static/copybutton.js?v=529101c1"></script>
-      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
-    <script src="../../_static/js/theme.js"></script>
+      <script src="../../static/jquery.js?v=5d32c60e"></script>
+      <script src="../../static/sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../static/doctools.js?v=9bcbadda"></script>
+      <script src="../../static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../static/copybutton.js?v=529101c1"></script>
+      <script src="../../static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Configure Security and Permissions" href="../../security-and-permissions/set-security-and-permission-index.html" />
@@ -134,11 +134,11 @@
 <p>This example simulates the failover of the SynxDB Elastic cluster metadata proxy service after a failure.</p>
 <ol class="arabic">
 <li><p>Access the <code class="docutils literal notranslate"><span class="pre">k9s</span></code> console and locate the <code class="docutils literal notranslate"><span class="pre">cloudberry-proxy-0</span></code> Pod in the <code class="docutils literal notranslate"><span class="pre">synxdb-system</span></code> namespace.</p>
-<p><img alt="dr1" src="../../_images/dr1.png" /></p>
+<p><img alt="dr1" src="../../images/dr1.png" /></p>
 </li>
 <li><p>Set a local forwarding port for <code class="docutils literal notranslate"><span class="pre">cloudberry-proxy-0</span></code>. Use <code class="docutils literal notranslate"><span class="pre">shift</span> <span class="pre">+</span> <span class="pre">f</span></code> to open the port forwarding settings, enter the container port (default is <code class="docutils literal notranslate"><span class="pre">5432</span></code>) and the local port to forward to. The address can be the default <code class="docutils literal notranslate"><span class="pre">localhost</span></code>.</p>
 <p><strong>Note</strong>: Avoid setting the local port to <code class="docutils literal notranslate"><span class="pre">5432</span></code> to prevent conflicts with a local PostgreSQL installation.</p>
-<p><img alt="dr2" src="../../_images/dr2.png" /></p>
+<p><img alt="dr2" src="../../images/dr2.png" /></p>
 </li>
 <li><p>Log in to the cluster using the forwarding port and address set in the previous step: <code class="docutils literal notranslate"><span class="pre">psql</span> <span class="pre">-h</span> <span class="pre">localhost</span> <span class="pre">-p</span> <span class="pre">15432</span> <span class="pre">-U</span> <span class="pre">gpadmin</span> <span class="pre">-d</span> <span class="pre">postgres</span></code>.</p></li>
 <li><p>Enter the <code class="docutils literal notranslate"><span class="pre">cloudmeta</span></code> database and verify that data can be accessed:</p>
@@ -150,14 +150,14 @@
 </div>
 </li>
 <li><p>In the <code class="docutils literal notranslate"><span class="pre">k9s</span></code> cluster, switch to the Persistent Volume Claim (PVC) view: <code class="docutils literal notranslate"><span class="pre">:pvc</span></code>. Find the corresponding storage claim and delete it using <code class="docutils literal notranslate"><span class="pre">CTRL+D</span></code>.</p>
-<p><img alt="dr3" src="../../_images/dr3.png" /></p>
+<p><img alt="dr3" src="../../images/dr3.png" /></p>
 </li>
 <li><p>In the Pod list, delete <code class="docutils literal notranslate"><span class="pre">cloudberry-proxy-0</span></code>.</p>
-<p><img alt="dr4" src="../../_images/dr4.png" /></p>
+<p><img alt="dr4" src="../../images/dr4.png" /></p>
 <p>After the Pod is deleted, k8s will restart it. The metadata cluster will be temporarily inaccessible until the Pod’s status returns to <code class="docutils literal notranslate"><span class="pre">Running</span></code>.</p>
 </li>
 <li><p>Wait for the Pod to restart. Once its status is <code class="docutils literal notranslate"><span class="pre">Running</span></code>, set up local port forwarding again and access the <code class="docutils literal notranslate"><span class="pre">cloudmeta</span></code> database. The database should now be accessible.</p>
-<p><img alt="dr5" src="../../_images/dr5.png" /></p>
+<p><img alt="dr5" src="../../images/dr5.png" /></p>
 </li>
 </ol>
 </section>
@@ -211,11 +211,11 @@
 </div>
 </li>
 <li><p>Delete the <code class="docutils literal notranslate"><span class="pre">cloudberry-proxy-0</span></code> Pod and its corresponding PVC. At this point, <code class="docutils literal notranslate"><span class="pre">test_db</span></code> will be temporarily inaccessible.</p>
-<p><img alt="dr6" src="../../_images/dr6.png" /></p>
-<p><img alt="dr7" src="../../_images/dr7.png" /></p>
+<p><img alt="dr6" src="../../images/dr6.png" /></p>
+<p><img alt="dr7" src="../../images/dr7.png" /></p>
 </li>
 <li><p>When the Pod’s status automatically changes to <code class="docutils literal notranslate"><span class="pre">Running</span></code>, <code class="docutils literal notranslate"><span class="pre">test_db</span></code> becomes accessible again.</p>
-<p><img alt="dr8" src="../../_images/dr8.png" /></p>
+<p><img alt="dr8" src="../../images/dr8.png" /></p>
 </li>
 </ol>
 </section>
@@ -225,10 +225,10 @@
 <ol class="arabic">
 <li><p>In <code class="docutils literal notranslate"><span class="pre">k9s</span></code>, go to the data warehouse namespace (e.g., <code class="docutils literal notranslate"><span class="pre">cloud007-513d75d5-3033-4649-b913-07f6115ec41a+</span></code>) and locate the data node Pod (e.g., <code class="docutils literal notranslate"><span class="pre">wh9527-0</span></code>).</p></li>
 <li><p>Go to the PVC list, locate the corresponding PVC, and delete it.</p>
-<p><img alt="dr9" src="../../_images/dr9.png" /></p>
+<p><img alt="dr9" src="../../images/dr9.png" /></p>
 </li>
 <li><p>Delete the Pod <code class="docutils literal notranslate"><span class="pre">wh9527-0</span></code>. At this point, <code class="docutils literal notranslate"><span class="pre">test_db</span></code> will be briefly inaccessible.</p>
-<p><img alt="dr10" src="../../_images/dr10.png" /></p>
+<p><img alt="dr10" src="../../images/dr10.png" /></p>
 </li>
 <li><p>The deleted Pod is automatically restarted. When its status changes to <code class="docutils literal notranslate"><span class="pre">Running</span></code>, database access is restored.</p></li>
 </ol>

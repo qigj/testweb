@@ -7,22 +7,22 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Data Branching &mdash; SynxDB Elastic Documentation Preview documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=53dc447f" />
+      <link rel="stylesheet" type="text/css" href="../../static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../static/custom.css?v=53dc447f" />
 
   
-      <script src="../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f1f14d95"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../_static/copybutton.js?v=529101c1"></script>
-      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
-    <script src="../../_static/js/theme.js"></script>
+      <script src="../../static/jquery.js?v=5d32c60e"></script>
+      <script src="../../static/sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../static/documentation_options.js?v=f1f14d95"></script>
+      <script src="../../static/doctools.js?v=9bcbadda"></script>
+      <script src="../../static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../static/copybutton.js?v=529101c1"></script>
+      <script src="../../static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Choose Table Storage Model" href="../choose-table-storage-models/choose-table-storage-models-index.html" />
@@ -120,7 +120,7 @@
 <p>The data branching feature allows you to quickly create a new table (for example, <code class="docutils literal notranslate"><span class="pre">t2</span></code>) based on an existing one (for example, <code class="docutils literal notranslate"><span class="pre">t1</span></code>). This creation process is highly efficient because it does not initially copy any physical data. Instead, the newly created branch table shares the same set of underlying data blocks with the original table.</p>
 <p>When you perform a write operation (such as <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>) on any branch table, the system uses a “Copy-on-Write” mechanism. It only creates new, independent data blocks for the branch where the changes occur, while the original data remains untouched.</p>
 <figure class="align-default">
-<a class="reference internal image-reference" href="../../_images/data-branching.png"><img alt="../../_images/data-branching.png" src="../../_images/data-branching.png" style="width: 50%;" /></a>
+<a class="reference internal image-reference" href="../../images/data-branching.png"><img alt="../../images/data-branching.png" src="../../images/data-branching.png" style="width: 50%;" /></a>
 </figure>
 <p>The figure above shows <code class="docutils literal notranslate"><span class="pre">t2</span></code> as a branch of <code class="docutils literal notranslate"><span class="pre">t1</span></code>. Initially, they share the same data blocks. When <code class="docutils literal notranslate"><span class="pre">t2</span></code> is written to, it creates its own new data blocks.</p>
 </section>
